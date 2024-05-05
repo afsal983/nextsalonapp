@@ -1,20 +1,20 @@
-"use client";
+'use client'
 
-import { m } from "framer-motion";
+import { m } from 'framer-motion'
 
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
 
-import { RouterLink } from "src/routes/components";
+import { RouterLink } from 'src/routes/components'
 
-import CompactLayout from "src/layouts/compact";
-import { PageNotFoundIllustration } from "src/assets/illustrations";
+import CompactLayout from 'src/layouts/compact'
+import { PageNotFoundIllustration } from 'src/assets/illustrations'
 
-import { varBounce, MotionContainer } from "src/components/animate";
+import { varBounce, MotionContainer } from 'src/components/animate'
 
 // ----------------------------------------------------------------------
 
-export default function NotFoundView() {
+export default function NotFoundView () {
   return (
     <CompactLayout>
       <MotionContainer>
@@ -25,7 +25,7 @@ export default function NotFoundView() {
         </m.div>
 
         <m.div variants={varBounce().in}>
-          <Typography sx={{ color: "text.secondary" }}>
+          <Typography sx={{ color: 'text.secondary' }}>
             Sorry, we couldn’t find the page you’re looking for. Perhaps you’ve
             mistyped the URL? Be sure to check your spelling.
           </Typography>
@@ -35,7 +35,7 @@ export default function NotFoundView() {
           <PageNotFoundIllustration
             sx={{
               height: 260,
-              my: { xs: 5, sm: 10 },
+              my: { xs: 5, sm: 10 }
             }}
           />
         </m.div>
@@ -50,5 +50,5 @@ export default function NotFoundView() {
         </Button>
       </MotionContainer>
     </CompactLayout>
-  );
+  )
 }

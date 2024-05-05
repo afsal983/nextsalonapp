@@ -1,19 +1,19 @@
-import Box from "@mui/material/Box";
-import { alpha } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
-import Stack, { StackProps } from "@mui/material/Stack";
+import Box from '@mui/material/Box'
+import { alpha } from '@mui/material/styles'
+import Typography from '@mui/material/Typography'
+import Stack, { type StackProps } from '@mui/material/Stack'
 
 // ----------------------------------------------------------------------
 
 type EmptyContentProps = StackProps & {
-  title?: string;
-  imgUrl?: string;
-  filled?: boolean;
-  description?: string;
-  action?: React.ReactNode;
-};
+  title?: string
+  imgUrl?: string
+  filled?: boolean
+  description?: string
+  action?: React.ReactNode
+}
 
-export default function EmptyContent({
+export default function EmptyContent ({
   title,
   imgUrl,
   action,
@@ -34,16 +34,16 @@ export default function EmptyContent({
           borderRadius: 2,
           bgcolor: (theme) => alpha(theme.palette.grey[500], 0.04),
           border: (theme) =>
-            `dashed 1px ${alpha(theme.palette.grey[500], 0.08)}`,
+            `dashed 1px ${alpha(theme.palette.grey[500], 0.08)}`
         }),
-        ...sx,
+        ...sx
       }}
       {...other}
     >
       <Box
         component="img"
         alt="empty content"
-        src={imgUrl || "/assets/icons/empty/ic_content.svg"}
+        src={imgUrl || '/assets/icons/empty/ic_content.svg'}
         sx={{ width: 1, maxWidth: 160 }}
       />
 
@@ -51,7 +51,7 @@ export default function EmptyContent({
         <Typography
           variant="h6"
           component="span"
-          sx={{ mt: 1, color: "text.disabled", textAlign: "center" }}
+          sx={{ mt: 1, color: 'text.disabled', textAlign: 'center' }}
         >
           {title}
         </Typography>
@@ -60,7 +60,7 @@ export default function EmptyContent({
       {description && (
         <Typography
           variant="caption"
-          sx={{ mt: 1, color: "text.disabled", textAlign: "center" }}
+          sx={{ mt: 1, color: 'text.disabled', textAlign: 'center' }}
         >
           {description}
         </Typography>
@@ -68,5 +68,5 @@ export default function EmptyContent({
 
       {action && action}
     </Stack>
-  );
+  )
 }

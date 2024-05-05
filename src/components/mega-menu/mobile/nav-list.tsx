@@ -1,60 +1,60 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from 'react'
 
-import Box from "@mui/material/Box";
-import List from "@mui/material/List";
-import Stack from "@mui/material/Stack";
-import Drawer from "@mui/material/Drawer";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import { alpha, useTheme } from "@mui/material/styles";
-import ListItemButton from "@mui/material/ListItemButton";
+import Box from '@mui/material/Box'
+import List from '@mui/material/List'
+import Stack from '@mui/material/Stack'
+import Drawer from '@mui/material/Drawer'
+import Divider from '@mui/material/Divider'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+import { alpha, useTheme } from '@mui/material/styles'
+import ListItemButton from '@mui/material/ListItemButton'
 
-import { RouterLink } from "src/routes/components";
-import { usePathname, useActiveLink } from "src/routes/hooks";
+import { RouterLink } from 'src/routes/components'
+import { usePathname, useActiveLink } from 'src/routes/hooks'
 
-import NavItem from "./nav-item";
-import Iconify from "../../iconify";
-import Scrollbar from "../../scrollbar";
-import { NavListProps, NavSubListProps } from "../types";
+import NavItem from './nav-item'
+import Iconify from '../../iconify'
+import Scrollbar from '../../scrollbar'
+import { type NavListProps, type NavSubListProps } from '../types'
 
 // ----------------------------------------------------------------------
 
-export default function NavList({ data, slotProps }: NavListProps) {
-  const pathname = usePathname();
+export default function NavList ({ data, slotProps }: NavListProps) {
+  const pathname = usePathname()
 
-  const active = useActiveLink(data.path, !!data.children);
+  const active = useActiveLink(data.path, !!data.children)
 
-  const [openMenu, setOpenMenu] = useState(false);
+  const [openMenu, setOpenMenu] = useState(false)
 
-  const [rectWidth, setRectWidth] = useState(0);
+  const [rectWidth, setRectWidth] = useState(0)
 
   useEffect(() => {
     if (openMenu) {
-      handleCloseMenu();
+      handleCloseMenu()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+  }, [pathname])
 
   useEffect(() => {
-    const element = document.getElementById("mega-menu-mobile");
+    const element = document.getElementById('mega-menu-mobile')
 
     if (element) {
-      const clientRect = element?.getBoundingClientRect();
+      const clientRect = element?.getBoundingClientRect()
 
-      setRectWidth(clientRect.width);
+      setRectWidth(clientRect.width)
     }
-  }, []);
+  }, [])
 
   const handleOpenMenu = useCallback(() => {
     if (data.children) {
-      setOpenMenu(true);
+      setOpenMenu(true)
     }
-  }, [data.children]);
+  }, [data.children])
 
   const handleCloseMenu = useCallback(() => {
-    setOpenMenu(false);
-  }, []);
+    setOpenMenu(false)
+  }, [])
 
   return (
     <>
@@ -67,10 +67,10 @@ export default function NavList({ data, slotProps }: NavListProps) {
         icon={data.icon}
         //
         hasChild={!!data.children}
-        externalLink={data.path.includes("http")}
+        externalLink={data.path.includes('http')}
         //
         active={active}
-        className={active ? "active" : ""}
+        className={active ? 'active' : ''}
         sx={slotProps?.rootItem}
       />
 
@@ -79,12 +79,12 @@ export default function NavList({ data, slotProps }: NavListProps) {
           open={openMenu}
           onClose={handleCloseMenu}
           slotProps={{
-            backdrop: { invisible: true },
+            backdrop: { invisible: true }
           }}
           PaperProps={{
             sx: {
-              width: rectWidth - 8,
-            },
+              width: rectWidth - 8
+            }
           }}
         >
           <NavSubList
@@ -96,15 +96,15 @@ export default function NavList({ data, slotProps }: NavListProps) {
         </Drawer>
       )}
     </>
-  );
+  )
 }
 
 // ----------------------------------------------------------------------
 
-function NavSubList({ data, slotProps, title, onCloseMenu }: NavSubListProps) {
-  const theme = useTheme();
+function NavSubList ({ data, slotProps, title, onCloseMenu }: NavSubListProps) {
+  const theme = useTheme()
 
-  const pathname = usePathname();
+  const pathname = usePathname()
 
   return (
     <>
@@ -116,7 +116,7 @@ function NavSubList({ data, slotProps, title, onCloseMenu }: NavSubListProps) {
         <Typography
           noWrap
           variant="subtitle1"
-          sx={{ textTransform: "capitalize" }}
+          sx={{ textTransform: 'capitalize' }}
         >
           {title}
         </Typography>
@@ -137,8 +137,8 @@ function NavSubList({ data, slotProps, title, onCloseMenu }: NavSubListProps) {
                   mb: 1,
                   px: 2.5,
                   fontSize: 11,
-                  color: "text.secondary",
-                  ...slotProps?.subheader,
+                  color: 'text.secondary',
+                  ...slotProps?.subheader
                 }}
               >
                 {list.subheader}
@@ -147,29 +147,29 @@ function NavSubList({ data, slotProps, title, onCloseMenu }: NavSubListProps) {
 
             {list.items.map((link) => {
               const active =
-                pathname === link.path || pathname === `${link.path}/`;
+                pathname === link.path || pathname === `${link.path}/`
 
               return (
                 <ListItemButton
                   key={link.title}
                   component={RouterLink}
                   href={link.path}
-                  className={active ? "active" : ""}
+                  className={active ? 'active' : ''}
                   sx={{
                     ...theme.typography.body2,
                     fontSize: 13,
                     ...(active && {
-                      fontWeight: "fontWeightSemiBold",
+                      fontWeight: 'fontWeightSemiBold',
                       color:
-                        theme.palette.mode === "light"
-                          ? "primary.main"
-                          : "primary.light",
+                        theme.palette.mode === 'light'
+                          ? 'primary.main'
+                          : 'primary.light',
                       bgcolor: alpha(theme.palette.primary.main, 0.08),
-                      "&:hover": {
-                        bgcolor: alpha(theme.palette.primary.main, 0.16),
-                      },
+                      '&:hover': {
+                        bgcolor: alpha(theme.palette.primary.main, 0.16)
+                      }
                     }),
-                    ...slotProps?.subItem,
+                    ...slotProps?.subItem
                   }}
                 >
                   <Box
@@ -180,17 +180,17 @@ function NavSubList({ data, slotProps, title, onCloseMenu }: NavSubListProps) {
                       width: 20,
                       height: 20,
                       flexShrink: 0,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
                     }}
                   >
                     <Box
                       sx={{
                         width: 4,
                         height: 4,
-                        borderRadius: "50%",
-                        bgcolor: "currentColor",
+                        borderRadius: '50%',
+                        bgcolor: 'currentColor'
                       }}
                     />
                   </Box>
@@ -201,19 +201,19 @@ function NavSubList({ data, slotProps, title, onCloseMenu }: NavSubListProps) {
                     sx={{
                       flexGrow: 1,
                       maxWidth: 1,
-                      overflow: "hidden",
-                      whiteSpace: "nowrap",
-                      textOverflow: "ellipsis",
+                      overflow: 'hidden',
+                      whiteSpace: 'nowrap',
+                      textOverflow: 'ellipsis'
                     }}
                   >
                     {link.title}
                   </Box>
                 </ListItemButton>
-              );
+              )
             })}
           </List>
         ))}
       </Scrollbar>
     </>
-  );
+  )
 }

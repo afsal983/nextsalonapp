@@ -1,13 +1,13 @@
-import { memo } from "react";
+import { memo } from 'react'
 
-import { useTheme } from "@mui/material/styles";
+import { useTheme } from '@mui/material/styles'
 
 // ----------------------------------------------------------------------
 
-function BackgroundShape() {
-  const theme = useTheme();
+function BackgroundShape () {
+  const theme = useTheme()
 
-  const PRIMARY_MAIN = theme.palette.primary.main;
+  const PRIMARY_MAIN = theme.palette.primary.main
 
   return (
     <>
@@ -31,7 +31,7 @@ function BackgroundShape() {
         opacity="0.2"
       />
     </>
-  );
+  )
 }
 
-export default memo(BackgroundShape);
+export default memo(BackgroundShape)

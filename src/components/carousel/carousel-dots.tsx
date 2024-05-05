@@ -1,65 +1,65 @@
 /* eslint-disable react/jsx-no-useless-fragment */
-import Stack from "@mui/material/Stack";
-import Box, { BoxProps } from "@mui/material/Box";
-import { Theme, styled, SxProps } from "@mui/material/styles";
+import Stack from '@mui/material/Stack'
+import Box, { type BoxProps } from '@mui/material/Box'
+import { styled, type Theme, type SxProps } from '@mui/material/styles'
 
 // ----------------------------------------------------------------------
 
-type StyledRootProps = {
-  rounded: boolean;
-};
+interface StyledRootProps {
+  rounded: boolean
+}
 
 const StyledRoot = styled(Box, {
-  shouldForwardProp: (prop) => prop !== "rounded",
+  shouldForwardProp: (prop) => prop !== 'rounded'
 })<StyledRootProps>(({ rounded, theme }) => ({
   zIndex: 9,
   margin: 0,
   padding: 0,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
   color: theme.palette.primary.main,
-  "& li": {
+  '& li': {
     width: 18,
     height: 18,
     opacity: 0.32,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    cursor: "pointer",
-    "&.slick-active": {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    '&.slick-active': {
       opacity: 1,
       ...(rounded && {
-        "& span": {
+        '& span': {
           width: 16,
-          borderRadius: 6,
-        },
-      }),
-    },
-  },
-}));
+          borderRadius: 6
+        }
+      })
+    }
+  }
+}))
 
-const StyledDot = styled("span")(({ theme }) => ({
+const StyledDot = styled('span')(({ theme }) => ({
   width: 8,
   height: 8,
-  borderRadius: "50%",
-  transition: theme.transitions.create(["width"], {
+  borderRadius: '50%',
+  transition: theme.transitions.create(['width'], {
     easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.short,
-  }),
-}));
+    duration: theme.transitions.duration.short
+  })
+}))
 
 // ----------------------------------------------------------------------
 
 export interface Props extends BoxProps {
-  rounded?: boolean;
-  sx?: SxProps<Theme>;
+  rounded?: boolean
+  sx?: SxProps<Theme>
 }
 
-export default function CarouselDots(props?: Props) {
-  const rounded = props?.rounded || false;
+export default function CarouselDots (props?: Props) {
+  const rounded = props?.rounded || false
 
-  const sx = props?.sx;
+  const sx = props?.sx
 
   return {
     appendDots: (dots: React.ReactNode) => (
@@ -78,10 +78,10 @@ export default function CarouselDots(props?: Props) {
       >
         <StyledDot
           sx={{
-            bgcolor: "currentColor",
+            bgcolor: 'currentColor'
           }}
         />
       </Stack>
-    ),
-  };
+    )
+  }
 }

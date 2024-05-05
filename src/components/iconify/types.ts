@@ -1,5 +1,5 @@
-import { IconifyIcon } from "@iconify/react";
+import { type IconifyIcon } from '@iconify/react'
 
 // ----------------------------------------------------------------------
 
-export type IconifyProps = IconifyIcon | string;
+export type IconifyProps = IconifyIcon | string

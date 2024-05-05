@@ -1,47 +1,47 @@
-"use client";
+'use client'
 
-import { useCallback } from "react";
-import { useTranslation } from "react-i18next";
+import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { localStorageGetItem } from "src/utils/storage-available";
+import { localStorageGetItem } from 'src/utils/storage-available'
 
-import { useSettingsContext } from "src/components/settings";
+import { useSettingsContext } from 'src/components/settings'
 
-import { allLangs, defaultLang } from "./config-lang";
+import { allLangs, defaultLang } from './config-lang'
 
 // ----------------------------------------------------------------------
 
-export function useLocales() {
-  const langStorage = localStorageGetItem("i18nextLng");
+export function useLocales () {
+  const langStorage = localStorageGetItem('i18nextLng')
 
   const currentLang =
-    allLangs.find((lang) => lang.value === langStorage) || defaultLang;
+    allLangs.find((lang) => lang.value === langStorage) || defaultLang
 
   return {
     allLangs,
-    currentLang,
-  };
+    currentLang
+  }
 }
 
 // ----------------------------------------------------------------------
 
-export function useTranslate() {
-  const { t, i18n, ready } = useTranslation();
+export function useTranslate () {
+  const { t, i18n, ready } = useTranslation()
 
-  const settings = useSettingsContext();
+  const settings = useSettingsContext()
 
   const onChangeLang = useCallback(
     (newlang: string) => {
-      i18n.changeLanguage(newlang);
-      settings.onChangeDirectionByLang(newlang);
+      i18n.changeLanguage(newlang)
+      settings.onChangeDirectionByLang(newlang)
     },
-    [i18n, settings],
-  );
+    [i18n, settings]
+  )
 
   return {
     t,
     i18n,
     ready,
-    onChangeLang,
-  };
+    onChangeLang
+  }
 }

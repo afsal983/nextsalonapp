@@ -1,65 +1,77 @@
-"use client";
-import { useState } from "react";
-import Container from "@mui/material/Container";
+'use client'
 
-import { paths } from "src/routes/paths";
+import useSWR from 'swr'
+import React, { useState } from 'react'
 
-import { _userList } from "src/_mock";
+import Container from '@mui/material/Container'
 
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+import { paths } from 'src/routes/paths'
 
-import useSWR from "swr";
-import { fetcher } from "src/utils/axios";
+import { fetcher } from 'src/utils/axios'
 
-import ServiceNewEditForm from "../service-new-edit-form";
-import React from "react";
-import { IServiceItem } from "src/types/service";
+import { useSettingsContext } from 'src/components/settings'
+import CustomBreadcrumbs from 'src/components/custom-breadcrumbs'
+
+import { type IServiceItem, type IServiceCategoryItem } from 'src/types/service'
+
+import ServiceNewEditForm from '../service-new-edit-form'
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  id: string;
-};
+interface Props {
+  id: string
+}
 
-export default function ServiceEditView({ id }: Props) {
-  const settings = useSettingsContext();
+export default function ServiceEditView ({ id }: Props) {
+  const settings = useSettingsContext()
 
-  //const currentService = _userList.find((user) => user.id === id);
-  const [ServiceData, setServiceData] = useState<IServiceItem>();
+  // const currentService = _userList.find((user) => user.id === id);
+  const [ServiceData, setServiceData] = useState<IServiceItem>()
+  const [ServiceCategoryData, setServiceCategoryData] = useState<IServiceCategoryItem[]>([])
 
-  //Get the all the services
-  const { data, error, isLoading } = useSWR(
-    "/apiserver/products/{id}",
+  // Get the services
+  const { data: serviceData, error: serviceError, isLoading: serviceLoading } = useSWR(
+    '/apiserver/products/{id}',
     fetcher,
     {
       onSuccess: (data) => {
-        setServiceData(data.data); // this seems to use fetched data as needed without useEffect
-      },
-    },
-  );
+        setServiceData(data.data)
+      }
+    }
+  )
+
+  // Get the service categories
+  const { data: serviceCategoryData, error: serviceCategoryError, isLoading: serviceCategoryLoading } = useSWR(
+    '/apiserver/productcategories?type=1',
+    fetcher,
+    {
+      onSuccess: (data) => {
+        setServiceCategoryData(data.data)
+      }
+    }
+  )
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : "lg"}>
+    <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs
         heading="Edit"
         links={[
           {
-            name: "Dashboard",
-            href: paths.dashboard.root,
+            name: 'Dashboard',
+            href: paths.dashboard.root
           },
           {
-            name: "User",
-            href: paths.dashboard.services.root,
+            name: 'User',
+            href: paths.dashboard.services.root
           },
-          { name: ServiceData?.name },
+          { name: ServiceData?.name }
         ]}
         sx={{
-          mb: { xs: 3, md: 5 },
+          mb: { xs: 3, md: 5 }
         }}
       />
 
-      <ServiceNewEditForm currentService={ServiceData} />
+      <ServiceNewEditForm currentService={ServiceData} servicecategory={ServiceCategoryData}/>
     </Container>
-  );
+  )
 }

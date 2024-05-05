@@ -1,37 +1,37 @@
-"use client";
+'use client'
 
-import Stack from "@mui/material/Stack";
-import Badge from "@mui/material/Badge";
-import Divider from "@mui/material/Divider";
-import Tooltip from "@mui/material/Tooltip";
-import { useTheme } from "@mui/material/styles";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Drawer, { drawerClasses } from "@mui/material/Drawer";
+import Stack from '@mui/material/Stack'
+import Badge from '@mui/material/Badge'
+import Divider from '@mui/material/Divider'
+import Tooltip from '@mui/material/Tooltip'
+import { useTheme } from '@mui/material/styles'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+import Drawer, { drawerClasses } from '@mui/material/Drawer'
 
-import { paper } from "src/theme/css";
+import { paper } from 'src/theme/css'
 
-import Iconify from "../../iconify";
-import Scrollbar from "../../scrollbar";
-import BaseOptions from "./base-option";
-import LayoutOptions from "./layout-options";
-import PresetsOptions from "./presets-options";
-import StretchOptions from "./stretch-options";
-import { useSettingsContext } from "../context";
-import FullScreenOption from "./fullscreen-option";
+import Iconify from '../../iconify'
+import Scrollbar from '../../scrollbar'
+import BaseOptions from './base-option'
+import LayoutOptions from './layout-options'
+import PresetsOptions from './presets-options'
+import StretchOptions from './stretch-options'
+import { useSettingsContext } from '../context'
+import FullScreenOption from './fullscreen-option'
 
 // ----------------------------------------------------------------------
 
-export default function SettingsDrawer() {
-  const theme = useTheme();
+export default function SettingsDrawer () {
+  const theme = useTheme()
 
-  const settings = useSettingsContext();
+  const settings = useSettingsContext()
 
   const labelStyles = {
     mb: 1.5,
-    color: "text.disabled",
-    fontWeight: "fontWeightSemiBold",
-  };
+    color: 'text.disabled',
+    fontWeight: 'fontWeightSemiBold'
+  }
 
   const renderHead = (
     <Stack
@@ -56,7 +56,7 @@ export default function SettingsDrawer() {
         <Iconify icon="mingcute:close-line" />
       </IconButton>
     </Stack>
-  );
+  )
 
   const renderMode = (
     <div>
@@ -66,14 +66,13 @@ export default function SettingsDrawer() {
 
       <BaseOptions
         value={settings.themeMode}
-        onChange={(newValue: string) =>
-          settings.onUpdate("themeMode", newValue)
+        onChange={(newValue: string) => { settings.onUpdate('themeMode', newValue) }
         }
-        options={["light", "dark"]}
-        icons={["sun", "moon"]}
+        options={['light', 'dark']}
+        icons={['sun', 'moon']}
       />
     </div>
-  );
+  )
 
   const renderContrast = (
     <div>
@@ -83,14 +82,13 @@ export default function SettingsDrawer() {
 
       <BaseOptions
         value={settings.themeContrast}
-        onChange={(newValue: string) =>
-          settings.onUpdate("themeContrast", newValue)
+        onChange={(newValue: string) => { settings.onUpdate('themeContrast', newValue) }
         }
-        options={["default", "bold"]}
-        icons={["contrast", "contrast_bold"]}
+        options={['default', 'bold']}
+        icons={['contrast', 'contrast_bold']}
       />
     </div>
-  );
+  )
 
   const renderDirection = (
     <div>
@@ -100,14 +98,13 @@ export default function SettingsDrawer() {
 
       <BaseOptions
         value={settings.themeDirection}
-        onChange={(newValue: string) =>
-          settings.onUpdate("themeDirection", newValue)
+        onChange={(newValue: string) => { settings.onUpdate('themeDirection', newValue) }
         }
-        options={["ltr", "rtl"]}
-        icons={["align_left", "align_right"]}
+        options={['ltr', 'rtl']}
+        icons={['align_left', 'align_right']}
       />
     </div>
-  );
+  )
 
   const renderLayout = (
     <div>
@@ -117,13 +114,12 @@ export default function SettingsDrawer() {
 
       <LayoutOptions
         value={settings.themeLayout}
-        onChange={(newValue: string) =>
-          settings.onUpdate("themeLayout", newValue)
+        onChange={(newValue: string) => { settings.onUpdate('themeLayout', newValue) }
         }
-        options={["vertical", "horizontal", "mini"]}
+        options={['vertical', 'horizontal', 'mini']}
       />
     </div>
-  );
+  )
 
   const renderStretch = (
     <div>
@@ -132,8 +128,8 @@ export default function SettingsDrawer() {
         component="div"
         sx={{
           ...labelStyles,
-          display: "inline-flex",
-          alignItems: "center",
+          display: 'inline-flex',
+          alignItems: 'center'
         }}
       >
         Stretch
@@ -144,12 +140,11 @@ export default function SettingsDrawer() {
 
       <StretchOptions
         value={settings.themeStretch}
-        onChange={() =>
-          settings.onUpdate("themeStretch", !settings.themeStretch)
+        onChange={() => { settings.onUpdate('themeStretch', !settings.themeStretch) }
         }
       />
     </div>
-  );
+  )
 
   const renderPresets = (
     <div>
@@ -159,12 +154,11 @@ export default function SettingsDrawer() {
 
       <PresetsOptions
         value={settings.themeColorPresets}
-        onChange={(newValue: string) =>
-          settings.onUpdate("themeColorPresets", newValue)
+        onChange={(newValue: string) => { settings.onUpdate('themeColorPresets', newValue) }
         }
       />
     </div>
-  );
+  )
 
   return (
     <Drawer
@@ -172,18 +166,18 @@ export default function SettingsDrawer() {
       open={settings.open}
       onClose={settings.onClose}
       slotProps={{
-        backdrop: { invisible: true },
+        backdrop: { invisible: true }
       }}
       sx={{
         [`& .${drawerClasses.paper}`]: {
           ...paper({ theme, bgcolor: theme.palette.background.default }),
-          width: 280,
-        },
+          width: 280
+        }
       }}
     >
       {renderHead}
 
-      <Divider sx={{ borderStyle: "dashed" }} />
+      <Divider sx={{ borderStyle: 'dashed' }} />
 
       <Scrollbar>
         <Stack spacing={3} sx={{ p: 3 }}>
@@ -203,5 +197,5 @@ export default function SettingsDrawer() {
 
       <FullScreenOption />
     </Drawer>
-  );
+  )
 }

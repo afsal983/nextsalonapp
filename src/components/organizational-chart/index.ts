@@ -1,9 +1,9 @@
-import dynamic from "next/dynamic";
+import dynamic from 'next/dynamic'
 
-const OrganizationalChart = dynamic(() => import("./organizational-chart"), {
-  ssr: false,
-});
+const OrganizationalChart = dynamic(async () => import('./organizational-chart'), {
+  ssr: false
+})
 
-export * from "./types";
+export * from './types'
 
-export default OrganizationalChart;
+export default OrganizationalChart

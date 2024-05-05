@@ -1,20 +1,20 @@
-import { memo } from "react";
+import { memo } from 'react'
 
-import { useTheme } from "@mui/material/styles";
-import Box, { BoxProps } from "@mui/material/Box";
+import { useTheme } from '@mui/material/styles'
+import Box, { type BoxProps } from '@mui/material/Box'
 
 // ----------------------------------------------------------------------
 
-function CheckoutIllustration({ ...other }: BoxProps) {
-  const theme = useTheme();
+function CheckoutIllustration ({ ...other }: BoxProps) {
+  const theme = useTheme()
 
-  const PRIMARY_LIGHT = theme.palette.primary.light;
+  const PRIMARY_LIGHT = theme.palette.primary.light
 
-  const PRIMARY_MAIN = theme.palette.primary.main;
+  const PRIMARY_MAIN = theme.palette.primary.main
 
-  const PRIMARY_DARK = theme.palette.primary.dark;
+  const PRIMARY_DARK = theme.palette.primary.dark
 
-  const PRIMARY_DARKER = theme.palette.primary.darker;
+  const PRIMARY_DARKER = theme.palette.primary.darker
 
   return (
     <Box
@@ -63,7 +63,7 @@ function CheckoutIllustration({ ...other }: BoxProps) {
         </linearGradient>
       </defs>
     </Box>
-  );
+  )
 }
 
-export default memo(CheckoutIllustration);
+export default memo(CheckoutIllustration)

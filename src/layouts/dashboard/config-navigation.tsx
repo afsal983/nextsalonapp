@@ -1,8 +1,8 @@
-import { useMemo } from "react";
+import { useMemo } from 'react'
 
-import { paths } from "src/routes/paths";
+import { paths } from 'src/routes/paths'
 
-import SvgColor from "src/components/svg-color";
+import SvgColor from 'src/components/svg-color'
 
 // ----------------------------------------------------------------------
 
@@ -15,176 +15,176 @@ const icon = (name: string) => (
   // <Iconify icon="fluent:mail-24-filled" />
   // https://icon-sets.iconify.design/solar/
   // https://www.streamlinehq.com/icons
-);
+)
 
 const ICONS = {
-  dashboard: icon("ic_dashboard"),
-  services: icon("ic_job"),
-  retails: icon("ic_blog"),
-  packages: icon("ic_chat"),
-  appointments: icon("ic_mail"),
-  invoices: icon("ic_user"),
-  employees: icon("ic_file"),
-  locations: icon("ic_lock"),
-  organizations: icon("ic_tour"),
-  branches: icon("ic_order"),
-  reports: icon("ic_label"),
-  audits: icon("ic_blank"),
-  settings: icon("ic_kanban"),
-  users: icon("ic_folder"),
-  messagebuilder: icon("ic_banking"),
-  marketing: icon("ic_booking"),
-  adapters: icon("ic_invoice"),
-};
+  dashboard: icon('ic_dashboard'),
+  services: icon('ic_job'),
+  retails: icon('ic_blog'),
+  packages: icon('ic_chat'),
+  appointments: icon('ic_mail'),
+  invoices: icon('ic_user'),
+  employees: icon('ic_file'),
+  locations: icon('ic_lock'),
+  organizations: icon('ic_tour'),
+  branches: icon('ic_order'),
+  reports: icon('ic_label'),
+  audits: icon('ic_blank'),
+  settings: icon('ic_kanban'),
+  users: icon('ic_folder'),
+  messagebuilder: icon('ic_banking'),
+  marketing: icon('ic_booking'),
+  adapters: icon('ic_invoice')
+}
 
 // ----------------------------------------------------------------------
 
-export function useNavData() {
+export function useNavData () {
   const data = useMemo(
     () => [
       // OVERVIEW
       // ----------------------------------------------------------------------
       {
-        subheader: "Analysis",
+        subheader: 'Analysis',
         items: [
           {
-            title: "dashboard",
+            title: 'dashboard',
             path: paths.dashboard.root,
-            icon: ICONS.dashboard,
-          },
-        ],
+            icon: ICONS.dashboard
+          }
+        ]
       },
 
       // MANAGEMENT
       // ----------------------------------------------------------------------
       {
-        subheader: "management",
+        subheader: 'management',
         items: [
           {
-            title: "services",
+            title: 'services',
             path: paths.dashboard.services.root,
             icon: ICONS.services,
             children: [
-              { title: "service list", path: paths.dashboard.services.root },
+              { title: 'service list', path: paths.dashboard.services.root },
               {
-                title: "service category",
-                path: paths.dashboard.services.servicecategory.root,
-              },
-            ],
+                title: 'service category',
+                path: paths.dashboard.services.servicecategory.root
+              }
+            ]
           },
           {
-            title: "retails",
+            title: 'retails',
             path: paths.dashboard.retails.root,
             icon: ICONS.retails,
             children: [
-              { title: "retail list", path: paths.dashboard.retails.root },
-              { title: "retail category", path: paths.dashboard.retails.root },
-              { title: "retail brand", path: paths.dashboard.retails.root },
-            ],
+              { title: 'retail list', path: paths.dashboard.retails.root },
+              { title: 'retail category', path: paths.dashboard.retails.root },
+              { title: 'retail brand', path: paths.dashboard.retails.root }
+            ]
           },
           {
-            title: "packages",
+            title: 'packages',
             path: paths.dashboard.packages.root,
             icon: ICONS.packages,
             children: [
-              { title: "package list", path: paths.dashboard.packages.root },
+              { title: 'package list', path: paths.dashboard.packages.root },
               {
-                title: "paackage category",
-                path: paths.dashboard.packages.root,
-              },
-            ],
+                title: 'paackage category',
+                path: paths.dashboard.packages.root
+              }
+            ]
           },
           {
-            title: "appointments",
+            title: 'appointments',
             path: paths.dashboard.retails.root,
-            icon: ICONS.appointments,
+            icon: ICONS.appointments
           },
           {
-            title: "invoices",
+            title: 'invoices',
             path: paths.dashboard.retails.root,
             icon: ICONS.invoices,
             children: [
-              { title: "invoice list", path: paths.dashboard.retails.root },
-              { title: "payment types", path: paths.dashboard.retails.root },
-            ],
+              { title: 'invoice list', path: paths.dashboard.retails.root },
+              { title: 'payment types', path: paths.dashboard.retails.root }
+            ]
           },
           {
-            title: "employees",
+            title: 'employees',
             path: paths.dashboard.retails.root,
             icon: ICONS.employees,
             children: [
-              { title: "emloyee", path: paths.dashboard.retails.root },
-              { title: "work schedule", path: paths.dashboard.retails.root },
-              { title: "timeslots", path: paths.dashboard.retails.root },
-            ],
+              { title: 'emloyee', path: paths.dashboard.retails.root },
+              { title: 'work schedule', path: paths.dashboard.retails.root },
+              { title: 'timeslots', path: paths.dashboard.retails.root }
+            ]
           },
           {
-            title: "locations",
+            title: 'locations',
             path: paths.dashboard.retails.root,
-            icon: ICONS.locations,
+            icon: ICONS.locations
           },
           {
-            title: "organizations",
+            title: 'organizations',
             path: paths.dashboard.retails.root,
-            icon: ICONS.organizations,
+            icon: ICONS.organizations
           },
           {
-            title: "branches",
+            title: 'branches',
             path: paths.dashboard.retails.root,
-            icon: ICONS.branches,
+            icon: ICONS.branches
           },
           {
-            title: "reports",
+            title: 'reports',
             path: paths.dashboard.retails.root,
-            icon: ICONS.reports,
+            icon: ICONS.reports
           },
           {
-            title: "audits",
+            title: 'audits',
             path: paths.dashboard.retails.root,
-            icon: ICONS.audits,
+            icon: ICONS.audits
           },
           {
-            title: "settings",
+            title: 'settings',
             path: paths.dashboard.retails.root,
-            icon: ICONS.settings,
+            icon: ICONS.settings
           },
           {
-            title: "users",
+            title: 'users',
             path: paths.dashboard.retails.root,
             icon: ICONS.users,
             children: [
-              { title: "user list", path: paths.dashboard.retails.root },
-              { title: "roles", path: paths.dashboard.retails.root },
-            ],
+              { title: 'user list', path: paths.dashboard.retails.root },
+              { title: 'roles', path: paths.dashboard.retails.root }
+            ]
           },
           {
-            title: "message builder",
+            title: 'message builder',
             path: paths.dashboard.retails.root,
-            icon: ICONS.messagebuilder,
+            icon: ICONS.messagebuilder
           },
           {
-            title: "maketing",
+            title: 'maketing',
             path: paths.dashboard.retails.root,
             icon: ICONS.marketing,
             children: [
-              { title: "campaign content", path: paths.dashboard.retails.root },
-              { title: "campaigns", path: paths.dashboard.retails.root },
-            ],
+              { title: 'campaign content', path: paths.dashboard.retails.root },
+              { title: 'campaigns', path: paths.dashboard.retails.root }
+            ]
           },
           {
-            title: "adapters",
+            title: 'adapters',
             path: paths.dashboard.retails.root,
             icon: ICONS.adapters,
             children: [
-              { title: "email", path: paths.dashboard.retails.root },
-              { title: "whatsapp", path: paths.dashboard.retails.root },
-            ],
-          },
-        ],
-      },
+              { title: 'email', path: paths.dashboard.retails.root },
+              { title: 'whatsapp', path: paths.dashboard.retails.root }
+            ]
+          }
+        ]
+      }
     ],
-    [],
-  );
+    []
+  )
 
-  return data;
+  return data
 }

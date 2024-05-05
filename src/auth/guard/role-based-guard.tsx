@@ -1,41 +1,42 @@
-import { m } from "framer-motion";
+import { m } from 'framer-motion'
 
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import { Theme, SxProps } from "@mui/material/styles";
+import Container from '@mui/material/Container'
+import Typography from '@mui/material/Typography'
+import { type Theme, type SxProps } from '@mui/material/styles'
 
-import { useMockedUser } from "src/hooks/use-mocked-user";
+import { useMockedUser } from 'src/hooks/use-mocked-user'
 
-import { ForbiddenIllustration } from "src/assets/illustrations";
+import { ForbiddenIllustration } from 'src/assets/illustrations'
 
-import { varBounce, MotionContainer } from "src/components/animate";
+import { varBounce, MotionContainer } from 'src/components/animate'
 
 // ----------------------------------------------------------------------
 
-type RoleBasedGuardProp = {
-  hasContent?: boolean;
-  roles?: string[];
-  children: React.ReactNode;
-  sx?: SxProps<Theme>;
-};
+interface RoleBasedGuardProp {
+  hasContent?: boolean
+  roles?: string[]
+  children: React.ReactNode
+  sx?: SxProps<Theme>
+}
 
-export default function RoleBasedGuard({
+export default function RoleBasedGuard ({
   hasContent,
   roles,
   children,
-  sx,
+  sx
 }: RoleBasedGuardProp) {
   // Logic here to get current user role
-  const { user } = useMockedUser();
+  const { user } = useMockedUser()
 
   // const currentRole = 'user';
-  const currentRole = user?.role; // admin;
+  const currentRole = user?.role // admin;
 
-  if (typeof roles !== "undefined" && !roles.includes(currentRole)) {
-    return hasContent ? (
+  if (typeof roles !== 'undefined' && !roles.includes(currentRole)) {
+    return hasContent
+      ? (
       <Container
         component={MotionContainer}
-        sx={{ textAlign: "center", ...sx }}
+        sx={{ textAlign: 'center', ...sx }}
       >
         <m.div variants={varBounce().in}>
           <Typography variant="h3" sx={{ mb: 2 }}>
@@ -44,7 +45,7 @@ export default function RoleBasedGuard({
         </m.div>
 
         <m.div variants={varBounce().in}>
-          <Typography sx={{ color: "text.secondary" }}>
+          <Typography sx={{ color: 'text.secondary' }}>
             You do not have permission to access this page
           </Typography>
         </m.div>
@@ -53,13 +54,14 @@ export default function RoleBasedGuard({
           <ForbiddenIllustration
             sx={{
               height: 260,
-              my: { xs: 5, sm: 10 },
+              my: { xs: 5, sm: 10 }
             }}
           />
         </m.div>
       </Container>
-    ) : null;
+        )
+      : null
   }
 
-  return <> {children} </>;
+  return <> {children} </>
 }

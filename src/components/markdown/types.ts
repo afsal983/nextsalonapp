@@ -1,9 +1,9 @@
-import { Options } from "react-markdown";
+import { type Options } from 'react-markdown'
 
-import { Theme, SxProps } from "@mui/material/styles";
+import { type Theme, type SxProps } from '@mui/material/styles'
 
 // ----------------------------------------------------------------------
 
 export interface MarkdownProps extends Options {
-  sx?: SxProps<Theme>;
+  sx?: SxProps<Theme>
 }

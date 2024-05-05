@@ -1,11 +1,11 @@
-import Chip from "@mui/material/Chip";
-import TextField from "@mui/material/TextField";
-import InputAdornment from "@mui/material/InputAdornment";
-import Autocomplete, { AutocompleteProps } from "@mui/material/Autocomplete";
+import Chip from '@mui/material/Chip'
+import TextField from '@mui/material/TextField'
+import InputAdornment from '@mui/material/InputAdornment'
+import Autocomplete, { type AutocompleteProps } from '@mui/material/Autocomplete'
 
-import { countries } from "src/assets/data";
+import { countries } from 'src/assets/data'
 
-import Iconify from "src/components/iconify";
+import Iconify from 'src/components/iconify'
 
 // ----------------------------------------------------------------------
 
@@ -15,10 +15,10 @@ interface Props<
   DisableClearable extends boolean | undefined,
   FreeSolo extends boolean | undefined,
 > extends AutocompleteProps<T, Multiple, DisableClearable, FreeSolo> {
-  label?: string;
-  error?: boolean;
-  placeholder?: string;
-  helperText?: React.ReactNode;
+  label?: string
+  error?: boolean
+  placeholder?: string
+  helperText?: React.ReactNode
 }
 
 export default function CountrySelect<
@@ -26,24 +26,24 @@ export default function CountrySelect<
   Multiple extends boolean | undefined,
   DisableClearable extends boolean | undefined,
   FreeSolo extends boolean | undefined,
->({
+> ({
   label,
   error,
   helperText,
   placeholder,
   ...other
-}: Omit<Props<T, Multiple, DisableClearable, FreeSolo>, "renderInput">) {
-  const multiple = other?.multiple;
+}: Omit<Props<T, Multiple, DisableClearable, FreeSolo>, 'renderInput'>) {
+  const multiple = other?.multiple
 
   return (
     <Autocomplete
       autoHighlight={!multiple}
       disableCloseOnSelect={multiple}
       renderOption={(props, option) => {
-        const country = getCountry(option as string);
+        const country = getCountry(option as string)
 
         if (!country.label) {
-          return null;
+          return null
         }
 
         return (
@@ -55,10 +55,10 @@ export default function CountrySelect<
             />
             {country.label} ({country.code}) +{country.phone}
           </li>
-        );
+        )
       }}
       renderInput={(params) => {
-        const country = getCountry(params.inputProps.value as string);
+        const country = getCountry(params.inputProps.value as string)
 
         const baseField = {
           ...params,
@@ -68,12 +68,12 @@ export default function CountrySelect<
           helperText,
           inputProps: {
             ...params.inputProps,
-            autoComplete: "new-password",
-          },
-        };
+            autoComplete: 'new-password'
+          }
+        }
 
         if (multiple) {
-          return <TextField {...baseField} />;
+          return <TextField {...baseField} />
         }
 
         return (
@@ -86,8 +86,8 @@ export default function CountrySelect<
                   position="start"
                   sx={{
                     ...(!country.code && {
-                      display: "none",
-                    }),
+                      display: 'none'
+                    })
                   }}
                 >
                   <Iconify
@@ -95,14 +95,14 @@ export default function CountrySelect<
                     sx={{ mr: -0.5, ml: 0.5 }}
                   />
                 </InputAdornment>
-              ),
+              )
             }}
           />
-        );
+        )
       }}
       renderTags={(selected, getTagProps) =>
         selected.map((option, index) => {
-          const country = getCountry(option as string);
+          const country = getCountry(option as string)
 
           return (
             <Chip
@@ -115,20 +115,20 @@ export default function CountrySelect<
               size="small"
               variant="soft"
             />
-          );
+          )
         })
       }
       {...other}
     />
-  );
+  )
 }
 
 // ----------------------------------------------------------------------
 
-export function getCountry(inputValue: string) {
-  const option = countries.filter((country) => country.label === inputValue)[0];
+export function getCountry (inputValue: string) {
+  const option = countries.filter((country) => country.label === inputValue)[0]
 
   return {
-    ...option,
-  };
+    ...option
+  }
 }

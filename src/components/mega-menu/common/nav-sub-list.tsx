@@ -1,20 +1,20 @@
-import Link from "@mui/material/Link";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
+import Link from '@mui/material/Link'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 
-import { usePathname } from "src/routes/hooks";
-import { RouterLink } from "src/routes/components";
+import { usePathname } from 'src/routes/hooks'
+import { RouterLink } from 'src/routes/components'
 
-import { NavSubListProps } from "../types";
+import { type NavSubListProps } from '../types'
 
 // ----------------------------------------------------------------------
 
-export default function NavSubList({
+export default function NavSubList ({
   data,
   slotProps,
   ...other
 }: NavSubListProps) {
-  const pathname = usePathname();
+  const pathname = usePathname()
 
   return (
     <>
@@ -28,7 +28,7 @@ export default function NavSubList({
 
           {list.items.map((link) => {
             const active =
-              pathname === link.path || pathname === `${link.path}/`;
+              pathname === link.path || pathname === `${link.path}/`
 
             return (
               <Link
@@ -36,29 +36,29 @@ export default function NavSubList({
                 key={link.title}
                 component={RouterLink}
                 href={link.path}
-                className={active ? "active" : ""}
+                className={active ? 'active' : ''}
                 variant="body2"
                 sx={{
                   fontSize: 13,
-                  color: "text.secondary",
-                  transition: (theme) => theme.transitions.create("all"),
-                  "&:hover": {
-                    color: "text.primary",
+                  color: 'text.secondary',
+                  transition: (theme) => theme.transitions.create('all'),
+                  '&:hover': {
+                    color: 'text.primary'
                   },
                   ...(active && {
-                    color: "text.primary",
-                    textDecoration: "underline",
-                    fontWeight: "fontWeightSemiBold",
+                    color: 'text.primary',
+                    textDecoration: 'underline',
+                    fontWeight: 'fontWeightSemiBold'
                   }),
-                  ...slotProps?.subItem,
+                  ...slotProps?.subItem
                 }}
               >
                 {link.title}
               </Link>
-            );
+            )
           })}
         </Stack>
       ))}
     </>
-  );
+  )
 }

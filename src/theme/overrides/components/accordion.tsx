@@ -1,26 +1,26 @@
-import { Theme } from "@mui/material/styles";
-import { accordionClasses } from "@mui/material/Accordion";
-import { typographyClasses } from "@mui/material/Typography";
-import { accordionSummaryClasses } from "@mui/material/AccordionSummary";
+import { type Theme } from '@mui/material/styles'
+import { accordionClasses } from '@mui/material/Accordion'
+import { typographyClasses } from '@mui/material/Typography'
+import { accordionSummaryClasses } from '@mui/material/AccordionSummary'
 
 // ----------------------------------------------------------------------
 
-export function accordion(theme: Theme) {
+export function accordion (theme: Theme) {
   return {
     MuiAccordion: {
       styleOverrides: {
         root: {
-          backgroundColor: "transparent",
+          backgroundColor: 'transparent',
           [`&.${accordionClasses.expanded}`]: {
             boxShadow: theme.customShadows.z8,
             borderRadius: theme.shape.borderRadius,
-            backgroundColor: theme.palette.background.paper,
+            backgroundColor: theme.palette.background.paper
           },
           [`&.${accordionClasses.disabled}`]: {
-            backgroundColor: "transparent",
-          },
-        },
-      },
+            backgroundColor: 'transparent'
+          }
+        }
+      }
     },
     MuiAccordionSummary: {
       styleOverrides: {
@@ -31,14 +31,14 @@ export function accordion(theme: Theme) {
             opacity: 1,
             color: theme.palette.action.disabled,
             [`& .${typographyClasses.root}`]: {
-              color: "inherit",
-            },
-          },
+              color: 'inherit'
+            }
+          }
         },
         expandIconWrapper: {
-          color: "inherit",
-        },
-      },
-    },
-  };
+          color: 'inherit'
+        }
+      }
+    }
+  }
 }

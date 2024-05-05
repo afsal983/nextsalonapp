@@ -1,35 +1,35 @@
-"use client";
+'use client'
 
-import isEqual from "lodash/isEqual";
-import { useState, useEffect, useCallback } from "react";
+import isEqual from 'lodash/isEqual'
+import { useState, useCallback } from 'react'
 
-import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
-import Card from "@mui/material/Card";
-import Table from "@mui/material/Table";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import { alpha } from "@mui/material/styles";
-import Container from "@mui/material/Container";
-import TableBody from "@mui/material/TableBody";
-import IconButton from "@mui/material/IconButton";
-import TableContainer from "@mui/material/TableContainer";
+import Tab from '@mui/material/Tab'
+import Tabs from '@mui/material/Tabs'
+import Card from '@mui/material/Card'
+import Table from '@mui/material/Table'
+import Button from '@mui/material/Button'
+import Tooltip from '@mui/material/Tooltip'
+import { alpha } from '@mui/material/styles'
+import Container from '@mui/material/Container'
+import TableBody from '@mui/material/TableBody'
+import IconButton from '@mui/material/IconButton'
+import TableContainer from '@mui/material/TableContainer'
 
-import { paths } from "src/routes/paths";
-import { useRouter } from "src/routes/hooks";
-import { RouterLink } from "src/routes/components";
+import { paths } from 'src/routes/paths'
+import { useRouter } from 'src/routes/hooks'
+import { RouterLink } from 'src/routes/components'
 
-import { useBoolean } from "src/hooks/use-boolean";
+import { useBoolean } from 'src/hooks/use-boolean'
 
-import { USER_STATUS_OPTIONS } from "src/_mock";
+import { USER_STATUS_OPTIONS } from 'src/_mock'
 
-import Label from "src/components/label";
-import Iconify from "src/components/iconify";
-import Scrollbar from "src/components/scrollbar";
-import { useSnackbar } from "src/components/snackbar";
-import { ConfirmDialog } from "src/components/custom-dialog";
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+import Label from 'src/components/label'
+import Iconify from 'src/components/iconify'
+import Scrollbar from 'src/components/scrollbar'
+import { useSnackbar } from 'src/components/snackbar'
+import { ConfirmDialog } from 'src/components/custom-dialog'
+import { useSettingsContext } from 'src/components/settings'
+import CustomBreadcrumbs from 'src/components/custom-breadcrumbs'
 import {
   useTable,
   emptyRows,
@@ -38,157 +38,150 @@ import {
   TableEmptyRows,
   TableHeadCustom,
   TableSelectedAction,
-  TablePaginationCustom,
-} from "src/components/table";
+  TablePaginationCustom
+} from 'src/components/table'
 
 import {
-  IServiceCategoryItem,
-  IServiceItem,
-  IUserTableFilters,
-  IUserTableFilterValue,
-} from "src/types/service";
+  type IServiceItem,
+  type IUserTableFilters,
+  type IServiceCategoryItem,
+  type IUserTableFilterValue
+} from 'src/types/service'
 
-import UserTableRow from "../service-table-row";
-import UserTableToolbar from "../service-table-toolbar";
-import UserTableFiltersResult from "../service-table-filters-result";
-
-import useSWR from "swr";
-import { fetcher } from "src/utils/axios";
+import UserTableRow from '../service-table-row'
+import UserTableToolbar from '../service-table-toolbar'
+import UserTableFiltersResult from '../service-table-filters-result'
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [{ value: "all", label: "All" }, ...USER_STATUS_OPTIONS];
+const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS]
 
 const TABLE_HEAD = [
-  { id: "name", label: "Name", width: 320 },
-  { id: "price", label: "Price", width: 120 },
-  { id: "tax", label: "Tax" },
-  { id: "duration", label: "Duration" },
-  { id: "commission", label: "Commission" },
-  { id: "color", label: "Color", width: 100 },
-  { id: "", width: 88 },
-];
+  { id: 'name', label: 'Name', width: 320 },
+  { id: 'price', label: 'Price', width: 120 },
+  { id: 'tax', label: 'Tax' },
+  { id: 'duration', label: 'Duration' },
+  { id: 'commission', label: 'Commission' },
+  { id: 'color', label: 'Color', width: 100 },
+  { id: '', width: 88 }
+]
 
 const defaultFilters: IUserTableFilters = {
-  name: "",
+  name: '',
   productcategory: [],
-  status: "all",
-};
-
+  status: 'all'
+}
 
 // ----------------------------------------------------------------------
-type ServiceListViewProps = {
-  services: IServiceItem[];
-  servicecategory: IServiceCategoryItem[];
-};
+interface ServiceListViewProps {
+  services: IServiceItem[]
+  servicecategory: IServiceCategoryItem[]
+}
 
+export default function ServiceListView ({ services, servicecategory }: ServiceListViewProps) {
+  const { enqueueSnackbar } = useSnackbar()
+  const [tableData, setTableData] = useState<IServiceItem[]>(services)
+  // const [productCategory, setproductCategory] = useState<IServiceCategoryItem[]>(servicecategory);
 
-export default function ServiceListView({services, servicecategory}: ServiceListViewProps) {
+  const table = useTable()
 
-  const { enqueueSnackbar } = useSnackbar();
-  const [tableData, setTableData] = useState<IServiceItem[]>(services);
-  const [productCategory, setproductCategory] = useState<IServiceCategoryItem[]>(servicecategory);
+  const settings = useSettingsContext()
 
-  const table = useTable();
+  const router = useRouter()
 
-  const settings = useSettingsContext();
+  const confirm = useBoolean()
 
-  const router = useRouter();
-
-  const confirm = useBoolean();
-
-  const [filters, setFilters] = useState(defaultFilters);
+  const [filters, setFilters] = useState(defaultFilters)
 
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
-    filters,
-  });
+    filters
+  })
 
   const dataInPage = dataFiltered.slice(
     table.page * table.rowsPerPage,
-    table.page * table.rowsPerPage + table.rowsPerPage,
-  );
+    table.page * table.rowsPerPage + table.rowsPerPage
+  )
 
-  const denseHeight = table.dense ? 56 : 56 + 20;
+  const denseHeight = table.dense ? 56 : 56 + 20
 
-  const canReset = !isEqual(defaultFilters, filters);
+  const canReset = !isEqual(defaultFilters, filters)
 
-  const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
+  const notFound = ((dataFiltered.length === 0) && canReset) || (dataFiltered.length === 0)
 
   const handleFilters = useCallback(
     (name: string, value: IUserTableFilterValue) => {
-      table.onResetPage();
+      table.onResetPage()
       setFilters((prevState) => ({
         ...prevState,
-        [name]: value,
-      }));
+        [name]: value
+      }))
     },
-    [table],
-  );
+    [table]
+  )
 
   const handleResetFilters = useCallback(() => {
-    setFilters(defaultFilters);
-  }, []);
+    setFilters(defaultFilters)
+  }, [])
 
   const handleDeleteRow = useCallback(
     (id: string) => {
-      const deleteRow = tableData.filter((row: IServiceItem) => row.id !== id);
+      const deleteRow = tableData.filter((row: IServiceItem) => row.id !== id)
 
-      enqueueSnackbar("Delete success!");
+      enqueueSnackbar('Delete success!')
 
-      setTableData(deleteRow);
+      setTableData(deleteRow)
 
-      table.onUpdatePageDeleteRow(dataInPage.length);
+      table.onUpdatePageDeleteRow(dataInPage.length)
     },
-    [dataInPage.length, enqueueSnackbar, table, tableData],
-  );
+    [dataInPage.length, enqueueSnackbar, table, tableData]
+  )
 
   const handleDeleteRows = useCallback(() => {
     const deleteRows = tableData.filter(
-      (row: IServiceItem) => !table.selected.includes(row.id),
-    );
+      (row: IServiceItem) => !table.selected.includes(row.id)
+    )
 
-    enqueueSnackbar("Delete success!");
+    enqueueSnackbar('Delete success!')
 
-    setTableData(deleteRows);
+    setTableData(deleteRows)
 
     table.onUpdatePageDeleteRows({
       totalRowsInPage: dataInPage.length,
-      totalRowsFiltered: dataFiltered.length,
-    });
+      totalRowsFiltered: dataFiltered.length
+    })
   }, [
     dataFiltered.length,
     dataInPage.length,
     enqueueSnackbar,
     table,
-    tableData,
-  ]);
+    tableData
+  ])
 
   const handleEditRow = useCallback(
     (id: string) => {
-      router.push(paths.dashboard.services.edit(Number(id)));
+      router.push(paths.dashboard.services.edit(Number(id)))
     },
-    [router],
-  );
+    [router]
+  )
 
   const handleFilterStatus = useCallback(
     (event: React.SyntheticEvent, newValue: string) => {
-      handleFilters("status", newValue);
+      handleFilters('status', newValue)
     },
-    [handleFilters],
-  );
-
+    [handleFilters]
+  )
 
   return (
     <>
-      <Container maxWidth={settings.themeStretch ? false : "lg"}>
+      <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="List"
           links={[
-            { name: "Dashboard", href: paths.dashboard.root },
-            { name: "Service", href: paths.dashboard.services.root },
-            { name: "List" },
+            { name: 'Dashboard', href: paths.dashboard.root },
+            { name: 'Service', href: paths.dashboard.services.root },
+            { name: 'List' }
           ]}
           action={
             <Button
@@ -201,7 +194,7 @@ export default function ServiceListView({services, servicecategory}: ServiceList
             </Button>
           }
           sx={{
-            mb: { xs: 3, md: 5 },
+            mb: { xs: 3, md: 5 }
           }}
         />
 
@@ -212,7 +205,7 @@ export default function ServiceListView({services, servicecategory}: ServiceList
             sx={{
               px: 2.5,
               boxShadow: (theme) =>
-                `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
+                `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`
             }}
           >
             {STATUS_OPTIONS.map((tab) => (
@@ -224,23 +217,23 @@ export default function ServiceListView({services, servicecategory}: ServiceList
                 icon={
                   <Label
                     variant={
-                      ((tab.value === "all" || tab.value === filters.status) &&
-                        "filled") ||
-                      "soft"
+                      ((tab.value === 'all' || tab.value === filters.status) &&
+                        'filled') ||
+                      'soft'
                     }
                     color={
-                      (tab.value === "active" && "success") ||
-                      (tab.value === "pending" && "warning") ||
-                      (tab.value === "banned" && "error") ||
-                      "default"
+                      (tab.value === 'active' && 'success') ||
+                      (tab.value === 'pending' && 'warning') ||
+                      (tab.value === 'banned' && 'error') ||
+                      'default'
                     }
                   >
-                    {["active", "pending", "banned", "rejected"].includes(
-                      tab.value,
+                    {['active', 'pending', 'banned', 'rejected'].includes(
+                      tab.value
                     )
                       ? tableData.filter(
-                          (service: IServiceItem) => service.name === tab.value,
-                        ).length
+                        (service: IServiceItem) => service.name === tab.value
+                      ).length
                       : tableData.length}
                   </Label>
                 }
@@ -252,7 +245,7 @@ export default function ServiceListView({services, servicecategory}: ServiceList
             filters={filters}
             onFilters={handleFilters}
             //
-            productCategory={productCategory}
+            productCategory={servicecategory.map(obj => obj.name)}
           />
 
           {canReset && (
@@ -267,16 +260,17 @@ export default function ServiceListView({services, servicecategory}: ServiceList
             />
           )}
 
-          <TableContainer sx={{ position: "relative", overflow: "unset" }}>
+          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
               rowCount={dataFiltered.length}
-              onSelectAllRows={(checked) =>
+              onSelectAllRows={(checked) => {
                 table.onSelectAllRows(
                   checked,
-                  dataFiltered.map((row) => row.id),
+                  dataFiltered.map((row) => row.id)
                 )
+              }
               }
               action={
                 <Tooltip title="Delete">
@@ -289,7 +283,7 @@ export default function ServiceListView({services, servicecategory}: ServiceList
 
             <Scrollbar>
               <Table
-                size={table.dense ? "small" : "medium"}
+                size={table.dense ? 'small' : 'medium'}
                 sx={{ minWidth: 960 }}
               >
                 <TableHeadCustom
@@ -299,11 +293,12 @@ export default function ServiceListView({services, servicecategory}: ServiceList
                   rowCount={dataFiltered.length}
                   numSelected={table.selected.length}
                   onSort={table.onSort}
-                  onSelectAllRows={(checked) =>
+                  onSelectAllRows={(checked) => {
                     table.onSelectAllRows(
                       checked,
-                      dataFiltered.map((row) => row.id),
+                      dataFiltered.map((row) => row.id)
                     )
+                  }
                   }
                 />
 
@@ -311,16 +306,16 @@ export default function ServiceListView({services, servicecategory}: ServiceList
                   {dataFiltered
                     .slice(
                       table.page * table.rowsPerPage,
-                      table.page * table.rowsPerPage + table.rowsPerPage,
+                      table.page * table.rowsPerPage + table.rowsPerPage
                     )
                     .map((row) => (
                       <UserTableRow
                         key={row.id}
                         row={row}
                         selected={table.selected.includes(row.id)}
-                        onSelectRow={() => table.onSelectRow(row.id)}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
-                        onEditRow={() => handleEditRow(row.id)}
+                        onSelectRow={() => { table.onSelectRow(row.id) }}
+                        onDeleteRow={() => { handleDeleteRow(row.id) }}
+                        onEditRow={() => { handleEditRow(row.id) }}
                       />
                     ))}
 
@@ -329,7 +324,7 @@ export default function ServiceListView({services, servicecategory}: ServiceList
                     emptyRows={emptyRows(
                       table.page,
                       table.rowsPerPage,
-                      dataFiltered.length,
+                      dataFiltered.length
                     )}
                   />
 
@@ -358,7 +353,7 @@ export default function ServiceListView({services, servicecategory}: ServiceList
         title="Delete"
         content={
           <>
-            Are you sure want to delete{" "}
+            Are you sure want to delete{' '}
             <strong> {table.selected.length} </strong> items?
           </>
         }
@@ -367,8 +362,8 @@ export default function ServiceListView({services, servicecategory}: ServiceList
             variant="contained"
             color="error"
             onClick={() => {
-              handleDeleteRows();
-              confirm.onFalse();
+              handleDeleteRows()
+              confirm.onFalse()
             }}
           >
             Delete
@@ -376,48 +371,48 @@ export default function ServiceListView({services, servicecategory}: ServiceList
         }
       />
     </>
-  );
+  )
 }
 
 // ----------------------------------------------------------------------
 
-function applyFilter({
+function applyFilter ({
   inputData,
   comparator,
-  filters,
+  filters
 }: {
-  inputData: IServiceItem[];
-  comparator: (a: any, b: any) => number;
-  filters: IUserTableFilters;
+  inputData: IServiceItem[]
+  comparator: (a: any, b: any) => number
+  filters: IUserTableFilters
 }) {
-  const { name, status, productcategory } = filters;
+  const { name, status, productcategory } = filters
 
-  const stabilizedThis = inputData.map((el, index) => [el, index] as const);
+  const stabilizedThis = inputData.map((el, index) => [el, index] as const)
 
   stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
+    const order = comparator(a[0], b[0])
+    if (order !== 0) return order
+    return a[1] - b[1]
+  })
 
-  inputData = stabilizedThis.map((el) => el[0]);
+  inputData = stabilizedThis.map((el) => el[0])
 
   if (name) {
     inputData = inputData.filter(
       (service) =>
-        service.name.toLowerCase().indexOf(name.toLowerCase()) !== -1,
-    );
+        service.name.toLowerCase().includes(name.toLowerCase())
+    )
   }
 
-  //if (status !== "all") {
-  //inputData = inputData.filter((user) => user.status === status);
-  //}
+  // if (status !== "all") {
+  // inputData = inputData.filter((user) => user.status === status);
+  // }
 
-  if (productcategory.length) {
+  if (productcategory.length > 0) {
     inputData = inputData.filter((service) =>
-      productcategory.includes(service.ProductCategory.name),
-    );
+      productcategory.includes(service.ProductCategory.name)
+    )
   }
 
-  return inputData;
+  return inputData
 }

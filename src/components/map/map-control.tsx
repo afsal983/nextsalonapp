@@ -2,25 +2,25 @@ import {
   ScaleControl,
   GeolocateControl,
   NavigationControl,
-  FullscreenControl,
-} from "react-map-gl";
+  FullscreenControl
+} from 'react-map-gl'
 
-import { StyledMapControls } from "./styles";
+import { StyledMapControls } from './styles'
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  hideScaleControl?: boolean;
-  hideGeolocateControl?: boolean;
-  hideFullscreenControl?: boolean;
-  hideNavigationnControl?: boolean;
-};
+interface Props {
+  hideScaleControl?: boolean
+  hideGeolocateControl?: boolean
+  hideFullscreenControl?: boolean
+  hideNavigationnControl?: boolean
+}
 
-export default function MapControl({
+export default function MapControl ({
   hideScaleControl,
   hideGeolocateControl,
   hideFullscreenControl,
-  hideNavigationnControl,
+  hideNavigationnControl
 }: Props) {
   return (
     <>
@@ -39,5 +39,5 @@ export default function MapControl({
 
       {!hideNavigationnControl && <NavigationControl position="bottom-left" />}
     </>
-  );
+  )
 }

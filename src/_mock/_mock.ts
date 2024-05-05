@@ -1,6 +1,6 @@
-import { sub } from "date-fns";
+import { sub } from 'date-fns'
 
-import { ASSETS_API } from "src/config-global";
+import { ASSETS_API } from 'src/config-global'
 
 import {
   _id,
@@ -26,8 +26,8 @@ import {
   _companyNames,
   _productNames,
   _descriptions,
-  _phoneNumbers,
-} from "./assets";
+  _phoneNumbers
+} from './assets'
 
 // ----------------------------------------------------------------------
 
@@ -61,7 +61,7 @@ export const _mock = {
     price: (index: number) => _prices[index],
     nativeS: (index: number) => _nativeS[index],
     nativeM: (index: number) => _nativeM[index],
-    nativeL: (index: number) => _nativeL[index],
+    nativeL: (index: number) => _nativeL[index]
   },
   // Image
   image: {
@@ -76,6 +76,6 @@ export const _mock = {
     product: (index: number) =>
       `${ASSETS_API}/assets/images/m_product/product_${index + 1}.jpg`,
     portrait: (index: number) =>
-      `${ASSETS_API}/assets/images/portrait/portrait_${index + 1}.jpg`,
-  },
-};
+      `${ASSETS_API}/assets/images/portrait/portrait_${index + 1}.jpg`
+  }
+}

@@ -1,13 +1,13 @@
-import { memo } from "react";
+import { memo } from 'react'
 
-import Stack from "@mui/material/Stack";
+import Stack from '@mui/material/Stack'
 
-import NavList from "./nav-list";
-import { NavProps } from "../types";
+import NavList from './nav-list'
+import { type NavProps } from '../types'
 
 // ----------------------------------------------------------------------
 
-function NavBasicDesktop({ data, slotProps, ...other }: NavProps) {
+function NavBasicDesktop ({ data, slotProps, ...other }: NavProps) {
   return (
     <Stack
       component="nav"
@@ -20,7 +20,7 @@ function NavBasicDesktop({ data, slotProps, ...other }: NavProps) {
         <NavList key={list.title} data={list} depth={1} slotProps={slotProps} />
       ))}
     </Stack>
-  );
+  )
 }
 
-export default memo(NavBasicDesktop);
+export default memo(NavBasicDesktop)

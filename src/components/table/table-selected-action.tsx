@@ -1,18 +1,18 @@
-import Checkbox from "@mui/material/Checkbox";
-import Typography from "@mui/material/Typography";
-import Stack, { StackProps } from "@mui/material/Stack";
+import Checkbox from '@mui/material/Checkbox'
+import Typography from '@mui/material/Typography'
+import Stack, { type StackProps } from '@mui/material/Stack'
 
 // ----------------------------------------------------------------------
 
 interface Props extends StackProps {
-  dense?: boolean;
-  action?: React.ReactNode;
-  rowCount: number;
-  numSelected: number;
-  onSelectAllRows: (checked: boolean) => void;
+  dense?: boolean
+  action?: React.ReactNode
+  rowCount: number
+  numSelected: number
+  onSelectAllRows: (checked: boolean) => void
 }
 
-export default function TableSelectedAction({
+export default function TableSelectedAction ({
   dense,
   action,
   rowCount,
@@ -22,7 +22,7 @@ export default function TableSelectedAction({
   ...other
 }: Props) {
   if (!numSelected) {
-    return null;
+    return null
   }
 
   return (
@@ -37,20 +37,19 @@ export default function TableSelectedAction({
         width: 1,
         zIndex: 9,
         height: 58,
-        position: "absolute",
-        bgcolor: "primary.lighter",
+        position: 'absolute',
+        bgcolor: 'primary.lighter',
         ...(dense && {
-          height: 38,
+          height: 38
         }),
-        ...sx,
+        ...sx
       }}
       {...other}
     >
       <Checkbox
         indeterminate={!!numSelected && numSelected < rowCount}
         checked={!!rowCount && numSelected === rowCount}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-          onSelectAllRows(event.target.checked)
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => { onSelectAllRows(event.target.checked) }
         }
       />
 
@@ -59,10 +58,10 @@ export default function TableSelectedAction({
         sx={{
           ml: 2,
           flexGrow: 1,
-          color: "primary.main",
+          color: 'primary.main',
           ...(dense && {
-            ml: 3,
-          }),
+            ml: 3
+          })
         }}
       >
         {numSelected} selected
@@ -70,5 +69,5 @@ export default function TableSelectedAction({
 
       {action && action}
     </Stack>
-  );
+  )
 }

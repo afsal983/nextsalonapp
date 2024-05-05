@@ -1,11 +1,11 @@
-import Stack from "@mui/material/Stack";
+import Stack from '@mui/material/Stack'
 
-import NavList from "./nav-list";
-import { NavProps } from "../types";
+import NavList from './nav-list'
+import { type NavProps } from '../types'
 
 // ----------------------------------------------------------------------
 
-export default function MegaMenuMobile({
+export default function MegaMenuMobile ({
   data,
   slotProps,
   ...other
@@ -16,5 +16,5 @@ export default function MegaMenuMobile({
         <NavList key={list.title} data={list} slotProps={slotProps} />
       ))}
     </Stack>
-  );
+  )
 }

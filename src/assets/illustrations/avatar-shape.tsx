@@ -1,10 +1,10 @@
-import { memo } from "react";
+import { memo } from 'react'
 
-import Box, { BoxProps } from "@mui/material/Box";
+import Box, { type BoxProps } from '@mui/material/Box'
 
 // ----------------------------------------------------------------------
 
-function AvatarShape({ sx, ...other }: BoxProps) {
+function AvatarShape ({ sx, ...other }: BoxProps) {
   return (
     <Box
       component="svg"
@@ -14,8 +14,8 @@ function AvatarShape({ sx, ...other }: BoxProps) {
       viewBox="0 0 144 62"
       xmlns="http://www.w3.org/2000/svg"
       sx={{
-        color: "background.paper",
-        ...sx,
+        color: 'background.paper',
+        ...sx
       }}
       {...other}
     >
@@ -25,7 +25,7 @@ function AvatarShape({ sx, ...other }: BoxProps) {
         fillRule="evenodd"
       />
     </Box>
-  );
+  )
 }
 
-export default memo(AvatarShape);
+export default memo(AvatarShape)

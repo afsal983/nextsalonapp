@@ -1,16 +1,16 @@
 /* eslint-disable perfectionist/sort-imports */
-import "src/utils/highlight";
+import 'src/utils/highlight'
 
-import dynamic from "next/dynamic";
+import dynamic from 'next/dynamic'
 
-import { alpha } from "@mui/material/styles";
-import Skeleton from "@mui/material/Skeleton";
+import { alpha } from '@mui/material/styles'
+import Skeleton from '@mui/material/Skeleton'
 
-import { EditorProps } from "./types";
-import { StyledEditor } from "./styles";
-import Toolbar, { formats } from "./toolbar";
+import { type EditorProps } from './types'
+import { StyledEditor } from './styles'
+import Toolbar, { formats } from './toolbar'
 
-const ReactQuill = dynamic(() => import("react-quill"), {
+const ReactQuill = dynamic(async () => import('react-quill'), {
   ssr: false,
   loading: () => (
     <Skeleton
@@ -21,16 +21,16 @@ const ReactQuill = dynamic(() => import("react-quill"), {
         bottom: 0,
         height: 1,
         borderRadius: 1,
-        position: "absolute",
+        position: 'absolute'
       }}
     />
-  ),
-});
+  )
+})
 
 // ----------------------------------------------------------------------
 
-export default function Editor({
-  id = "minimal-quill",
+export default function Editor ({
+  id = 'minimal-quill',
   error,
   simple = false,
   helperText,
@@ -39,18 +39,18 @@ export default function Editor({
 }: EditorProps) {
   const modules = {
     toolbar: {
-      container: `#${id}`,
+      container: `#${id}`
     },
     history: {
       delay: 500,
       maxStack: 100,
-      userOnly: true,
+      userOnly: true
     },
     syntax: true,
     clipboard: {
-      matchVisual: false,
-    },
-  };
+      matchVisual: false
+    }
+  }
 
   return (
     <>
@@ -58,11 +58,11 @@ export default function Editor({
         sx={{
           ...(error && {
             border: (theme) => `solid 1px ${theme.palette.error.main}`,
-            "& .ql-editor": {
-              bgcolor: (theme) => alpha(theme.palette.error.main, 0.08),
-            },
+            '& .ql-editor': {
+              bgcolor: (theme) => alpha(theme.palette.error.main, 0.08)
+            }
           }),
-          ...sx,
+          ...sx
         }}
       >
         <Toolbar id={id} simple={simple} />
@@ -77,5 +77,5 @@ export default function Editor({
 
       {helperText && helperText}
     </>
-  );
+  )
 }

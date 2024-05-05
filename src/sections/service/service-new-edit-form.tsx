@@ -1,92 +1,73 @@
-import * as Yup from "yup";
-import { useMemo, useCallback, useState } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from 'yup'
+import { useForm } from 'react-hook-form'
+import { useMemo, useState } from 'react'
+import { MuiColorInput } from 'mui-color-input'
+import { yupResolver } from '@hookform/resolvers/yup'
 
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Switch from "@mui/material/Switch";
-import Grid from "@mui/material/Unstable_Grid2";
-import Typography from "@mui/material/Typography";
-import LoadingButton from "@mui/lab/LoadingButton";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import { MuiColorInput } from "mui-color-input";
+import Box from '@mui/material/Box'
+import Card from '@mui/material/Card'
+import Stack from '@mui/material/Stack'
+import Grid from '@mui/material/Unstable_Grid2'
+import LoadingButton from '@mui/lab/LoadingButton'
 
-import { paths } from "src/routes/paths";
-import { useRouter } from "src/routes/hooks";
+import { paths } from 'src/routes/paths'
+import { useRouter } from 'src/routes/hooks'
 
-import { fData } from "src/utils/format-number";
-
-import { countries } from "src/assets/data";
-
-import Label from "src/components/label";
-import { useSnackbar } from "src/components/snackbar";
+import { useSnackbar } from 'src/components/snackbar'
 import FormProvider, {
   RHFSwitch,
   RHFTextField,
-  RHFUploadAvatar,
-  RHFAutocomplete,
-} from "src/components/hook-form";
+  RHFAutocomplete
+} from 'src/components/hook-form'
 
-import { ServiceCategoryItem, ServiceItem } from "src/types/service";
-
-import useSWR from "swr";
-import { fetcher } from "src/utils/axios";
+import { type ServiceItem, type ServiceCategoryItem } from 'src/types/service'
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  currentService?: ServiceItem;
-  productcategory: ServiceCategoryItem[];
-};
+interface Props {
+  currentService?: ServiceItem
+  servicecategory: ServiceCategoryItem[]
+}
 
-export default function ServiceNewEditForm({ currentService, productcategory }: Props) {
-  const router = useRouter();
-  const [color, setColor] = useState("#ffffff");
+export default function ServiceNewEditForm ({ currentService, servicecategory }: Props) {
+  const router = useRouter()
+  const [color, setColor] = useState('#ffffff')
 
+  const category = servicecategory.map((item) => item.name)
 
-  const category = productcategory.map((item) => item.name);
+  const { enqueueSnackbar } = useSnackbar()
 
-
-  const { enqueueSnackbar } = useSnackbar();
-
-
-  if (currentService) {
+  const handleChange = (newcolor: string) => {
+    setColor(newcolor)
   }
 
-  const handleChange = (color: string) => {
-    setColor(color);
-  };
-
   const NewUserSchema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
-    duration: Yup.number().positive("Must be non zero value").required("Duration is required"),
-    tax: Yup.number().required("Tax is required"),
-    color: Yup.string().required("Country is required"),
-    price: Yup.number().positive("Must be non zero value").required("Price is required"),
-    category: Yup.string().required("Category is required"),
-    onthetop: Yup.boolean(),
-  });
+    name: Yup.string().required('Name is required'),
+    duration: Yup.number().positive('Must be non zero value').required('Duration is required'),
+    tax: Yup.number().required('Tax is required'),
+    color: Yup.string().required('Country is required'),
+    price: Yup.number().positive('Must be non zero value').required('Price is required'),
+    category: Yup.number().required('Category is required'),
+    onthetop: Yup.boolean()
+  })
 
   const defaultValues = useMemo(
     () => ({
-      name: currentService?.name || "",
+      name: currentService?.name || '',
       duration: currentService?.duration || 15,
       tax: currentService?.tax || 0,
-      color: currentService?.color || "#ffffff",
+      color: currentService?.color || '#ffffff',
       price: currentService?.price || 0,
-      category: currentService?.category || "",
-      onthetop: currentService?.onthetop || true,
+      category: currentService?.category || 0,
+      onthetop: currentService?.onthetop || true
     }),
-    [currentService],
-  );
+    [currentService]
+  )
 
   const methods = useForm({
     resolver: yupResolver(NewUserSchema),
-    defaultValues,
-  });
+    defaultValues
+  })
 
   const {
     reset,
@@ -94,24 +75,23 @@ export default function ServiceNewEditForm({ currentService, productcategory }: 
     control,
     setValue,
     handleSubmit,
-    formState: { isSubmitting },
-  } = methods;
+    formState: { isSubmitting }
+  } = methods
 
-  const values = watch();
+  const values = watch()
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log("dddddd");
+    console.log('dddddd')
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      enqueueSnackbar(currentService ? "Update success!" : "Create success!");
-      router.push(paths.dashboard.services.list);
-      console.info("DATA", data);
+      await new Promise((resolve) => setTimeout(resolve, 500))
+      reset()
+      enqueueSnackbar(currentService ? 'Update success!' : 'Create success!')
+      router.push(paths.dashboard.services.list)
+      console.info('DATA', data)
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  });
-
+  })
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -123,8 +103,8 @@ export default function ServiceNewEditForm({ currentService, productcategory }: 
               columnGap={2}
               display="grid"
               gridTemplateColumns={{
-                xs: "repeat(1, 1fr)",
-                sm: "repeat(2, 1fr)",
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)'
               }}
             >
               <RHFTextField name="name" label="Service Name" />
@@ -162,12 +142,12 @@ export default function ServiceNewEditForm({ currentService, productcategory }: 
                 variant="contained"
                 loading={isSubmitting}
               >
-                {!currentService ? "Create Service" : "Save Changes"}
+                {!currentService ? 'Create Service' : 'Save Changes'}
               </LoadingButton>
             </Stack>
           </Card>
         </Grid>
       </Grid>
     </FormProvider>
-  );
+  )
 }

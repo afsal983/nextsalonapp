@@ -1,36 +1,37 @@
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import Tooltip from "@mui/material/Tooltip";
-import { Theme, SxProps } from "@mui/material/styles";
+import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import Tooltip from '@mui/material/Tooltip'
+import { type Theme, type SxProps } from '@mui/material/styles'
 
-import DownloadButton from "./download-button";
-import { fileData, fileThumb, fileFormat } from "./utils";
+import DownloadButton from './download-button'
+import { fileData, fileThumb, fileFormat } from './utils'
 
 // ----------------------------------------------------------------------
 
-type FileIconProps = {
-  file: File | string;
-  tooltip?: boolean;
-  imageView?: boolean;
-  onDownload?: VoidFunction;
-  sx?: SxProps<Theme>;
-  imgSx?: SxProps<Theme>;
-};
+interface FileIconProps {
+  file: File | string
+  tooltip?: boolean
+  imageView?: boolean
+  onDownload?: VoidFunction
+  sx?: SxProps<Theme>
+  imgSx?: SxProps<Theme>
+}
 
-export default function FileThumbnail({
+export default function FileThumbnail ({
   file,
   tooltip,
   imageView,
   onDownload,
   sx,
-  imgSx,
+  imgSx
 }: FileIconProps) {
-  const { name = "", path = "", preview = "" } = fileData(file);
+  const { name = '', path = '', preview = '' } = fileData(file)
 
-  const format = fileFormat(path || preview);
+  const format = fileFormat(path || preview)
 
   const renderContent =
-    format === "image" && imageView ? (
+    format === 'image' && imageView
+      ? (
       <Box
         component="img"
         src={preview}
@@ -38,11 +39,12 @@ export default function FileThumbnail({
           width: 1,
           height: 1,
           flexShrink: 0,
-          objectFit: "cover",
-          ...imgSx,
+          objectFit: 'cover',
+          ...imgSx
         }}
       />
-    ) : (
+        )
+      : (
       <Box
         component="img"
         src={fileThumb(format)}
@@ -50,10 +52,10 @@ export default function FileThumbnail({
           width: 32,
           height: 32,
           flexShrink: 0,
-          ...sx,
+          ...sx
         }}
       />
-    );
+        )
 
   if (tooltip) {
     return (
@@ -64,15 +66,15 @@ export default function FileThumbnail({
           alignItems="center"
           justifyContent="center"
           sx={{
-            width: "fit-content",
-            height: "inherit",
+            width: 'fit-content',
+            height: 'inherit'
           }}
         >
           {renderContent}
           {onDownload && <DownloadButton onDownload={onDownload} />}
         </Stack>
       </Tooltip>
-    );
+    )
   }
 
   return (
@@ -80,5 +82,5 @@ export default function FileThumbnail({
       {renderContent}
       {onDownload && <DownloadButton onDownload={onDownload} />}
     </>
-  );
+  )
 }

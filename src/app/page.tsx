@@ -1,19 +1,19 @@
-"use client";
+'use client'
 
-import { useEffect } from "react";
+import { useEffect } from 'react'
 
-import { useRouter } from "src/routes/hooks";
+import { useRouter } from 'src/routes/hooks'
 
-import { PATH_AFTER_LOGIN } from "src/config-global";
+import { PATH_AFTER_LOGIN } from 'src/config-global'
 
 // ----------------------------------------------------------------------
 
-export default function HomePage() {
-  const router = useRouter();
+export default function HomePage () {
+  const router = useRouter()
 
   useEffect(() => {
-    router.push(PATH_AFTER_LOGIN);
-  }, [router]);
+    router.push(PATH_AFTER_LOGIN)
+  }, [router])
 
-  return null;
+  return null
 }

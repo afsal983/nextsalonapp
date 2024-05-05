@@ -1,11 +1,11 @@
-import Stack from "@mui/material/Stack";
+import Stack from '@mui/material/Stack'
 
-import NavList from "./nav-list";
-import { NavProps } from "../types";
+import NavList from './nav-list'
+import { type NavProps } from '../types'
 
 // ----------------------------------------------------------------------
 
-export default function MegaMenuDesktopVertical({
+export default function MegaMenuDesktopVertical ({
   data,
   sx,
   slotProps,
@@ -16,8 +16,8 @@ export default function MegaMenuDesktopVertical({
       component="nav"
       id="mega-menu-desktop-vertical"
       sx={{
-        position: "relative",
-        ...sx,
+        position: 'relative',
+        ...sx
       }}
       {...other}
     >
@@ -25,5 +25,5 @@ export default function MegaMenuDesktopVertical({
         <NavList key={list.title} data={list} slotProps={slotProps} />
       ))}
     </Stack>
-  );
+  )
 }

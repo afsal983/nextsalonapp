@@ -1,19 +1,19 @@
-import Box from "@mui/material/Box";
-import { alpha } from "@mui/material/styles";
-import ButtonBase from "@mui/material/ButtonBase";
+import Box from '@mui/material/Box'
+import { alpha } from '@mui/material/styles'
+import ButtonBase from '@mui/material/ButtonBase'
 
-import { presetOptions } from "src/theme/options/presets";
+import { presetOptions } from 'src/theme/options/presets'
 
 // ----------------------------------------------------------------------
 
-type PresetsOptionsProps = {
-  value: string;
-  onChange: (newValue: string) => void;
-};
+interface PresetsOptionsProps {
+  value: string
+  onChange: (newValue: string) => void
+}
 
-export default function PresetsOptions({
+export default function PresetsOptions ({
   value,
-  onChange,
+  onChange
 }: PresetsOptionsProps) {
   return (
     <Box
@@ -23,41 +23,41 @@ export default function PresetsOptions({
       gridTemplateColumns="repeat(3, 1fr)"
     >
       {presetOptions.map((option) => {
-        const selected = value === option.name;
+        const selected = value === option.name
 
         return (
           <ButtonBase
             key={option.name}
-            onClick={() => onChange(option.name)}
+            onClick={() => { onChange(option.name) }}
             sx={{
               height: 56,
               borderRadius: 1,
               border: (theme) =>
                 `solid 1px ${alpha(theme.palette.grey[500], 0.08)}`,
               ...(selected && {
-                borderColor: "transparent",
-                bgcolor: alpha(option.value, 0.08),
-              }),
+                borderColor: 'transparent',
+                bgcolor: alpha(option.value, 0.08)
+              })
             }}
           >
             <Box
               sx={{
                 width: 12,
                 height: 12,
-                borderRadius: "50%",
+                borderRadius: '50%',
                 bgcolor: option.value,
                 transition: (theme) =>
-                  theme.transitions.create(["transform"], {
-                    duration: theme.transitions.duration.shorter,
+                  theme.transitions.create(['transform'], {
+                    duration: theme.transitions.duration.shorter
                   }),
                 ...(selected && {
-                  transform: "scale(2)",
-                }),
+                  transform: 'scale(2)'
+                })
               }}
             />
           </ButtonBase>
-        );
+        )
       })}
     </Box>
-  );
+  )
 }

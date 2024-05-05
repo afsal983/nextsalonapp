@@ -1,18 +1,18 @@
-"use client";
+'use client'
 
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { LocalizationProvider as MuiLocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { LocalizationProvider as MuiLocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 
-import { useLocales } from "./use-locales";
+import { useLocales } from './use-locales'
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  children: React.ReactNode;
-};
+interface Props {
+  children: React.ReactNode
+}
 
-export default function LocalizationProvider({ children }: Props) {
-  const { currentLang } = useLocales();
+export default function LocalizationProvider ({ children }: Props) {
+  const { currentLang } = useLocales()
 
   return (
     <MuiLocalizationProvider
@@ -21,5 +21,5 @@ export default function LocalizationProvider({ children }: Props) {
     >
       {children}
     </MuiLocalizationProvider>
-  );
+  )
 }

@@ -1,22 +1,22 @@
-import { memo } from "react";
+import { memo } from 'react'
 
-import { useTheme } from "@mui/material/styles";
-import Box, { BoxProps } from "@mui/material/Box";
+import { useTheme } from '@mui/material/styles'
+import Box, { type BoxProps } from '@mui/material/Box'
 
 // ----------------------------------------------------------------------
 
-function BookingIllustration({ ...other }: BoxProps) {
-  const theme = useTheme();
+function BookingIllustration ({ ...other }: BoxProps) {
+  const theme = useTheme()
 
-  const PRIMARY_LIGHTER = theme.palette.primary.lighter;
+  const PRIMARY_LIGHTER = theme.palette.primary.lighter
 
-  const PRIMARY_LIGHT = theme.palette.primary.light;
+  const PRIMARY_LIGHT = theme.palette.primary.light
 
-  const PRIMARY_MAIN = theme.palette.primary.main;
+  const PRIMARY_MAIN = theme.palette.primary.main
 
-  const PRIMARY_DARK = theme.palette.primary.dark;
+  const PRIMARY_DARK = theme.palette.primary.dark
 
-  const PRIMARY_DARKER = theme.palette.primary.darker;
+  const PRIMARY_DARKER = theme.palette.primary.darker
 
   return (
     <Box
@@ -329,7 +329,7 @@ function BookingIllustration({ ...other }: BoxProps) {
         />
       </g>
     </Box>
-  );
+  )
 }
 
-export default memo(BookingIllustration);
+export default memo(BookingIllustration)

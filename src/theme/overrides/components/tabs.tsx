@@ -1,20 +1,20 @@
-import { Theme } from "@mui/material/styles";
-import { tabClasses } from "@mui/material/Tab";
+import { tabClasses } from '@mui/material/Tab'
+import { type Theme } from '@mui/material/styles'
 
 // ----------------------------------------------------------------------
 
-export function tabs(theme: Theme) {
+export function tabs (theme: Theme) {
   return {
     MuiTabs: {
       styleOverrides: {
         indicator: {
-          backgroundColor: theme.palette.text.primary,
+          backgroundColor: theme.palette.text.primary
         },
         scrollButtons: {
           width: 48,
-          borderRadius: "50%",
-        },
-      },
+          borderRadius: '50%'
+        }
+      }
     },
     MuiTab: {
       styleOverrides: {
@@ -24,17 +24,17 @@ export function tabs(theme: Theme) {
           minWidth: 48,
           minHeight: 48,
           fontWeight: theme.typography.fontWeightSemiBold,
-          "&:not(:last-of-type)": {
+          '&:not(:last-of-type)': {
             marginRight: theme.spacing(3),
-            [theme.breakpoints.up("sm")]: {
-              marginRight: theme.spacing(5),
-            },
+            [theme.breakpoints.up('sm')]: {
+              marginRight: theme.spacing(5)
+            }
           },
           [`&:not(.${tabClasses.selected})`]: {
-            color: theme.palette.text.secondary,
-          },
-        },
-      },
-    },
-  };
+            color: theme.palette.text.secondary
+          }
+        }
+      }
+    }
+  }
 }

@@ -1,14 +1,14 @@
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
 
-import { ConfirmDialogProps } from "./types";
+import { type ConfirmDialogProps } from './types'
 
 // ----------------------------------------------------------------------
 
-export default function ConfirmDialog({
+export default function ConfirmDialog ({
   title,
   content,
   action,
@@ -21,7 +21,7 @@ export default function ConfirmDialog({
       <DialogTitle sx={{ pb: 2 }}>{title}</DialogTitle>
 
       {content && (
-        <DialogContent sx={{ typography: "body2" }}> {content} </DialogContent>
+        <DialogContent sx={{ typography: 'body2' }}> {content} </DialogContent>
       )}
 
       <DialogActions>
@@ -32,5 +32,5 @@ export default function ConfirmDialog({
         </Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }

@@ -1,14 +1,14 @@
-import { forwardRef } from "react";
-import { Icon } from "@iconify/react";
+import { forwardRef } from 'react'
+import { Icon } from '@iconify/react'
 
-import Box, { BoxProps } from "@mui/material/Box";
+import Box, { type BoxProps } from '@mui/material/Box'
 
-import { IconifyProps } from "./types";
+import { type IconifyProps } from './types'
 
 // ----------------------------------------------------------------------
 
 interface Props extends BoxProps {
-  icon: IconifyProps;
+  icon: IconifyProps
 }
 
 const Iconify = forwardRef<SVGElement, Props>(
@@ -21,7 +21,7 @@ const Iconify = forwardRef<SVGElement, Props>(
       sx={{ width, height: width, ...sx }}
       {...other}
     />
-  ),
-);
+  )
+)
 
-export default Iconify;
+export default Iconify

@@ -1,9 +1,9 @@
-"use client";
+'use client'
 
-import { LoadingScreen } from "src/components/loading-screen";
+import { LoadingScreen } from 'src/components/loading-screen'
 
 // ----------------------------------------------------------------------
 
-export default function Loading() {
-  return <LoadingScreen />;
+export default function Loading () {
+  return <LoadingScreen />
 }

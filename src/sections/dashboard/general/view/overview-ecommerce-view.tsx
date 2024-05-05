@@ -1,43 +1,38 @@
-"use client";
+'use client'
 
-import Button from "@mui/material/Button";
-import { useTheme } from "@mui/material/styles";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Unstable_Grid2";
+import { useTheme } from '@mui/material/styles'
+import Container from '@mui/material/Container'
+import Grid from '@mui/material/Unstable_Grid2'
 
-import { useMockedUser } from "src/hooks/use-mocked-user";
+import { useMockedUser } from 'src/hooks/use-mocked-user'
 
-import { MotivationIllustration } from "src/assets/illustrations";
 import {
-  _ecommerceNewProducts,
   _ecommerceBestSalesman,
   _ecommerceSalesOverview,
-  _ecommerceLatestProducts,
-} from "src/_mock";
+  _ecommerceLatestProducts
+} from 'src/_mock'
 
-import { useSettingsContext } from "src/components/settings";
+import { useSettingsContext } from 'src/components/settings'
 
-import EcommerceWelcome from "../ecommerce-welcome";
-import EcommerceNewProducts from "../ecommerce-new-products";
-import EcommerceYearlySales from "../ecommerce-yearly-sales";
-import EcommerceBestSalesman from "../ecommerce-best-salesman";
-import EcommerceSaleByGender from "../ecommerce-sale-by-gender";
-import EcommerceSalesOverview from "../ecommerce-sales-overview";
-import EcommerceWidgetSummary from "../ecommerce-widget-summary";
-import EcommerceLatestProducts from "../ecommerce-latest-products";
-import EcommerceCurrentBalance from "../ecommerce-current-balance";
+import EcommerceYearlySales from '../ecommerce-yearly-sales'
+import EcommerceBestSalesman from '../ecommerce-best-salesman'
+import EcommerceSaleByGender from '../ecommerce-sale-by-gender'
+import EcommerceSalesOverview from '../ecommerce-sales-overview'
+import EcommerceWidgetSummary from '../ecommerce-widget-summary'
+import EcommerceLatestProducts from '../ecommerce-latest-products'
+import EcommerceCurrentBalance from '../ecommerce-current-balance'
 
 // ----------------------------------------------------------------------
 
-export default function OverviewEcommerceView() {
-  const { user } = useMockedUser();
+export default function OverviewEcommerceView () {
+  const { user } = useMockedUser()
 
-  const theme = useTheme();
+  const theme = useTheme()
 
-  const settings = useSettingsContext();
+  const settings = useSettingsContext()
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : "xl"}>
+    <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <Grid container spacing={3}>
         <Grid xs={12} md={4}>
           <EcommerceWidgetSummary
@@ -45,7 +40,7 @@ export default function OverviewEcommerceView() {
             percent={2.6}
             total={765}
             chart={{
-              series: [22, 8, 35, 50, 82, 84, 77, 12, 87, 43],
+              series: [22, 8, 35, 50, 82, 84, 77, 12, 87, 43]
             }}
           />
         </Grid>
@@ -57,7 +52,7 @@ export default function OverviewEcommerceView() {
             total={18765}
             chart={{
               colors: [theme.palette.info.light, theme.palette.info.main],
-              series: [56, 47, 40, 62, 73, 30, 23, 54, 67, 68],
+              series: [56, 47, 40, 62, 73, 30, 23, 54, 67, 68]
             }}
           />
         </Grid>
@@ -69,7 +64,7 @@ export default function OverviewEcommerceView() {
             total={4876}
             chart={{
               colors: [theme.palette.warning.light, theme.palette.warning.main],
-              series: [40, 70, 75, 70, 50, 28, 7, 64, 38, 27],
+              series: [40, 70, 75, 70, 50, 28, 7, 64, 38, 27]
             }}
           />
         </Grid>
@@ -80,9 +75,9 @@ export default function OverviewEcommerceView() {
             total={2324}
             chart={{
               series: [
-                { label: "Mens", value: 44 },
-                { label: "Womens", value: 75 },
-              ],
+                { label: 'Mens', value: 44 },
+                { label: 'Womens', value: 75 }
+              ]
             }}
           />
         </Grid>
@@ -93,47 +88,47 @@ export default function OverviewEcommerceView() {
             subheader="(+43%) than last year"
             chart={{
               categories: [
-                "Jan",
-                "Feb",
-                "Mar",
-                "Apr",
-                "May",
-                "Jun",
-                "Jul",
-                "Aug",
-                "Sep",
-                "Oct",
-                "Nov",
-                "Dec",
+                'Jan',
+                'Feb',
+                'Mar',
+                'Apr',
+                'May',
+                'Jun',
+                'Jul',
+                'Aug',
+                'Sep',
+                'Oct',
+                'Nov',
+                'Dec'
               ],
               series: [
                 {
-                  year: "2019",
+                  year: '2019',
                   data: [
                     {
-                      name: "Total Income",
-                      data: [10, 41, 35, 51, 49, 62, 69, 91, 148, 35, 51, 49],
+                      name: 'Total Income',
+                      data: [10, 41, 35, 51, 49, 62, 69, 91, 148, 35, 51, 49]
                     },
                     {
-                      name: "Total Expenses",
-                      data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 13, 56, 77],
-                    },
-                  ],
+                      name: 'Total Expenses',
+                      data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 13, 56, 77]
+                    }
+                  ]
                 },
                 {
-                  year: "2020",
+                  year: '2020',
                   data: [
                     {
-                      name: "Total Income",
-                      data: [51, 35, 41, 10, 91, 69, 62, 148, 91, 69, 62, 49],
+                      name: 'Total Income',
+                      data: [51, 35, 41, 10, 91, 69, 62, 148, 91, 69, 62, 49]
                     },
                     {
-                      name: "Total Expenses",
-                      data: [56, 13, 34, 10, 77, 99, 88, 45, 77, 99, 88, 77],
-                    },
-                  ],
-                },
-              ],
+                      name: 'Total Expenses',
+                      data: [56, 13, 34, 10, 77, 99, 88, 45, 77, 99, 88, 77]
+                    }
+                  ]
+                }
+              ]
             }}
           />
         </Grid>
@@ -158,11 +153,11 @@ export default function OverviewEcommerceView() {
             title="Best Salesman"
             tableData={_ecommerceBestSalesman}
             tableLabels={[
-              { id: "name", label: "Seller" },
-              { id: "category", label: "Product" },
-              { id: "country", label: "Country", align: "center" },
-              { id: "totalAmount", label: "Total", align: "right" },
-              { id: "rank", label: "Rank", align: "right" },
+              { id: 'name', label: 'Seller' },
+              { id: 'category', label: 'Product' },
+              { id: 'country', label: 'Country', align: 'center' },
+              { id: 'totalAmount', label: 'Total', align: 'right' },
+              { id: 'rank', label: 'Rank', align: 'right' }
             ]}
           />
         </Grid>
@@ -175,5 +170,5 @@ export default function OverviewEcommerceView() {
         </Grid>
       </Grid>
     </Container>
-  );
+  )
 }

@@ -1,35 +1,35 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback } from 'react'
 
 // ----------------------------------------------------------------------
 
 interface ReturnType {
-  value: boolean;
-  onTrue: () => void;
-  onFalse: () => void;
-  onToggle: () => void;
-  setValue: React.Dispatch<React.SetStateAction<boolean>>;
+  value: boolean
+  onTrue: () => void
+  onFalse: () => void
+  onToggle: () => void
+  setValue: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export function useBoolean(defaultValue?: boolean): ReturnType {
-  const [value, setValue] = useState(!!defaultValue);
+export function useBoolean (defaultValue?: boolean): ReturnType {
+  const [value, setValue] = useState(!!defaultValue)
 
   const onTrue = useCallback(() => {
-    setValue(true);
-  }, []);
+    setValue(true)
+  }, [])
 
   const onFalse = useCallback(() => {
-    setValue(false);
-  }, []);
+    setValue(false)
+  }, [])
 
   const onToggle = useCallback(() => {
-    setValue((prev) => !prev);
-  }, []);
+    setValue((prev) => !prev)
+  }, [])
 
   return {
     value,
     onTrue,
     onFalse,
     onToggle,
-    setValue,
-  };
+    setValue
+  }
 }

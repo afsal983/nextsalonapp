@@ -1,53 +1,53 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback } from 'react'
 
-import { fDate } from "src/utils/format-time";
+import { fDate } from 'src/utils/format-time'
 
-import { shortDateLabel } from "./utils";
-import { DateRangePickerProps } from "./types";
+import { shortDateLabel } from './utils'
+import { type DateRangePickerProps } from './types'
 
 // ----------------------------------------------------------------------
 
-type ReturnType = DateRangePickerProps;
+type ReturnType = DateRangePickerProps
 
-export default function useDateRangePicker(
+export default function useDateRangePicker (
   start: Date | null,
-  end: Date | null,
+  end: Date | null
 ): ReturnType {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
 
-  const [endDate, setEndDate] = useState(end);
+  const [endDate, setEndDate] = useState(end)
 
-  const [startDate, setStartDate] = useState(start);
+  const [startDate, setStartDate] = useState(start)
 
   const error =
-    start && end ? new Date(start).getTime() > new Date(end).getTime() : false;
+    start && end ? new Date(start).getTime() > new Date(end).getTime() : false
 
   const onOpen = useCallback(() => {
-    setOpen(true);
-  }, []);
+    setOpen(true)
+  }, [])
 
   const onClose = useCallback(() => {
-    setOpen(false);
-  }, []);
+    setOpen(false)
+  }, [])
 
   const onChangeStartDate = useCallback((newValue: Date | null) => {
-    setStartDate(newValue);
-  }, []);
+    setStartDate(newValue)
+  }, [])
 
   const onChangeEndDate = useCallback(
     (newValue: Date | null) => {
       if (error) {
-        setEndDate(null);
+        setEndDate(null)
       }
-      setEndDate(newValue);
+      setEndDate(newValue)
     },
-    [error],
-  );
+    [error]
+  )
 
   const onReset = useCallback(() => {
-    setStartDate(null);
-    setEndDate(null);
-  }, []);
+    setStartDate(null)
+    setEndDate(null)
+  }, [])
 
   return {
     startDate,
@@ -67,6 +67,6 @@ export default function useDateRangePicker(
     shortLabel: shortDateLabel(startDate, endDate),
     //
     setStartDate,
-    setEndDate,
-  };
+    setEndDate
+  }
 }

@@ -1,17 +1,17 @@
-import { Theme } from "@mui/material/styles";
+import { type Theme } from '@mui/material/styles'
 
 // ----------------------------------------------------------------------
 
-export function svgIcon(theme: Theme) {
+export function svgIcon (theme: Theme) {
   return {
     MuiSvgIcon: {
       styleOverrides: {
         fontSizeLarge: {
           width: 32,
           height: 32,
-          fontSize: "inherit",
-        },
-      },
-    },
-  };
+          fontSize: 'inherit'
+        }
+      }
+    }
+  }
 }

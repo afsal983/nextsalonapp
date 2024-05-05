@@ -1,16 +1,16 @@
-import { memo } from "react";
+import { memo } from 'react'
 
-import { useTheme } from "@mui/material/styles";
-import Box, { BoxProps } from "@mui/material/Box";
+import { useTheme } from '@mui/material/styles'
+import Box, { type BoxProps } from '@mui/material/Box'
 
 // ----------------------------------------------------------------------
 
-function SentIcon({ ...other }: BoxProps) {
-  const theme = useTheme();
+function SentIcon ({ ...other }: BoxProps) {
+  const theme = useTheme()
 
-  const PRIMARY_MAIN = theme.palette.primary.main;
+  const PRIMARY_MAIN = theme.palette.primary.main
 
-  const PRIMARY_DARK = theme.palette.primary.dark;
+  const PRIMARY_DARK = theme.palette.primary.dark
 
   return (
     <Box
@@ -33,7 +33,7 @@ function SentIcon({ ...other }: BoxProps) {
       />
 
       <g
-        style={{ mixBlendMode: "overlay" }}
+        style={{ mixBlendMode: 'overlay' }}
         fill="#fff"
         fillOpacity="0.04"
         filter="url(#filter0_i_1870_134242)"
@@ -67,7 +67,7 @@ function SentIcon({ ...other }: BoxProps) {
         </filter>
       </defs>
     </Box>
-  );
+  )
 }
 
-export default memo(SentIcon);
+export default memo(SentIcon)

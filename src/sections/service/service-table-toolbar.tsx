@@ -1,75 +1,75 @@
-import { useCallback } from "react";
+import { useCallback } from 'react'
 
-import Stack from "@mui/material/Stack";
-import MenuItem from "@mui/material/MenuItem";
-import Checkbox from "@mui/material/Checkbox";
-import TextField from "@mui/material/TextField";
-import InputLabel from "@mui/material/InputLabel";
-import IconButton from "@mui/material/IconButton";
-import FormControl from "@mui/material/FormControl";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputAdornment from "@mui/material/InputAdornment";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Stack from '@mui/material/Stack'
+import MenuItem from '@mui/material/MenuItem'
+import Checkbox from '@mui/material/Checkbox'
+import TextField from '@mui/material/TextField'
+import InputLabel from '@mui/material/InputLabel'
+import IconButton from '@mui/material/IconButton'
+import FormControl from '@mui/material/FormControl'
+import OutlinedInput from '@mui/material/OutlinedInput'
+import InputAdornment from '@mui/material/InputAdornment'
+import Select, { type SelectChangeEvent } from '@mui/material/Select'
 
-import Iconify from "src/components/iconify";
-import CustomPopover, { usePopover } from "src/components/custom-popover";
+import Iconify from 'src/components/iconify'
+import CustomPopover, { usePopover } from 'src/components/custom-popover'
 
-import { IUserTableFilters, IUserTableFilterValue } from "src/types/service";
+import { type IUserTableFilters, type IUserTableFilterValue } from 'src/types/service'
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  filters: IUserTableFilters;
-  onFilters: (name: string, value: IUserTableFilterValue) => void;
+interface Props {
+  filters: IUserTableFilters
+  onFilters: (name: string, value: IUserTableFilterValue) => void
   //
-  productCategory: string[];
-};
+  productCategory: string[]
+}
 
-export default function UserTableToolbar({
+export default function UserTableToolbar ({
   filters,
   onFilters,
   //
-  productCategory,
+  productCategory
 }: Props) {
-  const popover = usePopover();
+  const popover = usePopover()
 
   const handleFilterName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      onFilters("name", event.target.value);
+      onFilters('name', event.target.value)
     },
-    [onFilters],
-  );
+    [onFilters]
+  )
 
   const handleFilterRole = useCallback(
     (event: SelectChangeEvent<string[]>) => {
       onFilters(
-        "productcategory",
-        typeof event.target.value === "string"
-          ? event.target.value.split(",")
-          : event.target.value,
-      );
+        'productcategory',
+        typeof event.target.value === 'string'
+          ? event.target.value.split(',')
+          : event.target.value
+      )
     },
-    [onFilters],
-  );
+    [onFilters]
+  )
 
   return (
     <>
       <Stack
         spacing={2}
-        alignItems={{ xs: "flex-end", md: "center" }}
+        alignItems={{ xs: 'flex-end', md: 'center' }}
         direction={{
-          xs: "column",
-          md: "row",
+          xs: 'column',
+          md: 'row'
         }}
         sx={{
           p: 2.5,
-          pr: { xs: 2.5, md: 1 },
+          pr: { xs: 2.5, md: 1 }
         }}
       >
         <FormControl
           sx={{
             flexShrink: 0,
-            width: { xs: 1, md: 200 },
+            width: { xs: 1, md: 200 }
           }}
         >
           <InputLabel>Category</InputLabel>
@@ -80,12 +80,12 @@ export default function UserTableToolbar({
             onChange={handleFilterRole}
             input={<OutlinedInput label="Role" />}
             renderValue={(selected) =>
-              selected.map((value) => value).join(", ")
+              selected.map((value) => value).join(', ')
             }
             MenuProps={{
               PaperProps: {
-                sx: { maxHeight: 240 },
-              },
+                sx: { maxHeight: 240 }
+              }
             }}
           >
             {productCategory.map((option) => (
@@ -118,10 +118,10 @@ export default function UserTableToolbar({
                 <InputAdornment position="start">
                   <Iconify
                     icon="eva:search-fill"
-                    sx={{ color: "text.disabled" }}
+                    sx={{ color: 'text.disabled' }}
                   />
                 </InputAdornment>
-              ),
+              )
             }}
           />
 
@@ -139,7 +139,7 @@ export default function UserTableToolbar({
       >
         <MenuItem
           onClick={() => {
-            popover.onClose();
+            popover.onClose()
           }}
         >
           <Iconify icon="solar:printer-minimalistic-bold" />
@@ -148,7 +148,7 @@ export default function UserTableToolbar({
 
         <MenuItem
           onClick={() => {
-            popover.onClose();
+            popover.onClose()
           }}
         >
           <Iconify icon="solar:import-bold" />
@@ -157,7 +157,7 @@ export default function UserTableToolbar({
 
         <MenuItem
           onClick={() => {
-            popover.onClose();
+            popover.onClose()
           }}
         >
           <Iconify icon="solar:export-bold" />
@@ -165,5 +165,5 @@ export default function UserTableToolbar({
         </MenuItem>
       </CustomPopover>
     </>
-  );
+  )
 }

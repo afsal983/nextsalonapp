@@ -1,62 +1,62 @@
-import Box from "@mui/material/Box";
-import { alpha } from "@mui/material/styles";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemButton from "@mui/material/ListItemButton";
+import Box from '@mui/material/Box'
+import { alpha } from '@mui/material/styles'
+import ListItemText from '@mui/material/ListItemText'
+import ListItemButton from '@mui/material/ListItemButton'
 
-import Label from "src/components/label";
+import Label from 'src/components/label'
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  title: {
-    text: string;
-    highlight: boolean;
-  }[];
-  path: {
-    text: string;
-    highlight: boolean;
-  }[];
-  groupLabel: string;
-  onClickItem: VoidFunction;
-};
+interface Props {
+  title: Array<{
+    text: string
+    highlight: boolean
+  }>
+  path: Array<{
+    text: string
+    highlight: boolean
+  }>
+  groupLabel: string
+  onClickItem: VoidFunction
+}
 
-export default function ResultItem({
+export default function ResultItem ({
   title,
   path,
   groupLabel,
-  onClickItem,
+  onClickItem
 }: Props) {
   return (
     <ListItemButton
       onClick={onClickItem}
       sx={{
         borderWidth: 1,
-        borderStyle: "dashed",
-        borderColor: "transparent",
+        borderStyle: 'dashed',
+        borderColor: 'transparent',
         borderBottomColor: (theme) => theme.palette.divider,
-        "&:hover": {
+        '&:hover': {
           borderRadius: 1,
           borderColor: (theme) => theme.palette.primary.main,
           backgroundColor: (theme) =>
             alpha(
               theme.palette.primary.main,
-              theme.palette.action.hoverOpacity,
-            ),
-        },
+              theme.palette.action.hoverOpacity
+            )
+        }
       }}
     >
       <ListItemText
         primaryTypographyProps={{
-          typography: "subtitle2",
-          sx: { textTransform: "capitalize" },
+          typography: 'subtitle2',
+          sx: { textTransform: 'capitalize' }
         }}
-        secondaryTypographyProps={{ typography: "caption" }}
+        secondaryTypographyProps={{ typography: 'caption' }}
         primary={title.map((part, index) => (
           <Box
             key={index}
             component="span"
             sx={{
-              color: part.highlight ? "primary.main" : "text.primary",
+              color: part.highlight ? 'primary.main' : 'text.primary'
             }}
           >
             {part.text}
@@ -67,7 +67,7 @@ export default function ResultItem({
             key={index}
             component="span"
             sx={{
-              color: part.highlight ? "primary.main" : "text.secondary",
+              color: part.highlight ? 'primary.main' : 'text.secondary'
             }}
           >
             {part.text}
@@ -77,5 +77,5 @@ export default function ResultItem({
 
       {groupLabel && <Label color="info">{groupLabel}</Label>}
     </ListItemButton>
-  );
+  )
 }

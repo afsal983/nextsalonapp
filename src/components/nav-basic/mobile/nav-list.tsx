@@ -1,38 +1,38 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from 'react'
 
-import Collapse from "@mui/material/Collapse";
+import Collapse from '@mui/material/Collapse'
 
-import { usePathname } from "src/routes/hooks";
-import { useActiveLink } from "src/routes/hooks/use-active-link";
+import { usePathname } from 'src/routes/hooks'
+import { useActiveLink } from 'src/routes/hooks/use-active-link'
 
-import NavItem from "./nav-item";
-import { NavListProps, NavSubListProps } from "../types";
+import NavItem from './nav-item'
+import { type NavListProps, type NavSubListProps } from '../types'
 
 // ----------------------------------------------------------------------
 
-export default function NavList({ data, depth, slotProps }: NavListProps) {
-  const pathname = usePathname();
+export default function NavList ({ data, depth, slotProps }: NavListProps) {
+  const pathname = usePathname()
 
-  const active = useActiveLink(data.path, !!data.children);
+  const active = useActiveLink(data.path, !!data.children)
 
-  const [openMenu, setOpenMenu] = useState(active);
+  const [openMenu, setOpenMenu] = useState(active)
 
   useEffect(() => {
     if (!active) {
-      handleCloseMenu();
+      handleCloseMenu()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+  }, [pathname])
 
   const handleToggleMenu = useCallback(() => {
     if (data.children) {
-      setOpenMenu((prev) => !prev);
+      setOpenMenu((prev) => !prev)
     }
-  }, [data.children]);
+  }, [data.children])
 
   const handleCloseMenu = useCallback(() => {
-    setOpenMenu(false);
-  }, []);
+    setOpenMenu(false)
+  }, [])
 
   return (
     <>
@@ -47,10 +47,10 @@ export default function NavList({ data, depth, slotProps }: NavListProps) {
         //
         depth={depth}
         hasChild={!!data.children}
-        externalLink={!!data.path.includes("http")}
+        externalLink={!!data.path.includes('http')}
         //
         active={active}
-        className={active ? "active" : ""}
+        className={active ? 'active' : ''}
         sx={depth === 1 ? slotProps?.rootItem : slotProps?.subItem}
       />
 
@@ -64,12 +64,12 @@ export default function NavList({ data, depth, slotProps }: NavListProps) {
         </Collapse>
       )}
     </>
-  );
+  )
 }
 
 // ----------------------------------------------------------------------
 
-function NavSubList({ data, depth, slotProps }: NavSubListProps) {
+function NavSubList ({ data, depth, slotProps }: NavSubListProps) {
   return (
     <>
       {data.map((list) => (
@@ -81,5 +81,5 @@ function NavSubList({ data, depth, slotProps }: NavSubListProps) {
         />
       ))}
     </>
-  );
+  )
 }

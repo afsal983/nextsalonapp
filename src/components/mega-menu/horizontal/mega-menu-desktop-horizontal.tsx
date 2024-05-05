@@ -1,11 +1,11 @@
-import Stack from "@mui/material/Stack";
+import Stack from '@mui/material/Stack'
 
-import NavList from "./nav-list";
-import { NavProps } from "../types";
+import NavList from './nav-list'
+import { type NavProps } from '../types'
 
 // ----------------------------------------------------------------------
 
-export default function MegaMenuDesktopHorizontal({
+export default function MegaMenuDesktopHorizontal ({
   data,
   sx,
   slotProps,
@@ -19,7 +19,7 @@ export default function MegaMenuDesktopHorizontal({
       spacing={3}
       sx={{
         height: 1,
-        ...sx,
+        ...sx
       }}
       {...other}
     >
@@ -27,5 +27,5 @@ export default function MegaMenuDesktopHorizontal({
         <NavList key={list.title} data={list} slotProps={slotProps} />
       ))}
     </Stack>
-  );
+  )
 }

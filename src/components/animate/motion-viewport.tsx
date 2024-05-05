@@ -1,29 +1,29 @@
-import { m, MotionProps } from "framer-motion";
+import { m, type MotionProps } from 'framer-motion'
 
-import Box, { BoxProps } from "@mui/material/Box";
+import Box, { type BoxProps } from '@mui/material/Box'
 
-import { useResponsive } from "src/hooks/use-responsive";
+import { useResponsive } from 'src/hooks/use-responsive'
 
-import { varContainer } from "./variants";
+import { varContainer } from './variants'
 
 // ----------------------------------------------------------------------
 
-type IProps = BoxProps & MotionProps;
+type IProps = BoxProps & MotionProps
 
 interface Props extends IProps {
-  children: React.ReactNode;
-  disableAnimatedMobile?: boolean;
+  children: React.ReactNode
+  disableAnimatedMobile?: boolean
 }
 
-export default function MotionViewport({
+export default function MotionViewport ({
   children,
   disableAnimatedMobile = true,
   ...other
 }: Props) {
-  const smDown = useResponsive("down", "sm");
+  const smDown = useResponsive('down', 'sm')
 
   if (smDown && disableAnimatedMobile) {
-    return <Box {...other}>{children}</Box>;
+    return <Box {...other}>{children}</Box>
   }
 
   return (
@@ -37,5 +37,5 @@ export default function MotionViewport({
     >
       {children}
     </Box>
-  );
+  )
 }

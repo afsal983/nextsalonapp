@@ -1,68 +1,69 @@
-import Carousel, { Settings } from "react-slick";
-import { useRef, useState, useCallback } from "react";
+import type Carousel from 'react-slick'
+import { type Settings } from 'react-slick'
+import { useRef, useState, useCallback } from 'react'
 
-import { useTheme } from "@mui/material/styles";
+import { useTheme } from '@mui/material/styles'
 
 // ----------------------------------------------------------------------
 
-type ReturnType = {
-  currentIndex: number;
-  nav: Carousel | undefined;
-  carouselSettings: Settings;
-  carouselRef: React.MutableRefObject<Carousel | null>;
+interface ReturnType {
+  currentIndex: number
+  nav: Carousel | undefined
+  carouselSettings: Settings
+  carouselRef: React.MutableRefObject<Carousel | null>
   //
-  onPrev: VoidFunction;
-  onNext: VoidFunction;
-  onSetNav: VoidFunction;
-  onTogo: (index: number) => void;
+  onPrev: VoidFunction
+  onNext: VoidFunction
+  onSetNav: VoidFunction
+  onTogo: (index: number) => void
   //
-  setNav: React.Dispatch<React.SetStateAction<Carousel | undefined>>;
-  setCurrentIndex: React.Dispatch<React.SetStateAction<number>>;
-};
+  setNav: React.Dispatch<React.SetStateAction<Carousel | undefined>>
+  setCurrentIndex: React.Dispatch<React.SetStateAction<number>>
+}
 
-export default function useCarousel(props?: Settings): ReturnType {
-  const theme = useTheme();
+export default function useCarousel (props?: Settings): ReturnType {
+  const theme = useTheme()
 
-  const carouselRef = useRef<Carousel | null>(null);
+  const carouselRef = useRef<Carousel | null>(null)
 
-  const [currentIndex, setCurrentIndex] = useState(props?.initialSlide || 0);
+  const [currentIndex, setCurrentIndex] = useState(props?.initialSlide || 0)
 
-  const [nav, setNav] = useState<Carousel | undefined>(undefined);
+  const [nav, setNav] = useState<Carousel | undefined>(undefined)
 
-  const rtl = theme.direction === "rtl";
+  const rtl = theme.direction === 'rtl'
 
   const carouselSettings = {
     arrows: false,
     dots: !!props?.customPaging,
     rtl,
-    beforeChange: (current: number, next: number) => setCurrentIndex(next),
+    beforeChange: (current: number, next: number) => { setCurrentIndex(next) },
     ...props,
-    fade: !!(props?.fade && !rtl),
-  };
+    fade: !!(props?.fade && !rtl)
+  }
 
   const onSetNav = useCallback(() => {
     if (carouselRef.current) {
-      setNav(carouselRef.current);
+      setNav(carouselRef.current)
     }
-  }, []);
+  }, [])
 
   const onPrev = useCallback(() => {
     if (carouselRef.current) {
-      carouselRef.current.slickPrev();
+      carouselRef.current.slickPrev()
     }
-  }, []);
+  }, [])
 
   const onNext = useCallback(() => {
     if (carouselRef.current) {
-      carouselRef.current.slickNext();
+      carouselRef.current.slickNext()
     }
-  }, []);
+  }, [])
 
   const onTogo = useCallback((index: number) => {
     if (carouselRef.current) {
-      carouselRef.current.slickGoTo(index);
+      carouselRef.current.slickGoTo(index)
     }
-  }, []);
+  }, [])
 
   return {
     nav,
@@ -76,6 +77,6 @@ export default function useCarousel(props?: Settings): ReturnType {
     onSetNav,
     //
     setNav,
-    setCurrentIndex,
-  };
+    setCurrentIndex
+  }
 }

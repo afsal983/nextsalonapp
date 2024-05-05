@@ -1,20 +1,20 @@
-import { Theme } from "@mui/material/styles";
+import { type Theme } from '@mui/material/styles'
 
 // ----------------------------------------------------------------------
 
-export function tooltip(theme: Theme) {
-  const lightMode = theme.palette.mode === "light";
+export function tooltip (theme: Theme) {
+  const lightMode = theme.palette.mode === 'light'
 
   return {
     MuiTooltip: {
       styleOverrides: {
         tooltip: {
-          backgroundColor: theme.palette.grey[lightMode ? 800 : 700],
+          backgroundColor: theme.palette.grey[lightMode ? 800 : 700]
         },
         arrow: {
-          color: theme.palette.grey[lightMode ? 800 : 700],
-        },
-      },
-    },
-  };
+          color: theme.palette.grey[lightMode ? 800 : 700]
+        }
+      }
+    }
+  }
 }

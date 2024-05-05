@@ -1,19 +1,20 @@
-import Typography from "@mui/material/Typography";
-import Paper, { PaperProps } from "@mui/material/Paper";
+import Typography from '@mui/material/Typography'
+import Paper, { type PaperProps } from '@mui/material/Paper'
 
 // ----------------------------------------------------------------------
 
 interface Props extends PaperProps {
-  query?: string;
+  query?: string
 }
 
-export default function SearchNotFound({ query, sx, ...other }: Props) {
-  return query ? (
+export default function SearchNotFound ({ query, sx, ...other }: Props) {
+  return query
+    ? (
     <Paper
       sx={{
-        bgcolor: "unset",
-        textAlign: "center",
-        ...sx,
+        bgcolor: 'unset',
+        textAlign: 'center',
+        ...sx
       }}
       {...other}
     >
@@ -27,9 +28,10 @@ export default function SearchNotFound({ query, sx, ...other }: Props) {
         <br /> Try checking for typos or using complete words.
       </Typography>
     </Paper>
-  ) : (
+      )
+    : (
     <Typography variant="body2" sx={sx}>
       Please enter keywords
     </Typography>
-  );
+      )
 }

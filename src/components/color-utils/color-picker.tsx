@@ -1,34 +1,34 @@
-import { forwardRef, useCallback } from "react";
+import { forwardRef, useCallback } from 'react'
 
-import Stack from "@mui/material/Stack";
-import { alpha } from "@mui/material/styles";
-import ButtonBase from "@mui/material/ButtonBase";
+import Stack from '@mui/material/Stack'
+import { alpha } from '@mui/material/styles'
+import ButtonBase from '@mui/material/ButtonBase'
 
-import Iconify from "../iconify";
-import { ColorPickerProps } from "./types";
+import Iconify from '../iconify'
+import { type ColorPickerProps } from './types'
 
 // ----------------------------------------------------------------------
 
 const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
-  ({ colors, selected, onSelectColor, limit = "auto", sx, ...other }, ref) => {
-    const singleSelect = typeof selected === "string";
+  ({ colors, selected, onSelectColor, limit = 'auto', sx, ...other }, ref) => {
+    const singleSelect = typeof selected === 'string'
 
     const handleSelect = useCallback(
       (color: string) => {
         if (singleSelect) {
           if (color !== selected) {
-            onSelectColor(color);
+            onSelectColor(color)
           }
         } else {
           const newSelected = selected.includes(color)
             ? selected.filter((value) => value !== color)
-            : [...selected, color];
+            : [...selected, color]
 
-          onSelectColor(newSelected);
+          onSelectColor(newSelected)
         }
       },
-      [onSelectColor, selected, singleSelect],
-    );
+      [onSelectColor, selected, singleSelect]
+    )
 
     return (
       <Stack
@@ -36,19 +36,19 @@ const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
         direction="row"
         display="inline-flex"
         sx={{
-          flexWrap: "wrap",
-          ...(limit !== "auto" && {
+          flexWrap: 'wrap',
+          ...(limit !== 'auto' && {
             width: limit * 36,
-            justifyContent: "flex-end",
+            justifyContent: 'flex-end'
           }),
-          ...sx,
+          ...sx
         }}
         {...other}
       >
         {colors.map((color) => {
           const hasSelected = singleSelect
             ? selected === color
-            : selected.includes(color);
+            : selected.includes(color)
 
           return (
             <ButtonBase
@@ -56,10 +56,10 @@ const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
               sx={{
                 width: 36,
                 height: 36,
-                borderRadius: "50%",
+                borderRadius: '50%'
               }}
               onClick={() => {
-                handleSelect(color);
+                handleSelect(color)
               }}
             >
               <Stack
@@ -69,18 +69,18 @@ const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
                   width: 20,
                   height: 20,
                   bgcolor: color,
-                  borderRadius: "50%",
+                  borderRadius: '50%',
                   border: (theme) =>
                     `solid 1px ${alpha(theme.palette.grey[500], 0.16)}`,
                   ...(hasSelected && {
-                    transform: "scale(1.3)",
+                    transform: 'scale(1.3)',
                     boxShadow: `4px 4px 8px 0 ${alpha(color, 0.48)}`,
                     outline: `solid 2px ${alpha(color, 0.08)}`,
                     transition: (theme) =>
-                      theme.transitions.create("all", {
-                        duration: theme.transitions.duration.shortest,
-                      }),
-                  }),
+                      theme.transitions.create('all', {
+                        duration: theme.transitions.duration.shortest
+                      })
+                  })
                 }}
               >
                 <Iconify
@@ -89,18 +89,18 @@ const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
                   sx={{
                     color: (theme) => theme.palette.getContrastText(color),
                     transition: (theme) =>
-                      theme.transitions.create("all", {
-                        duration: theme.transitions.duration.shortest,
-                      }),
+                      theme.transitions.create('all', {
+                        duration: theme.transitions.duration.shortest
+                      })
                   }}
                 />
               </Stack>
             </ButtonBase>
-          );
+          )
         })}
       </Stack>
-    );
-  },
-);
+    )
+  }
+)
 
-export default ColorPicker;
+export default ColorPicker

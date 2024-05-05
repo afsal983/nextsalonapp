@@ -1,24 +1,24 @@
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from 'react-hook-form'
 
-import Checkbox from "@mui/material/Checkbox";
-import FormGroup from "@mui/material/FormGroup";
-import FormLabel from "@mui/material/FormLabel";
-import FormControl from "@mui/material/FormControl";
-import FormHelperText from "@mui/material/FormHelperText";
+import Checkbox from '@mui/material/Checkbox'
+import FormGroup from '@mui/material/FormGroup'
+import FormLabel from '@mui/material/FormLabel'
+import FormControl from '@mui/material/FormControl'
+import FormHelperText from '@mui/material/FormHelperText'
 import FormControlLabel, {
-  FormControlLabelProps,
   formControlLabelClasses,
-} from "@mui/material/FormControlLabel";
+  type FormControlLabelProps
+} from '@mui/material/FormControlLabel'
 
 // ----------------------------------------------------------------------
 
-interface RHFCheckboxProps extends Omit<FormControlLabelProps, "control"> {
-  name: string;
-  helperText?: React.ReactNode;
+interface RHFCheckboxProps extends Omit<FormControlLabelProps, 'control'> {
+  name: string
+  helperText?: React.ReactNode
 }
 
-export function RHFCheckbox({ name, helperText, ...other }: RHFCheckboxProps) {
-  const { control } = useFormContext();
+export function RHFCheckbox ({ name, helperText, ...other }: RHFCheckboxProps) {
+  const { control } = useFormContext()
 
   return (
     <Controller
@@ -39,22 +39,22 @@ export function RHFCheckbox({ name, helperText, ...other }: RHFCheckboxProps) {
         </div>
       )}
     />
-  );
+  )
 }
 
 // ----------------------------------------------------------------------
 
 interface RHFMultiCheckboxProps
-  extends Omit<FormControlLabelProps, "control" | "label"> {
-  name: string;
-  options: { label: string; value: any }[];
-  row?: boolean;
-  label?: string;
-  spacing?: number;
-  helperText?: React.ReactNode;
+  extends Omit<FormControlLabelProps, 'control' | 'label'> {
+  name: string
+  options: Array<{ label: string, value: any }>
+  row?: boolean
+  label?: string
+  spacing?: number
+  helperText?: React.ReactNode
 }
 
-export function RHFMultiCheckbox({
+export function RHFMultiCheckbox ({
   row,
   name,
   label,
@@ -64,12 +64,12 @@ export function RHFMultiCheckbox({
   sx,
   ...other
 }: RHFMultiCheckboxProps) {
-  const { control } = useFormContext();
+  const { control } = useFormContext()
 
   const getSelected = (selectedItems: string[], item: string) =>
     selectedItems.includes(item)
       ? selectedItems.filter((value) => value !== item)
-      : [...selectedItems, item];
+      : [...selectedItems, item]
 
   return (
     <Controller
@@ -78,7 +78,7 @@ export function RHFMultiCheckbox({
       render={({ field, fieldState: { error } }) => (
         <FormControl component="fieldset">
           {label && (
-            <FormLabel component="legend" sx={{ typography: "body2" }}>
+            <FormLabel component="legend" sx={{ typography: 'body2' }}>
               {label}
             </FormLabel>
           )}
@@ -86,20 +86,20 @@ export function RHFMultiCheckbox({
           <FormGroup
             sx={{
               ...(row && {
-                flexDirection: "row",
+                flexDirection: 'row'
               }),
               [`& .${formControlLabelClasses.root}`]: {
-                "&:not(:last-of-type)": {
-                  mb: spacing || 0,
+                '&:not(:last-of-type)': {
+                  mb: spacing || 0
                 },
                 ...(row && {
                   mr: 0,
-                  "&:not(:last-of-type)": {
-                    mr: spacing || 2,
-                  },
-                }),
+                  '&:not(:last-of-type)': {
+                    mr: spacing || 2
+                  }
+                })
               },
-              ...sx,
+              ...sx
             }}
           >
             {options.map((option) => (
@@ -108,8 +108,7 @@ export function RHFMultiCheckbox({
                 control={
                   <Checkbox
                     checked={field.value.includes(option.value)}
-                    onChange={() =>
-                      field.onChange(getSelected(field.value, option.value))
+                    onChange={() => { field.onChange(getSelected(field.value, option.value)) }
                     }
                   />
                 }
@@ -127,5 +126,5 @@ export function RHFMultiCheckbox({
         </FormControl>
       )}
     />
-  );
+  )
 }

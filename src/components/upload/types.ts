@@ -1,28 +1,28 @@
-import { DropzoneOptions } from "react-dropzone";
+import { type DropzoneOptions } from 'react-dropzone'
 
-import { Theme, SxProps } from "@mui/material/styles";
+import { type Theme, type SxProps } from '@mui/material/styles'
 
 // ----------------------------------------------------------------------
 
 export interface CustomFile extends File {
-  path?: string;
-  preview?: string;
-  lastModifiedDate?: Date;
+  path?: string
+  preview?: string
+  lastModifiedDate?: Date
 }
 
 export interface UploadProps extends DropzoneOptions {
-  error?: boolean;
-  sx?: SxProps<Theme>;
-  thumbnail?: boolean;
-  placeholder?: React.ReactNode;
-  helperText?: React.ReactNode;
-  disableMultiple?: boolean;
+  error?: boolean
+  sx?: SxProps<Theme>
+  thumbnail?: boolean
+  placeholder?: React.ReactNode
+  helperText?: React.ReactNode
+  disableMultiple?: boolean
   //
-  file?: CustomFile | string | null;
-  onDelete?: VoidFunction;
+  file?: CustomFile | string | null
+  onDelete?: VoidFunction
   //
-  files?: (File | string)[];
-  onUpload?: VoidFunction;
-  onRemove?: (file: CustomFile | string) => void;
-  onRemoveAll?: VoidFunction;
+  files?: Array<File | string>
+  onUpload?: VoidFunction
+  onRemove?: (file: CustomFile | string) => void
+  onRemoveAll?: VoidFunction
 }

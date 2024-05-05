@@ -1,35 +1,35 @@
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
+import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
 
-import { useMockedUser } from "src/hooks/use-mocked-user";
+import { useMockedUser } from 'src/hooks/use-mocked-user'
 
-import { hideScroll } from "src/theme/css";
+import { hideScroll } from 'src/theme/css'
 
-import Logo from "src/components/logo";
-import { NavSectionMini } from "src/components/nav-section";
+import Logo from 'src/components/logo'
+import { NavSectionMini } from 'src/components/nav-section'
 
-import { NAV } from "../config-layout";
-import { useNavData } from "./config-navigation";
-import NavToggleButton from "../common/nav-toggle-button";
+import { NAV } from '../config-layout'
+import { useNavData } from './config-navigation'
+import NavToggleButton from '../common/nav-toggle-button'
 
 // ----------------------------------------------------------------------
 
-export default function NavMini() {
-  const { user } = useMockedUser();
+export default function NavMini () {
+  const { user } = useMockedUser()
 
-  const navData = useNavData();
+  const navData = useNavData()
 
   return (
     <Box
       sx={{
         flexShrink: { lg: 0 },
-        width: { lg: NAV.W_MINI },
+        width: { lg: NAV.W_MINI }
       }}
     >
       <NavToggleButton
         sx={{
           top: 22,
-          left: NAV.W_MINI - 12,
+          left: NAV.W_MINI - 12
         }}
       />
 
@@ -37,24 +37,24 @@ export default function NavMini() {
         sx={{
           pb: 2,
           height: 1,
-          position: "fixed",
+          position: 'fixed',
           width: NAV.W_MINI,
           borderRight: (theme) => `dashed 1px ${theme.palette.divider}`,
-          ...hideScroll.x,
+          ...hideScroll.x
         }}
       >
         <Logo
           logourl="SMEEYE_logo_transparent.png"
-          sx={{ mx: "auto", my: 2 }}
+          sx={{ mx: 'auto', my: 2 }}
         />
 
         <NavSectionMini
           data={navData}
           slotProps={{
-            currentRole: user?.role,
+            currentRole: user?.role
           }}
         />
       </Stack>
     </Box>
-  );
+  )
 }

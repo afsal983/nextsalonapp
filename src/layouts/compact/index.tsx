@@ -1,15 +1,15 @@
-import Stack from "@mui/material/Stack";
-import Container from "@mui/material/Container";
+import Stack from '@mui/material/Stack'
+import Container from '@mui/material/Container'
 
-import Header from "../common/header-simple";
+import Header from '../common/header-simple'
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  children: React.ReactNode;
-};
+interface Props {
+  children: React.ReactNode
+}
 
-export default function CompactLayout({ children }: Props) {
+export default function CompactLayout ({ children }: Props) {
   return (
     <>
       <Header />
@@ -18,16 +18,16 @@ export default function CompactLayout({ children }: Props) {
         <Stack
           sx={{
             py: 12,
-            m: "auto",
+            m: 'auto',
             maxWidth: 400,
-            minHeight: "100vh",
-            textAlign: "center",
-            justifyContent: "center",
+            minHeight: '100vh',
+            textAlign: 'center',
+            justifyContent: 'center'
           }}
         >
           {children}
         </Stack>
       </Container>
     </>
-  );
+  )
 }

@@ -1,19 +1,19 @@
-"use client";
+'use client'
 
-import { SplashScreen } from "src/components/loading-screen";
+import { SplashScreen } from 'src/components/loading-screen'
 
-import { AuthContext } from "./auth-context";
+import { AuthContext } from './auth-context'
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  children: React.ReactNode;
-};
-
-export function AuthConsumer({ children }: Props) {
-  return (
-    <AuthContext.Consumer>
-      {(auth) => (auth.loading ? <SplashScreen /> : children)}
-    </AuthContext.Consumer>
-  );
+interface Props {
+  children: React.ReactNode
 }
+// I changes props to any
+  export function AuthConsumer ({ children }: any) {
+    return (
+      <AuthContext.Consumer>
+        {async (auth) => (auth.loading ? <SplashScreen /> : children)}
+      </AuthContext.Consumer>
+    )
+  }

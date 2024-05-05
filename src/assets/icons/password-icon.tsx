@@ -1,16 +1,16 @@
-import { memo } from "react";
+import { memo } from 'react'
 
-import { useTheme } from "@mui/material/styles";
-import Box, { BoxProps } from "@mui/material/Box";
+import { useTheme } from '@mui/material/styles'
+import Box, { type BoxProps } from '@mui/material/Box'
 
 // ----------------------------------------------------------------------
 
-function PasswordIcon({ ...other }: BoxProps) {
-  const theme = useTheme();
+function PasswordIcon ({ ...other }: BoxProps) {
+  const theme = useTheme()
 
-  const PRIMARY_MAIN = theme.palette.primary.main;
+  const PRIMARY_MAIN = theme.palette.primary.main
 
-  const WARNING_LIGHT = theme.palette.warning.light;
+  const WARNING_LIGHT = theme.palette.warning.light
 
   return (
     <Box
@@ -27,7 +27,7 @@ function PasswordIcon({ ...other }: BoxProps) {
         d="M36.324 29.4v7.76a4.803 4.803 0 11-9.606 0V29.4c0-11.677 9.405-21.198 21.037-21.388l.353-.002c11.678 0 21.199 9.405 21.388 21.037l.003.353v7.76a4.803 4.803 0 11-9.606 0V29.4c0-6.433-5.181-11.678-11.59-11.783l-.194-.001c-6.499 0-11.785 5.286-11.785 11.784z"
       />
       <g
-        style={{ mixBlendMode: "overlay" }}
+        style={{ mixBlendMode: 'overlay' }}
         filter="url(#filter0_i_1870_135517)"
       >
         <path
@@ -43,7 +43,7 @@ function PasswordIcon({ ...other }: BoxProps) {
         clipRule="evenodd"
       />
       <g
-        style={{ mixBlendMode: "overlay" }}
+        style={{ mixBlendMode: 'overlay' }}
         filter="url(#filter1_i_1870_135517)"
       >
         <path
@@ -107,7 +107,7 @@ function PasswordIcon({ ...other }: BoxProps) {
         </filter>
       </defs>
     </Box>
-  );
+  )
 }
 
-export default memo(PasswordIcon);
+export default memo(PasswordIcon)

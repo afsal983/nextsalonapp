@@ -1,20 +1,20 @@
-import { memo } from "react";
+import { memo } from 'react'
 
-import { useTheme } from "@mui/material/styles";
-import Box, { BoxProps } from "@mui/material/Box";
+import { useTheme } from '@mui/material/styles'
+import Box, { type BoxProps } from '@mui/material/Box'
 
-import BackgroundShape from "./background-shape";
+import BackgroundShape from './background-shape'
 
 // ----------------------------------------------------------------------
 
-function MotivationIllustration({ ...other }: BoxProps) {
-  const theme = useTheme();
+function MotivationIllustration ({ ...other }: BoxProps) {
+  const theme = useTheme()
 
-  const PRIMARY_LIGHTER = theme.palette.primary.lighter;
+  const PRIMARY_LIGHTER = theme.palette.primary.lighter
 
-  const PRIMARY_DARK = theme.palette.primary.dark;
+  const PRIMARY_DARK = theme.palette.primary.dark
 
-  const PRIMARY_DARKER = theme.palette.primary.darker;
+  const PRIMARY_DARKER = theme.palette.primary.darker
 
   return (
     <Box
@@ -69,7 +69,7 @@ function MotivationIllustration({ ...other }: BoxProps) {
         </linearGradient>
       </defs>
     </Box>
-  );
+  )
 }
 
-export default memo(MotivationIllustration);
+export default memo(MotivationIllustration)

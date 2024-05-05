@@ -1,18 +1,18 @@
-import { Theme, alpha } from "@mui/material/styles";
+import { alpha, type Theme } from '@mui/material/styles'
 
 // ----------------------------------------------------------------------
 
-export function paper(theme: Theme) {
+export function paper (theme: Theme) {
   return {
     MuiPaper: {
       styleOverrides: {
         root: {
-          backgroundImage: "none",
+          backgroundImage: 'none'
         },
         outlined: {
-          borderColor: alpha(theme.palette.grey[500], 0.16),
-        },
-      },
-    },
-  };
+          borderColor: alpha(theme.palette.grey[500], 0.16)
+        }
+      }
+    }
+  }
 }

@@ -1,15 +1,15 @@
-import { Theme } from "@mui/material/styles";
+import { type Theme } from '@mui/material/styles'
 
 // ----------------------------------------------------------------------
 
-export function appBar(theme: Theme) {
+export function appBar (theme: Theme) {
   return {
     MuiAppBar: {
       styleOverrides: {
         root: {
-          boxShadow: "none",
-        },
-      },
-    },
-  };
+          boxShadow: 'none'
+        }
+      }
+    }
+  }
 }

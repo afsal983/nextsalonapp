@@ -1,18 +1,18 @@
-import { memo } from "react";
+import { memo } from 'react'
 
-import { useTheme } from "@mui/material/styles";
-import Box, { BoxProps } from "@mui/material/Box";
+import { useTheme } from '@mui/material/styles'
+import Box, { type BoxProps } from '@mui/material/Box'
 
 // ----------------------------------------------------------------------
 
-function PlanFreeIcon({ ...other }: BoxProps) {
-  const theme = useTheme();
+function PlanFreeIcon ({ ...other }: BoxProps) {
+  const theme = useTheme()
 
-  const PRIMARY_MAIN = theme.palette.primary.main;
+  const PRIMARY_MAIN = theme.palette.primary.main
 
-  const PRIMARY_DARK = theme.palette.primary.dark;
+  const PRIMARY_DARK = theme.palette.primary.dark
 
-  const PRIMARY_DARKER = theme.palette.primary.darker;
+  const PRIMARY_DARKER = theme.palette.primary.darker
 
   return (
     <Box
@@ -43,7 +43,7 @@ function PlanFreeIcon({ ...other }: BoxProps) {
         />
       </g>
     </Box>
-  );
+  )
 }
 
-export default memo(PlanFreeIcon);
+export default memo(PlanFreeIcon)

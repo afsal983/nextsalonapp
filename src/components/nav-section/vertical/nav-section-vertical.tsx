@@ -1,15 +1,15 @@
-import { memo, useState, useCallback } from "react";
+import { memo, useState, useCallback } from 'react'
 
-import Stack from "@mui/material/Stack";
-import Collapse from "@mui/material/Collapse";
-import ListSubheader from "@mui/material/ListSubheader";
+import Stack from '@mui/material/Stack'
+import Collapse from '@mui/material/Collapse'
+import ListSubheader from '@mui/material/ListSubheader'
 
-import NavList from "./nav-list";
-import { NavProps, NavGroupProps } from "../types";
+import NavList from './nav-list'
+import { type NavProps, type NavGroupProps } from '../types'
 
 // ----------------------------------------------------------------------
 
-function NavSectionVertical({ data, slotProps, ...other }: NavProps) {
+function NavSectionVertical ({ data, slotProps, ...other }: NavProps) {
   return (
     <Stack component="nav" id="nav-section-vertical" {...other}>
       {data.map((group, index) => (
@@ -21,27 +21,28 @@ function NavSectionVertical({ data, slotProps, ...other }: NavProps) {
         />
       ))}
     </Stack>
-  );
+  )
 }
 
-export default memo(NavSectionVertical);
+export default memo(NavSectionVertical)
 
 // ----------------------------------------------------------------------
 
-function Group({ subheader, items, slotProps }: NavGroupProps) {
-  const [open, setOpen] = useState(true);
+function Group ({ subheader, items, slotProps }: NavGroupProps) {
+  const [open, setOpen] = useState(true)
 
   const handleToggle = useCallback(() => {
-    setOpen((prev) => !prev);
-  }, []);
+    setOpen((prev) => !prev)
+  }, [])
 
   const renderContent = items.map((list) => (
     <NavList key={list.title} data={list} depth={1} slotProps={slotProps} />
-  ));
+  ))
 
   return (
     <Stack sx={{ px: 2 }}>
-      {subheader ? (
+      {subheader
+        ? (
         <>
           <ListSubheader
             disableGutters
@@ -49,20 +50,20 @@ function Group({ subheader, items, slotProps }: NavGroupProps) {
             onClick={handleToggle}
             sx={{
               fontSize: 11,
-              cursor: "pointer",
-              typography: "overline",
-              display: "inline-flex",
-              color: "text.disabled",
+              cursor: 'pointer',
+              typography: 'overline',
+              display: 'inline-flex',
+              color: 'text.disabled',
               mb: `${slotProps?.gap || 4}px`,
               p: (theme) => theme.spacing(2, 1, 1, 1.5),
               transition: (theme) =>
-                theme.transitions.create(["color"], {
-                  duration: theme.transitions.duration.shortest,
+                theme.transitions.create(['color'], {
+                  duration: theme.transitions.duration.shortest
                 }),
-              "&:hover": {
-                color: "text.primary",
+              '&:hover': {
+                color: 'text.primary'
               },
-              ...slotProps?.subheader,
+              ...slotProps?.subheader
             }}
           >
             {subheader}
@@ -70,9 +71,10 @@ function Group({ subheader, items, slotProps }: NavGroupProps) {
 
           <Collapse in={open}>{renderContent}</Collapse>
         </>
-      ) : (
-        renderContent
-      )}
+          )
+        : (
+            renderContent
+          )}
     </Stack>
-  );
+  )
 }

@@ -1,81 +1,81 @@
-import { m } from "framer-motion";
-import { useState, useCallback } from "react";
+import { m } from 'framer-motion'
+import { useState, useCallback } from 'react'
 
-import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
-import Tabs from "@mui/material/Tabs";
-import List from "@mui/material/List";
-import Stack from "@mui/material/Stack";
-import Badge from "@mui/material/Badge";
-import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
-import Tooltip from "@mui/material/Tooltip";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
+import Tab from '@mui/material/Tab'
+import Box from '@mui/material/Box'
+import Tabs from '@mui/material/Tabs'
+import List from '@mui/material/List'
+import Stack from '@mui/material/Stack'
+import Badge from '@mui/material/Badge'
+import Drawer from '@mui/material/Drawer'
+import Button from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
+import Tooltip from '@mui/material/Tooltip'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
 
-import { useBoolean } from "src/hooks/use-boolean";
-import { useResponsive } from "src/hooks/use-responsive";
+import { useBoolean } from 'src/hooks/use-boolean'
+import { useResponsive } from 'src/hooks/use-responsive'
 
-import { _notifications } from "src/_mock";
+import { _notifications } from 'src/_mock'
 
-import Label from "src/components/label";
-import Iconify from "src/components/iconify";
-import Scrollbar from "src/components/scrollbar";
-import { varHover } from "src/components/animate";
+import Label from 'src/components/label'
+import Iconify from 'src/components/iconify'
+import Scrollbar from 'src/components/scrollbar'
+import { varHover } from 'src/components/animate'
 
-import NotificationItem from "./notification-item";
+import NotificationItem from './notification-item'
 
 // ----------------------------------------------------------------------
 
 const TABS = [
   {
-    value: "all",
-    label: "All",
-    count: 22,
+    value: 'all',
+    label: 'All',
+    count: 22
   },
   {
-    value: "unread",
-    label: "Unread",
-    count: 12,
+    value: 'unread',
+    label: 'Unread',
+    count: 12
   },
   {
-    value: "archived",
-    label: "Archived",
-    count: 10,
-  },
-];
+    value: 'archived',
+    label: 'Archived',
+    count: 10
+  }
+]
 
 // ----------------------------------------------------------------------
 
-export default function NotificationsPopover() {
-  const drawer = useBoolean();
+export default function NotificationsPopover () {
+  const drawer = useBoolean()
 
-  const smUp = useResponsive("up", "sm");
+  const smUp = useResponsive('up', 'sm')
 
-  const [currentTab, setCurrentTab] = useState("all");
+  const [currentTab, setCurrentTab] = useState('all')
 
   const handleChangeTab = useCallback(
     (event: React.SyntheticEvent, newValue: string) => {
-      setCurrentTab(newValue);
+      setCurrentTab(newValue)
     },
-    [],
-  );
+    []
+  )
 
-  const [notifications, setNotifications] = useState(_notifications);
+  const [notifications, setNotifications] = useState(_notifications)
 
   const totalUnRead = notifications.filter(
-    (item) => item.isUnRead === true,
-  ).length;
+    (item) => item.isUnRead
+  ).length
 
   const handleMarkAllAsRead = () => {
     setNotifications(
       notifications.map((notification) => ({
         ...notification,
-        isUnRead: false,
-      })),
-    );
-  };
+        isUnRead: false
+      }))
+    )
+  }
 
   const renderHead = (
     <Stack
@@ -101,7 +101,7 @@ export default function NotificationsPopover() {
         </IconButton>
       )}
     </Stack>
-  );
+  )
 
   const renderTabs = (
     <Tabs value={currentTab} onChange={handleChangeTab}>
@@ -114,28 +114,28 @@ export default function NotificationsPopover() {
           icon={
             <Label
               variant={
-                ((tab.value === "all" || tab.value === currentTab) &&
-                  "filled") ||
-                "soft"
+                ((tab.value === 'all' || tab.value === currentTab) &&
+                  'filled') ||
+                'soft'
               }
               color={
-                (tab.value === "unread" && "info") ||
-                (tab.value === "archived" && "success") ||
-                "default"
+                (tab.value === 'unread' && 'info') ||
+                (tab.value === 'archived' && 'success') ||
+                'default'
               }
             >
               {tab.count}
             </Label>
           }
           sx={{
-            "&:not(:last-of-type)": {
-              mr: 3,
-            },
+            '&:not(:last-of-type)': {
+              mr: 3
+            }
           }}
         />
       ))}
     </Tabs>
-  );
+  )
 
   const renderList = (
     <Scrollbar>
@@ -145,7 +145,7 @@ export default function NotificationsPopover() {
         ))}
       </List>
     </Scrollbar>
-  );
+  )
 
   return (
     <>
@@ -154,7 +154,7 @@ export default function NotificationsPopover() {
         whileTap="tap"
         whileHover="hover"
         variants={varHover(1.05)}
-        color={drawer.value ? "primary" : "default"}
+        color={drawer.value ? 'primary' : 'default'}
         onClick={drawer.onTrue}
       >
         <Badge badgeContent={totalUnRead} color="error">
@@ -167,10 +167,10 @@ export default function NotificationsPopover() {
         onClose={drawer.onFalse}
         anchor="right"
         slotProps={{
-          backdrop: { invisible: true },
+          backdrop: { invisible: true }
         }}
         PaperProps={{
-          sx: { width: 1, maxWidth: 420 },
+          sx: { width: 1, maxWidth: 420 }
         }}
       >
         {renderHead}
@@ -200,5 +200,5 @@ export default function NotificationsPopover() {
         </Box>
       </Drawer>
     </>
-  );
+  )
 }

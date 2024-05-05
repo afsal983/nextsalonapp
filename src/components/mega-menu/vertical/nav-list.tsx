@@ -1,48 +1,48 @@
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback } from 'react'
 
-import Masonry from "@mui/lab/Masonry";
-import Paper from "@mui/material/Paper";
-import Stack from "@mui/material/Stack";
-import Divider from "@mui/material/Divider";
+import Masonry from '@mui/lab/Masonry'
+import Paper from '@mui/material/Paper'
+import Stack from '@mui/material/Stack'
+import Divider from '@mui/material/Divider'
 
-import { usePathname, useActiveLink } from "src/routes/hooks";
+import { usePathname, useActiveLink } from 'src/routes/hooks'
 
-import NavItem from "./nav-item";
-import { NavListProps } from "../types";
-import MenuTags from "../common/menu-tags";
-import NavSubList from "../common/nav-sub-list";
-import MenuProducts from "../common/menu-products";
-import MenuMoreLink from "../common/menu-more-link";
+import NavItem from './nav-item'
+import MenuTags from '../common/menu-tags'
+import { type NavListProps } from '../types'
+import NavSubList from '../common/nav-sub-list'
+import MenuProducts from '../common/menu-products'
+import MenuMoreLink from '../common/menu-more-link'
 
 // ----------------------------------------------------------------------
 
-export default function NavList({ data, slotProps }: NavListProps) {
-  const navRef = useRef<HTMLDivElement | null>(null);
+export default function NavList ({ data, slotProps }: NavListProps) {
+  const navRef = useRef<HTMLDivElement | null>(null)
 
-  const pathname = usePathname();
+  const pathname = usePathname()
 
-  const active = useActiveLink(data.path, !!data.children);
+  const active = useActiveLink(data.path, !!data.children)
 
-  const singleList = data.children?.length === 1;
+  const singleList = data.children?.length === 1
 
-  const [openMenu, setOpenMenu] = useState(false);
+  const [openMenu, setOpenMenu] = useState(false)
 
   useEffect(() => {
     if (openMenu) {
-      handleCloseMenu();
+      handleCloseMenu()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+  }, [pathname])
 
   const handleOpenMenu = useCallback(() => {
     if (data.children) {
-      setOpenMenu(true);
+      setOpenMenu(true)
     }
-  }, [data.children]);
+  }, [data.children])
 
   const handleCloseMenu = useCallback(() => {
-    setOpenMenu(false);
-  }, []);
+    setOpenMenu(false)
+  }, [])
 
   return (
     <>
@@ -57,10 +57,10 @@ export default function NavList({ data, slotProps }: NavListProps) {
         icon={data.icon}
         //
         hasChild={!!data.children}
-        externalLink={data.path.includes("http")}
+        externalLink={data.path.includes('http')}
         //
         active={active}
-        className={active ? "active" : ""}
+        className={active ? 'active' : ''}
         sx={slotProps?.rootItem}
       />
 
@@ -73,20 +73,22 @@ export default function NavList({ data, slotProps }: NavListProps) {
             top: -40,
             width: 800,
             borderRadius: 2,
-            position: "absolute",
-            left: "calc(100% - 2px)",
+            position: 'absolute',
+            left: 'calc(100% - 2px)',
             zIndex: (theme) => theme.zIndex.drawer,
             boxShadow: (theme) => theme.customShadows.z20,
             ...(singleList && {
               p: 2,
-              width: "auto",
-              minWidth: 160,
-            }),
+              width: 'auto',
+              minWidth: 160
+            })
           }}
         >
-          {singleList ? (
+          {singleList
+            ? (
             <NavSubList data={data.children} slotProps={slotProps} />
-          ) : (
+              )
+            : (
             <Masonry
               columns={3}
               spacing={3}
@@ -99,7 +101,7 @@ export default function NavList({ data, slotProps }: NavListProps) {
                 sx={{ mb: 2.5 }}
               />
             </Masonry>
-          )}
+              )}
 
           <Stack spacing={3}>
             {!!data.moreLink && (
@@ -111,7 +113,7 @@ export default function NavList({ data, slotProps }: NavListProps) {
 
             {!!data.products && (
               <>
-                <Divider sx={{ borderStyle: "dashed" }} />
+                <Divider sx={{ borderStyle: 'dashed' }} />
 
                 <MenuProducts
                   products={data.products}
@@ -122,7 +124,7 @@ export default function NavList({ data, slotProps }: NavListProps) {
 
             {!!data.tags && (
               <>
-                <Divider sx={{ borderStyle: "dashed" }} />
+                <Divider sx={{ borderStyle: 'dashed' }} />
                 <MenuTags tags={data.tags} />
               </>
             )}
@@ -130,5 +132,5 @@ export default function NavList({ data, slotProps }: NavListProps) {
         </Paper>
       )}
     </>
-  );
+  )
 }

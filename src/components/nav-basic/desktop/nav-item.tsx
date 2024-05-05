@@ -1,14 +1,14 @@
-import { forwardRef } from "react";
+import { forwardRef } from 'react'
 
-import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
-import { styled } from "@mui/material/styles";
-import ListItemButton from "@mui/material/ListItemButton";
+import Box from '@mui/material/Box'
+import Link from '@mui/material/Link'
+import { styled } from '@mui/material/styles'
+import ListItemButton from '@mui/material/ListItemButton'
 
-import { RouterLink } from "src/routes/components";
+import { RouterLink } from 'src/routes/components'
 
-import Iconify from "../../iconify";
-import { NavItemProps, NavItemStateProps } from "../types";
+import Iconify from '../../iconify'
+import { type NavItemProps, type NavItemStateProps } from '../types'
 
 // ----------------------------------------------------------------------
 
@@ -26,9 +26,9 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
       externalLink,
       ...other
     },
-    ref,
+    ref
   ) => {
-    const subItem = depth !== 1;
+    const subItem = depth !== 1
 
     const renderContent = (
       <StyledNavItem
@@ -66,15 +66,15 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
             className="arrow"
             icon={
               subItem
-                ? "eva:arrow-ios-forward-fill"
-                : "eva:arrow-ios-downward-fill"
+                ? 'eva:arrow-ios-forward-fill'
+                : 'eva:arrow-ios-downward-fill'
             }
           />
         )}
       </StyledNavItem>
-    );
+    )
 
-    if (externalLink)
+    if (externalLink) {
       return (
         <Link
           href={path}
@@ -85,55 +85,56 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
         >
           {renderContent}
         </Link>
-      );
+      )
+    }
 
     return (
       <Link component={RouterLink} href={path} color="inherit" underline="none">
         {renderContent}
       </Link>
-    );
-  },
-);
+    )
+  }
+)
 
-export default NavItem;
+export default NavItem
 
 // ----------------------------------------------------------------------
 
 const StyledNavItem = styled(ListItemButton, {
-  shouldForwardProp: (prop) => prop !== "active",
+  shouldForwardProp: (prop) => prop !== 'active'
 })<NavItemStateProps>(({ active, open, depth, theme }) => {
-  const subItem = depth !== 1;
+  const subItem = depth !== 1
 
-  const opened = open && !active;
+  const opened = open && !active
 
   const baseStyles = {
     item: {
       ...theme.typography.body2,
-      fontWeight: theme.typography.fontWeightMedium,
+      fontWeight: theme.typography.fontWeightMedium
     },
     icon: {
       width: 20,
       height: 20,
       flexShrink: 0,
-      marginRight: theme.spacing(1),
+      marginRight: theme.spacing(1)
     },
     textContainer: {
       flexGrow: 1,
-      display: "inline-flex",
-      flexDirection: "column",
+      display: 'inline-flex',
+      flexDirection: 'column'
     },
     label: {
-      flexGrow: 1,
+      flexGrow: 1
     },
     caption: {
       ...theme.typography.caption,
-      color: theme.palette.text.disabled,
+      color: theme.palette.text.disabled
     },
     arrow: {
       flexShrink: 0,
-      marginLeft: theme.spacing(0.75),
-    },
-  } as const;
+      marginLeft: theme.spacing(0.75)
+    }
+  } as const
 
   return {
     // Root item
@@ -141,35 +142,35 @@ const StyledNavItem = styled(ListItemButton, {
       ...baseStyles.item,
       padding: 0,
       minHeight: 40,
-      transition: theme.transitions.create(["all"], {
-        duration: theme.transitions.duration.shorter,
+      transition: theme.transitions.create(['all'], {
+        duration: theme.transitions.duration.shorter
       }),
-      "&:hover": {
-        backgroundColor: "transparent",
+      '&:hover': {
+        backgroundColor: 'transparent'
       },
-      "& .icon": {
-        ...baseStyles.icon,
+      '& .icon': {
+        ...baseStyles.icon
       },
-      "& .text-container": {
-        ...baseStyles.textContainer,
+      '& .text-container': {
+        ...baseStyles.textContainer
       },
-      "& .label": {
-        ...baseStyles.label,
+      '& .label': {
+        ...baseStyles.label
       },
-      "& .caption": {
+      '& .caption': {
         ...baseStyles.caption,
-        display: "none",
+        display: 'none'
       },
-      "& .arrow": {
-        ...baseStyles.arrow,
+      '& .arrow': {
+        ...baseStyles.arrow
       },
       ...(active && {
         color: theme.palette.primary.main,
-        fontWeight: theme.typography.fontWeightSemiBold,
+        fontWeight: theme.typography.fontWeightSemiBold
       }),
       ...(opened && {
-        opacity: 0.64,
-      }),
+        opacity: 0.64
+      })
     }),
 
     // Sub item
@@ -179,31 +180,31 @@ const StyledNavItem = styled(ListItemButton, {
       borderRadius: 6,
       padding: theme.spacing(0.75, 1),
       color: theme.palette.text.secondary,
-      "& .icon": {
-        ...baseStyles.icon,
+      '& .icon': {
+        ...baseStyles.icon
       },
-      "& .text-container": {
-        ...baseStyles.textContainer,
+      '& .text-container': {
+        ...baseStyles.textContainer
       },
-      "& .label": {
-        ...baseStyles.label,
+      '& .label': {
+        ...baseStyles.label
       },
-      "& .caption": {
-        ...baseStyles.caption,
+      '& .caption': {
+        ...baseStyles.caption
       },
-      "& .arrow": {
+      '& .arrow': {
         ...baseStyles.arrow,
-        marginRight: theme.spacing(-0.5),
+        marginRight: theme.spacing(-0.5)
       },
       ...(active && {
         color: theme.palette.text.primary,
         backgroundColor: theme.palette.action.selected,
-        fontWeight: theme.typography.fontWeightSemiBold,
+        fontWeight: theme.typography.fontWeightSemiBold
       }),
       ...(opened && {
         color: theme.palette.text.primary,
-        backgroundColor: theme.palette.action.hover,
-      }),
-    }),
-  };
-});
+        backgroundColor: theme.palette.action.hover
+      })
+    })
+  }
+})

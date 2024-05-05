@@ -1,51 +1,51 @@
-import { m } from "framer-motion";
-import { useCallback } from "react";
+import { m } from 'framer-motion'
+import { useCallback } from 'react'
 
-import MenuItem from "@mui/material/MenuItem";
-import IconButton from "@mui/material/IconButton";
+import MenuItem from '@mui/material/MenuItem'
+import IconButton from '@mui/material/IconButton'
 
-import Iconify from "src/components/iconify";
-import { varHover } from "src/components/animate";
-import CustomPopover, { usePopover } from "src/components/custom-popover";
+import Iconify from 'src/components/iconify'
+import { varHover } from 'src/components/animate'
+import CustomPopover, { usePopover } from 'src/components/custom-popover'
 
 // ----------------------------------------------------------------------
 
 export const allLangs = [
   {
-    label: "English",
-    value: "en",
-    icon: "flagpack:gb-nir",
+    label: 'English',
+    value: 'en',
+    icon: 'flagpack:gb-nir'
   },
   {
-    label: "French",
-    value: "fr",
-    icon: "flagpack:fr",
+    label: 'French',
+    value: 'fr',
+    icon: 'flagpack:fr'
   },
   {
-    label: "Vietnamese",
-    value: "vi",
-    icon: "flagpack:vn",
+    label: 'Vietnamese',
+    value: 'vi',
+    icon: 'flagpack:vn'
   },
   {
-    label: "Chinese",
-    value: "cn",
-    icon: "flagpack:cn",
+    label: 'Chinese',
+    value: 'cn',
+    icon: 'flagpack:cn'
   },
   {
-    label: "Arabic",
-    value: "ar",
-    icon: "flagpack:sa",
-  },
-];
+    label: 'Arabic',
+    value: 'ar',
+    icon: 'flagpack:sa'
+  }
+]
 
-export default function LanguagePopover() {
-  const popover = usePopover();
+export default function LanguagePopover () {
+  const popover = usePopover()
 
-  const currentLang = allLangs[0];
+  const currentLang = allLangs[0]
 
   const handleChangeLang = useCallback(() => {
-    popover.onClose();
-  }, [popover]);
+    popover.onClose()
+  }, [popover])
 
   return (
     <>
@@ -59,8 +59,8 @@ export default function LanguagePopover() {
           width: 40,
           height: 40,
           ...(popover.open && {
-            bgcolor: "action.selected",
-          }),
+            bgcolor: 'action.selected'
+          })
         }}
       >
         <Iconify
@@ -90,5 +90,5 @@ export default function LanguagePopover() {
         ))}
       </CustomPopover>
     </>
-  );
+  )
 }

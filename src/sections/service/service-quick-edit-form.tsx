@@ -1,99 +1,94 @@
-import * as Yup from "yup";
-import { useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from 'yup'
+import { useMemo, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { MuiColorInput } from 'mui-color-input'
+import { yupResolver } from '@hookform/resolvers/yup'
 
-import Box from "@mui/material/Box";
-import Alert from "@mui/material/Alert";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import MenuItem from "@mui/material/MenuItem";
-import LoadingButton from "@mui/lab/LoadingButton";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import { MuiColorInput } from "mui-color-input";
+import Box from '@mui/material/Box'
+import Alert from '@mui/material/Alert'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import LoadingButton from '@mui/lab/LoadingButton'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
 
-import { countries } from "src/assets/data";
-import { USER_STATUS_OPTIONS } from "src/_mock";
-
-import { useSnackbar } from "src/components/snackbar";
+import { useSnackbar } from 'src/components/snackbar'
 import FormProvider, {
-  RHFSelect,
   RHFSwitch,
   RHFTextField,
-  RHFAutocomplete,
-} from "src/components/hook-form";
+  RHFAutocomplete
+} from 'src/components/hook-form'
 
-import { IServiceItem } from "src/types/service";
+import { type IServiceItem } from 'src/types/service'
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  open: boolean;
-  onClose: VoidFunction;
-  currentService?: IServiceItem;
-};
+interface Props {
+  open: boolean
+  onClose: VoidFunction
+  currentService?: IServiceItem
+}
 
-export default function ServiceQuickEditForm({
+export default function ServiceQuickEditForm ({
   currentService,
   open,
-  onClose,
+  onClose
 }: Props) {
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar()
 
-  const [color, setColor] = useState("#ffffff");
+  const [color, setColor] = useState('#ffffff')
 
   const NewUserSchema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
-    duration: Yup.number().required("Duration is required"),
-    tax: Yup.number().required("Tax is required"),
-    color: Yup.string().required("Country is required"),
-    price: Yup.number().required("Price is required"),
-    category: Yup.number().required("Category is required"),
-    onthetop: Yup.boolean(),
-  });
+    name: Yup.string().required('Name is required'),
+    duration: Yup.number().required('Duration is required'),
+    tax: Yup.number().required('Tax is required'),
+    color: Yup.string().required('Country is required'),
+    price: Yup.number().required('Price is required'),
+    category: Yup.number().required('Category is required'),
+    onthetop: Yup.boolean()
+  })
 
-  const handleChange = (color: string) => {
-    setColor(color);
-  };
+  const handleChange = (newcolor: string) => {
+    setColor(newcolor)
+  }
 
   const defaultValues = useMemo(
     () => ({
-      name: currentService?.name || "",
+      name: currentService?.name || '',
       duration: currentService?.duration || 15,
       tax: currentService?.tax || 0,
-      color: currentService?.color || "",
+      color: currentService?.color || '',
       price: currentService?.price || 0,
       category: currentService?.category || 0,
       onthetop: currentService?.onthetop || true,
-      commission: currentService?.commission || 0,
+      commission: currentService?.commission || 0
     }),
-    [currentService],
-  );
+    [currentService]
+  )
 
   const methods = useForm({
     resolver: yupResolver(NewUserSchema),
-    defaultValues,
-  });
+    defaultValues
+  })
 
   const {
     reset,
     handleSubmit,
-    formState: { isSubmitting },
-  } = methods;
+    formState: { isSubmitting }
+  } = methods
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      onClose();
-      enqueueSnackbar("Update success!");
-      console.info("DATA", data);
+      await new Promise((resolve) => setTimeout(resolve, 500))
+      reset()
+      onClose()
+      enqueueSnackbar('Update success!')
+      console.info('DATA', data)
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  });
+  })
 
   return (
     <Dialog
@@ -102,7 +97,7 @@ export default function ServiceQuickEditForm({
       open={open}
       onClose={onClose}
       PaperProps={{
-        sx: { maxWidth: 720 },
+        sx: { maxWidth: 720 }
       }}
     >
       <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -118,15 +113,15 @@ export default function ServiceQuickEditForm({
             columnGap={2}
             display="grid"
             gridTemplateColumns={{
-              xs: "repeat(1, 1fr)",
-              sm: "repeat(2, 1fr)",
+              xs: 'repeat(1, 1fr)',
+              sm: 'repeat(2, 1fr)'
             }}
           >
             <RHFAutocomplete
               name="category"
               label="Service Category"
               autoHighlight
-              options={[""]}
+              options={['']}
               getOptionLabel={(option) => option}
               renderOption={(props, option) => (
                 <li {...props} key={option}>
@@ -156,7 +151,7 @@ export default function ServiceQuickEditForm({
               name="color"
               label="Color"
               format="hex"
-              value={defaultValues.color}
+              value={defaultValues.color&& color}
               onChange={handleChange}
             />
             <RHFSwitch name="onthetop" label="On the top" />
@@ -178,5 +173,5 @@ export default function ServiceQuickEditForm({
         </DialogActions>
       </FormProvider>
     </Dialog>
-  );
+  )
 }

@@ -1,65 +1,65 @@
-import { StackProps } from "@mui/material/Stack";
-import { Theme, SxProps } from "@mui/material/styles";
-import { ListItemButtonProps } from "@mui/material/ListItemButton";
+import { type StackProps } from '@mui/material/Stack'
+import { type Theme, type SxProps } from '@mui/material/styles'
+import { type ListItemButtonProps } from '@mui/material/ListItemButton'
 
 // ----------------------------------------------------------------------
 
-export type SlotProps = {
-  gap?: number;
-  rootItem?: SxProps<Theme>;
-  subItem?: SxProps<Theme>;
-  subheader?: SxProps<Theme>;
-  currentRole?: string;
-};
+export interface SlotProps {
+  gap?: number
+  rootItem?: SxProps<Theme>
+  subItem?: SxProps<Theme>
+  subheader?: SxProps<Theme>
+  currentRole?: string
+}
 
-export type NavItemStateProps = {
-  depth?: number;
-  open?: boolean;
-  active?: boolean;
-  hasChild?: boolean;
-  currentRole?: string;
-  externalLink?: boolean;
-};
+export interface NavItemStateProps {
+  depth?: number
+  open?: boolean
+  active?: boolean
+  hasChild?: boolean
+  currentRole?: string
+  externalLink?: boolean
+}
 
-export type NavItemBaseProps = {
-  title: string;
-  path: string;
-  icon?: React.ReactElement;
-  info?: React.ReactElement;
-  caption?: string;
-  disabled?: boolean;
-  roles?: string[];
-  children?: any;
-};
+export interface NavItemBaseProps {
+  title: string
+  path: string
+  icon?: React.ReactElement
+  info?: React.ReactElement
+  caption?: string
+  disabled?: boolean
+  roles?: string[]
+  children?: any
+}
 
 export type NavItemProps = ListItemButtonProps &
-  NavItemStateProps &
-  NavItemBaseProps & {
-    slotProps?: SlotProps;
-  };
+NavItemStateProps &
+NavItemBaseProps & {
+  slotProps?: SlotProps
+}
 
-export type NavListProps = {
-  data: NavItemBaseProps;
-  depth: number;
-  slotProps?: SlotProps;
-};
+export interface NavListProps {
+  data: NavItemBaseProps
+  depth: number
+  slotProps?: SlotProps
+}
 
-export type NavSubListProps = {
-  data: NavItemBaseProps[];
-  depth: number;
-  slotProps?: SlotProps;
-};
+export interface NavSubListProps {
+  data: NavItemBaseProps[]
+  depth: number
+  slotProps?: SlotProps
+}
 
-export type NavGroupProps = {
-  subheader?: string;
-  items: NavItemBaseProps[];
-  slotProps?: SlotProps;
-};
+export interface NavGroupProps {
+  subheader?: string
+  items: NavItemBaseProps[]
+  slotProps?: SlotProps
+}
 
 export type NavProps = StackProps & {
-  data: {
-    subheader: string;
-    items: NavItemBaseProps[];
-  }[];
-  slotProps?: SlotProps;
-};
+  data: Array<{
+    subheader: string
+    items: NavItemBaseProps[]
+  }>
+  slotProps?: SlotProps
+}

@@ -1,20 +1,20 @@
-import Box from "@mui/material/Box";
-import Switch from "@mui/material/Switch";
-import { Theme, SxProps } from "@mui/material/styles";
-import FormControlLabel from "@mui/material/FormControlLabel";
+import Box from '@mui/material/Box'
+import Switch from '@mui/material/Switch'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import { type Theme, type SxProps } from '@mui/material/styles'
 import TablePagination, {
-  TablePaginationProps,
-} from "@mui/material/TablePagination";
+  type TablePaginationProps
+} from '@mui/material/TablePagination'
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  dense?: boolean;
-  onChangeDense?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  sx?: SxProps<Theme>;
-};
+interface Props {
+  dense?: boolean
+  onChangeDense?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  sx?: SxProps<Theme>
+}
 
-export default function TablePaginationCustom({
+export default function TablePaginationCustom ({
   dense,
   onChangeDense,
   rowsPerPageOptions = [5, 10, 25],
@@ -22,13 +22,13 @@ export default function TablePaginationCustom({
   ...other
 }: Props & TablePaginationProps) {
   return (
-    <Box sx={{ position: "relative", ...sx }}>
+    <Box sx={{ position: 'relative', ...sx }}>
       <TablePagination
         rowsPerPageOptions={rowsPerPageOptions}
         component="div"
         {...other}
         sx={{
-          borderTopColor: "transparent",
+          borderTopColor: 'transparent'
         }}
       />
 
@@ -41,11 +41,11 @@ export default function TablePaginationCustom({
             py: 1.5,
             top: 0,
             position: {
-              sm: "absolute",
-            },
+              sm: 'absolute'
+            }
           }}
         />
       )}
     </Box>
-  );
+  )
 }

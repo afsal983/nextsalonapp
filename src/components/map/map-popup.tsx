@@ -1,18 +1,18 @@
-import { PopupProps } from "react-map-gl";
+import { type PopupProps } from 'react-map-gl'
 
-import { Theme, SxProps } from "@mui/material/styles";
+import { type Theme, type SxProps } from '@mui/material/styles'
 
-import { StyledPopup } from "./styles";
+import { StyledPopup } from './styles'
 
 // ----------------------------------------------------------------------
 
 interface MapControlPopupProps extends PopupProps {
-  sx?: SxProps<Theme>;
+  sx?: SxProps<Theme>
 }
 
 // ----------------------------------------------------------------------
 
-export default function MapPopup({
+export default function MapPopup ({
   sx,
   children,
   ...other
@@ -21,5 +21,5 @@ export default function MapPopup({
     <StyledPopup anchor="bottom" sx={sx} {...other}>
       {children}
     </StyledPopup>
-  );
+  )
 }

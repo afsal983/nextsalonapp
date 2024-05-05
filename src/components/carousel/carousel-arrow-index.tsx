@@ -1,51 +1,51 @@
-import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import { Theme, styled, SxProps, useTheme } from "@mui/material/styles";
+import Box from '@mui/material/Box'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+import { styled, useTheme, type Theme, type SxProps } from '@mui/material/styles'
 
-import { bgBlur } from "src/theme/css";
+import { bgBlur } from 'src/theme/css'
 
-import { IconifyProps } from "../iconify";
-import { LeftIcon, RightIcon } from "./arrow-icons";
+import { type IconifyProps } from '../iconify'
+import { LeftIcon, RightIcon } from './arrow-icons'
 
 // ----------------------------------------------------------------------
 
 const StyledRoot = styled(Box)(({ theme }) => ({
   ...bgBlur({
     opacity: 0.48,
-    color: theme.palette.grey[900],
+    color: theme.palette.grey[900]
   }),
   zIndex: 9,
-  display: "inline-flex",
-  alignItems: "center",
-  position: "absolute",
+  display: 'inline-flex',
+  alignItems: 'center',
+  position: 'absolute',
   bottom: theme.spacing(2),
   right: theme.spacing(2),
   padding: theme.spacing(0.25),
   color: theme.palette.common.white,
-  borderRadius: theme.shape.borderRadius,
-}));
+  borderRadius: theme.shape.borderRadius
+}))
 
 const StyledIconButton = styled(IconButton)({
   width: 28,
   height: 28,
   padding: 0,
   opacity: 0.48,
-  "&:hover": { opacity: 1 },
-});
+  '&:hover': { opacity: 1 }
+})
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  index: number;
-  total: number;
-  icon?: IconifyProps; // Right icon
-  onNext?: VoidFunction;
-  onPrev?: VoidFunction;
-  sx?: SxProps<Theme>;
-};
+interface Props {
+  index: number
+  total: number
+  icon?: IconifyProps // Right icon
+  onNext?: VoidFunction
+  onPrev?: VoidFunction
+  sx?: SxProps<Theme>
+}
 
-export default function CarouselArrowIndex({
+export default function CarouselArrowIndex ({
   index,
   total,
   onNext,
@@ -54,9 +54,9 @@ export default function CarouselArrowIndex({
   sx,
   ...other
 }: Props) {
-  const theme = useTheme();
+  const theme = useTheme()
 
-  const isRTL = theme.direction === "rtl";
+  const isRTL = theme.direction === 'rtl'
 
   return (
     <StyledRoot sx={sx} {...other}>
@@ -72,5 +72,5 @@ export default function CarouselArrowIndex({
         <RightIcon icon={icon} isRTL={isRTL} />
       </StyledIconButton>
     </StyledRoot>
-  );
+  )
 }

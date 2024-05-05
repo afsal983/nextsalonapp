@@ -1,13 +1,13 @@
-import { memo } from "react";
+import { memo } from 'react'
 
-import Stack from "@mui/material/Stack";
+import Stack from '@mui/material/Stack'
 
-import NavList from "./nav-list";
-import { NavProps, NavGroupProps } from "../types";
+import NavList from './nav-list'
+import { type NavProps, type NavGroupProps } from '../types'
 
 // ----------------------------------------------------------------------
 
-function NavSectionHorizontal({ data, slotProps, sx, ...other }: NavProps) {
+function NavSectionHorizontal ({ data, slotProps, sx, ...other }: NavProps) {
   return (
     <Stack
       component="nav"
@@ -16,8 +16,8 @@ function NavSectionHorizontal({ data, slotProps, sx, ...other }: NavProps) {
       alignItems="center"
       spacing={`${slotProps?.gap || 6}px`}
       sx={{
-        mx: "auto",
-        ...sx,
+        mx: 'auto',
+        ...sx
       }}
       {...other}
     >
@@ -29,19 +29,19 @@ function NavSectionHorizontal({ data, slotProps, sx, ...other }: NavProps) {
         />
       ))}
     </Stack>
-  );
+  )
 }
 
-export default memo(NavSectionHorizontal);
+export default memo(NavSectionHorizontal)
 
 // ----------------------------------------------------------------------
 
-function Group({ items, slotProps }: NavGroupProps) {
+function Group ({ items, slotProps }: NavGroupProps) {
   return (
     <>
       {items.map((list) => (
         <NavList key={list.title} data={list} depth={1} slotProps={slotProps} />
       ))}
     </>
-  );
+  )
 }
