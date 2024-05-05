@@ -1,4 +1,4 @@
-/* eslint-disable perfectionist/sort-imports s*/ 
+/* eslint-disable perfectionist/sort-imports */ 
 import 'src/global.css'
 
 // ----------------------------------------------------------------------
