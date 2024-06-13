@@ -8,13 +8,13 @@ import Stack, { type StackProps } from '@mui/material/Stack'
 
 import Iconify from 'src/components/iconify'
 
-import { type IUserTableFilters, type IUserTableFilterValue } from 'src/types/service'
+import { type ServiceTableFilters, type ServiceTableFilterValue } from 'src/types/service'
 
 // ----------------------------------------------------------------------
 
 type Props = StackProps & {
-  filters: IUserTableFilters
-  onFilters: (name: string, value: IUserTableFilterValue) => void
+  filters: ServiceTableFilters
+  onFilters: (name: string, value: ServiceTableFilterValue) => void
   //
   onResetFilters: VoidFunction
   //

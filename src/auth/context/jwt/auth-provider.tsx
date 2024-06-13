@@ -1,10 +1,11 @@
 'use client'
 
 // Import the library
-import { setCookie } from 'nookies'
 import { useMemo, useEffect, useReducer, useCallback } from 'react'
 
 import axios, { endpoints } from 'src/utils/axios'
+
+import { useAuthContext } from 'src/auth/hooks';
 
 import { AuthContext } from './auth-context'
 import { setSession, isValidToken } from './utils'
@@ -86,22 +87,26 @@ interface Props {
 export function AuthProvider ({ children }: Props) {
   const [state, dispatch] = useReducer(reducer, initialState)
 
+  const currentuser  = useAuthContext();
+  
   const initialize = useCallback(async () => {
     try {
       const token = sessionStorage.getItem(STORAGE_KEY)
 
+   
       if (token && isValidToken(token)) {
         setSession(token)
 
-        const res = await axios.get(endpoints.auth.me)
 
-        const { user } = res.data
+        // /const res = await axios.get(endpoints.auth.me)
+
+        
 
         dispatch({
           type: Types.INITIAL,
           payload: {
             user: {
-              ...user,
+              ...currentuser.user,
               token
             }
           }
@@ -115,7 +120,6 @@ export function AuthProvider ({ children }: Props) {
         })
       }
     } catch (error) {
-      console.error(error)
       dispatch({
         type: Types.INITIAL,
         payload: {
@@ -123,7 +127,7 @@ export function AuthProvider ({ children }: Props) {
         }
       })
     }
-  }, [])
+  }, [currentuser])
 
   useEffect(() => {
     initialize()
@@ -131,12 +135,18 @@ export function AuthProvider ({ children }: Props) {
 
   // LOGIN
   const login = useCallback(async (username: string, password: string) => {
-    const data = {
-      username,
-      password
-    }
 
-    const res = await axios.post(endpoints.auth.login, data)
+    setSession("")
+    // const res = await axios.post(endpoints.auth.login, data)
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: {
+          'Content-type': 'application/json',
+      },
+      body: JSON.stringify({ "email": username, "password": password }),
+    })
+
+    const logindata = await res.json()
 
     const {
       firstname,
@@ -150,14 +160,9 @@ export function AuthProvider ({ children }: Props) {
       branch_id,
       token,
       refresh_token
-    } = res.data
+    } = logindata
 
-    setSession(token)
-    // Set the token in a cookie
-    setCookie(null, 'token', token, {
-      maxAge: 30 * 24 * 60 * 60, // 30 days
-      path: '/' // Cookie path
-    })
+    // setSession(token)
 
     dispatch({
       type: Types.LOGIN,
@@ -237,7 +242,7 @@ export function AuthProvider ({ children }: Props) {
       //
       login,
       register,
-      logout
+      logout,
     }),
     [login, logout, register, state.user, status]
   )

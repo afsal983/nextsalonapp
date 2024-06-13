@@ -39,6 +39,20 @@ export const paths = {
       new: `${ROOTS.DASHBOARD}/package/new`,
       list: `${ROOTS.DASHBOARD}/package/list`,
       edit: (id: number) => `${ROOTS.DASHBOARD}/service/${id}/edit`
-    }
+    },
+    invoice: {
+      root: `${ROOTS.DASHBOARD}/invoice`,
+      new: `${ROOTS.DASHBOARD}/invoice/new`,
+      list: `${ROOTS.DASHBOARD}/invoice/list`,
+      edit: (id: number) => `${ROOTS.DASHBOARD}/invoice/${id}/edit`,
+      details: (id: string) => `${ROOTS.DASHBOARD}/invoice/${id}`
+    },
+    report: {
+      root: `${ROOTS.DASHBOARD}/report`,
+      list: `${ROOTS.DASHBOARD}/retail/list`,
+      details: (id: string) => `${ROOTS.DASHBOARD}/report/${id}`,
+      edit: (id: string) => `${ROOTS.DASHBOARD}/report/${id}/edit`,
+
+    },
   }
 }

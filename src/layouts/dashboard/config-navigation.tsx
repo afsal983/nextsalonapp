@@ -2,6 +2,8 @@ import { useMemo } from 'react'
 
 import { paths } from 'src/routes/paths'
 
+import { useTranslate } from 'src/locales';
+
 import SvgColor from 'src/components/svg-color'
 
 // ----------------------------------------------------------------------
@@ -40,15 +42,17 @@ const ICONS = {
 // ----------------------------------------------------------------------
 
 export function useNavData () {
+  const { t } = useTranslate();
+  
   const data = useMemo(
     () => [
       // OVERVIEW
       // ----------------------------------------------------------------------
       {
-        subheader: 'Analysis',
+        subheader: t('overview'),
         items: [
           {
-            title: 'dashboard',
+            title: t('salonapp.dashboard'),
             path: paths.dashboard.root,
             icon: ICONS.dashboard
           }
@@ -58,132 +62,132 @@ export function useNavData () {
       // MANAGEMENT
       // ----------------------------------------------------------------------
       {
-        subheader: 'management',
+        subheader: t('salonapp.management'),
         items: [
           {
-            title: 'services',
+            title: t('salonapp.services'),
             path: paths.dashboard.services.root,
             icon: ICONS.services,
             children: [
-              { title: 'service list', path: paths.dashboard.services.root },
+              { title: t('salonapp.service_list'), path: paths.dashboard.services.root },
               {
-                title: 'service category',
+                title: t('salonapp.service_category'),
                 path: paths.dashboard.services.servicecategory.root
               }
             ]
           },
           {
-            title: 'retails',
+            title: t('salonapp.retails'),
             path: paths.dashboard.retails.root,
             icon: ICONS.retails,
             children: [
-              { title: 'retail list', path: paths.dashboard.retails.root },
-              { title: 'retail category', path: paths.dashboard.retails.root },
-              { title: 'retail brand', path: paths.dashboard.retails.root }
+              { title: t('salonapp.retail_list'), path: paths.dashboard.retails.root },
+              { title: t('salonapp.retail_category'), path: paths.dashboard.retails.root },
+              { title: t('salonapp.retail_brand'), path: paths.dashboard.retails.root }
             ]
           },
           {
-            title: 'packages',
+            title: t('salonapp.packages'),
             path: paths.dashboard.packages.root,
             icon: ICONS.packages,
             children: [
-              { title: 'package list', path: paths.dashboard.packages.root },
+              { title: t('salonapp.package_list'), path: paths.dashboard.packages.root },
               {
-                title: 'paackage category',
+                title: t('salonapp.package_category'),
                 path: paths.dashboard.packages.root
               }
             ]
           },
           {
-            title: 'appointments',
+            title: t('salonapp.appointments'),
             path: paths.dashboard.retails.root,
             icon: ICONS.appointments
           },
           {
-            title: 'invoices',
-            path: paths.dashboard.retails.root,
+            title: t('salonapp.invoices'),
+            path: paths.dashboard.invoice.root,
             icon: ICONS.invoices,
             children: [
-              { title: 'invoice list', path: paths.dashboard.retails.root },
-              { title: 'payment types', path: paths.dashboard.retails.root }
+              { title: t('salonapp.invoice_list'), path: paths.dashboard.invoice.root },
+              { title: t('salonapp.payment_types'), path: paths.dashboard.invoice.root }
             ]
           },
           {
-            title: 'employees',
+            title: t('salonapp.employees'),
             path: paths.dashboard.retails.root,
             icon: ICONS.employees,
             children: [
-              { title: 'emloyee', path: paths.dashboard.retails.root },
-              { title: 'work schedule', path: paths.dashboard.retails.root },
-              { title: 'timeslots', path: paths.dashboard.retails.root }
+              { title: t('salonapp.employee'), path: paths.dashboard.retails.root },
+              { title: t('salonapp.work_schedule'), path: paths.dashboard.retails.root },
+              { title: t('salonapp.timeslots'), path: paths.dashboard.retails.root }
             ]
           },
           {
-            title: 'locations',
+            title: t('salonapp.locations'),
             path: paths.dashboard.retails.root,
             icon: ICONS.locations
           },
           {
-            title: 'organizations',
+            title: t('salonapp.organizations'),
             path: paths.dashboard.retails.root,
             icon: ICONS.organizations
           },
           {
-            title: 'branches',
+            title: t('salonapp.branches'),
             path: paths.dashboard.retails.root,
             icon: ICONS.branches
           },
           {
-            title: 'reports',
-            path: paths.dashboard.retails.root,
+            title: t('salonapp.reports'),
+            path: paths.dashboard.report.root,
             icon: ICONS.reports
           },
           {
-            title: 'audits',
+            title: t('salonapp.audits'),
             path: paths.dashboard.retails.root,
             icon: ICONS.audits
           },
           {
-            title: 'settings',
+            title: t('salonapp.settings'),
             path: paths.dashboard.retails.root,
             icon: ICONS.settings
           },
           {
-            title: 'users',
+            title: t('salonapp.users'),
             path: paths.dashboard.retails.root,
             icon: ICONS.users,
             children: [
-              { title: 'user list', path: paths.dashboard.retails.root },
-              { title: 'roles', path: paths.dashboard.retails.root }
+              { title: t('salonapp.user_list'), path: paths.dashboard.retails.root },
+              { title: t('salonapp.roles'), path: paths.dashboard.retails.root }
             ]
           },
           {
-            title: 'message builder',
+            title: t('salonapp.message_builder'),
             path: paths.dashboard.retails.root,
             icon: ICONS.messagebuilder
           },
           {
-            title: 'maketing',
+            title: t('salonapp.marketing'),
             path: paths.dashboard.retails.root,
             icon: ICONS.marketing,
             children: [
-              { title: 'campaign content', path: paths.dashboard.retails.root },
-              { title: 'campaigns', path: paths.dashboard.retails.root }
+              { title: t('salonapp.campaign_content'), path: paths.dashboard.retails.root },
+              { title: t('salonapp.campaigns'), path: paths.dashboard.retails.root }
             ]
           },
           {
-            title: 'adapters',
+            title: t('salonapp.adapters'),
             path: paths.dashboard.retails.root,
             icon: ICONS.adapters,
             children: [
-              { title: 'email', path: paths.dashboard.retails.root },
-              { title: 'whatsapp', path: paths.dashboard.retails.root }
+              { title: t('salonapp.email'), path: paths.dashboard.retails.root },
+              { title: t('salonapp.whatsapp'), path: paths.dashboard.retails.root }
             ]
           }
         ]
       }
     ],
-    []
+    [t]
   )
 
   return data

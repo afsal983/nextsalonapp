@@ -6,9 +6,11 @@ import { AuthContext } from './auth-context'
 
 // ----------------------------------------------------------------------
 
+/*
 interface Props {
   children: React.ReactNode
 }
+*/
 // I changes props to any
   export function AuthConsumer ({ children }: any) {
     return (

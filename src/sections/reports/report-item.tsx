@@ -1,0 +1,93 @@
+import Box from '@mui/material/Box';
+import Link from '@mui/material/Link';
+import Card from '@mui/material/Card';
+import Stack from '@mui/material/Stack';
+import Avatar from '@mui/material/Avatar';
+import Divider from '@mui/material/Divider';
+import MenuItem from '@mui/material/MenuItem';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import ListItemText from '@mui/material/ListItemText';
+
+import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
+
+import { fDate } from 'src/utils/format-time';
+import { fCurrency } from 'src/utils/format-number';
+
+import Iconify from 'src/components/iconify';
+import CustomPopover, { usePopover } from 'src/components/custom-popover';
+
+import { IReportItem } from 'src/types/report';
+
+// ----------------------------------------------------------------------
+
+type Props = {
+  report: IReportItem;
+  onView: VoidFunction;
+  onEdit: VoidFunction;
+  onDelete: VoidFunction;
+};
+
+export default function ReportItem({ report, onView, onEdit, onDelete }: Props) {
+  const popover = usePopover();
+
+  const { id, name, url } =
+    report;
+
+  return (
+    <>
+      <Card>
+        <Stack sx={{ p: 3, pb: 2 }}>
+          <ListItemText
+            sx={{ mb: 1 }}
+            primary={
+              <Link component={RouterLink} href={paths.dashboard.report.details(id)} color="inherit">
+                {name}
+              </Link>
+            }
+  
+          />
+        </Stack>
+      </Card>
+
+      <CustomPopover
+        open={popover.open}
+        onClose={popover.onClose}
+        arrow="right-top"
+        sx={{ width: 140 }}
+      >
+        <MenuItem
+          onClick={() => {
+            popover.onClose();
+            onView();
+          }}
+        >
+          <Iconify icon="solar:eye-bold" />
+          View
+        </MenuItem>
+
+        <MenuItem
+          onClick={() => {
+            popover.onClose();
+            onEdit();
+          }}
+        >
+          <Iconify icon="solar:pen-bold" />
+          Edit
+        </MenuItem>
+
+        <MenuItem
+          onClick={() => {
+            popover.onClose();
+            onDelete();
+          }}
+          sx={{ color: 'error.main' }}
+        >
+          <Iconify icon="solar:trash-bin-trash-bold" />
+          Delete
+        </MenuItem>
+      </CustomPopover>
+    </>
+  );
+}

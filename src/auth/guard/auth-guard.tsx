@@ -20,6 +20,7 @@ interface Props {
 }
 
 export default function AuthGuard ({ children }: Props) {
+
   const { loading } = useAuthContext()
 
   return <>{loading ? <SplashScreen /> : <Container>{children}</Container>}</>
@@ -41,9 +42,8 @@ function Container ({ children }: Props) {
       }).toString()
 
       const loginPath = loginPaths[method]
-
+      
       const href = `${loginPath}?${searchParams}`
-
       router.replace(href)
     } else {
       setChecked(true)

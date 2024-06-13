@@ -7,11 +7,11 @@ const getCookie = async (name: string) => cookies().get(name)?.value ?? ''
  
 
 export async function fetchWithAuth (url: string, options: RequestInit = {}): Promise<any> {
+
   // const token = cookies().get('token')?.value
 
-  // const cookieData = await getCookieData()
-  // const token = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImZiVjBWQk1aSVpoOWctUEFkcXZjM2hfa0FvWkk5TUxGdDZ0TE9xcG9IOEEiLCJ0eXAiOiJKV1QifQ.eyJicmFuY2hfaWQiOjEsImRvbWFpbl9pZCI6IlRDZG55RHZ2aXEiLCJlbWFpbCI6ImFkbWluQHRlc3QuY29tIiwiZXhwIjoxNzE0OTY2NzgwLCJpYXQiOjE3MTQ5MDkxODAsImlzcyI6InNtZWV5ZSIsIm9yZ3JvbGUiOjEsInJvbGUiOjEsInN1YiI6IlN1YmplY3QifQ.Nmho2zxUzhMizhDn3Uq5n5QwJMcmlzSkFUnu-v0m8MlYIOmgC39r8xWQBqQ4wIABIzsbWq0AXk2OHuasxu7Mpo8hotKbJfthFapuK8Pev9N3029s-Lm8fUwVgLi02qx7un770bc6Pay_OCd7KftFqhzzOjXn3KddNp-NN7miMafVodmWvxrNOiZs9EGDr1_n3k7PJE7Ony2KGEFYOrIfYfVplsnTQER70MTkyNUqmAiSQd7LnmQmFWK2cnmOxWMbUhVsIqJhirjZ36IZQrJEGJdP8AN7szMEM1xV8-IL1XyZ8d4cuyUY2V1p4xOIPrP6uBh6vWbTxcB2XVRkymOCxA"
-  const token = await getCookie('token');
+
+  const token = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImZiVjBWQk1aSVpoOWctUEFkcXZjM2hfa0FvWkk5TUxGdDZ0TE9xcG9IOEEiLCJ0eXAiOiJKV1QifQ.eyJicmFuY2hfaWQiOjEsImRvbWFpbl9pZCI6IlRDZG55RHZ2aXEiLCJlbWFpbCI6ImFkbWluQHRlc3QuY29tIiwiZXhwIjoxNzE1NTUxMDcwLCJpYXQiOjE3MTU0OTM0NzAsImlzcyI6InNtZWV5ZSIsIm9yZ3JvbGUiOjEsInJvbGUiOjEsInN1YiI6IlN1YmplY3QifQ.igJ84fQUHDvfootiWA2aZsT56GHdUuDyFmyt4Z2xEOt6LS3jP4rHCHpHdreLzU4DPjiFb5vsnWknzBy5abqKPHMNyz5mdx0UMdhC1UHKeHn4mLtoK8BwbofO8qQL26VDep4zutOSC80u9PclaLHxG3ztsfs_ofVKbOqRvXEOGlRgtewrimgY0q8ie41GPlTZi-CPFLdIGgolGWOT3h50V_eurHOyw-FP3xFIXAS7Si8Y8a8qsw_gjhja_Pd8bXRvTOyoyIttEhJCctKIk4o21Qzh20H_hMSV5niBcDwmnjWFyVLKOIj44zM2ftIjzr2EVAB8Mq_AGAQTCHaM6DxXZw"
   // If token is available, add it to the request headers
   if (token) {
     options.headers = {

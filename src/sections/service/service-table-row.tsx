@@ -1,6 +1,4 @@
 import Button from '@mui/material/Button'
-import Avatar from '@mui/material/Avatar'
-import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import TableRow from '@mui/material/TableRow'
 import Checkbox from '@mui/material/Checkbox'
@@ -14,16 +12,14 @@ import Iconify from 'src/components/iconify'
 import { ConfirmDialog } from 'src/components/custom-dialog'
 import CustomPopover, { usePopover } from 'src/components/custom-popover'
 
-import { type IServiceItem } from 'src/types/service'
-
-import ServiceQuickEditForm from './service-quick-edit-form'
+import { type ServiceItem } from 'src/types/service'
 
 // ----------------------------------------------------------------------
 
 interface Props {
   selected: boolean
   onEditRow: VoidFunction
-  row: IServiceItem
+  row: ServiceItem
   onSelectRow: VoidFunction
   onDeleteRow: VoidFunction
 }
@@ -52,8 +48,6 @@ export default function UserTableRow ({
         </TableCell>
 
         <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-          <Avatar alt={name} src={name} sx={{ mr: 2 }} />
-
           <ListItemText
             primary={name}
             secondary={ProductCategory.name}
@@ -78,15 +72,6 @@ export default function UserTableRow ({
         </TableCell>
 
         <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-          <Tooltip title="Quick Edit" placement="top" arrow>
-            <IconButton
-              color={quickEdit.value ? 'inherit' : 'default'}
-              onClick={quickEdit.onTrue}
-            >
-              <Iconify icon="solar:pen-bold" />
-            </IconButton>
-          </Tooltip>
-
           <IconButton
             color={popover.open ? 'inherit' : 'default'}
             onClick={popover.onOpen}
@@ -95,12 +80,6 @@ export default function UserTableRow ({
           </IconButton>
         </TableCell>
       </TableRow>
-
-      <ServiceQuickEditForm
-        currentService={row}
-        open={quickEdit.value}
-        onClose={quickEdit.onFalse}
-      />
 
       <CustomPopover
         open={popover.open}

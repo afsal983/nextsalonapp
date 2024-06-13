@@ -9,5 +9,6 @@ export const metadata = {
 }
 
 export default async function OverviewEcommercePage () {
+  console.log("Dashboard")
   return <OverviewEcommerceView />
 }

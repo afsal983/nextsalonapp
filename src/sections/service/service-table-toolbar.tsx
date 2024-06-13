@@ -14,13 +14,13 @@ import Select, { type SelectChangeEvent } from '@mui/material/Select'
 import Iconify from 'src/components/iconify'
 import CustomPopover, { usePopover } from 'src/components/custom-popover'
 
-import { type IUserTableFilters, type IUserTableFilterValue } from 'src/types/service'
+import { type ServiceTableFilters, type ServiceTableFilterValue } from 'src/types/service'
 
 // ----------------------------------------------------------------------
 
 interface Props {
-  filters: IUserTableFilters
-  onFilters: (name: string, value: IUserTableFilterValue) => void
+  filters: ServiceTableFilters
+  onFilters: (name: string, value: ServiceTableFilterValue) => void
   //
   productCategory: string[]
 }

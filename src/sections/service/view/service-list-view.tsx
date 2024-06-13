@@ -1,7 +1,8 @@
 'use client'
 
+import useSWR,{mutate} from 'swr';
 import isEqual from 'lodash/isEqual'
-import { useState, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
@@ -21,7 +22,10 @@ import { RouterLink } from 'src/routes/components'
 
 import { useBoolean } from 'src/hooks/use-boolean'
 
-import { USER_STATUS_OPTIONS } from 'src/_mock'
+import { fetcher } from 'src/utils/axios';
+
+import { useTranslate } from 'src/locales';
+import { useAuthContext } from 'src/auth/hooks'
 
 import Label from 'src/components/label'
 import Iconify from 'src/components/iconify'
@@ -42,31 +46,23 @@ import {
 } from 'src/components/table'
 
 import {
-  type IServiceItem,
-  type IUserTableFilters,
-  type IServiceCategoryItem,
-  type IUserTableFilterValue
+  type ServiceItem,
+  type ServiceTableFilters,
+  type ServiceCategoryItem,
+  type ServiceTableFilterValue
 } from 'src/types/service'
 
 import UserTableRow from '../service-table-row'
 import UserTableToolbar from '../service-table-toolbar'
 import UserTableFiltersResult from '../service-table-filters-result'
 
+
+
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS]
+const STATUS_OPTIONS = [{ value: 'all', label: 'All' }]
 
-const TABLE_HEAD = [
-  { id: 'name', label: 'Name', width: 320 },
-  { id: 'price', label: 'Price', width: 120 },
-  { id: 'tax', label: 'Tax' },
-  { id: 'duration', label: 'Duration' },
-  { id: 'commission', label: 'Commission' },
-  { id: 'color', label: 'Color', width: 100 },
-  { id: '', width: 88 }
-]
-
-const defaultFilters: IUserTableFilters = {
+const defaultFilters: ServiceTableFilters = {
   name: '',
   productcategory: [],
   status: 'all'
@@ -74,14 +70,35 @@ const defaultFilters: IUserTableFilters = {
 
 // ----------------------------------------------------------------------
 interface ServiceListViewProps {
-  services: IServiceItem[]
-  servicecategory: IServiceCategoryItem[]
+  services: ServiceItem[]
+  servicecategory: ServiceCategoryItem[]
 }
 
-export default function ServiceListView ({ services, servicecategory }: ServiceListViewProps) {
+export default  function ServiceListView () {
+
+  const { t } = useTranslate();
+
+  const TABLE_HEAD = [
+    { id: 'name', label: t('general.name'), width: 320 },
+    { id: 'price', label: t('general.price'), width: 120 },
+    { id: 'tax', label: t('general.tax') },
+    { id: 'duration', label: t('general.duration') },
+    { id: 'commission', label: t('general.commission') },
+    { id: 'color', label: t('general.color'), width: 100 },
+    { id: '', width: 88 }
+  ]
+
+  // Initialize
+  const [tableData, setTableData] = useState<ServiceItem[]>([])
+  const [serviceCategory, setserviceCategory] = useState<ServiceCategoryItem[]>([]);
+  const { logout } = useAuthContext()
+
+  // Use SWR to fetch data from multiple endpoints in parallel
+  const { data: service,isLoading: isserviceLoading,  error: errorA } = useSWR('/api/salonapp/services', fetcher);
+  const { data: servicecategory,isLoading: isservicecategoryLoading, error: errorB } = useSWR('/api/salonapp/servicecategory', fetcher);
+
+
   const { enqueueSnackbar } = useSnackbar()
-  const [tableData, setTableData] = useState<IServiceItem[]>(services)
-  // const [productCategory, setproductCategory] = useState<IServiceCategoryItem[]>(servicecategory);
 
   const table = useTable()
 
@@ -92,6 +109,16 @@ export default function ServiceListView ({ services, servicecategory }: ServiceL
   const confirm = useBoolean()
 
   const [filters, setFilters] = useState(defaultFilters)
+ 
+  // Logout the user 
+  const handleLogout = async () => {
+    try {
+      await logout()
+      router.replace('/')
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -111,7 +138,7 @@ export default function ServiceListView ({ services, servicecategory }: ServiceL
   const notFound = ((dataFiltered.length === 0) && canReset) || (dataFiltered.length === 0)
 
   const handleFilters = useCallback(
-    (name: string, value: IUserTableFilterValue) => {
+    (name: string, value: ServiceTableFilterValue) => {
       table.onResetPage()
       setFilters((prevState) => ({
         ...prevState,
@@ -125,25 +152,40 @@ export default function ServiceListView ({ services, servicecategory }: ServiceL
     setFilters(defaultFilters)
   }, [])
 
+  // Delete an item
   const handleDeleteRow = useCallback(
-    (id: string) => {
-      const deleteRow = tableData.filter((row: IServiceItem) => row.id !== id)
+    async (id: string) => {
+      const response = await fetch(`/api/salonapp/services/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      const responseData = await response.json();
+  
+      if(responseData?.status > 401 ) {
+        enqueueSnackbar(t('general.delete_fail'), { variant: 'error' });
+        return;
+      } 
+      
+      const deleteRow = tableData.filter((row: ServiceItem) => row.id !== id)
 
-      enqueueSnackbar('Delete success!')
+      enqueueSnackbar(t('general.delete_success'))
 
       setTableData(deleteRow)
 
       table.onUpdatePageDeleteRow(dataInPage.length)
     },
-    [dataInPage.length, enqueueSnackbar, table, tableData]
+    [dataInPage.length, enqueueSnackbar, table, tableData,t]
   )
 
   const handleDeleteRows = useCallback(() => {
     const deleteRows = tableData.filter(
-      (row: IServiceItem) => !table.selected.includes(row.id)
+      (row: ServiceItem) => !table.selected.includes(row.id)
     )
 
-    enqueueSnackbar('Delete success!')
+    enqueueSnackbar(t('general.delete_success'))
 
     setTableData(deleteRows)
 
@@ -156,7 +198,8 @@ export default function ServiceListView ({ services, servicecategory }: ServiceL
     dataInPage.length,
     enqueueSnackbar,
     table,
-    tableData
+    tableData,
+    t
   ])
 
   const handleEditRow = useCallback(
@@ -173,15 +216,46 @@ export default function ServiceListView ({ services, servicecategory }: ServiceL
     [handleFilters]
   )
 
+  
+    // Use useEffect to update state1 when data1 is available
+    useEffect(() => {
+      if (service) {
+        setTableData(service.data);
+      }
+    }, [service]);
+  
+    // Use useEffect to update state2 when data2 is available
+    useEffect(() => {
+      if (servicecategory) {
+        setserviceCategory(servicecategory.data);
+      }
+    }, [servicecategory]);
+  
+
+    if (errorA || errorB) {
+      if (errorA?.response?.data?.status === 401 || errorB?.response?.data?.status === 401 ){
+        mutate(
+          key => true, // which cache keys are updated
+          undefined,   // update cache data to `undefined`
+          { revalidate: false } // do not revalidate
+        );
+        handleLogout();
+      }
+      return <div>Error loading data1.</div>;
+    }
+ 
+    if ( isserviceLoading ) return <div>Loading...</div>;
+    if ( isservicecategoryLoading) return <div>Loading...</div>;
+
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="List"
           links={[
-            { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'Service', href: paths.dashboard.services.root },
-            { name: 'List' }
+            { name: t('salonapp.dashboard'), href: paths.dashboard.root },
+            { name: t('salonapp.services'), href: paths.dashboard.services.root },
+            { name: t('general.list') }
           ]}
           action={
             <Button
@@ -221,18 +295,13 @@ export default function ServiceListView ({ services, servicecategory }: ServiceL
                         'filled') ||
                       'soft'
                     }
-                    color={
-                      (tab.value === 'active' && 'success') ||
-                      (tab.value === 'pending' && 'warning') ||
-                      (tab.value === 'banned' && 'error') ||
-                      'default'
-                    }
+                    color='default'
                   >
-                    {['active', 'pending', 'banned', 'rejected'].includes(
+                    {['active'].includes(
                       tab.value
                     )
                       ? tableData.filter(
-                        (service: IServiceItem) => service.name === tab.value
+                        (serviceitem: ServiceItem) => serviceitem.name === tab.value
                       ).length
                       : tableData.length}
                   </Label>
@@ -245,7 +314,7 @@ export default function ServiceListView ({ services, servicecategory }: ServiceL
             filters={filters}
             onFilters={handleFilters}
             //
-            productCategory={servicecategory.map(obj => obj.name)}
+            productCategory={serviceCategory.map(obj => obj.name)}
           />
 
           {canReset && (
@@ -381,9 +450,9 @@ function applyFilter ({
   comparator,
   filters
 }: {
-  inputData: IServiceItem[]
+  inputData: ServiceItem[]
   comparator: (a: any, b: any) => number
-  filters: IUserTableFilters
+  filters: ServiceTableFilters
 }) {
   const { name, status, productcategory } = filters
 
@@ -403,11 +472,7 @@ function applyFilter ({
         service.name.toLowerCase().includes(name.toLowerCase())
     )
   }
-
-  // if (status !== "all") {
-  // inputData = inputData.filter((user) => user.status === status);
-  // }
-
+  
   if (productcategory.length > 0) {
     inputData = inputData.filter((service) =>
       productcategory.includes(service.ProductCategory.name)

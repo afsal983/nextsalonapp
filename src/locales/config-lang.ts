@@ -3,34 +3,22 @@
 import merge from 'lodash/merge'
 // date fns
 import {
-  fr as frFRAdapter,
-  vi as viVNAdapter,
   enUS as enUSAdapter,
-  zhCN as zhCNAdapter,
   arSA as arSAAdapter
 } from 'date-fns/locale'
 
 // date pickers (MUI)
 import {
-  enUS as enUSDate,
-  frFR as frFRDate,
-  viVN as viVNDate,
-  zhCN as zhCNDate
+  enUS as enUSDate
 } from '@mui/x-date-pickers/locales'
 // core (MUI)
 import {
   enUS as enUSCore,
-  frFR as frFRCore,
-  viVN as viVNCore,
-  zhCN as zhCNCore,
   arSA as arSACore
 } from '@mui/material/locale'
 // data grid (MUI)
 import {
   enUS as enUSDataGrid,
-  frFR as frFRDataGrid,
-  viVN as viVNDataGrid,
-  zhCN as zhCNDataGrid,
   arSD as arSDDataGrid
 } from '@mui/x-data-grid'
 
@@ -49,6 +37,7 @@ export const allLangs = [
       currency: 'USD'
     }
   },
+  /*
   {
     label: 'French',
     value: 'fr',
@@ -82,12 +71,13 @@ export const allLangs = [
       currency: 'CNY'
     }
   },
+  */
   {
     label: 'Arabic',
     value: 'ar',
     systemValue: merge(arSDDataGrid, arSACore),
     adapterLocale: arSAAdapter,
-    icon: 'flagpack:sa',
+    icon: 'flagpack:ae',
     numberFormat: {
       code: 'ar',
       currency: 'AED'

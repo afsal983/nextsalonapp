@@ -5,7 +5,8 @@ export interface IAddressItem {
   name: string
   company?: string
   primary?: boolean
-  fullAddress: string
-  phoneNumber?: string
+  address: string
+  location: string
+  telephone?: string
   addressType?: string
 }

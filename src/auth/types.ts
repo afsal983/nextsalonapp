@@ -140,3 +140,9 @@ export type SupabaseContextType = CanRemove & {
   forgotPassword: (email: string) => Promise<void>
   updatePassword: (password: string) => Promise<void>
 }
+
+
+export type SessionPayload = {
+  token: string
+  refresh_token: string
+}
