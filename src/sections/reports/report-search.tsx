@@ -33,7 +33,11 @@ export default function ReportSearch({ query, results, onSearch, hrefItem }: Pro
   const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (query) {
       if (event.key === 'Enter') {
-        const selectProduct = results.filter((report) => report.name === query)[0];
+        const selectProduct = results
+        .map(category => category.items)   // Extract items from each category
+        .flat()                            // Flatten the array of arrays into a single array of items
+        .filter(item => item.name === query)[0]; // Filter items based on the query and get the first match
+      
 
         handleClick(selectProduct.id);
       }
@@ -45,7 +49,7 @@ export default function ReportSearch({ query, results, onSearch, hrefItem }: Pro
       sx={{ width: { xs: 1, sm: 260 } }}
       autoHighlight
       popupIcon={null}
-      options={results}
+      options={results.map(category => category.items).flat()}
       onInputChange={(event, newValue) => onSearch(newValue)}
       getOptionLabel={(option) => option.name}
       noOptionsText={<SearchNotFound query={query} sx={{ bgcolor: 'unset' }} />}

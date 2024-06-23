@@ -19,12 +19,8 @@ import { TableHeadCustom } from 'src/components/table'
 interface RowProps {
   id: string
   name: string
-  flag: string
-  rank: string
-  email: string
-  category: string
-  avatarUrl: string
-  totalAmount: number
+  revenue: string
+  amount: string
 }
 
 interface Props extends CardProps {
@@ -34,7 +30,7 @@ interface Props extends CardProps {
   tableLabels: any
 }
 
-export default function EcommerceBestSalesman ({
+export default function SalonBestEmployee ({
   title,
   subheader,
   tableData,
@@ -72,32 +68,14 @@ function EcommerceBestSalesmanRow ({ row }: EcommerceBestSalesmanRowProps) {
   return (
     <TableRow>
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar alt={row.name} src={row.avatarUrl} sx={{ mr: 2 }} />
         {row.name}
       </TableCell>
 
-      <TableCell>{row.category}</TableCell>
 
-      <TableCell align="center">
-        <Iconify icon={row.flag} sx={{ borderRadius: 0.65, width: 28 }} />
-      </TableCell>
+      <TableCell align="right">{fCurrency(row.revenue)}</TableCell>
 
-      <TableCell align="right">{fCurrency(row.totalAmount)}</TableCell>
+      <TableCell align="right">{row.amount}</TableCell>
 
-      <TableCell align="right">
-        <Label
-          variant="soft"
-          color={
-            (row.rank === 'Top 1' && 'primary') ||
-            (row.rank === 'Top 2' && 'info') ||
-            (row.rank === 'Top 3' && 'success') ||
-            (row.rank === 'Top 4' && 'warning') ||
-            'error'
-          }
-        >
-          {row.rank}
-        </Label>
-      </TableCell>
     </TableRow>
   )
 }

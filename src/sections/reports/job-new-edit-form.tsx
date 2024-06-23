@@ -121,7 +121,7 @@ export default function JobNewEditForm({ currentJob }: Props) {
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
       enqueueSnackbar(currentJob ? 'Update success!' : 'Create success!');
-      router.push(paths.dashboard.job.root);
+      router.push(paths.dashboard.report.root);
       console.info('DATA', data);
     } catch (error) {
       console.error(error);

@@ -1,7 +1,6 @@
 
 // ----------------------------------------------------------------------
 
-import { boolean } from "yup"
 
 export type ServiceTableFilterValue = string | string[]
 
@@ -35,6 +34,12 @@ export interface Customer {
   }
 }
 
+export interface Customercategory {
+  id: number
+  name: string
+  discount: number
+  default_category: boolean
+}
 export interface ServiceCategoryItem {
   id: string
   name: string

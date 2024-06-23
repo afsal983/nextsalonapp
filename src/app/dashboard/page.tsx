@@ -1,6 +1,6 @@
 
 
-import { OverviewEcommerceView } from 'src/sections/dashboard/general/view'
+import { OverviewSalonView } from 'src/sections/dashboard/general/view'
 
 // ----------------------------------------------------------------------
 
@@ -10,5 +10,5 @@ export const metadata = {
 
 export default async function OverviewEcommercePage () {
   console.log("Dashboard")
-  return <OverviewEcommerceView />
+  return <OverviewSalonView />
 }

@@ -5,11 +5,9 @@ import isEqual from 'lodash/isEqual';
 import { useState, useCallback } from 'react';
 
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 
 import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
@@ -22,23 +20,21 @@ import {
   JOB_EMPLOYMENT_TYPE_OPTIONS,
 } from 'src/_mock';
 
-import {
-  report_types
-} from './_reporttypes'
-
-import Iconify from 'src/components/iconify';
 import EmptyContent from 'src/components/empty-content';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 
-
 import {IReportItem, ReportFilters,ReportFilterValue } from 'src/types/report';
 
-import ReportList from '../report-list';
 import JobSort from '../job-sort';
-import  ReportSearch from '../report-search';
+import ReportList from '../report-list';
 import JobFilters from '../job-filters';
+import  ReportSearch from '../report-search';
+import {
+  report_types
+} from './_reporttypes'
 import ReportFiltersResult from '../report-filters-result';
+
 
 // ----------------------------------------------------------------------
 
@@ -68,7 +64,7 @@ export default function ReportListView() {
     sortBy,
   });
 
-  console.log(dataFiltered)
+
   const canReset = !isEqual(defaultFilters, filters);
 
   const notFound = !dataFiltered.length && canReset;
@@ -96,9 +92,23 @@ export default function ReportListView() {
       }));
 
       if (inputValue) {
-        const results = report_types.filter(
-          (report) => report.name.toLowerCase().indexOf(search.query.toLowerCase()) !== -1
-        );
+        const results = report_types
+        .map(category => {
+          const filteredItems = category.items.filter(item =>
+            item.name.toLowerCase().indexOf(search.query.toLowerCase()) !== -1
+          );
+          if (filteredItems.length > 0) {
+            return {
+              ...category,
+              items: filteredItems
+            };
+          }
+          return {
+            ...category,
+            items: []
+          };
+        })
+        .filter(category => category !== null);
 
         setSearch((prevState) => ({
           ...prevState,
@@ -223,7 +233,22 @@ const applyFilter = ({
 
   // FILTERS
   if (name.length) {
-    inputData = inputData.filter((job) => name.includes(job.name));
+   // inputData = inputData.filter((job) => name.includes(job.name));
+    inputData = report_types
+   .map(category => {
+     const filteredItems = category.items.filter(item => name.includes(item.name));
+     if (filteredItems.length > 0) {
+       return {
+         ...category,
+         items: filteredItems
+       };
+     }
+     return {
+      ...category,
+      items: []
+    };
+   })
+   .filter(category => category !== null);
   }
   return inputData;
 };

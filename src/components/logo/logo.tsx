@@ -1,7 +1,6 @@
 import { forwardRef } from 'react'
 
 import Link from '@mui/material/Link'
-import { useTheme } from '@mui/material/styles'
 import Box, { type BoxProps } from '@mui/material/Box'
 
 import { RouterLink } from 'src/routes/components'

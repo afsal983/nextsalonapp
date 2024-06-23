@@ -17,7 +17,7 @@ type Props = {
 export default function ReportDetailsPage({ params }: Props) {
   const { id } = params;
 
-  return <ReportDetailsView id={id} />;
+  return <ReportDetailsView reportid={id} />;
 }
 
 export async function generateStaticParams() {

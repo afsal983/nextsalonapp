@@ -1,31 +1,31 @@
+import useSWR from 'swr';
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import useSWR from 'swr';
-import { fetcher } from 'src/utils/axios';
+
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
+import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { formHelperTextClasses } from '@mui/material/FormHelperText';
-import { countries } from 'src/assets/data';
-import { useTranslate } from 'src/locales';
-import FormProvider, {
-  RHFCheckbox,
-  RHFTextField,
-  RHFRadioGroup,
-  RHFSelect,
-  RHFSwitch
-} from 'src/components/hook-form';
-import Typography from '@mui/material/Typography';
 
-import { Customer } from 'src/types/customer';
+import { fetcher } from 'src/utils/axios';
+
+import { useTranslate } from 'src/locales';
+
+import FormProvider, {
+  RHFSelect,
+  RHFSwitch,
+  RHFTextField,
+  RHFRadioGroup
+} from 'src/components/hook-form';
+
+import { Customer, Customercategory } from 'src/types/customer';
 
 // ----------------------------------------------------------------------
 
@@ -180,7 +180,7 @@ export default function AddressNewForm({ open, onClose, onCreate }: Props) {
 
             <RHFSelect native name="category_id" label={t('general.category')} InputLabelProps={{ shrink: true }}>
               <option key={0}>{ t('general.dropdown_select') }</option>
-              {customercategory.data.map((item) => (
+              {customercategory.data.map((item : Customercategory) => (
                 <option key={item.id} value={item.id}>
                   {item.name}
                 </option>

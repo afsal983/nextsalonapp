@@ -17,6 +17,7 @@ import SearchNotFound from 'src/components/search-not-found';
 
 import { Customer } from 'src/types/customer';
 import { IAddressItem } from 'src/types/address';
+
 import AddressNewForm from './address-new-form';
 
 // ----------------------------------------------------------------------
@@ -24,7 +25,7 @@ import AddressNewForm from './address-new-form';
 type Props = {
   title?: string;
   list: IAddressItem[];
-  action: React.ReactNode;
+  action: React.ReactElement<any, string | React.JSXElementConstructor<any>>;
   //
   open: boolean;
   onClose: VoidFunction;
@@ -157,7 +158,6 @@ export default function CustomerAddressListDialog({
         sx={{ p: 3, pr: 1.5 }}
       >
         <Typography variant="h6"> {title} </Typography>
-
         {action && React.cloneElement(action  , {
           onClick: handleButtonClick,
         })}

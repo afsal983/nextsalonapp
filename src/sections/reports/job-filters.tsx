@@ -1,23 +1,16 @@
 import { useCallback } from 'react';
 
-import Chip from '@mui/material/Chip';
-import Radio from '@mui/material/Radio';
 import Stack from '@mui/material/Stack';
 import Badge from '@mui/material/Badge';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
-import Checkbox from '@mui/material/Checkbox';
-import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import Autocomplete from '@mui/material/Autocomplete';
-import FormControlLabel from '@mui/material/FormControlLabel';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
-import CountrySelect from 'src/components/country-select';
 
 import { ReportFilters, ReportFilterValue } from 'src/types/report';
 
@@ -62,7 +55,7 @@ export default function JobFilters({
     (newValue: string) => {
       const checked = filters.name.includes(newValue)
         ? filters.name.filter((value) => value !== newValue)
-        : [...filters.employmentTypes, newValue];
+        : [...filters.name, newValue];
       onFilters('employmentTypes', checked);
     },
     [filters.name, onFilters]
@@ -129,9 +122,9 @@ export default function JobFilters({
         <Divider />
 
         <Scrollbar sx={{ px: 2.5, py: 3 }}>
-          <Stack spacing={3}>
+          <Stack spacing={3}/>
    
-          </Stack>
+
         </Scrollbar>
       </Drawer>
     </>
