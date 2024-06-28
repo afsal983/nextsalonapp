@@ -40,12 +40,13 @@ export default function PaymentNewEditForm({ currentPayment, paymenttypes }: Pro
 
   const values = watch();
 
+  console.log(values)
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'payments',
   });
 
-  const { invoiceTo, invoiceFrom } = values;
 
   const from = useBoolean();
 
@@ -54,6 +55,9 @@ export default function PaymentNewEditForm({ currentPayment, paymenttypes }: Pro
   
   const handleSelectPayment = useCallback(
     (index: number, option: string) => {
+
+      const selected_payment = paymenttypes?.find((payment) => payment.name === option)
+      // console.log(selected_payment)
       values.payments.map((items: Payment, count: number)=> {
           if(items?.value >0 && index !== count ) {
             setValue(
@@ -67,25 +71,32 @@ export default function PaymentNewEditForm({ currentPayment, paymenttypes }: Pro
         `payments[${index}].value`,
         values.totalAmount
       );
+      setValue(
+        `payments[${index}].payment_type`,
+        selected_payment?.id
+      );
     },
     [setValue, values.totalAmount,values.payments]
   );
 
   const handleChangeamount = useCallback(
-    (index: number, option: string) => {
+    (index: number, option: string, event) => {
       values.payments.map((items : Payment, count : number)=> {
-          if(items?.value >0 && index !== count ) {
+          if(items?.value > event.target.value && index !== count ) {
             setValue(
               `payments[${count}].value`,
-              0
+              items?.value - event.target.value
             );
+            return true; 
           }
-          return null; // Or return undefined
+          
+          // return null; // Or return undefined
       })
       setValue(
         `payments[${index}].value`,
-        values.totalAmount
+        event.target.value
       );
+
     },
     [setValue, values.totalAmount,values.payments]
   );
@@ -98,33 +109,18 @@ export default function PaymentNewEditForm({ currentPayment, paymenttypes }: Pro
       </Typography>
 
       <Stack
-        spacing={{ xs: 3, md: 5 }}
-        direction={{ xs: 'column', md: 'row' }}
-        divider={
-          <Divider
-            flexItem
-            orientation={mdUp ? 'vertical' : 'horizontal'}
-            sx={{ borderStyle: 'dashed' }}
-          />
-        }
-        sx={{ p: 3 }}
+        spacing={2}
+        alignItems="flex-end"
+        sx={{ mt: 3, textAlign: 'right', typography: 'body2' }}
       >
-        <Stack sx={{ width: 1 }}>
-          <Stack direction="row" alignItems="center" sx={{ mb: 1 }}>
-            <Typography variant="h6" sx={{ color: 'text.disabled', flexGrow: 1 }}>
-              From:
-            </Typography>
-
-            <IconButton onClick={from.onTrue}>
-              <Iconify icon="solar:pen-bold" />
-            </IconButton>
-          </Stack>
-
-          <Stack spacing={1}>
-            <Typography variant="subtitle2">{invoiceFrom.name}</Typography>
-            <Typography variant="body2">{invoiceFrom.address}</Typography>
-            <Typography variant="body2"> {invoiceFrom.telephone}</Typography>
-          </Stack>
+        <Stack direction="row">
+          <Box sx={{ color: 'text.secondary' }}>Payment by</Box>
+            <Box sx={{ width: 160, typography: 'subtitle2' }}>
+              {currentPayment && paymenttypes?.map((paymenttype)=> paymenttype.default_paymenttype && paymenttype.name )}
+              <IconButton onClick={from.onTrue}>
+                <Iconify icon="solar:pen-bold" />
+              </IconButton>
+            </Box>
         </Stack>
       </Stack>
 
@@ -138,7 +134,7 @@ export default function PaymentNewEditForm({ currentPayment, paymenttypes }: Pro
           <Typography variant="h6"> Select Payment for {values.totalAmount}</Typography>
         </Stack>
         <Box gap={1} p={1} display="grid" gridTemplateColumns="repeat(3, 1fr)">
-          {paymenttypes?.map((item, index) => (
+          {paymenttypes?.filter(item => !item.name.toLowerCase().includes('split')).map((item, index) => (
             <Stack spacing={1}>
               <Paper
                 component={ButtonBase}
@@ -165,9 +161,19 @@ export default function PaymentNewEditForm({ currentPayment, paymenttypes }: Pro
                   size="small"
                   label="Amount"
                   name={`payments[${index}].value`}
-                  onChange={() => handleChangeamount(index, item.name)}
+                  onChange={(event) => handleChangeamount(index, item.name, event)}
                   type="number" 
                 />
+                <RHFTextField
+                  size="small"
+                  type="number"
+                  name={`payments[${index}].payment_type`}
+                  label="Type"
+                  placeholder="0"
+                  style={{ display: 'none' }}
+                  InputLabelProps={{ shrink: true }}
+                />
+
                 {item.is_authcode && 
                     <RHFTextField
                     size="small"

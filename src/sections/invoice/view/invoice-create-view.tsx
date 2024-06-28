@@ -17,8 +17,9 @@ import InvoiceNewEditForm from '../invoice-new-edit-form';
 
 export default function InvoiceCreateView() {
   const settings = useSettingsContext();
+  
 
-    // Use SWR to fetch data from multiple endpoints in parallel
+    // Use SWR to fetch data from multiple endpoints in parallel and pass them to invoice New Edit form
     const { data: service,isLoading: isserviceLoading,  error: errorS } = useSWR('/api/salonapp/services', fetcher);
     const { data: branches,isLoading: isbranchesLoading,  error: errorB } = useSWR('/api/salonapp/branches', fetcher);
     const { data: employees,isLoading: isEmployeeLoading,  error: errorE } = useSWR('/api/salonapp/employee', fetcher);

@@ -10,13 +10,17 @@ import CardHeader from '@mui/material/CardHeader';
 import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 
+
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+
+import { fDate } from 'src/utils/format-time';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
 import Iconify from 'src/components/iconify';
 import FormProvider from 'src/components/hook-form';
+import { useSnackbar } from 'src/components/snackbar'
 
 import { IInvoice } from 'src/types/invoice';
 import { Employee } from 'src/types/employee';
@@ -24,6 +28,8 @@ import { ServiceItem } from 'src/types/service';
 import { AppSettings } from 'src/types/settings';
 import { IPaymenttypes } from 'src/types/payment';
 import { Branches_organization } from 'src/types/branches_organizations';
+
+import { useTranslate } from 'src/locales';
 
 import PaymentNewEditForm from './payment-new-edit-form'
 import InvoiceNewEditDetails from './invoice-new-edit-details';
@@ -44,6 +50,10 @@ type Props = {
 export default function InvoiceNewEditForm({ currentInvoice, services, branches, employees, appsettings, paymenttypes }: Props ) {
   const router = useRouter();
 
+  const { enqueueSnackbar } = useSnackbar()
+
+  const { t } = useTranslate();
+
   const loadingSave = useBoolean();
 
   const loadingSend = useBoolean();  
@@ -52,18 +62,18 @@ export default function InvoiceNewEditForm({ currentInvoice, services, branches,
     invoiceTo: Yup.mixed<any>().nullable().required('Invoice to is required'),
     createDate: Yup.mixed<any>().nullable().required('Create date is required'),
     dueDate: Yup.mixed<any>()
-      .required('Due date is required')
-      .test(
-        'date-min',
-        'Due date must be later than create date',
-        (value, { parent }) => value.getTime() > parent.createDate.getTime()
-      ),
+      .required('Due date is required'),
+      //.test(
+      //  'date-min',
+      //  'Due date must be later than create date',
+      //  (value, { parent }) => value.getTime() > parent.createDate.getTime()
+      // ),
     items: Yup.lazy(() =>
       Yup.array().of(
         Yup.object({
           id: Yup.number(),
-          service: Yup.string().required('Service is required'),
-          employee: Yup.string().required('Employee is required'),
+          service: Yup.number().required('Service is required'),
+          employee: Yup.number().required('Employee is required'),
           quantity: Yup.number()
             .required('Quantity is required')
             .min(1, 'Quantity must be more than 0'),
@@ -73,6 +83,7 @@ export default function InvoiceNewEditForm({ currentInvoice, services, branches,
           .min(0, 'Discount cannot be negative'),
           total: Yup.number()
           .positive('Discount must be a positive value'),
+          type: Yup.number(),
         })
       )
     ),
@@ -89,7 +100,7 @@ export default function InvoiceNewEditForm({ currentInvoice, services, branches,
     ),
     // not required
     taxes: Yup.number(),
-    // status: Yup.string(),
+    status: Yup.string(),
     discount: Yup.number(),
     tip: Yup.number(),
     invoiceFrom: Yup.mixed(),
@@ -101,12 +112,13 @@ export default function InvoiceNewEditForm({ currentInvoice, services, branches,
     // Wrap the initialization of currentitems in useMemo()
     let currentitems = useMemo(() => [{
       id: 0,
-      service: '',
-      employee: '',
+      service: 0,
+      employee: 0,
       quantity: 1,
       price: 0,
       discount: 0,
       total: 0,
+      type: 0,
   }], []);
 
   if( currentInvoice?.Invoice_line) {
@@ -114,12 +126,13 @@ export default function InvoiceNewEditForm({ currentInvoice, services, branches,
     currentInvoice?.Invoice_line.map(item => {
         const tmp = {
           id: item.id,
-          service: item.Product.name,
+          service: item.Product.id,
           quantity: item.quantity,
           price: item.price,
           total: item.quantity * item.price,
           discount: item.discount,
-          employee: item.Employee.name,
+          employee: item.Employee.id,
+          type: item.Product.type,
         }
         currentitems.push(tmp)
         return tmp; 
@@ -129,8 +142,8 @@ export default function InvoiceNewEditForm({ currentInvoice, services, branches,
   const defaultValues = useMemo(
     () => ({
       invoiceTo: currentInvoice?.Customer || null,
-      createDate: currentInvoice?.date || new Date(),
-      dueDate: currentInvoice?.date || null,
+      createDate: (currentInvoice?.date && new Date(currentInvoice?.date)) || new Date(),
+      dueDate: (currentInvoice?.date && new Date(currentInvoice?.date)) ||new Date(),
       items: currentitems,
       payments: currentInvoice?.Payment || [
         {
@@ -142,7 +155,7 @@ export default function InvoiceNewEditForm({ currentInvoice, services, branches,
         },
       ],
       taxes: currentInvoice?.tax_rate || 0,
-      status: currentInvoice?.status===1? "Draft": "paid"|| 'draft',
+      status: "paid",
       discount: currentInvoice?.discount || 0,
       tip : currentInvoice?.tip||0,
       invoiceFrom: currentInvoice?.Branches_organization || branches[0],
@@ -160,7 +173,6 @@ export default function InvoiceNewEditForm({ currentInvoice, services, branches,
 
   const {
     reset,
-
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -169,11 +181,12 @@ export default function InvoiceNewEditForm({ currentInvoice, services, branches,
     loadingSave.onTrue();
 
     try {
+ 
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
       loadingSave.onFalse();
       router.push(paths.dashboard.invoice.root);
-      console.info('DATA', JSON.stringify(data, null, 2));
+      // console.info('DATA', JSON.stringify(data, null, 2));
     } catch (error) {
       console.error(error);
       loadingSave.onFalse();
@@ -183,17 +196,113 @@ export default function InvoiceNewEditForm({ currentInvoice, services, branches,
   const handleCreateAndSend = handleSubmit(async (data) => {
     loadingSend.onTrue();
     console.log(data)
-    return
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      loadingSend.onFalse();
-      router.push(paths.dashboard.invoice.root);
-      console.info('DATA', JSON.stringify(data, null, 2));
-    } catch (error) {
-      console.error(error);
-      loadingSend.onFalse();
+
+    let products = []
+    let retails = []
+    let packages = []
+    let payments = []
+    data?.items?.map((item, index) => {
+        if(item.type ==1 ) {
+            let tmp = {
+              id:  item.service,
+              start: new Date(),
+              end: new Date(),
+              productid: item.service,
+              price: item.price,
+              quantity: item.quantity,
+              discount: item.discount,
+              employee_id: item.employee,
+              deleted: 0,
+            }
+            products.push(tmp)
+        } else if(item.type ==2 ) {
+            let tmp = {
+              id:  item.service,
+              productid: item.service,
+              price: item.price,
+              quantity: item.quantity,
+              discount: item.discount,
+              employee_id: item.employee,
+              deleted: 0,
+            }
+          retails.push(tmp)
+
+        } else if (item.type ==3 ) {
+          let tmp = {
+            id:  item.service,
+            start: new Date(),
+            end: new Date(),
+            productid: item.service,
+            price: item.price,
+            quantity: item.quantity,
+            discount: item.discount,
+            employee_id: item.employee,
+            deleted: 0,
+          }
+          packages.push(tmp)
+        }
+    })
+
+    data?.payments?.map((item, index) => { 
+
+      if( item?.value > 0) {
+        let tmp = {
+          id:  item.id,
+          invoice_id: 0,
+          value: item.value,
+          payment_type: item.payment_type,
+          auth_code: item.auth_code,
+        }
+        payments.push(tmp)
+      }
+    })
+
+    const invoicedata = {
+      customer: data.invoiceTo.id,
+      branch_id: data.invoiceFrom.branch_id,
+      reminder_count: 0,
+      products: products,
+      retails: retails,
+      packages: packages,
+      payments: payments,
+      discount: data.discount,
+      tip: data.tip,
+      paymentmethod: 1,
+      notify: 0,
+      createevent: 1,
+      event_id: 0,
+
     }
+
+    console.log(invoicedata)
+
+    try {
+      
+        // Post the data 
+        const response = await fetch(`/api/salonapp/invoice`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(invoicedata),
+        });
+
+        const responseData = await response.json();
+
+        if(responseData?.status > 401 ) {
+          enqueueSnackbar(currentInvoice ? t('general.update_failed') : t('general.create_failed'), { variant: 'error' });
+        } else {
+          // Keep 500ms delay
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          reset(); 
+          enqueueSnackbar(currentInvoice ? t('general.update_sucess') : t('general.create_success'), { variant: 'success' });
+
+          // Service listing again
+          router.push(paths.dashboard.invoice.details(responseData.data[0].id))
+        }
+      } catch (error) {
+          enqueueSnackbar(error, { variant: 'error' });
+      }
   });
 
   const renderPayment = (

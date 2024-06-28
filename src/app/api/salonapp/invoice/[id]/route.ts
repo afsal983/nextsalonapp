@@ -38,16 +38,17 @@ export async function GET(request: NextRequest, response: NextResponse) {
 
 
   // Make an HTTP request to your API route with the token in the headers
-  const data = await fetch( `${baseUSRL}/apiserver/invoice/${invoiceId}`, {
+  const data = await fetch( `${baseUSRL}/apiserver/getinvoiceprintdata/${invoiceId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 
-
+ 
   // Get the data in JSON format 
   const apiResponse = await data.json();
 
+  console.log(apiResponse)
   if(apiResponse?.status === 401) {
     const res = {
       Title: 'NOK',

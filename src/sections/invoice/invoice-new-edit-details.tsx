@@ -1,5 +1,5 @@
 import sum from 'lodash/sum';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
@@ -13,7 +13,7 @@ import { inputBaseClasses } from '@mui/material/InputBase';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { fCurrency } from 'src/utils/format-number';
+import { fCurrency, FnCurrency } from 'src/utils/format-number';
 
 import Iconify from 'src/components/iconify';
 import { RHFSelect, RHFTextField } from 'src/components/hook-form';
@@ -23,6 +23,7 @@ import { ServiceItem } from 'src/types/service';
 import { AppSettings } from 'src/types/settings';
 import { IInvoice, IInvoiceItem} from 'src/types/invoice';
 import { Branches_organization } from 'src/types/branches_organizations';
+import { settings } from 'nprogress';
 
 
 
@@ -49,6 +50,7 @@ export default function InvoiceNewEditDetails({ services, employees, appsettings
 
   const taxValue = appsettings.find((appsetting) => appsetting.name === "taxValue")?.value
 
+  const currency = appsettings.find((appsetting) => appsetting.name === "currency")?.value || "INR"
 
   const tax = Number(taxValue)/100
 
@@ -60,7 +62,7 @@ export default function InvoiceNewEditDetails({ services, employees, appsettings
 
   const totalOnRow = values.items.map((item: IInvoiceItem) => item.quantity * (item.price - (item.price * item.discount/100)) );
 
-  const subTotal = sum(totalOnRow);
+  const subTotal = sum(totalOnRow) - (sum(totalOnRow) * values.discount/100);
 
   const taxTotalOnRow = values.items.map((item: IInvoiceItem) => item.quantity * (item.price - (item.price * item.discount/100)) * tax );
 
@@ -70,17 +72,16 @@ export default function InvoiceNewEditDetails({ services, employees, appsettings
 
   const totalAmount = subTotal + values.tip + taxTotal;
 
-  const customerSavings = discount + discount * tax
-
-  /*
+  const customerSavings = discount + discount * tax 
+  
   useEffect(() => {
     setValue('totalAmount', totalAmount);
   }, [setValue, totalAmount]);
-  */
+
   const handleAdd = () => {
     append({
-      employee: '',
-      service: '',
+      employee: 0,
+      service: 0,
       quantity: 1,
       price: 0,
       type: 0,
@@ -183,17 +184,17 @@ export default function InvoiceNewEditDetails({ services, employees, appsettings
     >
       <Stack direction="row">
         <Box sx={{ color: 'text.secondary' }}>Subtotal</Box>
-        <Box sx={{ width: 160, typography: 'subtitle2' }}>{fCurrency(subTotal) || '-'}</Box>
+        <Box sx={{ width: 160, typography: 'subtitle2' }}>{FnCurrency(subTotal, currency)}</Box>
       </Stack>
 
       <Stack direction="row">
         <Box sx={{ color: 'text.secondary' }}>Overerall Discount</Box>
-        <Box sx={{ width: 160, typography: 'subtitle2' }}>{fCurrency(discount) || '-'}</Box>
+        <Box sx={{ width: 160, typography: 'subtitle2' }}>{FnCurrency(discount, currency) || '-'}</Box>
       </Stack>
 
       <Stack direction="row">
         <Box sx={{ color: 'text.secondary' }}>Tax Amount</Box>
-        <Box sx={{ width: 160, typography: 'subtitle2' }}>{fCurrency(taxTotal) || '-'}</Box>
+        <Box sx={{ width: 160, typography: 'subtitle2' }}>{FnCurrency(taxTotal, currency) || '-'}</Box>
       </Stack>
 
       <Stack direction="row">
@@ -204,56 +205,24 @@ export default function InvoiceNewEditDetails({ services, employees, appsettings
               ...(values.tip && { color: 'error.main' }),
             }}
           >
-            {values.tip ? `+ ${fCurrency(values.tip)}` : '+'}
+            {values.tip ? `+ ${FnCurrency(values.tip, currency)}` : '+'}
         </Box>
       </Stack>
 
       <Stack direction="row" sx={{ typography: 'subtitle1' }}>
         <Box>Total</Box>
-        <Box sx={{ width: 160 }}>{fCurrency(totalAmount) || '-'}</Box>
+        <Box sx={{ width: 160 }}>{FnCurrency(totalAmount, currency) || '-'}</Box>
       </Stack>
 
       <Stack direction="row">
         <Box sx={{ color: 'text.secondary' }}>Rounded Total</Box>
-        <Box sx={{ width: 160, typography: 'subtitle2' }}>{fCurrency(totalAmount) || '-'}</Box>
+        <Box sx={{ width: 160, typography: 'subtitle2' }}>{FnCurrency(totalAmount, currency) || '-'}</Box>
       </Stack>
 
       <Stack direction="row">
         <Box sx={{ color: 'text.secondary' }}>Customer Savings</Box>
-        <Box sx={{ width: 160, typography: 'subtitle2' }}>{fCurrency(customerSavings) || '-'}</Box>
+        <Box sx={{ width: 160, typography: 'subtitle2' }}>{FnCurrency(customerSavings, currency) || '-'}</Box>
       </Stack>
-
-    { /*
-      <Stack direction="row">
-        <Box sx={{ color: 'text.secondary' }}>Shipping</Box>
-        <Box
-          sx={{
-            width: 160,
-            ...(values.shipping && { color: 'error.main' }),
-          }}
-        >
-          {values.shipping ? `- ${fCurrency(values.shipping)}` : '-'}
-        </Box>
-      </Stack>
-
-      <Stack direction="row">
-        <Box sx={{ color: 'text.secondary' }}>Discount</Box>
-        <Box
-          sx={{
-            width: 160,
-            ...(values.discount && { color: 'error.main' }),
-          }}
-        >
-          {values.discount ? `- ${fCurrency(values.discount)}` : '-'}
-        </Box>
-      </Stack>
-
-      <Stack direction="row">
-        <Box sx={{ color: 'text.secondary' }}>Taxes</Box>
-        <Box sx={{ width: 160 }}>{values.taxes ? fCurrency(values.taxes) : '-'}</Box>
-      </Stack>
-        */ }
-    
     </Stack>
   );
 
@@ -267,23 +236,6 @@ export default function InvoiceNewEditDetails({ services, employees, appsettings
         {fields.map((item, index) => (
           <Stack key={item.id} alignItems="flex-end" spacing={1.5}>
             <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ width: 1 }}>
-            { /*
-              <RHFTextField
-                size="small"
-                name={`items[${index}].title`}
-                label="Title"
-                InputLabelProps={{ shrink: true }}
-              />
-         
-              <RHFTextField
-                size="small"
-                name={`items[${index}].description`}
-                label="Description"
-                InputLabelProps={{ shrink: true }}
-              />
-               */
-            }
-
               <RHFSelect
                 name={`items[${index}].service`}
                 size="small"
@@ -306,7 +258,7 @@ export default function InvoiceNewEditDetails({ services, employees, appsettings
                 {services?.map((service) => (
                   <MenuItem
                     key={service.id}
-                    value={service.name}
+                    value={service.id}
                     onClick={() => handleSelectService(index, service.name)}
                   >
                     {service.name}
@@ -335,7 +287,7 @@ export default function InvoiceNewEditDetails({ services, employees, appsettings
                 {employees?.map((employee) => (
                   <MenuItem
                     key={employee.id}
-                    value={employee.name}
+                    value={employee.id}
                     onClick={() => handleSelectEmployee(index, employee.name)}
                   >
                     {employee.name}
@@ -475,15 +427,6 @@ export default function InvoiceNewEditDetails({ services, employees, appsettings
             type="number"
             sx={{ maxWidth: { md: 120 } }}
           />
-        { /*
-          <RHFTextField
-            size="small"
-            label="Taxes(%)"
-            name="taxes"
-            type="number"
-            sx={{ maxWidth: { md: 120 } }}
-          />
-        */ }
         </Stack>
       </Stack>
 

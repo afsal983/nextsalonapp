@@ -1,8 +1,10 @@
 'use client';
 
-import useSWR from 'swr';
-import sumBy from 'lodash/sumBy';
 import { useState, useEffect, useCallback } from 'react';
+import useSWR from 'swr';
+import { fetcher } from 'src/utils/axios';
+import sumBy from 'lodash/sumBy';
+
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -24,11 +26,9 @@ import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { fetcher } from 'src/utils/axios';
 import { isAfter, isBetween } from 'src/utils/format-time';
 
 import { useTranslate } from 'src/locales';
-import { INVOICE_SERVICE_OPTIONS } from 'src/_mock';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -48,6 +48,7 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 
+import { ServiceItem } from 'src/types/service';
 import { IInvoice, IInvoiceTableFilters, IInvoiceTableFilterValue } from 'src/types/invoice';
 
 import InvoiceAnalytic from '../invoice-analytic';
@@ -58,10 +59,10 @@ import InvoiceTableFiltersResult from '../invoice-table-filters-result';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'invoiceNumber', label: 'Customer' },
+  { id: 'customer', label: 'Customer' },
   { id: 'createDate', label: 'Create' },
   { id: 'dueDate', label: 'Due' },
-  { id: 'price', label: 'Amount' },
+  { id: 'total', label: 'Amount' },
   { id: 'tip', label: 'Tip' },
   { id: 'status', label: 'Status' },
   { id: '' },
@@ -99,8 +100,9 @@ export default function InvoiceListView() {
 
   const dateError = isAfter(filters.startDate, filters.endDate);
 
-   // Use SWR to fetch data from multiple endpoints in parallel
+   // Get All invoices and services
    const { data: invoice,isLoading: isinvoiceLoading,  error: errorI } = useSWR('/api/salonapp/invoice', fetcher);
+   const { data: services,isLoading: isserviceLoading,  error: errorS } = useSWR('/api/salonapp/services', fetcher);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -137,7 +139,11 @@ export default function InvoiceListView() {
     (getInvoiceLength(status) / tableData.length) * 100;
 
   const TABS = [
-    { value: 'all', label: 'All', color: 'default', count: tableData.length },
+    { 
+      value: 'all', 
+      label: 'All', 
+      color: 'default', 
+      count: tableData.length },
     {
       value: 'paid',
       label: 'Paid',
@@ -226,7 +232,7 @@ export default function InvoiceListView() {
     [handleFilters]
   );
 
-  // Use useEffect to update state1 when data1 is available
+  // Use useEffect to update state when invoice data is loaded by useSWR hook.
   useEffect(() => {
     if (invoice) {
       setTableData(invoice.data);
@@ -234,8 +240,9 @@ export default function InvoiceListView() {
   }, [invoice]);
 
 
-  if ( isinvoiceLoading ) return <div>Loading...</div>;
-  if ( errorI ) return <div>Error Loading...</div>;
+  // Display loading page 
+  if ( isinvoiceLoading || isserviceLoading) return <div>Loading...</div>;
+  if ( errorI || errorS) return <div>Error Loading...</div>;
 
   return (
     <>
@@ -363,7 +370,7 @@ export default function InvoiceListView() {
             onFilters={handleFilters}
             //
             dateError={dateError}
-            serviceOptions={INVOICE_SERVICE_OPTIONS.map((option) => option.name)}
+            serviceOptions={services.data.map((option : ServiceItem) => option.name)}
           />
 
           {canReset && (

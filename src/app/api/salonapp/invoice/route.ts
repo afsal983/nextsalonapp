@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
 
   const { token } = cookiedata
   // Make an HTTP request to your API route with the token in the headers
-  const data = await fetch( `${baseUSRL}/apiserver/invoices?startdate=2024-01-12T03:00:00Z&enddate=2024-04-30T03:45:00Z`, {
+  const data = await fetch( `${baseUSRL}/apiserver/invoices?startdate=2024-01-12T03:00:00Z&enddate=2024-07-30T03:45:00Z`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -58,6 +58,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
   const body = await request.json();
 
+
   // Get the cookies
   const cookieStore = request.cookies
   const sessionCookie  = cookieStore?.get('session')?.value
@@ -81,11 +82,13 @@ export async function POST(request: NextRequest, response: NextResponse) {
     }
     return NextResponse.json(res, { status: 401 });
   }
+
+  console.log("ddd")
+  console.log(JSON.stringify(body))
   const { token } = cookiedata
 
-  if(body.id > 0 ) {
-    const data = await fetch(`${baseUSRL}/apiserver/product/${body.id}`, {
-      method: 'UPDATE',
+    const data = await fetch(`${baseUSRL}/apiserver/instantinvoice?notify=1`, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
@@ -94,6 +97,8 @@ export async function POST(request: NextRequest, response: NextResponse) {
     });
     // Get the data in JSON format 
     const apiResponse = await data.json();
+
+    console.log(apiResponse)
 
     if(apiResponse?.status === 401) {
       const res = {
@@ -106,29 +111,5 @@ export async function POST(request: NextRequest, response: NextResponse) {
   
     // Send the sucessful response back
     return NextResponse.json(apiResponse, { status: 201 });
-  } 
-
-  const data = await fetch(`${baseUSRL}/apiserver/product`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(body),
-  });
-
-  // Get the data in JSON format 
-  const apiResponse = await data.json();
-
-  if(apiResponse?.status === 401) {
-    const res = {
-      Title: 'NOK',
-      status: 401,
-      message: apiResponse?.message
-    }
-    return NextResponse.json(res, { status: 401 });
-  }
-
-  return NextResponse.json(apiResponse, { status: 201 });
 
 }

@@ -109,7 +109,7 @@ export default function InvoiceDetails({ invoice }: Props) {
       <Grid xs={12} md={3} sx={{ py: 3, textAlign: 'right' }}>
         <Typography variant="subtitle2">Have a Question?</Typography>
 
-        <Typography variant="body2">support@minimals.cc</Typography>
+        <Typography variant="body2">support@smeeye.com</Typography>
       </Grid>
     </Grid>
   );
@@ -122,36 +122,36 @@ export default function InvoiceDetails({ invoice }: Props) {
             <TableRow>
               <TableCell width={40}>#</TableCell>
 
-              <TableCell sx={{ typography: 'subtitle2' }}>Description</TableCell>
+              <TableCell sx={{ typography: 'subtitle2' }}>Item</TableCell>
+
+              <TableCell align="right">Price</TableCell>
 
               <TableCell>Qty</TableCell>
 
-              <TableCell align="right">Unit price</TableCell>
-
-              <TableCell align="right">Total</TableCell>
+              <TableCell align="right">Sub Total</TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
-            {invoice.Invoice_line.map((row, index) => (
+            {invoice.itemlist.map((row, index) => (
               <TableRow key={index}>
-                <TableCell>{index + 1}</TableCell>
+                <TableCell>{ row[0]}</TableCell>
 
                 <TableCell>
                   <Box sx={{ maxWidth: 560 }}>
-                    <Typography variant="subtitle2">{row.Product.name}</Typography>
+                    <Typography variant="subtitle2">{row[1]}</Typography>
 
                     <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                      {row?.Employee.name}
+                      {row[0]}
                     </Typography>
                   </Box>
                 </TableCell>
 
-                <TableCell>{row.quantity}</TableCell>
+                <TableCell align="right">{row[2]}</TableCell>
+                <TableCell>{row[3]}</TableCell>
 
-                <TableCell align="right">{fCurrency(row.price)}</TableCell>
+                <TableCell align="right">{row[4]}</TableCell>
 
-                <TableCell align="right">{fCurrency(row.price * row.quantity)}</TableCell>
               </TableRow>
             ))}
 
@@ -208,11 +208,11 @@ export default function InvoiceDetails({ invoice }: Props) {
             <Typography variant="subtitle2" sx={{ mb: 1 }}>
               Invoice From
             </Typography>
-            {invoice.Branches_organization.name}
+            {invoice.branchname}
             <br />
-            {invoice.Branches_organization.address}
+            {invoice.branchaddr}
             <br />
-            Phone: {invoice.Branches_organization.telephone}
+            Phone: {invoice.telephone}
             <br />
           </Stack>
 
@@ -220,11 +220,11 @@ export default function InvoiceDetails({ invoice }: Props) {
             <Typography variant="subtitle2" sx={{ mb: 1 }}>
               Invoice To
             </Typography>
-            {invoice.Customer.firstname}
+            {invoice.guestname}
             <br />
-            {invoice.Customer.address}
+            {invoice.guestaddress}
             <br />
-            Phone: {invoice.Customer.telephone}
+            Phone: {invoice.guesttelephone}
             <br />
           </Stack>
 
@@ -232,14 +232,14 @@ export default function InvoiceDetails({ invoice }: Props) {
             <Typography variant="subtitle2" sx={{ mb: 1 }}>
               Date Create
             </Typography>
-            {fDate(invoice.date)}
+            {invoice.date}
           </Stack>
 
           <Stack sx={{ typography: 'body2' }}>
             <Typography variant="subtitle2" sx={{ mb: 1 }}>
               Payment Method
             </Typography>
-            {fDate(invoice.date)}
+            {invoice.paymenttype}
           </Stack>
         </Box>
 

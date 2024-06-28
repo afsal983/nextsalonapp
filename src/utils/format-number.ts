@@ -8,6 +8,7 @@ import { useLocales as getLocales } from 'src/locales'
  */
 
 type InputValue = string | number | null
+type Currency = string | number | null | undefined
 
 function getLocaleCode () {
   const {
@@ -43,6 +44,28 @@ export function fNumber (inputValue: InputValue) {
 
 export function fCurrency (inputValue: InputValue) {
   const { code, currency } = getLocaleCode()
+
+  if (!inputValue) return ''
+
+  const number = Number(inputValue)
+
+  const fm = new Intl.NumberFormat(code, {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  }).format(number)
+
+  return fm
+}
+
+// ----------------------------------------------------------------------
+
+export function FnCurrency (inputValue: InputValue, Currency : string) {
+  if (Currency == "Dh") {
+    Currency = "AED"
+  }
+  const { code, currency } = {code : "en-US", currency: Currency}
 
   if (!inputValue) return ''
 
