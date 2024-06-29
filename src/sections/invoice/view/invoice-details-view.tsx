@@ -25,7 +25,7 @@ export default function InvoiceDetailsView({ id }: Props) {
   // const currentInvoice = _invoices.filter((invoice) => invoice.id === id)[0];
 
   // Use SWR to fetch data from multiple endpoints in parallel
-  const { data: currentInvoice,isLoading: isinvoiceLoading,  error: errorC } = useSWR(`/api/salonapp/invoice/${id}`, fetcher);
+  const { data: printInvoice,isLoading: isinvoiceLoading,  error: errorC } = useSWR(`/api/salonapp/invoiceprint/${id}`, fetcher);
 
   if ( isinvoiceLoading ) return <div>Loading...</div>;
   if ( errorC ) return <div>Error Loading...</div>;
@@ -33,7 +33,7 @@ export default function InvoiceDetailsView({ id }: Props) {
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs
-        heading={currentInvoice?.invoiceNumber}
+        heading={printInvoice?.invoiceNumber}
         links={[
           {
             name: 'Dashboard',
@@ -43,12 +43,12 @@ export default function InvoiceDetailsView({ id }: Props) {
             name: 'Invoice',
             href: paths.dashboard.invoice.root,
           },
-          { name: currentInvoice?.invoiceNumber },
+          { name: printInvoice?.invoiceNumber },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
-      <InvoiceDetails invoice={currentInvoice.data} />
+      <InvoiceDetails printinvoice={printInvoice.data} />
     </Container>
   );
 }

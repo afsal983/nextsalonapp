@@ -33,6 +33,7 @@ interface Props {
 
 export default function ServiceNewEditForm ({ currentService, servicecategory }: Props) {
   const router = useRouter()
+
   const [color, setColor] = useState(currentService?.color||"#FFFFFF")
 
   const { enqueueSnackbar } = useSnackbar()
@@ -122,7 +123,7 @@ export default function ServiceNewEditForm ({ currentService, servicecategory }:
         // Keep 500ms delay
         await new Promise((resolve) => setTimeout(resolve, 500));
         reset(); 
-        enqueueSnackbar(currentService ? t('general.update_sucess') : t('general.create_sucess'), { variant: 'success' });
+        enqueueSnackbar(currentService ? t('general.update_success') : t('general.create_success'), { variant: 'success' });
 
         // Service listing again
         router.push(paths.dashboard.services.list)

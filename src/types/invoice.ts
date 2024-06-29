@@ -115,3 +115,80 @@ export interface Payment {
   payment_type: number
   auth_code: string
 }
+
+export interface Printinvoice {
+"logourl": string
+"mainlogourl": string
+"branchname": string
+"branchaddr": string
+"orgname": string
+"telephone": string
+"taxname": string
+"taxid": string
+"billno": string
+"invoiceid": string
+"date": string
+"guestname": string
+"guestaddress": string
+"guesttelephone": string
+"guesttaxid": string
+"paymenttype": string
+"authcode": string
+"itemheader": []
+"itemlist": []
+"subtotal": string
+"total": string
+"discount": string
+"discountrate": string
+"tax": string
+"sgst": string
+"cgst": string
+"taxrate": string
+"tip": string
+"billamount": string
+"nonroundedbillamount": string
+"customersavings": string
+"footer": string
+}
+
+export interface Products {
+  id:  number
+  start: Date
+  end: Date
+  productid: number
+  price: number
+  quantity: number
+  discount: number | undefined
+  employee_id: number | undefined
+  deleted: number
+}
+
+export interface Retails {
+  id:  number
+  productid: number
+  price: number
+  quantity: number
+  discount: number | undefined
+  employee_id: number | undefined
+  deleted: number
+}
+
+export interface Packages {
+  id:  number
+  start: Date
+  end: Date
+  productid: number
+  price: number
+  quantity: number
+  discount: number | undefined
+  employee_id: number | undefined
+  deleted: Number
+}
+
+export interface Payments {
+  id:  number  | undefined
+  invoice_id: number  | undefined
+  value: number  | undefined
+  payment_type: number  | undefined
+  auth_code: string | undefined
+}

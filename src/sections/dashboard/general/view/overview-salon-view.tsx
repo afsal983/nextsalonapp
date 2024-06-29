@@ -1,28 +1,26 @@
 'use client'
 
+import useSWR from 'swr';
+
 import { useTheme } from '@mui/material/styles'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Unstable_Grid2'
-import useSWR from 'swr';
-import { fetcher } from 'src/utils/axios';
 
 import { useMockedUser } from 'src/hooks/use-mocked-user'
 
+import { fetcher } from 'src/utils/axios';
+
 import {
-  _ecommerceBestSalesman,
-  _ecommerceSalesOverview,
   _ecommerceLatestProducts
 } from 'src/_mock'
 
 import { useSettingsContext } from 'src/components/settings'
 
+import BookingDetails from '../invoice-details';
 import SalonBestCustomer from '../salon-best-customer'
 import SalonBestEmployee from '../salon-best-employee'
-import EcommerceSalesOverview from '../ecommerce-sales-overview'
 import EcommerceWidgetSummary from '../ecommerce-widget-summary'
 import EcommerceLatestProducts from '../ecommerce-latest-products'
-import EcommerceCurrentBalance from '../ecommerce-current-balance'
-import BookingDetails from '../invoice-details';
 
 // ----------------------------------------------------------------------
 

@@ -1,5 +1,5 @@
 import sum from 'lodash/sum';
-import { useCallback, useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
@@ -13,7 +13,7 @@ import { inputBaseClasses } from '@mui/material/InputBase';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { fCurrency, FnCurrency } from 'src/utils/format-number';
+import { FnCurrency } from 'src/utils/format-number';
 
 import Iconify from 'src/components/iconify';
 import { RHFSelect, RHFTextField } from 'src/components/hook-form';
@@ -23,7 +23,6 @@ import { ServiceItem } from 'src/types/service';
 import { AppSettings } from 'src/types/settings';
 import { IInvoice, IInvoiceItem} from 'src/types/invoice';
 import { Branches_organization } from 'src/types/branches_organizations';
-import { settings } from 'nprogress';
 
 
 
@@ -64,9 +63,10 @@ export default function InvoiceNewEditDetails({ services, employees, appsettings
 
   const subTotal = sum(totalOnRow) - (sum(totalOnRow) * values.discount/100);
 
-  const taxTotalOnRow = values.items.map((item: IInvoiceItem) => item.quantity * (item.price - (item.price * item.discount/100)) * tax );
+  // const taxTotalOnRow = values.items.map((item: IInvoiceItem) => item.quantity * (item.price - (item.price * item.discount/100)) * tax );
 
-  const taxTotal = sum(taxTotalOnRow);
+  // const taxTotal = sum(taxTotalOnRow);
+  const taxTotal = subTotal *  tax;
 
   const discount  = actualTotal - subTotal
 

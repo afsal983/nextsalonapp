@@ -14,22 +14,20 @@ import Select, { type SelectChangeEvent } from '@mui/material/Select'
 import Iconify from 'src/components/iconify'
 import CustomPopover, { usePopover } from 'src/components/custom-popover'
 
-import { type ServiceTableFilters, type ServiceTableFilterValue } from 'src/types/service'
+import { ServiceCategoryTableFilters, type ServiceTableFilters, type ServiceTableFilterValue } from 'src/types/service'
 
 // ----------------------------------------------------------------------
 
 interface Props {
-  filters: ServiceTableFilters
+  filters: ServiceCategoryTableFilters
   onFilters: (name: string, value: ServiceTableFilterValue) => void
   //
-  productCategory: string[]
 }
 
-export default function ServiceTableToolbar ({
+export default function ServiceCategoryTableToolbar ({
   filters,
   onFilters,
   //
-  productCategory
 }: Props) {
   const popover = usePopover()
 
@@ -71,35 +69,8 @@ export default function ServiceTableToolbar ({
             flexShrink: 0,
             width: { xs: 1, md: 200 }
           }}
-        >
-          <InputLabel>Category</InputLabel>
+        />
 
-          <Select
-            multiple
-            value={filters.productcategory}
-            onChange={handleFilterRole}
-            input={<OutlinedInput label="Role" />}
-            renderValue={(selected) =>
-              selected.map((value) => value).join(', ')
-            }
-            MenuProps={{
-              PaperProps: {
-                sx: { maxHeight: 240 }
-              }
-            }}
-          >
-            {productCategory.map((option) => (
-              <MenuItem key={option} value={option}>
-                <Checkbox
-                  disableRipple
-                  size="small"
-                  checked={filters.productcategory.includes(option)}
-                />
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
 
         <Stack
           direction="row"

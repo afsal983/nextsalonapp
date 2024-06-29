@@ -148,8 +148,6 @@ export function AuthProvider ({ children }: Props) {
 
     const logindata = await res.json()
 
-    console.log(logindata)
-
     const {
       firstname,
       lastname,

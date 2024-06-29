@@ -10,26 +10,23 @@ import CardHeader from '@mui/material/CardHeader';
 import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 
-
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { fDate } from 'src/utils/format-time';
-
 import { useBoolean } from 'src/hooks/use-boolean';
+
+import { useTranslate } from 'src/locales';
 
 import Iconify from 'src/components/iconify';
 import FormProvider from 'src/components/hook-form';
 import { useSnackbar } from 'src/components/snackbar'
 
-import { IInvoice } from 'src/types/invoice';
 import { Employee } from 'src/types/employee';
 import { ServiceItem } from 'src/types/service';
 import { AppSettings } from 'src/types/settings';
 import { IPaymenttypes } from 'src/types/payment';
 import { Branches_organization } from 'src/types/branches_organizations';
-
-import { useTranslate } from 'src/locales';
+import { Retails, IInvoice, Products, Packages, Payments } from 'src/types/invoice';
 
 import PaymentNewEditForm from './payment-new-edit-form'
 import InvoiceNewEditDetails from './invoice-new-edit-details';
@@ -63,7 +60,7 @@ export default function InvoiceNewEditForm({ currentInvoice, services, branches,
     createDate: Yup.mixed<any>().nullable().required('Create date is required'),
     dueDate: Yup.mixed<any>()
       .required('Due date is required'),
-      //.test(
+      // .test(
       //  'date-min',
       //  'Due date must be later than create date',
       //  (value, { parent }) => value.getTime() > parent.createDate.getTime()
@@ -72,13 +69,13 @@ export default function InvoiceNewEditForm({ currentInvoice, services, branches,
       Yup.array().of(
         Yup.object({
           id: Yup.number(),
-          service: Yup.number().required('Service is required'),
-          employee: Yup.number().required('Employee is required'),
+          service: Yup.number().positive('Choose a service').required('Service is required'),
+          employee: Yup.number().positive('Choose an employee').required('Employee is required'),
           quantity: Yup.number()
             .required('Quantity is required')
             .min(1, 'Quantity must be more than 0'),
           price: Yup.number()
-            .positive('Discount must be a positive value'),
+            .positive('Discount must be a positive value').required('Service is required'),
           discount: Yup.number()
           .min(0, 'Discount cannot be negative'),
           total: Yup.number()
@@ -197,13 +194,13 @@ export default function InvoiceNewEditForm({ currentInvoice, services, branches,
     loadingSend.onTrue();
     console.log(data)
 
-    let products = []
-    let retails = []
-    let packages = []
-    let payments = []
-    data?.items?.map((item, index) => {
-        if(item.type ==1 ) {
-            let tmp = {
+    const products: Products[] = [] 
+    const retails: Retails[] = []
+    const packages: Packages[] = []
+    const payments: Payments[] = []
+    data?.items?.forEach((item) => {
+        if(item.type ===1 ) {
+            const tmp = {
               id:  item.service,
               start: new Date(),
               end: new Date(),
@@ -215,8 +212,8 @@ export default function InvoiceNewEditForm({ currentInvoice, services, branches,
               deleted: 0,
             }
             products.push(tmp)
-        } else if(item.type ==2 ) {
-            let tmp = {
+        } else if(item.type ===2 ) {
+            const tmp = {
               id:  item.service,
               productid: item.service,
               price: item.price,
@@ -227,8 +224,8 @@ export default function InvoiceNewEditForm({ currentInvoice, services, branches,
             }
           retails.push(tmp)
 
-        } else if (item.type ==3 ) {
-          let tmp = {
+        } else if (item.type ===3 ) {
+          const tmp = {
             id:  item.service,
             start: new Date(),
             end: new Date(),
@@ -243,10 +240,9 @@ export default function InvoiceNewEditForm({ currentInvoice, services, branches,
         }
     })
 
-    data?.payments?.map((item, index) => { 
-
-      if( item?.value > 0) {
-        let tmp = {
+    data?.payments?.forEach((item) => {
+      if( item?.value && item?.value > 0) {
+        const tmp = {
           id:  item.id,
           invoice_id: 0,
           value: item.value,
@@ -261,10 +257,10 @@ export default function InvoiceNewEditForm({ currentInvoice, services, branches,
       customer: data.invoiceTo.id,
       branch_id: data.invoiceFrom.branch_id,
       reminder_count: 0,
-      products: products,
-      retails: retails,
-      packages: packages,
-      payments: payments,
+      products,
+      retails,
+      packages,
+      payments,
       discount: data.discount,
       tip: data.tip,
       paymentmethod: 1,
@@ -273,8 +269,6 @@ export default function InvoiceNewEditForm({ currentInvoice, services, branches,
       event_id: 0,
 
     }
-
-    console.log(invoicedata)
 
     try {
       
@@ -290,7 +284,7 @@ export default function InvoiceNewEditForm({ currentInvoice, services, branches,
         const responseData = await response.json();
 
         if(responseData?.status > 401 ) {
-          enqueueSnackbar(currentInvoice ? t('general.update_failed') : t('general.create_failed'), { variant: 'error' });
+          enqueueSnackbar(currentInvoice ? responseData?.message : responseData?.message, { variant: 'error' });
         } else {
           // Keep 500ms delay
           await new Promise((resolve) => setTimeout(resolve, 500));

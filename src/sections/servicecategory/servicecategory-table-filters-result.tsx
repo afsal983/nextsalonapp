@@ -8,20 +8,20 @@ import Stack, { type StackProps } from '@mui/material/Stack'
 
 import Iconify from 'src/components/iconify'
 
-import { type ServiceTableFilters, type ServiceTableFilterValue } from 'src/types/service'
+import { type ServiceCategoryTableFilters, type ServiceCategoryTableFilterValue } from 'src/types/service'
 
 // ----------------------------------------------------------------------
 
 type Props = StackProps & {
-  filters: ServiceTableFilters
-  onFilters: (name: string, value: ServiceTableFilterValue) => void
+  filters: ServiceCategoryTableFilters
+  onFilters: (name: string, value: ServiceCategoryTableFilterValue) => void
   //
   onResetFilters: VoidFunction
   //
   results: number
 }
 
-export default function ServiceTableFiltersResult ({
+export default function ServicecategoryTableFiltersResult ({
   filters,
   onFilters,
   //
@@ -38,16 +38,6 @@ export default function ServiceTableFiltersResult ({
     onFilters('status', 'all')
   }, [onFilters])
 
-  const handleRemoveRole = useCallback(
-    (inputValue: string) => {
-      const newValue = filters.productcategory.filter(
-        (item) => item !== inputValue
-      )
-
-      onFilters('productcategory', newValue)
-    },
-    [filters.productcategory, onFilters]
-  )
 
   return (
     <Stack spacing={1.5} {...other}>
@@ -72,19 +62,6 @@ export default function ServiceTableFiltersResult ({
               label={filters.status}
               onDelete={handleRemoveStatus}
             />
-          </Block>
-        )}
-
-        {!(filters.productcategory.length === 0) && (
-          <Block label="Role:">
-            {filters.productcategory.map((item) => (
-              <Chip
-                key={item}
-                label={item}
-                size="small"
-                onDelete={() => { handleRemoveRole(item) }}
-              />
-            ))}
           </Block>
         )}
 

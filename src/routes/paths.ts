@@ -25,7 +25,10 @@ export const paths = {
       list: `${ROOTS.DASHBOARD}/service/list`,
       edit: (id: number) => `${ROOTS.DASHBOARD}/service/${id}/edit`,
       servicecategory: {
-        root: `${ROOTS.DASHBOARD}/servicecategory`
+        root: `${ROOTS.DASHBOARD}/servicecategory`,
+        new: `${ROOTS.DASHBOARD}/servicecategory/new`,
+        list: `${ROOTS.DASHBOARD}/servicecategory/list`,
+        edit: (id: number) => `${ROOTS.DASHBOARD}/servicecategory/${id}/edit`,
       }
     },
     retails: {

@@ -2,10 +2,16 @@
 // ----------------------------------------------------------------------
 
 export type ServiceTableFilterValue = string | string[]
+export type ServiceCategoryTableFilterValue = string | string[]
 
 export interface ServiceTableFilters {
   name: string
   productcategory: string[]
+  status: string
+}
+
+export interface ServiceCategoryTableFilters {
+  name: string
   status: string
 }
 

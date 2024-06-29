@@ -1,11 +1,10 @@
-import { useCallback } from 'react';
+import { useCallback, ChangeEvent, useState } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Dialog from '@mui/material/Dialog';
-import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import ButtonBase from '@mui/material/ButtonBase';
@@ -37,10 +36,8 @@ export default function PaymentNewEditForm({ currentPayment, paymenttypes }: Pro
   } = useFormContext();
 
   const mdUp = useResponsive('up', 'md');
-
+  
   const values = watch();
-
-  console.log(values)
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -76,21 +73,21 @@ export default function PaymentNewEditForm({ currentPayment, paymenttypes }: Pro
         selected_payment?.id
       );
     },
-    [setValue, values.totalAmount,values.payments]
+    [setValue, values.totalAmount,values.payments, paymenttypes]
   );
 
   const handleChangeamount = useCallback(
-    (index: number, option: string, event) => {
+    (index: number, option: string, event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       values.payments.map((items : Payment, count : number)=> {
-          if(items?.value > event.target.value && index !== count ) {
+          if(items?.value && items?.value > Number(event.target.value) && index !== count ) {
             setValue(
               `payments[${count}].value`,
-              items?.value - event.target.value
+              items.value - Number(event.target.value)
             );
             return true; 
           }
           
-          // return null; // Or return undefined
+          return null; // Or return undefined
       })
       setValue(
         `payments[${index}].value`,
@@ -98,7 +95,7 @@ export default function PaymentNewEditForm({ currentPayment, paymenttypes }: Pro
       );
 
     },
-    [setValue, values.totalAmount,values.payments]
+    [setValue,values.payments]
   );
 
 

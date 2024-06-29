@@ -14,7 +14,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 
-import { fDate } from 'src/utils/format-time';
 import { fCurrency } from 'src/utils/format-number';
 
 import { INVOICE_STATUS_OPTIONS } from 'src/_mock';
@@ -22,7 +21,7 @@ import { INVOICE_STATUS_OPTIONS } from 'src/_mock';
 import Label from 'src/components/label';
 import Scrollbar from 'src/components/scrollbar';
 
-import { IInvoice } from 'src/types/invoice';
+import { Printinvoice } from 'src/types/invoice';
 
 import InvoiceToolbar from './invoice-toolbar';
 
@@ -40,12 +39,13 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 type Props = {
-  invoice: IInvoice;
+  printinvoice: Printinvoice;
 };
 
-export default function InvoiceDetails({ invoice }: Props) {
+export default function InvoiceDetails({ printinvoice }: Props) {
   const [currentStatus, setCurrentStatus] = useState("Paid");
 
+  console.log(printinvoice)
   const handleChangeStatus = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentStatus(event.target.value);
   }, []);
@@ -53,44 +53,62 @@ export default function InvoiceDetails({ invoice }: Props) {
   const renderTotal = (
     <>
       <StyledTableRow>
-        <TableCell colSpan={3} />
+        <TableCell colSpan={5} />
         <TableCell sx={{ color: 'text.secondary' }}>
           <Box sx={{ mt: 2 }} />
           Subtotal
         </TableCell>
         <TableCell width={120} sx={{ typography: 'subtitle2' }}>
           <Box sx={{ mt: 2 }} />
-          {fCurrency(invoice.total)}
+          {printinvoice.subtotal}
         </TableCell>
       </StyledTableRow>
 
       <StyledTableRow>
-        <TableCell colSpan={3} />
-        <TableCell sx={{ color: 'text.secondary' }}>Shipping</TableCell>
+        <TableCell colSpan={5} />
+        <TableCell sx={{ color: 'text.secondary' }}>Customer Savings</TableCell>
         <TableCell width={120} sx={{ color: 'error.main', typography: 'body2' }}>
-          {fCurrency(-invoice.total)}
+          {printinvoice.customersavings}
         </TableCell>
       </StyledTableRow>
 
       <StyledTableRow>
-        <TableCell colSpan={3} />
-        <TableCell sx={{ color: 'text.secondary' }}>Discount</TableCell>
+        <TableCell colSpan={5} />
+        <TableCell sx={{ color: 'text.secondary' }}>Overall discount</TableCell>
         <TableCell width={120} sx={{ color: 'error.main', typography: 'body2' }}>
-          {fCurrency(-invoice.discount)}
+          {printinvoice.discount}
         </TableCell>
       </StyledTableRow>
 
       <StyledTableRow>
-        <TableCell colSpan={3} />
-        <TableCell sx={{ color: 'text.secondary' }}>Taxes</TableCell>
-        <TableCell width={120}>{fCurrency(invoice.tax_rate)}</TableCell>
+        <TableCell colSpan={5} />
+        <TableCell sx={{ color: 'text.secondary' }}>Tax Rate</TableCell>
+        <TableCell width={120} sx={{ color: 'error.main', typography: 'body2' }}>
+          {printinvoice.taxrate}%
+        </TableCell>
+      </StyledTableRow>
+
+
+      <StyledTableRow>
+        <TableCell colSpan={5} />
+        <TableCell sx={{ color: 'text.secondary' }}>Tax Amount</TableCell>
+        <TableCell width={120} sx={{ color: 'error.secondary', typography: 'body2' }}>
+          {printinvoice.tax}
+        </TableCell>
       </StyledTableRow>
 
       <StyledTableRow>
-        <TableCell colSpan={3} />
+        <TableCell colSpan={5} />
         <TableCell sx={{ typography: 'subtitle1' }}>Total</TableCell>
         <TableCell width={140} sx={{ typography: 'subtitle1' }}>
-          {fCurrency(invoice.total)}
+          {printinvoice.billamount}
+        </TableCell>
+      </StyledTableRow>
+      <StyledTableRow>
+        <TableCell colSpan={5} />
+        <TableCell sx={{ typography: 'subtitle1' }}>Rounded Total</TableCell>
+        <TableCell width={140} sx={{ typography: 'subtitle1' }}>
+          {printinvoice.nonroundedbillamount}
         </TableCell>
       </StyledTableRow>
     </>
@@ -102,7 +120,7 @@ export default function InvoiceDetails({ invoice }: Props) {
         <Typography variant="subtitle2">NOTES</Typography>
 
         <Typography variant="body2">
-          We appreciate your business. Should you need us to add VAT or extra notes let us know!
+          We appreciate your business. 
         </Typography>
       </Grid>
 
@@ -124,16 +142,20 @@ export default function InvoiceDetails({ invoice }: Props) {
 
               <TableCell sx={{ typography: 'subtitle2' }}>Item</TableCell>
 
+              <TableCell sx={{ typography: 'subtitle2' }}>Catgory</TableCell>
+
               <TableCell align="right">Price</TableCell>
 
-              <TableCell>Qty</TableCell>
+              <TableCell align="right">Discounted Price</TableCell>
+
+              <TableCell>Quantity</TableCell>
 
               <TableCell align="right">Sub Total</TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
-            {invoice.itemlist.map((row, index) => (
+            {printinvoice.itemlist.map((row, index) => (
               <TableRow key={index}>
                 <TableCell>{ row[0]}</TableCell>
 
@@ -142,15 +164,21 @@ export default function InvoiceDetails({ invoice }: Props) {
                     <Typography variant="subtitle2">{row[1]}</Typography>
 
                     <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                      {row[0]}
+                      {}
                     </Typography>
                   </Box>
                 </TableCell>
 
-                <TableCell align="right">{row[2]}</TableCell>
-                <TableCell>{row[3]}</TableCell>
+                <TableCell align="left">{row[5]}</TableCell>
 
-                <TableCell align="right">{row[4]}</TableCell>
+                <TableCell align="right">{row[2]}</TableCell>
+
+                <TableCell align="right">{row[6]}</TableCell>
+
+                <TableCell>{row[3]}</TableCell>
+                
+                
+                <TableCell align="right">{row[7]}</TableCell>
 
               </TableRow>
             ))}
@@ -165,7 +193,7 @@ export default function InvoiceDetails({ invoice }: Props) {
   return (
     <>
       <InvoiceToolbar
-        invoice={invoice}
+        printinvoice={printinvoice}
         currentStatus={currentStatus || "Paid"}
         onChangeStatus={handleChangeStatus}
         statusOptions={INVOICE_STATUS_OPTIONS}
@@ -184,7 +212,7 @@ export default function InvoiceDetails({ invoice }: Props) {
           <Box
             component="img"
             alt="logo"
-            src="/logo/logo_single.svg"
+            src={printinvoice.logourl}
             sx={{ width: 48, height: 48 }}
           />
 
@@ -201,18 +229,18 @@ export default function InvoiceDetails({ invoice }: Props) {
               {currentStatus}
             </Label>
 
-            <Typography variant="h6">{invoice.invoicenumber}</Typography>
+            <Typography variant="h6">{printinvoice.invoiceid}</Typography>
           </Stack>
 
           <Stack sx={{ typography: 'body2' }}>
             <Typography variant="subtitle2" sx={{ mb: 1 }}>
               Invoice From
             </Typography>
-            {invoice.branchname}
+            {printinvoice.branchname}
             <br />
-            {invoice.branchaddr}
+            {printinvoice.branchaddr}
             <br />
-            Phone: {invoice.telephone}
+            Phone: {printinvoice.telephone}
             <br />
           </Stack>
 
@@ -220,11 +248,11 @@ export default function InvoiceDetails({ invoice }: Props) {
             <Typography variant="subtitle2" sx={{ mb: 1 }}>
               Invoice To
             </Typography>
-            {invoice.guestname}
+            {printinvoice.guestname}
             <br />
-            {invoice.guestaddress}
+            {printinvoice.guestaddress}
             <br />
-            Phone: {invoice.guesttelephone}
+            Phone: {printinvoice.guesttelephone}
             <br />
           </Stack>
 
@@ -232,14 +260,14 @@ export default function InvoiceDetails({ invoice }: Props) {
             <Typography variant="subtitle2" sx={{ mb: 1 }}>
               Date Create
             </Typography>
-            {invoice.date}
+            {printinvoice.date}
           </Stack>
 
           <Stack sx={{ typography: 'body2' }}>
             <Typography variant="subtitle2" sx={{ mb: 1 }}>
               Payment Method
             </Typography>
-            {invoice.paymenttype}
+            {printinvoice.paymenttype}
           </Stack>
         </Box>
 

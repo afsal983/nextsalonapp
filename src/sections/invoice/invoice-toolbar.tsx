@@ -1,6 +1,6 @@
-import { useCallback } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
-
+import { useReactToPrint } from 'react-to-print';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -19,14 +19,16 @@ import { useBoolean } from 'src/hooks/use-boolean';
 
 import Iconify from 'src/components/iconify';
 
-import { IInvoice } from 'src/types/invoice';
+import { Printinvoice } from 'src/types/invoice';
 
 import InvoicePDF from './invoice-pdf';
+
+import InvoiceThermalReceipt from './invoice-thermal-receipt';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  invoice: IInvoice;
+  printinvoice: Printinvoice;
   currentStatus: string;
   onChangeStatus: (event: React.ChangeEvent<HTMLInputElement>) => void;
   statusOptions: {
@@ -36,7 +38,7 @@ type Props = {
 };
 
 export default function InvoiceToolbar({
-  invoice,
+  printinvoice,
   currentStatus,
   statusOptions,
   onChangeStatus,
@@ -45,9 +47,19 @@ export default function InvoiceToolbar({
 
   const view = useBoolean();
 
+  const printview = useBoolean();
+
+  const componentRef = useRef<HTMLDivElement>(null);
+
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+   
+  });
+
+
   const handleEdit = useCallback(() => {
-    router.push(paths.dashboard.invoice.edit(Number(invoice.id)));
-  }, [invoice.id, router]);
+    router.push(paths.dashboard.invoice.edit(Number(printinvoice.invoiceid)));
+  }, [printinvoice.invoiceid, router]);
 
   return (
     <>
@@ -71,8 +83,8 @@ export default function InvoiceToolbar({
           </Tooltip>
 
           <PDFDownloadLink
-            document={<InvoicePDF invoice={invoice} currentStatus={currentStatus} />}
-            fileName={invoice.invoicenumber}
+            document={<InvoicePDF printinvoice={printinvoice} currentStatus={currentStatus} />}
+            fileName={printinvoice.invoiceid}
             style={{ textDecoration: 'none' }}
           >
             {({ loading }) => (
@@ -90,7 +102,7 @@ export default function InvoiceToolbar({
 
           <Tooltip title="Print">
             <IconButton>
-              <Iconify icon="solar:printer-minimalistic-bold" />
+              <Iconify icon="solar:printer-minimalistic-bold" onClick={handlePrint}/>
             </IconButton>
           </Tooltip>
 
@@ -139,11 +151,34 @@ export default function InvoiceToolbar({
 
           <Box sx={{ flexGrow: 1, height: 1, overflow: 'hidden' }}>
             <PDFViewer width="100%" height="100%" style={{ border: 'none' }}>
-              <InvoicePDF invoice={invoice} currentStatus={currentStatus} />
+              <InvoicePDF printinvoice={printinvoice} currentStatus={currentStatus} />
             </PDFViewer>
           </Box>
         </Box>
       </Dialog>
+
+      <Dialog fullScreen open={printview.value}>
+        <Box sx={{ height: 1, display: 'flex', flexDirection: 'column' }}>
+          <DialogActions
+            sx={{
+              p: 1.5,
+            }}
+          >
+            <Button color="inherit" variant="contained" onClick={printview.onFalse}>
+              Close
+            </Button>
+          </DialogActions>
+
+          <Box sx={{ flexGrow: 1, height: 1, overflow: 'hidden' }}>
+            <PDFViewer width="100%" height="100%" style={{ border: 'none' }}>
+              <InvoicePDF printinvoice={printinvoice} currentStatus={currentStatus} />
+            </PDFViewer>
+          </Box>
+        </Box>
+      </Dialog>
+      <div style={{ display: 'none' }}>
+        <InvoiceThermalReceipt ref={componentRef} printinvoice={printinvoice}/>
+        </div>
     </>
   );
 }

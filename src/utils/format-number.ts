@@ -62,7 +62,7 @@ export function fCurrency (inputValue: InputValue) {
 // ----------------------------------------------------------------------
 
 export function FnCurrency (inputValue: InputValue, Currency : string) {
-  if (Currency == "Dh") {
+  if (Currency === "Dh") {
     Currency = "AED"
   }
   const { code, currency } = {code : "en-US", currency: Currency}

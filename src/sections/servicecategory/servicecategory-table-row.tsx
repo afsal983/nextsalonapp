@@ -12,26 +12,26 @@ import Iconify from 'src/components/iconify'
 import { ConfirmDialog } from 'src/components/custom-dialog'
 import CustomPopover, { usePopover } from 'src/components/custom-popover'
 
-import { type ServiceItem } from 'src/types/service'
+import { type ServiceCategoryItem } from 'src/types/service'
 
 // ----------------------------------------------------------------------
 
 interface Props {
   selected: boolean
   onEditRow: VoidFunction
-  row: ServiceItem
+  row: ServiceCategoryItem
   onSelectRow: VoidFunction
   onDeleteRow: VoidFunction
 }
 
-export default function ServiceTableRow ({
+export default function ServiceCategoryTableRow ({
   row,
   selected,
   onEditRow,
   onSelectRow,
   onDeleteRow
 }: Props) {
-  const { name, price, tax, duration, commission, color, ProductCategory } =
+  const { name } =
     row
 
   const confirm = useBoolean()
@@ -50,7 +50,7 @@ export default function ServiceTableRow ({
         <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
           <ListItemText
             primary={name}
-            secondary={ProductCategory.name}
+            // secondary={ProductCategory.name}
             primaryTypographyProps={{ typography: 'body2' }}
             secondaryTypographyProps={{
               component: 'span',
@@ -58,19 +58,6 @@ export default function ServiceTableRow ({
             }}
           />
         </TableCell>
-
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{price}</TableCell>
-
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{tax}</TableCell>
-
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{duration}</TableCell>
-
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{commission}</TableCell>
-
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>
-          <input type="color" id="head" name="head" value={color} />
-        </TableCell>
-
         <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
           <IconButton
             color={popover.open ? 'inherit' : 'default'}

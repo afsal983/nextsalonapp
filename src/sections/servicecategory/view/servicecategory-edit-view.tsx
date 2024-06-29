@@ -14,7 +14,7 @@ import { useTranslate } from 'src/locales';
 import { useSettingsContext } from 'src/components/settings'
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs'
 
-import ServiceNewEditForm from '../service-new-edit-form'
+import ServiceCategoryNewEditForm from '../servicecategory-new-edit-form'
 
 // ----------------------------------------------------------------------
 
@@ -22,21 +22,21 @@ interface Props {
   id: string
 }
 
-export default function ServiceEditView ({ id }: Props) {
+export default function ServiceCategoryEditView ({ id }: Props) {
 
   const { t } = useTranslate();
 
   const settings = useSettingsContext()
 
-  // Pre data fetching via API calls
-  const { data: serviceData , isLoading: isserviceLoading, error: serviceError} = useSWR( `/api/salonapp/services/${id}`, fetcher)
-  const { data: servicecategoryData , isLoading: isservicecategoryLoading, error: categoryError } = useSWR( `/api/salonapp/servicecategory`, fetcher)
+  
+  const { data: servicecategoryData , isLoading: isservicecategoryLoading, error: categoryError } = useSWR( `/api/salonapp/servicecategory/${id}`, fetcher)
 
-  if (serviceError ) return <div>Failed to load</div>
+  if (categoryError ) return <div>Failed to load</div>
   // if (categoryError ) return <div>Failed to load</div>
-  if (!serviceData ) return <div>Loading...</div>
+  if (!servicecategoryData ) return <div>Loading...</div>
   // if (!servicecategoryData) return <div>Loading...</div>
  
+
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs
@@ -47,17 +47,17 @@ export default function ServiceEditView ({ id }: Props) {
             href: paths.dashboard.root
           },
           {
-            name: t('salonapp.servicecategory'),
-            href: paths.dashboard.services.servicecategory.root
+            name: t('salonapp.services'),
+            href: paths.dashboard.services.root
           },
-          { name: serviceData?.name }
+          { name: servicecategoryData?.name }
         ]}
         sx={{
           mb: { xs: 3, md: 5 }
         }}
       />
 
-      <ServiceNewEditForm currentService={serviceData?.data[0]} servicecategory={servicecategoryData?.data}/>
+      <ServiceCategoryNewEditForm currentServiceCategory={servicecategoryData?.data[0]}/>
     </Container>
   )
 }

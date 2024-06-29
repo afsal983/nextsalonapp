@@ -1,10 +1,9 @@
 import { useMemo } from 'react';
 import { Page, View, Text, Font, Image, Document, StyleSheet } from '@react-pdf/renderer';
 
-import { fDate } from 'src/utils/format-time';
 import { fCurrency } from 'src/utils/format-number';
 
-import { IInvoice } from 'src/types/invoice';
+import { Printinvoice } from 'src/types/invoice';
 
 // ----------------------------------------------------------------------
 
@@ -73,7 +72,7 @@ const useStyles = () =>
           width: '5%',
         },
         tableCell_2: {
-          width: '50%',
+          width: '20%',
           paddingRight: 16,
         },
         tableCell_3: {
@@ -86,21 +85,11 @@ const useStyles = () =>
 // ----------------------------------------------------------------------
 
 type Props = {
-  invoice: IInvoice;
+  printinvoice: Printinvoice;
   currentStatus: string;
 };
 
-export default function InvoicePDF({ invoice, currentStatus }: Props) {
-  const {
-    Invoice_line,
-    tax_rate,
-    date,
-    discount,
-    Customer,
-    total,
-    Branches_organization,
-    invoicenumber,
-  } = invoice;
+export default function InvoicePDF({ printinvoice, currentStatus }: Props) {
 
   const styles = useStyles();
 
@@ -112,34 +101,34 @@ export default function InvoicePDF({ invoice, currentStatus }: Props) {
 
           <View style={{ alignItems: 'flex-end', flexDirection: 'column' }}>
             <Text style={styles.h3}>{currentStatus}</Text>
-            <Text> {invoicenumber} </Text>
+            <Text> {printinvoice.billno} </Text>
           </View>
         </View>
 
         <View style={[styles.gridContainer, styles.mb40]}>
           <View style={styles.col6}>
             <Text style={[styles.subtitle2, styles.mb4]}>Invoice from</Text>
-            <Text style={styles.body2}>{Branches_organization.name}</Text>
-            <Text style={styles.body2}>{Branches_organization.address}</Text>
-            <Text style={styles.body2}>{Branches_organization.telephone}</Text>
+            <Text style={styles.body2}>{printinvoice.branchname}</Text>
+            <Text style={styles.body2}>{printinvoice.branchaddr}</Text>
+            <Text style={styles.body2}>{printinvoice.telephone}</Text>
           </View>
 
           <View style={styles.col6}>
             <Text style={[styles.subtitle2, styles.mb4]}>Invoice to</Text>
-            <Text style={styles.body2}>{Customer.firstname}</Text>
-            <Text style={styles.body2}>{Customer.address}</Text>
-            <Text style={styles.body2}>{Customer.telephone}</Text>
+            <Text style={styles.body2}>{printinvoice.guestname}</Text>
+            <Text style={styles.body2}>{printinvoice.guestaddress}</Text>
+            <Text style={styles.body2}>{printinvoice.guesttelephone}</Text>
           </View>
         </View>
 
         <View style={[styles.gridContainer, styles.mb40]}>
           <View style={styles.col6}>
             <Text style={[styles.subtitle2, styles.mb4]}>Date create</Text>
-            <Text style={styles.body2}>{fDate(date)}</Text>
+            <Text style={styles.body2}>{printinvoice.date}</Text>
           </View>
           <View style={styles.col6}>
             <Text style={[styles.subtitle2, styles.mb4]}>Due date</Text>
-            <Text style={styles.body2}>{fDate(date)}</Text>
+            <Text style={styles.body2}>{printinvoice.date}</Text>
           </View>
         </View>
 
@@ -153,45 +142,62 @@ export default function InvoicePDF({ invoice, currentStatus }: Props) {
               </View>
 
               <View style={styles.tableCell_2}>
-                <Text style={styles.subtitle2}>Description</Text>
+                <Text style={styles.subtitle2}>Item</Text>
+              </View>
+
+              <View style={styles.tableCell_2}>
+                <Text style={styles.subtitle2}>Category</Text>
+              </View>
+
+              <View style={styles.tableCell_3}>
+                <Text style={styles.subtitle2}>Price</Text>
+              </View>
+
+              <View style={styles.tableCell_3}>
+                <Text style={styles.subtitle2}>Dicounted price</Text>
               </View>
 
               <View style={styles.tableCell_3}>
                 <Text style={styles.subtitle2}>Qty</Text>
               </View>
 
-              <View style={styles.tableCell_3}>
-                <Text style={styles.subtitle2}>Unit price</Text>
-              </View>
 
               <View style={[styles.tableCell_3, styles.alignRight]}>
-                <Text style={styles.subtitle2}>Total</Text>
+                <Text style={styles.subtitle2}>Sub Total</Text>
               </View>
             </View>
           </View>
 
           <View>
-            {Invoice_line.map((item, index) => (
-              <View style={styles.tableRow} key={item.id}>
+            {printinvoice.itemlist.map((row, index) => (
+              <View style={styles.tableRow} key={row[0]}>
                 <View style={styles.tableCell_1}>
-                  <Text>{index + 1}</Text>
+                  <Text>{row[0]}</Text>
                 </View>
 
                 <View style={styles.tableCell_2}>
-                  <Text style={styles.subtitle2}>{item.Product.name}</Text>
-                  <Text>{item.Product.name}</Text>
+                  <Text style={styles.subtitle2}>{row[1]}</Text>
+                  <Text>{}</Text>
+                </View>
+
+                <View style={styles.tableCell_2}>
+                  <Text>{row[5]}</Text>
                 </View>
 
                 <View style={styles.tableCell_3}>
-                  <Text>{item.quantity}</Text>
+                  <Text>{row[2]}</Text>
                 </View>
 
                 <View style={styles.tableCell_3}>
-                  <Text>{item.price}</Text>
+                  <Text>{row[6]}</Text>
+                </View>
+
+                <View style={styles.tableCell_3}>
+                  <Text>{row[3]}</Text>
                 </View>
 
                 <View style={[styles.tableCell_3, styles.alignRight]}>
-                  <Text>{fCurrency(item.price * item.quantity)}</Text>
+                  <Text>{row[7]}</Text>
                 </View>
               </View>
             ))}
@@ -200,15 +206,81 @@ export default function InvoicePDF({ invoice, currentStatus }: Props) {
               <View style={styles.tableCell_1} />
               <View style={styles.tableCell_2} />
               <View style={styles.tableCell_3} />
+              <View style={styles.tableCell_1} />
+              <View style={styles.tableCell_2} />
+              <View style={styles.tableCell_3} />
               <View style={styles.tableCell_3}>
                 <Text>Subtotal</Text>
               </View>
               <View style={[styles.tableCell_3, styles.alignRight]}>
-                <Text>{fCurrency(total)}</Text>
+                <Text>{printinvoice.total}</Text>
               </View>
             </View>
 
             <View style={[styles.tableRow, styles.noBorder]}>
+              <View style={styles.tableCell_1} />
+              <View style={styles.tableCell_2} />
+              <View style={styles.tableCell_3} />
+              <View style={styles.tableCell_1} />
+              <View style={styles.tableCell_2} />
+              <View style={styles.tableCell_3} />
+              <View style={styles.tableCell_3}>
+                <Text>Customer Savings</Text>
+              </View>
+              <View style={[styles.tableCell_3, styles.alignRight]}>
+                <Text>{printinvoice.customersavings}</Text>
+              </View>
+            </View>
+
+            <View style={[styles.tableRow, styles.noBorder]}>
+              <View style={styles.tableCell_1} />
+              <View style={styles.tableCell_2} />
+              <View style={styles.tableCell_3} />
+              <View style={styles.tableCell_1} />
+              <View style={styles.tableCell_2} />
+              <View style={styles.tableCell_3} />
+              <View style={styles.tableCell_3}>
+                <Text>Overall Discount</Text>
+              </View>
+              <View style={[styles.tableCell_3, styles.alignRight]}>
+                <Text>{printinvoice.discount}</Text>
+              </View>
+            </View>
+
+            <View style={[styles.tableRow, styles.noBorder]}>
+              <View style={styles.tableCell_1} />
+              <View style={styles.tableCell_2} />
+              <View style={styles.tableCell_3} />
+              <View style={styles.tableCell_1} />
+              <View style={styles.tableCell_2} />
+              <View style={styles.tableCell_3} />
+              <View style={styles.tableCell_3}>
+                <Text>Tax Rate</Text>
+              </View>
+              <View style={[styles.tableCell_3, styles.alignRight]}>
+                <Text>{printinvoice.taxrate}</Text>
+              </View>
+            </View>
+
+            <View style={[styles.tableRow, styles.noBorder]}>
+              <View style={styles.tableCell_1} />
+              <View style={styles.tableCell_2} />
+              <View style={styles.tableCell_3} />
+              <View style={styles.tableCell_1} />
+              <View style={styles.tableCell_2} />
+              <View style={styles.tableCell_3} />
+              <View style={styles.tableCell_3}>
+                <Text>Tax Amount</Text>
+              </View>
+              <View style={[styles.tableCell_3, styles.alignRight]}>
+                <Text>{printinvoice.tax}</Text>
+              </View>
+            </View>
+
+            <View style={[styles.tableRow, styles.noBorder]}>
+              <View style={styles.tableCell_1} />
+              <View style={styles.tableCell_2} />
+              <View style={styles.tableCell_3} />
               <View style={styles.tableCell_1} />
               <View style={styles.tableCell_2} />
               <View style={styles.tableCell_3} />
@@ -216,35 +288,15 @@ export default function InvoicePDF({ invoice, currentStatus }: Props) {
                 <Text>Tip</Text>
               </View>
               <View style={[styles.tableCell_3, styles.alignRight]}>
-                <Text>{fCurrency(-invoice.tip)}</Text>
+                <Text>{fCurrency(printinvoice.tip)}</Text>
               </View>
             </View>
+
 
             <View style={[styles.tableRow, styles.noBorder]}>
               <View style={styles.tableCell_1} />
               <View style={styles.tableCell_2} />
               <View style={styles.tableCell_3} />
-              <View style={styles.tableCell_3}>
-                <Text>Discount</Text>
-              </View>
-              <View style={[styles.tableCell_3, styles.alignRight]}>
-                <Text>{fCurrency(-discount)}</Text>
-              </View>
-            </View>
-
-            <View style={[styles.tableRow, styles.noBorder]}>
-              <View style={styles.tableCell_1} />
-              <View style={styles.tableCell_2} />
-              <View style={styles.tableCell_3} />
-              <View style={styles.tableCell_3}>
-                <Text>Taxes</Text>
-              </View>
-              <View style={[styles.tableCell_3, styles.alignRight]}>
-                <Text>{fCurrency(invoice.tax_rate)}</Text>
-              </View>
-            </View>
-
-            <View style={[styles.tableRow, styles.noBorder]}>
               <View style={styles.tableCell_1} />
               <View style={styles.tableCell_2} />
               <View style={styles.tableCell_3} />
@@ -252,7 +304,7 @@ export default function InvoicePDF({ invoice, currentStatus }: Props) {
                 <Text style={styles.h4}>Total</Text>
               </View>
               <View style={[styles.tableCell_3, styles.alignRight]}>
-                <Text style={styles.h4}>{fCurrency(invoice.total)}</Text>
+                <Text style={styles.h4}>{printinvoice.total}</Text>
               </View>
             </View>
           </View>
@@ -262,12 +314,12 @@ export default function InvoicePDF({ invoice, currentStatus }: Props) {
           <View style={styles.col8}>
             <Text style={styles.subtitle2}>NOTES</Text>
             <Text>
-              We appreciate your business. Should you need us to add VAT or extra notes let us know!
+              We appreciate your business.
             </Text>
           </View>
           <View style={[styles.col4, styles.alignRight]}>
             <Text style={styles.subtitle2}>Have a Question?</Text>
-            <Text>support@abcapp.com</Text>
+            <Text>support@smeeye.com</Text>
           </View>
         </View>
       </Page>

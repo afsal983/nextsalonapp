@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { decrypt } from "src/utils/encrypt";
 
+
 const baseUSRL = process.env.NEXT_PUBLIC_HOST_API
 
 export async function GET(request: NextRequest) {
-
   // Get the cookies
   const cookieStore = request.cookies
   const sessionCookie  =cookieStore.get('session')?.value
@@ -20,7 +20,6 @@ export async function GET(request: NextRequest) {
   } 
 
   const cookiedata  = await decrypt(sessionCookie)
-  
   if(cookiedata === undefined) {
     const res = {
       Title: 'NOK',
@@ -29,18 +28,97 @@ export async function GET(request: NextRequest) {
     }
     return NextResponse.json(res, { status: 401 });
   }
-  
-  const { token } = cookiedata
 
+  const { token } = cookiedata
   // Make an HTTP request to your API route with the token in the headers
-  const response = await fetch( `${baseUSRL}/apiserver/productcategories?type=1`, {
+  const data = await fetch( `${baseUSRL}/apiserver/productcategories?type=1`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 
   // Get the data in JSON format 
-  const apiResponse = await response.json();
+  const response = await data.json();
+
+  if(response?.status === 401) {
+    const res = {
+      Title: 'NOK',
+      status: 401,
+      message: response?.message
+    }
+    return NextResponse.json(res, { status: 401 });
+  }
+
+  // Send the sucessful response back
+  return NextResponse.json(response, { status: 201 });
+
+}
+
+export async function POST(request: NextRequest, response: NextResponse) {
+
+  const body = await request.json();
+
+  // Get the cookies
+  const cookieStore = request.cookies
+  const sessionCookie  = cookieStore?.get('session')?.value
+
+  if (sessionCookie === undefined) {
+    const res = {
+      Title: 'NOK',
+      status: 401,
+      message: "Cookie missing"
+    }
+    return NextResponse.json(res, { status: 401 });
+  } 
+
+  const cookiedata  = await decrypt(sessionCookie)
+
+  if(cookiedata === undefined) {
+    const res = {
+      Title: 'NOK',
+      status: 401,
+      message: "Cookie missing"
+    }
+    return NextResponse.json(res, { status: 401 });
+  }
+  const { token } = cookiedata
+
+  if(body.id > 0 ) {
+    const data = await fetch(`${baseUSRL}/apiserver/productcategory/${body.id}`, {
+      method: 'UPDATE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(body),
+    });
+    // Get the data in JSON format 
+    const apiResponse = await data.json();
+
+    if(apiResponse?.status === 401) {
+      const res = {
+        Title: 'NOK',
+        status: 401,
+        message: apiResponse?.message
+      }
+      return NextResponse.json(res, { status: 401 });
+    }
+  
+    // Send the sucessful response back
+    return NextResponse.json(apiResponse, { status: 201 });
+  } 
+
+  const data = await fetch(`${baseUSRL}/apiserver/productcategory`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+
+  // Get the data in JSON format 
+  const apiResponse = await data.json();
 
   if(apiResponse?.status === 401) {
     const res = {
@@ -52,4 +130,5 @@ export async function GET(request: NextRequest) {
   }
 
   return NextResponse.json(apiResponse, { status: 201 });
+
 }

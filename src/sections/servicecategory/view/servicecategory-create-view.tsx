@@ -1,46 +1,38 @@
 'use client'
 
-import useSWR from 'swr'
-import React from 'react'
+import useSWR from 'swr';
 
 import Container from '@mui/material/Container'
 
 import { paths } from 'src/routes/paths'
 
-import { fetcher } from 'src/utils/axios'
+import { fetcher } from 'src/utils/axios';
 
 import { useTranslate } from 'src/locales';
 
 import { useSettingsContext } from 'src/components/settings'
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs'
 
-import ServiceNewEditForm from '../service-new-edit-form'
+import ServiceCategoryNewEditForm from '../servicecategory-new-edit-form'
 
 // ----------------------------------------------------------------------
 
-interface Props {
-  id: string
-}
-
-export default function ServiceEditView ({ id }: Props) {
-
+export default function ServiceCategoryCreateView () {
   const { t } = useTranslate();
 
   const settings = useSettingsContext()
 
   // Pre data fetching via API calls
-  const { data: serviceData , isLoading: isserviceLoading, error: serviceError} = useSWR( `/api/salonapp/services/${id}`, fetcher)
-  const { data: servicecategoryData , isLoading: isservicecategoryLoading, error: categoryError } = useSWR( `/api/salonapp/servicecategory`, fetcher)
+  const { data: servicecategory,isLoading: isservicecategoryLoading } = useSWR('/api/salonapp/servicecategory', fetcher);
 
-  if (serviceError ) return <div>Failed to load</div>
-  // if (categoryError ) return <div>Failed to load</div>
-  if (!serviceData ) return <div>Loading...</div>
-  // if (!servicecategoryData) return <div>Loading...</div>
- 
+  // Wait for data loading
+  if ( isservicecategoryLoading) return <div>Loading...</div>;
+  if (!servicecategory ) return <div>Loading...</div>
+
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs
-        heading="Edit"
+        heading={ t('salonapp.service.servicecategory.create_a_new_servicecategory') }
         links={[
           {
             name: t('salonapp.dashboard'),
@@ -50,14 +42,14 @@ export default function ServiceEditView ({ id }: Props) {
             name: t('salonapp.servicecategory'),
             href: paths.dashboard.services.servicecategory.root
           },
-          { name: serviceData?.name }
+          { name: t('salonapp.service.servicecategory.create_a_new_servicecategory') }
         ]}
         sx={{
           mb: { xs: 3, md: 5 }
         }}
       />
 
-      <ServiceNewEditForm currentService={serviceData?.data[0]} servicecategory={servicecategoryData?.data}/>
+      <ServiceCategoryNewEditForm currentServiceCategory={servicecategory.data}/>
     </Container>
   )
 }

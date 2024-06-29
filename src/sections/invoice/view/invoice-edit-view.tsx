@@ -34,7 +34,9 @@ export default function InvoiceEditView({ id }: Props) {
   if ( isinvoiceLoading || isserviceLoading || isbranchesLoading || isEmployeeLoading || isAppSettingsLoading || isPaymenttypesLoading ) return <div>Loading...</div>;
   if ( errorC || errorS || errorB || errorE  || errorI || errorP) return <div>Error Loading...</div>;
 
-
+ if(currentInvoice) {
+  console.log(currentInvoice)
+ }
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs

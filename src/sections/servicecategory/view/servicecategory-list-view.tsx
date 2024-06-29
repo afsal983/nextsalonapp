@@ -46,15 +46,14 @@ import {
 } from 'src/components/table'
 
 import {
-  type ServiceItem,
-  type ServiceTableFilters,
   type ServiceCategoryItem,
-  type ServiceTableFilterValue
+  type ServiceCategoryTableFilters,
+  type ServiceCategoryTableFilterValue
 } from 'src/types/service'
 
-import ServiceTableRow from '../service-table-row'
-import ServiceTableToolbar from '../service-table-toolbar'
-import ServiceTableFiltersResult from '../service-table-filters-result'
+import ServiceCategoryTableRow from '../servicecategory-table-row'
+import ServiceCategoryTableToolbar from '../servicecategory-table-toolbar'
+import ServicecategoryTableFiltersResult from '../servicecategory-table-filters-result'
 
 
 
@@ -62,40 +61,31 @@ import ServiceTableFiltersResult from '../service-table-filters-result'
 
 const STATUS_OPTIONS = [{ value: 'all', label: 'All' }]
 
-const defaultFilters: ServiceTableFilters = {
+const defaultFilters: ServiceCategoryTableFilters = {
   name: '',
-  productcategory: [],
   status: 'all'
 }
 
 // ----------------------------------------------------------------------
-interface ServiceListViewProps {
-  services: ServiceItem[]
+interface ServiceCategoryListViewProps {
   servicecategory: ServiceCategoryItem[]
 }
 
-export default  function ServiceListView () {
+export default  function ServiceCategoryListView () {
 
   const { t } = useTranslate();
 
   const TABLE_HEAD = [
     { id: 'name', label: t('general.name'), width: 320 },
-    { id: 'price', label: t('general.price'), width: 120 },
-    { id: 'tax', label: t('general.tax') },
-    { id: 'duration', label: t('general.duration') },
-    { id: 'commission', label: t('general.commission') },
-    { id: 'color', label: t('general.color'), width: 100 },
-    { id: '', width: 18 }
+    { id: '', width: 188 },
   ]
 
   // Initialize
-  const [tableData, setTableData] = useState<ServiceItem[]>([])
+  const [tableData, setTableData] = useState<ServiceCategoryItem[]>([])
   const [serviceCategory, setserviceCategory] = useState<ServiceCategoryItem[]>([]);
-
   const { logout } = useAuthContext()
 
-  // Use SWR to fetch data from multiple endpoints in parallel
-  const { data: service,isLoading: isserviceLoading,  error: errorA } = useSWR('/api/salonapp/services', fetcher);
+
   const { data: servicecategory,isLoading: isservicecategoryLoading, error: errorB } = useSWR('/api/salonapp/servicecategory', fetcher);
 
 
@@ -139,7 +129,7 @@ export default  function ServiceListView () {
   const notFound = ((dataFiltered.length === 0) && canReset) || (dataFiltered.length === 0)
 
   const handleFilters = useCallback(
-    (name: string, value: ServiceTableFilterValue) => {
+    (name: string, value: ServiceCategoryTableFilterValue) => {
       table.onResetPage()
       setFilters((prevState) => ({
         ...prevState,
@@ -156,7 +146,7 @@ export default  function ServiceListView () {
   // Delete an item
   const handleDeleteRow = useCallback(
     async (id: string) => {
-      const response = await fetch(`/api/salonapp/services/${id}`, {
+      const response = await fetch(`/api/salonapp/servicecategory/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -170,7 +160,7 @@ export default  function ServiceListView () {
         return;
       } 
       
-      const deleteRow = tableData.filter((row: ServiceItem) => row.id !== id)
+      const deleteRow = tableData.filter((row: ServiceCategoryItem) => row.id !== id)
 
       enqueueSnackbar(t('general.delete_success'))
 
@@ -183,7 +173,7 @@ export default  function ServiceListView () {
 
   const handleDeleteRows = useCallback(() => {
     const deleteRows = tableData.filter(
-      (row: ServiceItem) => !table.selected.includes(row.id)
+      (row: ServiceCategoryItem) => !table.selected.includes(row.id)
     )
 
     enqueueSnackbar(t('general.delete_success'))
@@ -205,7 +195,7 @@ export default  function ServiceListView () {
 
   const handleEditRow = useCallback(
     (id: string) => {
-      router.push(paths.dashboard.services.edit(Number(id)))
+      router.push(paths.dashboard.services.servicecategory.edit(Number(id)))
     },
     [router]
   )
@@ -220,10 +210,10 @@ export default  function ServiceListView () {
   
     // Use useEffect to update state1 when data1 is available
     useEffect(() => {
-      if (service) {
-        setTableData(service.data);
+      if (servicecategory) {
+        setTableData(servicecategory.data);
       }
-    }, [service]);
+    }, [servicecategory]);
   
     // Use useEffect to update state2 when data2 is available
     useEffect(() => {
@@ -233,8 +223,8 @@ export default  function ServiceListView () {
     }, [servicecategory]);
   
 
-    if (errorA || errorB) {
-      if (errorA?.response?.data?.status === 401 || errorB?.response?.data?.status === 401 ){
+    if (errorB) {
+      if ( errorB?.response?.data?.status === 401 ){
         mutate(
           key => true, // which cache keys are updated
           undefined,   // update cache data to `undefined`
@@ -245,7 +235,6 @@ export default  function ServiceListView () {
       return <div>Error loading data1.</div>;
     }
  
-    if ( isserviceLoading ) return <div>Loading...</div>;
     if ( isservicecategoryLoading) return <div>Loading...</div>;
 
   return (
@@ -255,17 +244,17 @@ export default  function ServiceListView () {
           heading="List"
           links={[
             { name: t('salonapp.dashboard'), href: paths.dashboard.root },
-            { name: t('salonapp.services'), href: paths.dashboard.services.root },
+            { name: t('salonapp.service_category'), href: paths.dashboard.services.servicecategory.root },
             { name: t('general.list') }
           ]}
           action={
             <Button
               component={RouterLink}
-              href={paths.dashboard.services.new}
+              href={paths.dashboard.services.servicecategory.new}
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >
-              { t('salonapp.service.new_service') }
+              {t('salonapp.service.servicecategory.new_servicecategory')}
             </Button>
           }
           sx={{
@@ -302,7 +291,7 @@ export default  function ServiceListView () {
                       tab.value
                     )
                       ? tableData.filter(
-                        (serviceitem: ServiceItem) => serviceitem.name === tab.value
+                        (serviceitem: ServiceCategoryItem) => serviceitem.name === tab.value
                       ).length
                       : tableData.length}
                   </Label>
@@ -311,15 +300,13 @@ export default  function ServiceListView () {
             ))}
           </Tabs>
 
-          <ServiceTableToolbar
+          <ServiceCategoryTableToolbar
             filters={filters}
             onFilters={handleFilters}
-            //
-            productCategory={serviceCategory.map(obj => obj.name)}
           />
 
           {canReset && (
-            <ServiceTableFiltersResult
+            <ServicecategoryTableFiltersResult
               filters={filters}
               onFilters={handleFilters}
               //
@@ -379,7 +366,7 @@ export default  function ServiceListView () {
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
                     .map((row) => (
-                      <ServiceTableRow
+                      <ServiceCategoryTableRow
                         key={row.id}
                         row={row}
                         selected={table.selected.includes(row.id)}
@@ -451,11 +438,11 @@ function applyFilter ({
   comparator,
   filters
 }: {
-  inputData: ServiceItem[]
+  inputData: ServiceCategoryItem[]
   comparator: (a: any, b: any) => number
-  filters: ServiceTableFilters
+  filters: ServiceCategoryTableFilters
 }) {
-  const { name, status, productcategory } = filters
+  const { name, status } = filters
 
   const stabilizedThis = inputData.map((el, index) => [el, index] as const)
 
@@ -471,12 +458,6 @@ function applyFilter ({
     inputData = inputData.filter(
       (service) =>
         service.name.toLowerCase().includes(name.toLowerCase())
-    )
-  }
-  
-  if (productcategory.length > 0) {
-    inputData = inputData.filter((service) =>
-      productcategory.includes(service.ProductCategory.name)
     )
   }
 

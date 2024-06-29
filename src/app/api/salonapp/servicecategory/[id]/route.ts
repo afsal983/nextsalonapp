@@ -3,13 +3,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "src/utils/encrypt";
 
 
+
 const baseUSRL = process.env.NEXT_PUBLIC_HOST_API
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest, response: NextResponse) {
+
+  const { pathname } = new URL(request.url);
+  const productcategoryId = pathname.split('/')[4]
+
+  
   // Get the cookies
   const cookieStore = request.cookies
-  const sessionCookie  =cookieStore.get('session')?.value
-  
+  const sessionCookie  = cookieStore?.get('session')?.value
+
   if (sessionCookie === undefined) {
     const res = {
       Title: 'NOK',
@@ -23,40 +29,45 @@ export async function GET(request: NextRequest) {
   if(cookiedata === undefined) {
     const res = {
       Title: 'NOK',
-      status: 401,
+      status: 9001,
       message: "Cookie missing"
     }
     return NextResponse.json(res, { status: 401 });
   }
 
   const { token } = cookiedata
+
+
   // Make an HTTP request to your API route with the token in the headers
-  const data = await fetch( `${baseUSRL}/apiserver/products?type=1`, {
+  const data = await fetch( `${baseUSRL}/apiserver/productcategory/${productcategoryId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 
-  // Get the data in JSON format 
-  const response = await data.json();
 
-  if(response?.status === 401) {
+  // Get the data in JSON format 
+  const apiResponse = await data.json();
+
+  if(apiResponse?.status === 401) {
     const res = {
       Title: 'NOK',
       status: 401,
-      message: response?.message
+      message: apiResponse?.message
     }
     return NextResponse.json(res, { status: 401 });
   }
 
-  // Send the sucessful response back
-  return NextResponse.json(response, { status: 201 });
+
+  return NextResponse.json(apiResponse, { status: 201 });
 
 }
 
-export async function POST(request: NextRequest, response: NextResponse) {
+export async function DELETE(request: NextRequest, response: NextResponse) {
 
-  const body = await request.json();
+  console.log("sdddd")
+  const { pathname } = new URL(request.url);
+  const servicecategoryId = pathname.split('/')[4]
 
   // Get the cookies
   const cookieStore = request.cookies
@@ -72,50 +83,26 @@ export async function POST(request: NextRequest, response: NextResponse) {
   } 
 
   const cookiedata  = await decrypt(sessionCookie)
-
   if(cookiedata === undefined) {
     const res = {
       Title: 'NOK',
-      status: 401,
+      status: 9001,
       message: "Cookie missing"
     }
     return NextResponse.json(res, { status: 401 });
   }
+
   const { token } = cookiedata
 
-  if(body.id > 0 ) {
-    const data = await fetch(`${baseUSRL}/apiserver/product/${body.id}`, {
-      method: 'UPDATE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(body),
-    });
-    // Get the data in JSON format 
-    const apiResponse = await data.json();
 
-    if(apiResponse?.status === 401) {
-      const res = {
-        Title: 'NOK',
-        status: 401,
-        message: apiResponse?.message
-      }
-      return NextResponse.json(res, { status: 401 });
-    }
-  
-    // Send the sucessful response back
-    return NextResponse.json(apiResponse, { status: 201 });
-  } 
-
-  const data = await fetch(`${baseUSRL}/apiserver/product`, {
-    method: 'POST',
+  // Make an HTTP request to your API route with the token in the headers
+  const data = await fetch( `${baseUSRL}/apiserver/product/${servicecategoryId}`, {
+    method: 'DELETE',
     headers: {
-      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(body),
   });
+
 
   // Get the data in JSON format 
   const apiResponse = await data.json();
@@ -128,6 +115,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
     }
     return NextResponse.json(res, { status: 401 });
   }
+
 
   return NextResponse.json(apiResponse, { status: 201 });
 
