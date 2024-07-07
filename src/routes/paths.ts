@@ -37,6 +37,12 @@ export const paths = {
       list: `${ROOTS.DASHBOARD}/retail/list`,
       edit: (id: number) => `${ROOTS.DASHBOARD}/retail/${id}/edit`
     },
+    retailbrands: {
+      root: `${ROOTS.DASHBOARD}/retailbrand`,
+      new: `${ROOTS.DASHBOARD}/retailbrand/new`,
+      list: `${ROOTS.DASHBOARD}/retailbrand/list`,
+      edit: (id: number) => `${ROOTS.DASHBOARD}/retailbrand/${id}/edit`
+    },
     packages: {
       root: `${ROOTS.DASHBOARD}/package`,
       new: `${ROOTS.DASHBOARD}/package/new`,
@@ -48,7 +54,20 @@ export const paths = {
       new: `${ROOTS.DASHBOARD}/invoice/new`,
       list: `${ROOTS.DASHBOARD}/invoice/list`,
       edit: (id: number) => `${ROOTS.DASHBOARD}/invoice/${id}/edit`,
-      details: (id: string) => `${ROOTS.DASHBOARD}/invoice/${id}`
+      details: (id: string) => `${ROOTS.DASHBOARD}/invoice/${id}`,
+      paymenttypes: {
+        root: `${ROOTS.DASHBOARD}/paymenttype`,
+        new: `${ROOTS.DASHBOARD}/paymenttype/new`,
+        list: `${ROOTS.DASHBOARD}/paymenttype/list`,
+        edit: (id: number) => `${ROOTS.DASHBOARD}/paymenttype/${id}/edit`,
+        details: (id: string) => `${ROOTS.DASHBOARD}/paymenttype/${id}`,
+      }
+    },
+    employees: {
+      root: `${ROOTS.DASHBOARD}/employee`,
+      new: `${ROOTS.DASHBOARD}/employee/new`,
+      list: `${ROOTS.DASHBOARD}/employee/list`,
+      edit: (id: number) => `${ROOTS.DASHBOARD}/employee/${id}/edit`,
     },
     report: {
       root: `${ROOTS.DASHBOARD}/report`,

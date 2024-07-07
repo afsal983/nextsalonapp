@@ -28,15 +28,11 @@ export default function ServiceCategoryEditView ({ id }: Props) {
 
   const settings = useSettingsContext()
 
-  
-  const { data: servicecategoryData , isLoading: isservicecategoryLoading, error: categoryError } = useSWR( `/api/salonapp/servicecategory/${id}`, fetcher)
+  const { data: servicecategoryData , isLoading, error: categoryError } = useSWR( `/api/salonapp/servicecategory/${id}`, fetcher)
 
   if (categoryError ) return <div>Failed to load</div>
-  // if (categoryError ) return <div>Failed to load</div>
-  if (!servicecategoryData ) return <div>Loading...</div>
-  // if (!servicecategoryData) return <div>Loading...</div>
+  if (isLoading || !servicecategoryData) return <div>Loading...</div>
  
-
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs
@@ -50,7 +46,7 @@ export default function ServiceCategoryEditView ({ id }: Props) {
             name: t('salonapp.services'),
             href: paths.dashboard.services.root
           },
-          { name: servicecategoryData?.name }
+          { name: servicecategoryData?.data[0].name }
         ]}
         sx={{
           mb: { xs: 3, md: 5 }

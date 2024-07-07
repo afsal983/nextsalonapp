@@ -22,13 +22,6 @@ export default function ServiceCategoryCreateView () {
 
   const settings = useSettingsContext()
 
-  // Pre data fetching via API calls
-  const { data: servicecategory,isLoading: isservicecategoryLoading } = useSWR('/api/salonapp/servicecategory', fetcher);
-
-  // Wait for data loading
-  if ( isservicecategoryLoading) return <div>Loading...</div>;
-  if (!servicecategory ) return <div>Loading...</div>
-
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs
@@ -39,7 +32,7 @@ export default function ServiceCategoryCreateView () {
             href: paths.dashboard.root
           },
           {
-            name: t('salonapp.servicecategory'),
+            name: t('salonapp.service_category'),
             href: paths.dashboard.services.servicecategory.root
           },
           { name: t('salonapp.service.servicecategory.create_a_new_servicecategory') }
@@ -49,7 +42,7 @@ export default function ServiceCategoryCreateView () {
         }}
       />
 
-      <ServiceCategoryNewEditForm currentServiceCategory={servicecategory.data}/>
+      <ServiceCategoryNewEditForm/>
     </Container>
   )
 }

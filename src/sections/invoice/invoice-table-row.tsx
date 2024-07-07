@@ -41,7 +41,8 @@ export default function InvoiceTableRow({
   onEditRow,
   onDeleteRow,
 }: Props) {
-  const { invoicenumber, total, tip, Customer, Invoice_line, date, Invstatus } = row;
+  
+  const { invoicenumber, total, tip, Customer, date, Invstatus } = row;
 
   const confirm = useBoolean();
 

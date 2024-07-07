@@ -81,34 +81,9 @@ export async function POST(request: NextRequest, response: NextResponse) {
     }
     return NextResponse.json(res, { status: 401 });
   }
-  const { token } = cookiedata
+  const { token } = cookiedata  
 
-  if(body.id > 0 ) {
-    const data = await fetch(`${baseUSRL}/apiserver/product/${body.id}`, {
-      method: 'UPDATE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(body),
-    });
-    // Get the data in JSON format 
-    const apiResponse = await data.json();
-
-    if(apiResponse?.status === 401) {
-      const res = {
-        Title: 'NOK',
-        status: 401,
-        message: apiResponse?.message
-      }
-      return NextResponse.json(res, { status: 401 });
-    }
-  
-    // Send the sucessful response back
-    return NextResponse.json(apiResponse, { status: 201 });
-  } 
-
-  const data = await fetch(`${baseUSRL}/apiserver/product`, {
+  const data = await fetch(`${baseUSRL}/apiserver/employee`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -130,5 +105,61 @@ export async function POST(request: NextRequest, response: NextResponse) {
   }
 
   return NextResponse.json(apiResponse, { status: 201 });
+
+}
+
+export async function PUT(request: NextRequest, response: NextResponse) {
+
+  const body = await request.json();
+
+  const employeeId = body.id
+
+  // Get the cookies
+  const cookieStore = request.cookies
+  const sessionCookie  = cookieStore?.get('session')?.value
+
+  if (sessionCookie === undefined) {
+    const res = {
+      Title: 'NOK',
+      status: 401,
+      message: "Cookie missing"
+    }
+    return NextResponse.json(res, { status: 401 });
+  } 
+
+  const cookiedata  = await decrypt(sessionCookie)
+
+  if(cookiedata === undefined) {
+    const res = {
+      Title: 'NOK',
+      status: 401,
+      message: "Cookie missing"
+    }
+    return NextResponse.json(res, { status: 401 });
+  }
+  const { token } = cookiedata
+
+    const data = await fetch(`${baseUSRL}/apiserver/employee/${employeeId}`, {
+      method: 'UPDATE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(body),
+    });
+    // Get the data in JSON format 
+    const apiResponse = await data.json();
+
+    if(apiResponse?.status === 401) {
+      const res = {
+        Title: 'NOK',
+        status: 401,
+        message: apiResponse?.message
+      }
+      return NextResponse.json(res, { status: 401 });
+    }
+
+    // Send the sucessful response back
+    return NextResponse.json(apiResponse, { status: 201 });
 
 }

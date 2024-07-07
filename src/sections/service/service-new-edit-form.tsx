@@ -22,18 +22,20 @@ import FormProvider, {
   RHFTextField
 } from 'src/components/hook-form'
 
-import { type ServiceItem, type ServiceCategoryItem } from 'src/types/service'
+import { type ServiceItem, type ServiceCategoryItem, type RetailBrandItem } from 'src/types/service'
 
 // ----------------------------------------------------------------------
 
 interface Props {
   currentService?: ServiceItem
   servicecategory: ServiceCategoryItem[]
+  retailbrands: RetailBrandItem[]
 }
 
-export default function ServiceNewEditForm ({ currentService, servicecategory }: Props) {
+export default function ServiceNewEditForm ({ currentService, servicecategory, retailbrands }: Props) {
   const router = useRouter()
 
+  console.log(currentService)
   const [color, setColor] = useState(currentService?.color||"#FFFFFF")
 
   const { enqueueSnackbar } = useSnackbar()
@@ -48,6 +50,9 @@ export default function ServiceNewEditForm ({ currentService, servicecategory }:
     color: Yup.string().required(t('general.color_fvalid_error')),
     price: Yup.number().positive(t('general.must_be_non_zero')).required(t('general.price_fvalid_error')),
     category_id: Yup.number().positive(t('general.must_be_non_zero')).required(t('general.category_fvalid_error')),
+    brand_id: Yup.number(),
+    sku: Yup.string(),
+    stock: Yup.number(),
     commission: Yup.number(),
     type: Yup.number(),
     on_top: Yup.boolean()
@@ -62,6 +67,9 @@ export default function ServiceNewEditForm ({ currentService, servicecategory }:
       color: currentService?.color || '#ffffff',
       price: currentService?.price || 0.00,
       category_id: currentService?.category_id || 0,
+      brand_id: currentService?.brand_id || 0,
+      sku: currentService?.sku || "",
+      stock: currentService?.stock || 0,
       commission: currentService?.commission,
       type: currentService?.type||1,
       on_top: currentService?.ProductPreference.on_top || false
@@ -76,19 +84,16 @@ export default function ServiceNewEditForm ({ currentService, servicecategory }:
 
   const {
     reset,
-    watch,
-    control,
     setValue,
+    watch,
     handleSubmit,
     formState: { isSubmitting }
   } = methods
 
-  const values = watch()
-
   const handleChange = (newcolor: string) => {
     setValue("color", newcolor)
   }
-
+  const type  = watch("type")
   const onSubmit = handleSubmit(async (data) => {
     const productData = {
       id: Number(data.id),
@@ -100,6 +105,9 @@ export default function ServiceNewEditForm ({ currentService, servicecategory }:
       category_id: data.category_id,
       commission: data.commission,
       type: data.type,
+      stock: Number(data.stock),
+      brand_id: data.brand_id,
+      sku: data.sku,
       ProductPreference: {
         on_top: data.on_top
       }
@@ -108,7 +116,7 @@ export default function ServiceNewEditForm ({ currentService, servicecategory }:
       
       // Post the data 
       const response = await fetch(`/api/salonapp/services`, {
-        method: 'POST',
+        method: currentService? "PUT": "POST",
         headers: {
           'Content-Type': 'application/json',
         },
@@ -118,9 +126,9 @@ export default function ServiceNewEditForm ({ currentService, servicecategory }:
       const responseData = await response.json();
 
       if(responseData?.status > 401 ) {
-        enqueueSnackbar(currentService ? t('general.update_failed') : t('general.create_failed'), { variant: 'error' });
+        enqueueSnackbar(currentService ? `${t('general.update_failed')}:${responseData.message}` : `${t('general.create_failed')}:${responseData.message}`, { variant: 'error' });
       } else {
-        // Keep 500ms delay
+        // Keep 500ms delay 
         await new Promise((resolve) => setTimeout(resolve, 500));
         reset(); 
         enqueueSnackbar(currentService ? t('general.update_success') : t('general.create_success'), { variant: 'success' });
@@ -147,7 +155,17 @@ export default function ServiceNewEditForm ({ currentService, servicecategory }:
                 sm: 'repeat(2, 1fr)'
               }}
             >
-              <RHFTextField name="name" label={t('salonapp.service.service_name')} helperText={t('salonapp.service.sn_helper')}/>
+              <RHFSelect native name="type" label={t('general.product_type')} InputLabelProps={{ shrink: true }}>
+                <option key={0}>{ t('general.dropdown_select') }</option>
+                  <option key={1} value={1}>
+                    Services
+                  </option>
+                  <option key={2} value={2}>
+                    Retails
+                  </option>
+              </RHFSelect>
+              
+              <RHFTextField name="name" label={t('salonapp.service.name')} helperText={t('salonapp.service.sn_helper')}/>
 
               <RHFSelect native name="category_id" label={t('general.category')} InputLabelProps={{ shrink: true }}>
                 <option key={0}>{ t('general.dropdown_select') }</option>
@@ -170,7 +188,23 @@ export default function ServiceNewEditForm ({ currentService, servicecategory }:
                 onChange={handleChange}
                 helperText={t('salonapp.service.color_helper')}
               />
-              <RHFSwitch name="on_top" label={t('salonapp.service.on_the_top')} helperText={t('salonapp.service.onthetop_helper')}/>
+             
+              { Number(type) === 2 && ( 
+                <>
+                  <RHFSelect native name="brand_id" label={t('general.retail_brand')} InputLabelProps={{ shrink: true }}>
+                    <option key={0}>{ t('general.dropdown_select') }</option>
+                    {retailbrands.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item.name}
+                      </option>
+                    ))}
+                  </RHFSelect>
+                  <RHFTextField name="sku" label={t('sku')} helperText={t('salonapp.service.sku_helper')}/>
+                  <RHFTextField name="stock" label={t('stock')} helperText={t('salonapp.service.stock_helper')}/>
+                </>
+              )}
+
+            { Number(type) !== 2 && <RHFSwitch name="on_top" label={t('salonapp.service.on_the_top')} helperText={t('salonapp.service.onthetop_helper')}/> }
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>

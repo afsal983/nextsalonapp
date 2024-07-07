@@ -1,6 +1,7 @@
-import { useCallback, useRef, useState } from 'react';
-import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
+import { useRef, useCallback } from 'react';
 import { useReactToPrint } from 'react-to-print';
+import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
+
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -22,7 +23,6 @@ import Iconify from 'src/components/iconify';
 import { Printinvoice } from 'src/types/invoice';
 
 import InvoicePDF from './invoice-pdf';
-
 import InvoiceThermalReceipt from './invoice-thermal-receipt';
 
 // ----------------------------------------------------------------------

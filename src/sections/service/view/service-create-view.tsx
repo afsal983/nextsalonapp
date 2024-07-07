@@ -24,10 +24,11 @@ export default function ServiceCreateView () {
 
   // Pre data fetching via API calls
   const { data: servicecategory,isLoading: isservicecategoryLoading } = useSWR('/api/salonapp/servicecategory', fetcher);
+  const { data: retailbrands,isLoading: isretailbrandsLoading } = useSWR('/api/salonapp/retailbrand', fetcher);
 
   // Wait for data loading
-  if ( isservicecategoryLoading) return <div>Loading...</div>;
-  if (!servicecategory ) return <div>Loading...</div>
+  if ( isservicecategoryLoading || isretailbrandsLoading ) return <div>Loading...</div>;
+  if (!servicecategory  || !retailbrands ) return <div>Loading...</div>
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -49,7 +50,7 @@ export default function ServiceCreateView () {
         }}
       />
 
-      <ServiceNewEditForm servicecategory={servicecategory.data}/>
+      <ServiceNewEditForm servicecategory={servicecategory.data} retailbrands={retailbrands.data} />
     </Container>
   )
 }

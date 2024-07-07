@@ -2,25 +2,21 @@ import { useCallback } from 'react'
 
 import Stack from '@mui/material/Stack'
 import MenuItem from '@mui/material/MenuItem'
-import Checkbox from '@mui/material/Checkbox'
-import TextField from '@mui/material/TextField'
-import InputLabel from '@mui/material/InputLabel'
+import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton'
 import FormControl from '@mui/material/FormControl'
-import OutlinedInput from '@mui/material/OutlinedInput'
 import InputAdornment from '@mui/material/InputAdornment'
-import Select, { type SelectChangeEvent } from '@mui/material/Select'
 
 import Iconify from 'src/components/iconify'
 import CustomPopover, { usePopover } from 'src/components/custom-popover'
 
-import { ServiceCategoryTableFilters, type ServiceTableFilters, type ServiceTableFilterValue } from 'src/types/service'
+import { ServiceCategoryTableFilters, type ServiceCategoryTableFilterValue } from 'src/types/service'
 
 // ----------------------------------------------------------------------
 
 interface Props {
   filters: ServiceCategoryTableFilters
-  onFilters: (name: string, value: ServiceTableFilterValue) => void
+  onFilters: (name: string, value: ServiceCategoryTableFilterValue) => void
   //
 }
 
@@ -34,18 +30,6 @@ export default function ServiceCategoryTableToolbar ({
   const handleFilterName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       onFilters('name', event.target.value)
-    },
-    [onFilters]
-  )
-
-  const handleFilterRole = useCallback(
-    (event: SelectChangeEvent<string[]>) => {
-      onFilters(
-        'productcategory',
-        typeof event.target.value === 'string'
-          ? event.target.value.split(',')
-          : event.target.value
-      )
     },
     [onFilters]
   )
@@ -71,7 +55,6 @@ export default function ServiceCategoryTableToolbar ({
           }}
         />
 
-
         <Stack
           direction="row"
           alignItems="center"
@@ -95,10 +78,11 @@ export default function ServiceCategoryTableToolbar ({
               )
             }}
           />
-
+          { /*
           <IconButton onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
+          */ }
         </Stack>
       </Stack>
 

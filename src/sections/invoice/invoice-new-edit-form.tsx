@@ -3,11 +3,8 @@ import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import CardHeader from '@mui/material/CardHeader';
-import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { paths } from 'src/routes/paths';
@@ -17,11 +14,10 @@ import { useBoolean } from 'src/hooks/use-boolean';
 
 import { useTranslate } from 'src/locales';
 
-import Iconify from 'src/components/iconify';
 import FormProvider from 'src/components/hook-form';
 import { useSnackbar } from 'src/components/snackbar'
 
-import { Employee } from 'src/types/employee';
+import { EmployeeItem } from 'src/types/employee';
 import { ServiceItem } from 'src/types/service';
 import { AppSettings } from 'src/types/settings';
 import { IPaymenttypes } from 'src/types/payment';
@@ -39,7 +35,7 @@ type Props = {
   currentInvoice?: IInvoice;
   services?: ServiceItem[];
   branches: Branches_organization[];
-  employees: Employee[];
+  employees: EmployeeItem[];
   appsettings: AppSettings[];
   paymenttypes: IPaymenttypes[];
 };
@@ -201,39 +197,39 @@ export default function InvoiceNewEditForm({ currentInvoice, services, branches,
     data?.items?.forEach((item) => {
         if(item.type ===1 ) {
             const tmp = {
-              id:  item.service,
+              id:  item.id,
               start: new Date(),
               end: new Date(),
               productid: item.service,
               price: item.price,
               quantity: item.quantity,
               discount: item.discount,
-              employee_id: item.employee,
+              employeeid: item.employee,
               deleted: 0,
             }
             products.push(tmp)
         } else if(item.type ===2 ) {
             const tmp = {
-              id:  item.service,
+              id:  item.id,
               productid: item.service,
               price: item.price,
               quantity: item.quantity,
               discount: item.discount,
-              employee_id: item.employee,
+              employeeid: item.employee,
               deleted: 0,
             }
           retails.push(tmp)
 
         } else if (item.type ===3 ) {
           const tmp = {
-            id:  item.service,
+            id:  item.id,
             start: new Date(),
             end: new Date(),
             productid: item.service,
             price: item.price,
             quantity: item.quantity,
             discount: item.discount,
-            employee_id: item.employee,
+            employeeid: item.employee,
             deleted: 0,
           }
           packages.push(tmp)
@@ -254,6 +250,7 @@ export default function InvoiceNewEditForm({ currentInvoice, services, branches,
     })
 
     const invoicedata = {
+      id: currentInvoice?.id || 0,
       customer: data.invoiceTo.id,
       branch_id: data.invoiceFrom.branch_id,
       reminder_count: 0,
@@ -269,12 +266,12 @@ export default function InvoiceNewEditForm({ currentInvoice, services, branches,
       event_id: 0,
 
     }
-
+  
     try {
       
         // Post the data 
         const response = await fetch(`/api/salonapp/invoice`, {
-          method: 'POST',
+          method: currentInvoice? "PUT": "POST",
           headers: {
             'Content-Type': 'application/json',
           },
@@ -289,7 +286,7 @@ export default function InvoiceNewEditForm({ currentInvoice, services, branches,
           // Keep 500ms delay
           await new Promise((resolve) => setTimeout(resolve, 500));
           reset(); 
-          enqueueSnackbar(currentInvoice ? t('general.update_sucess') : t('general.create_success'), { variant: 'success' });
+          enqueueSnackbar(currentInvoice ? t('general.update_success') : t('general.create_success'), { variant: 'success' });
 
           // Service listing again
           router.push(paths.dashboard.invoice.details(responseData.data[0].id))
@@ -298,36 +295,6 @@ export default function InvoiceNewEditForm({ currentInvoice, services, branches,
           enqueueSnackbar(error, { variant: 'error' });
       }
   });
-
-  const renderPayment = (
-    <Stack
-      spacing={2}
-      alignItems="flex-end"
-      sx={{ mt: 3, textAlign: 'right', typography: 'body2' }}
-    >
-    <Card>
-      <CardHeader
-        title="Payment"
-        action={
-          <IconButton> 
-            <Iconify icon="solar:pen-bold" />
-          </IconButton>
-        }
-      />
-      <Stack direction="row" alignItems="center" sx={{ p: 3, typography: 'body2' }}>
-        <Box component="span" sx={{ color: 'text.secondary', flexGrow: 1 }}>
-          Phone number
-        </Box>
-
-        {0}
-        <Iconify icon="logos:mastercard" width={24} sx={{ ml: 0.5 }} />
-      </Stack>
-      </Card>
-    </Stack>
-    
-  );
-
-
 
   return (
     <FormProvider methods={methods}>

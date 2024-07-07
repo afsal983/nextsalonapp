@@ -8,6 +8,7 @@ export interface IProductFilters {
   category: string
   colors: string[]
   priceRange: number[]
+  name: string
 }
 
 // ----------------------------------------------------------------------

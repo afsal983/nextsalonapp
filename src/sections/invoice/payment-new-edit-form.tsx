@@ -1,4 +1,4 @@
-import { useCallback, ChangeEvent, useState } from 'react';
+import { useCallback, ChangeEvent } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
@@ -10,7 +10,6 @@ import Typography from '@mui/material/Typography';
 import ButtonBase from '@mui/material/ButtonBase';
 
 import { useBoolean } from 'src/hooks/use-boolean';
-import { useResponsive } from 'src/hooks/use-responsive';
 
 import Iconify from 'src/components/iconify';
 import { RHFTextField } from 'src/components/hook-form';
@@ -35,7 +34,7 @@ export default function PaymentNewEditForm({ currentPayment, paymenttypes }: Pro
     formState: { errors },
   } = useFormContext();
 
-  const mdUp = useResponsive('up', 'md');
+  // const mdUp = useResponsive('up', 'md');
   
   const values = watch();
 
@@ -45,10 +44,7 @@ export default function PaymentNewEditForm({ currentPayment, paymenttypes }: Pro
   });
 
 
-  const from = useBoolean();
-
-  const to = useBoolean();
-
+  const paymentview = useBoolean();
   
   const handleSelectPayment = useCallback(
     (index: number, option: string) => {
@@ -114,14 +110,14 @@ export default function PaymentNewEditForm({ currentPayment, paymenttypes }: Pro
           <Box sx={{ color: 'text.secondary' }}>Payment by</Box>
             <Box sx={{ width: 160, typography: 'subtitle2' }}>
               {currentPayment && paymenttypes?.map((paymenttype)=> paymenttype.default_paymenttype && paymenttype.name )}
-              <IconButton onClick={from.onTrue}>
+              <IconButton onClick={paymentview.onTrue}>
                 <Iconify icon="solar:pen-bold" />
               </IconButton>
             </Box>
         </Stack>
       </Stack>
 
-      <Dialog fullWidth maxWidth="xs" open={from.value} onClose={from.onFalse}>
+      <Dialog fullWidth maxWidth="xs" open={paymentview.value} onClose={paymentview.onFalse}>
         <Stack
           direction="row"
           alignItems="center"

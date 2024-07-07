@@ -11,14 +11,12 @@ import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
 import { inputBaseClasses } from '@mui/material/InputBase';
 
-import { useBoolean } from 'src/hooks/use-boolean';
-
 import { FnCurrency } from 'src/utils/format-number';
 
 import Iconify from 'src/components/iconify';
 import { RHFSelect, RHFTextField } from 'src/components/hook-form';
 
-import { Employee } from 'src/types/employee';
+import { EmployeeItem } from 'src/types/employee';
 import { ServiceItem } from 'src/types/service';
 import { AppSettings } from 'src/types/settings';
 import { IInvoice, IInvoiceItem} from 'src/types/invoice';
@@ -30,7 +28,7 @@ import { Branches_organization } from 'src/types/branches_organizations';
 
 type Props = {
   services?: ServiceItem[];
-  employees: Employee[];
+  employees: EmployeeItem[];
   appsettings: AppSettings[];
   currentInvoice?: IInvoice;
   branches: Branches_organization[];
@@ -39,8 +37,6 @@ type Props = {
 
 export default function InvoiceNewEditDetails({ services, employees, appsettings, currentInvoice, branches }: Props) {
   const { control, setValue, watch, resetField } = useFormContext();
-
-  const quickEdit = useBoolean()
 
   const { fields, append, remove } = useFieldArray({
     control,

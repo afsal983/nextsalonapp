@@ -24,7 +24,7 @@ export default function InvoiceCreateView() {
     const { data: branches,isLoading: isbranchesLoading,  error: errorB } = useSWR('/api/salonapp/branches', fetcher);
     const { data: employees,isLoading: isEmployeeLoading,  error: errorE } = useSWR('/api/salonapp/employee', fetcher);
     const { data: appsettings,isLoading: isAppSettingsLoading,  error: errorI } = useSWR('/api/salonapp/settings', fetcher);
-    const { data: paymenttypes,isLoading: isPaymenttypesLoading,  error: errorP } = useSWR('/api/salonapp/paymentypes', fetcher);
+    const { data: paymenttypes,isLoading: isPaymenttypesLoading,  error: errorP } = useSWR('/api/salonapp/paymenttype', fetcher);
 
     if ( isserviceLoading || isbranchesLoading || isEmployeeLoading || isAppSettingsLoading || isPaymenttypesLoading ) return <div>Loading...</div>;
     if ( errorS || errorB || errorE  || errorI || errorP) return <div>Error Loading...</div>;

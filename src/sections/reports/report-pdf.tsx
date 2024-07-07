@@ -93,7 +93,6 @@ type Props = {
 export default function InvoicePDF({ invoice, currentStatus }: Props) {
   const {
     Invoice_line,
-    tax_rate,
     date,
     discount,
     Customer,

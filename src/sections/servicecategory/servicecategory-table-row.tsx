@@ -36,8 +36,6 @@ export default function ServiceCategoryTableRow ({
 
   const confirm = useBoolean()
 
-  const quickEdit = useBoolean()
-
   const popover = usePopover()
 
   return (

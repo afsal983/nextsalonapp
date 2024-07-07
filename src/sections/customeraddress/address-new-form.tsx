@@ -56,7 +56,7 @@ export default function AddressNewForm({ open, onClose, onCreate }: Props) {
 
 
   // Use SWR to fetch data from multiple endpoints in parallel
-  const { data: customercategory,isLoading: iscustomercategory,  error: errorC } = useSWR('/api/salonapp/customercategory', fetcher);
+  const { data: customercategory, error: errorC } = useSWR('/api/salonapp/customercategory', fetcher);
 
   
   const defaultValues = {

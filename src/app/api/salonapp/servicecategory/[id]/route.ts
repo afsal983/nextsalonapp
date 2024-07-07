@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { decrypt } from "src/utils/encrypt";
 
-
-
 const baseUSRL = process.env.NEXT_PUBLIC_HOST_API
 
 export async function GET(request: NextRequest, response: NextResponse) {
@@ -65,7 +63,6 @@ export async function GET(request: NextRequest, response: NextResponse) {
 
 export async function DELETE(request: NextRequest, response: NextResponse) {
 
-  console.log("sdddd")
   const { pathname } = new URL(request.url);
   const servicecategoryId = pathname.split('/')[4]
 

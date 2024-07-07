@@ -14,8 +14,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 
-import { fCurrency } from 'src/utils/format-number';
-
 import { INVOICE_STATUS_OPTIONS } from 'src/_mock';
 
 import Label from 'src/components/label';
@@ -43,9 +41,8 @@ type Props = {
 };
 
 export default function InvoiceDetails({ printinvoice }: Props) {
-  const [currentStatus, setCurrentStatus] = useState("Paid");
+  const [currentStatus, setCurrentStatus] = useState("paid");
 
-  console.log(printinvoice)
   const handleChangeStatus = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentStatus(event.target.value);
   }, []);
@@ -229,7 +226,7 @@ export default function InvoiceDetails({ printinvoice }: Props) {
               {currentStatus}
             </Label>
 
-            <Typography variant="h6">{printinvoice.invoiceid}</Typography>
+            <Typography variant="h6">{printinvoice.billno}</Typography>
           </Stack>
 
           <Stack sx={{ typography: 'body2' }}>

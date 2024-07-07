@@ -9,12 +9,6 @@ export async function GET(request: NextRequest) {
   // Get the cookies
   const cookieStore = request.cookies
   const sessionCookie  =cookieStore.get('session')?.value
-
-  const { searchParams } = new URL(request.url);
-
-  // Accessing query parameters
-  const searchString = searchParams.get('search');
-
   
   if (sessionCookie === undefined) {
     const res = {

@@ -69,11 +69,6 @@ const defaultFilters: ServiceTableFilters = {
 }
 
 // ----------------------------------------------------------------------
-interface ServiceListViewProps {
-  services: ServiceItem[]
-  servicecategory: ServiceCategoryItem[]
-}
-
 export default  function ServiceListView () {
 
   const { t } = useTranslate();
@@ -245,8 +240,9 @@ export default  function ServiceListView () {
       return <div>Error loading data1.</div>;
     }
  
-    if ( isserviceLoading ) return <div>Loading...</div>;
-    if ( isservicecategoryLoading) return <div>Loading...</div>;
+      // Display loading page 
+  if ( isserviceLoading || isservicecategoryLoading) return <div>Loading...</div>;
+  if ( errorA || errorB) return <div>Error Loading...</div>;
 
   return (
     <>
@@ -455,7 +451,7 @@ function applyFilter ({
   comparator: (a: any, b: any) => number
   filters: ServiceTableFilters
 }) {
-  const { name, status, productcategory } = filters
+  const { name, productcategory } = filters
 
   const stabilizedThis = inputData.map((el, index) => [el, index] as const)
 

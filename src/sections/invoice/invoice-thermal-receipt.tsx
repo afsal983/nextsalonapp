@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Printinvoice } from 'src/types/invoice';
 // Define the props interface
 interface ReceiptProps {

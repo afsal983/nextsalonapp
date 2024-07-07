@@ -73,28 +73,9 @@ export function useNavData () {
               {
                 title: t('salonapp.service_category'),
                 path: paths.dashboard.services.servicecategory.root
-              }
-            ]
-          },
-          {
-            title: t('salonapp.retails'),
-            path: paths.dashboard.retails.root,
-            icon: ICONS.retails,
-            children: [
-              { title: t('salonapp.retail_list'), path: paths.dashboard.retails.root },
-              { title: t('salonapp.retail_category'), path: paths.dashboard.retails.root },
-              { title: t('salonapp.retail_brand'), path: paths.dashboard.retails.root }
-            ]
-          },
-          {
-            title: t('salonapp.packages'),
-            path: paths.dashboard.packages.root,
-            icon: ICONS.packages,
-            children: [
-              { title: t('salonapp.package_list'), path: paths.dashboard.packages.root },
-              {
-                title: t('salonapp.package_category'),
-                path: paths.dashboard.packages.root
+              },
+              { title: t('general.retail_brand'), 
+                path: paths.dashboard.retailbrands.root 
               }
             ]
           },
@@ -109,17 +90,17 @@ export function useNavData () {
             icon: ICONS.invoices,
             children: [
               { title: t('salonapp.invoice_list'), path: paths.dashboard.invoice.root },
-              { title: t('salonapp.payment_types'), path: paths.dashboard.invoice.root }
+              { title: t('salonapp.payment_types'), path: paths.dashboard.invoice.paymenttypes.root }
             ]
           },
           {
-            title: t('salonapp.employees'),
+            title: t('general.employees'),
             path: paths.dashboard.retails.root,
             icon: ICONS.employees,
             children: [
-              { title: t('salonapp.employee'), path: paths.dashboard.retails.root },
-              { title: t('salonapp.work_schedule'), path: paths.dashboard.retails.root },
-              { title: t('salonapp.timeslots'), path: paths.dashboard.retails.root }
+              { title: t('general.employee'), path: paths.dashboard.employees.root },
+              { title: t('salonapp.work_schedule'), path: paths.dashboard.employees.root },
+              { title: t('salonapp.timeslots'), path: paths.dashboard.employees.root }
             ]
           },
           {

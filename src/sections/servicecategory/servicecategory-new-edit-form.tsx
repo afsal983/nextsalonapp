@@ -1,7 +1,6 @@
 import * as Yup from 'yup'
+import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import { useMemo, useState } from 'react'
-import { MuiColorInput } from 'mui-color-input'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import Box from '@mui/material/Box'
@@ -17,21 +16,20 @@ import { useTranslate } from 'src/locales';
 
 import { useSnackbar } from 'src/components/snackbar'
 import FormProvider, {
-  RHFSwitch,
-  RHFSelect,
   RHFTextField
 } from 'src/components/hook-form'
 
-import { type ServiceItem, type ServiceCategoryItem } from 'src/types/service'
+import { type ServiceCategoryItem } from 'src/types/service'
 
 // ----------------------------------------------------------------------
 
 interface Props {
-  currentServiceCategory: ServiceCategoryItem
+  currentServiceCategory?: ServiceCategoryItem
 }
 
-export default function ServiceNewEditForm ({ currentServiceCategory }: Props) {
+export default function ServiceCategoryNewEditForm ({ currentServiceCategory }: Props) {
   const router = useRouter()
+
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -57,14 +55,9 @@ export default function ServiceNewEditForm ({ currentServiceCategory }: Props) {
 
   const {
     reset,
-    watch,
-    control,
-    setValue,
     handleSubmit,
     formState: { isSubmitting }
   } = methods
-
-  const values = watch()
 
   const onSubmit = handleSubmit(async (data) => {
     const ServiceCategoryData = {
@@ -73,10 +66,9 @@ export default function ServiceNewEditForm ({ currentServiceCategory }: Props) {
       type : 1,
     }
     try {
-      
       // Post the data 
       const response = await fetch(`/api/salonapp/servicecategory`, {
-        method: 'POST',
+        method: currentServiceCategory? "PUT": "POST",
         headers: {
           'Content-Type': 'application/json',
         },
@@ -86,7 +78,7 @@ export default function ServiceNewEditForm ({ currentServiceCategory }: Props) {
       const responseData = await response.json();
 
       if(responseData?.status > 401 ) {
-        enqueueSnackbar(currentServiceCategory ? t('general.update_failed') : t('general.create_failed'), { variant: 'error' });
+        enqueueSnackbar(currentServiceCategory ? `${t('general.update_failed')}:${responseData.message}` : `${t('general.create_failed')}:${responseData.message}`, { variant: 'error' });
       } else {
         // Keep 500ms delay
         await new Promise((resolve) => setTimeout(resolve, 500));
@@ -94,7 +86,7 @@ export default function ServiceNewEditForm ({ currentServiceCategory }: Props) {
         enqueueSnackbar(currentServiceCategory ? t('general.update_success') : t('general.create_success'), { variant: 'success' });
 
         // Service listing again
-        router.push(paths.dashboard.services.list)
+        router.push(paths.dashboard.services.servicecategory.list)
       }
     } catch (error) {
         enqueueSnackbar(error, { variant: 'error' });

@@ -21,7 +21,7 @@ import Iconify from 'src/components/iconify';
 
 import { IInvoice } from 'src/types/invoice';
 
-import InvoicePDF from './invoice-pdf';
+import InvoicePDF from './report-pdf';
 
 // ----------------------------------------------------------------------
 

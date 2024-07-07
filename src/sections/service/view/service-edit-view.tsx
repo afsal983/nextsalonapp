@@ -29,13 +29,12 @@ export default function ServiceEditView ({ id }: Props) {
   const settings = useSettingsContext()
 
   // Pre data fetching via API calls
-  const { data: serviceData , isLoading: isserviceLoading, error: serviceError} = useSWR( `/api/salonapp/services/${id}`, fetcher)
-  const { data: servicecategoryData , isLoading: isservicecategoryLoading, error: categoryError } = useSWR( `/api/salonapp/servicecategory`, fetcher)
+  const { data: serviceData , error: serviceError} = useSWR( `/api/salonapp/services/${id}`, fetcher)
+  const { data: servicecategoryData , error: categoryError } = useSWR( `/api/salonapp/servicecategory`, fetcher)
+  const { data: retailbrands,error: retailbrandError } = useSWR('/api/salonapp/retailbrands', fetcher);
 
-  if (serviceError ) return <div>Failed to load</div>
-  // if (categoryError ) return <div>Failed to load</div>
-  if (!serviceData ) return <div>Loading...</div>
-  // if (!servicecategoryData) return <div>Loading...</div>
+  if (serviceError || categoryError  || retailbrandError) return <div>Failed to load</div>
+  if (!serviceData  || !servicecategoryData || !retailbrands) return <div>Loading...</div>
  
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -47,17 +46,17 @@ export default function ServiceEditView ({ id }: Props) {
             href: paths.dashboard.root
           },
           {
-            name: t('salonapp.servicecategory'),
+            name: t('salonapp.services'),
             href: paths.dashboard.services.servicecategory.root
           },
-          { name: serviceData?.name }
+          { name: serviceData?.data[0].name }
         ]}
         sx={{
           mb: { xs: 3, md: 5 }
         }}
       />
 
-      <ServiceNewEditForm currentService={serviceData?.data[0]} servicecategory={servicecategoryData?.data}/>
+      <ServiceNewEditForm currentService={serviceData?.data[0]} servicecategory={servicecategoryData?.data} retailbrands={retailbrands.data}/>
     </Container>
   )
 }

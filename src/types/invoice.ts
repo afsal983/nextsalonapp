@@ -152,36 +152,36 @@ export interface Printinvoice {
 }
 
 export interface Products {
-  id:  number
+  id:  number| undefined
   start: Date
   end: Date
   productid: number
   price: number
   quantity: number
   discount: number | undefined
-  employee_id: number | undefined
+  employeeid: number | undefined
   deleted: number
 }
 
 export interface Retails {
-  id:  number
+  id:  number | undefined
   productid: number
   price: number
   quantity: number
   discount: number | undefined
-  employee_id: number | undefined
+  employeeid: number | undefined
   deleted: number
 }
 
 export interface Packages {
-  id:  number
+  id:  number | undefined
   start: Date
   end: Date
   productid: number
   price: number
   quantity: number
   discount: number | undefined
-  employee_id: number | undefined
+  employeeid: number | undefined
   deleted: Number
 }
 

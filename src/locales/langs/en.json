@@ -8,19 +8,29 @@
     "category_fvalid_error": "Category is required",
     "update_success": "Update Sucess",
     "create_success": "Create Sucess",
-    "update_failed": "Update Sucess",
+    "update_failed": "Update Failed",
     "create_failed": "Create Failed",
     "delete_success": "Delete Sucess",
     "delete_fail": "Deletion Failed!",
     "category": "Category",
     "product_type": "Product Type",
+    "description": "Description",
     "name": "name",
     "price": "price",
     "tax": "tax",
     "duration": "duration",
     "commission": "commission",
     "list": "List",
-    "color": "color"
+    "color": "color",
+    "sku": "Stock Keeping Unit(SKU)",
+    "stock": "Stock",
+    "retail_brand": "Retail Brand",
+    "address": "Address",
+    "telephone": "Telephone",
+    "email": "E-mail",
+    "branchname": "Branch Name",
+    "employee" : "Employee",
+    "employees" : "Employees"
   },
   "salonapp" : {
     "management": "management",
@@ -29,6 +39,7 @@
     "service_list": "Service list",
     "service_category": "Service category",
     "retails" : "Retails",
+    "retail_brand" : "Retail brand",
     "retail_list": "Retail list",
     "retail_category": "Retail category",
     "packages": "Packages",
@@ -38,8 +49,6 @@
     "invoices" : "invoices",
     "invoice_list": "Invoice list",
     "payment_types": "Payment types",
-    "employees": "Employees",
-    "employee": "Employee",
     "work_schedule": "Work schedule",
     "timeslots": "Timeslots",
     "locations": "Locations",
@@ -68,10 +77,12 @@
       "title": "English"
     },
     "service": {
+      "name": "Name",
       "create_a_new_service": "Create a new service",
       "new_service": "New service",
       "service_name": "Service Name",
       "sn_helper": "Use suitable Name for your service",
+      "desc_helper": "Description for your service",
       "duration_in_min" : "Duration in minutes",
       "dim_helper": "Approximate service time in minutes",
       "color_helper": "For visual differentiation of services of same category",
@@ -82,6 +93,7 @@
       "duration_fvalid_error": "Duration is required",
       "create_service" : "Create Service",
       "save_service": "Save Service",
+      "sku_helper" : "Unique number for each product to keep track of stock levels internally",
       "servicecategory" : { 
         "servicecategory_name": "Service Category Name",
         "create_a_new_servicecategory": "Create Servicecategory",
@@ -90,13 +102,46 @@
         "save_servicecategory": "Save Servicecategory",
         "name_fvalid_error": "Name is required",
         "sn_helper": "Use suitable Name for your service"
-      }
+      },
+      "new_retail_brand": "New Retail Brand",
+      "create_retailbrand": "Create Retail Brand",
+      "save_retailbrand": "Save Retail Brand"
     },
     "invoice": { 
       "invoice": "Invoice"
     },
     "Tax": {
       "tax_name" : "tax"
+    },
+    "paymenttype": 
+    {
+      "name_helper": "Select suitable name for your payment type",
+      "desc_helper": "Description for your paymenttype",
+      "default_paymenttype": "Is Default",
+      "authcode": "Is Authcode",
+      "new_paymenttype": "New payment type",
+      "paymenttype": "Payment type",
+      "default_payment": "Default Paymenttype",
+      "create_new_paymenttype": "Create Payment Type",
+      "save_paymenttype": "Save Payment Type",
+      "auth_code": "Enable authcode",
+      "default_payment_helper": "Enable if this is default payment",
+      "auth_code_helper": "Enable if this paymentmethods enforce authcode"
+    },
+    "employee": 
+    {
+      "new_employee": "New Employee",
+      "employees": "Employees",
+      "employee": "Employee",
+      "emp_name": "Employee Name",
+      "branch": "Branch",
+      "link_to_user_account":"Link Employee to user account",
+      "sn_helper": "Name of the employee",
+      "create_employee": "Create Employee",
+      "save_employee": "Save Employee",
+      "plus_services" : "+ Services",
+      "assign_employee_services": "Assign services to employee",
+      "service_assign_helper": "Online appointment will make use of this assignment"
     }
   }
 }

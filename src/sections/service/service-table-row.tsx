@@ -36,8 +36,6 @@ export default function ServiceTableRow ({
 
   const confirm = useBoolean()
 
-  const quickEdit = useBoolean()
-
   const popover = usePopover()
 
   return (
@@ -68,7 +66,7 @@ export default function ServiceTableRow ({
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{commission}</TableCell>
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>
-          <input type="color" id="head" name="head" value={color} />
+          <input type="color" id="head" name="head" value={color}/>
         </TableCell>
 
         <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>

@@ -67,9 +67,6 @@ const defaultFilters: ServiceCategoryTableFilters = {
 }
 
 // ----------------------------------------------------------------------
-interface ServiceCategoryListViewProps {
-  servicecategory: ServiceCategoryItem[]
-}
 
 export default  function ServiceCategoryListView () {
 
@@ -82,7 +79,6 @@ export default  function ServiceCategoryListView () {
 
   // Initialize
   const [tableData, setTableData] = useState<ServiceCategoryItem[]>([])
-  const [serviceCategory, setserviceCategory] = useState<ServiceCategoryItem[]>([]);
   const { logout } = useAuthContext()
 
 
@@ -213,15 +209,7 @@ export default  function ServiceCategoryListView () {
       if (servicecategory) {
         setTableData(servicecategory.data);
       }
-    }, [servicecategory]);
-  
-    // Use useEffect to update state2 when data2 is available
-    useEffect(() => {
-      if (servicecategory) {
-        setserviceCategory(servicecategory.data);
-      }
-    }, [servicecategory]);
-  
+    }, [servicecategory]);  
 
     if (errorB) {
       if ( errorB?.response?.data?.status === 401 ){
@@ -442,7 +430,7 @@ function applyFilter ({
   comparator: (a: any, b: any) => number
   filters: ServiceCategoryTableFilters
 }) {
-  const { name, status } = filters
+  const { name } = filters
 
   const stabilizedThis = inputData.map((el, index) => [el, index] as const)
 

@@ -6,8 +6,6 @@ import { useTheme } from '@mui/material/styles'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Unstable_Grid2'
 
-import { useMockedUser } from 'src/hooks/use-mocked-user'
-
 import { fetcher } from 'src/utils/axios';
 
 import {
@@ -25,7 +23,6 @@ import EcommerceLatestProducts from '../ecommerce-latest-products'
 // ----------------------------------------------------------------------
 
 export default function OverviewSalonView () {
-  const { user } = useMockedUser()
 
   const theme = useTheme()
 
