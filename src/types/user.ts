@@ -1,13 +1,13 @@
-import { type CustomFile } from 'src/components/upload'
-import { type Branches_organization } from 'src/types/branches_organizations'
+import { type BranchItem } from 'src/types/branch'
+
 
 // ----------------------------------------------------------------------
 
-export type IUserTableFilterValue = string | string[]
+export type UserTableFilterValue = string | string[]
 
-export interface IUserTableFilters {
+export interface UserTableFilters {
   name: string
-  role: string[]
+  userrole: string[]
   status: string
 }
 
@@ -30,8 +30,16 @@ export interface UserItem {
   acc_lockout: number
   deleted: number
   role_id: number
+  userroledb: UserRoleDB
   branch_id: number
-  branches_organization: Branches_organization
+  Branches_organization: BranchItem
   is_default: boolean
 }
 
+
+export interface  UserRoleDB {
+  id: string 
+  name: string        
+  casbin_roleid: string 
+  is_default: boolean
+}

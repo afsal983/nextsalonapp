@@ -11,7 +11,7 @@ import { useResponsive } from 'src/hooks/use-responsive';
 
 import Iconify from 'src/components/iconify';
 
-import { Branches_organization } from 'src/types/branches_organizations';
+import { BranchItem } from 'src/types/branch';
 
 import {  BranchAddressListDialog } from '../branchaddress';
 import { CustomerAddressListDialog } from '../customeraddress';
@@ -20,7 +20,7 @@ import { CustomerAddressListDialog } from '../customeraddress';
 
 // ----------------------------------------------------------------------
 type Props = {
-  branches: Branches_organization[];
+  branches: BranchItem[];
 
 };
 

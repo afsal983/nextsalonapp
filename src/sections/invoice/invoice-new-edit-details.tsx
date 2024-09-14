@@ -16,11 +16,11 @@ import { FnCurrency } from 'src/utils/format-number';
 import Iconify from 'src/components/iconify';
 import { RHFSelect, RHFTextField } from 'src/components/hook-form';
 
-import { EmployeeItem } from 'src/types/employee';
+import { BranchItem } from 'src/types/branch';
 import { ServiceItem } from 'src/types/service';
 import { AppSettings } from 'src/types/settings';
+import { EmployeeItem } from 'src/types/employee';
 import { IInvoice, IInvoiceItem} from 'src/types/invoice';
-import { Branches_organization } from 'src/types/branches_organizations';
 
 
 
@@ -31,7 +31,7 @@ type Props = {
   employees: EmployeeItem[];
   appsettings: AppSettings[];
   currentInvoice?: IInvoice;
-  branches: Branches_organization[];
+  branches: BranchItem[];
   // paymentypes: IPaymenttypes[]
 };
 

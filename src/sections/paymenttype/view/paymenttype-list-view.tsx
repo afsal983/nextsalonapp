@@ -47,8 +47,8 @@ import {
 
 import {
   type PaymentTypeItem,
-  type PaymentTypeTableFilters,
-  type PaymentTypeFilterValue
+  type PaymentTypeFilterValue,
+  type PaymentTypeTableFilters
 } from 'src/types/paymenttype'
 
 import RetailTableRow from '../paymenttype-table-row'

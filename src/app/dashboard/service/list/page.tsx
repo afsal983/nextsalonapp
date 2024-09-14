@@ -9,6 +9,5 @@ export const metadata = {
 }
 
 export default function ServiceListPage (context: any) {
-  console.log("dddd")
   return <ServiceListView/>
 }

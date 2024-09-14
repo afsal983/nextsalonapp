@@ -11,6 +11,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
   const { pathname } = new URL(request.url);
   const branchId = pathname.split('/')[4]
 
+
   // Get the cookies
   const cookieStore = request.cookies
   const sessionCookie  = cookieStore?.get('session')?.value
@@ -38,7 +39,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
 
 
   // Make an HTTP request to your API route with the token in the headers
-  const data = await fetch( `${baseUSRL}//apiserver/branches_organization/${branchId}`, {
+  const data = await fetch( `${baseUSRL}//apiserver/branches_organizations/${branchId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -64,7 +65,6 @@ export async function GET(request: NextRequest, response: NextResponse) {
 
 export async function DELETE(request: NextRequest, response: NextResponse) {
 
-  console.log("sdddd")
   const { pathname } = new URL(request.url);
   const serviceId = pathname.split('/')[4]
 

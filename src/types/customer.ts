@@ -2,18 +2,25 @@
 // ----------------------------------------------------------------------
 
 
-export type ServiceTableFilterValue = string | string[]
+export type CustomerTableFilterValue = string | string[]
+export type CustomerCategoryTableFilterValue = string | string[]
 
-export interface ServiceTableFilters {
+export interface CustomerTableFilters {
   name: string
-  productcategory: string[]
+  customercategory: string[]
   status: string
 }
+
+export interface CustomerCategoryTableFilters {
+  name: string
+  status: string
+}
+
 
 // ----------------------------------------------------------------------
 
 export interface Customer {
-  id: number
+  id: string
   firstname: string
   lastname: string
   comment: string
@@ -26,6 +33,7 @@ export interface Customer {
   category_id: number
   taxid: string
   cardno: string
+  CustomerCategory: CustomerCategory
   CustomerPreference : {
     customer_id: number
     eventnotify: boolean
@@ -34,14 +42,9 @@ export interface Customer {
   }
 }
 
-export interface Customercategory {
-  id: number
+export interface CustomerCategory {
+  id: string
   name: string
   discount: number
   default_category: boolean
-}
-export interface ServiceCategoryItem {
-  id: string
-  name: string
-  type: number
 }

@@ -50,7 +50,7 @@ import { IInvoice, IInvoiceTableFilters, IInvoiceTableFilterValue } from 'src/ty
 import InvoiceAnalytic from '../invoice-analytic';
 import InvoiceTableRow from '../invoice-table-row';
 import InvoiceTableToolbar from '../invoice-table-toolbar';
-import InvoiceTableFiltersResult from '../invoice-table-filters-result';
+import InvoiceTableFiltersResult from '../report-table-filters-result';
 
 // ----------------------------------------------------------------------
 

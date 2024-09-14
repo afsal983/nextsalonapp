@@ -19,6 +19,18 @@ export const paths = {
   // DASHBOARD
   dashboard: {
     root: ROOTS.DASHBOARD,
+    customers: {
+      root: `${ROOTS.DASHBOARD}/customer`,
+      new: `${ROOTS.DASHBOARD}/customer/new`,
+      list: `${ROOTS.DASHBOARD}/customer/list`,
+      edit: (id: number) => `${ROOTS.DASHBOARD}/customer/${id}/edit`,
+      customercategory: {
+        root: `${ROOTS.DASHBOARD}/customercategory`,
+        new: `${ROOTS.DASHBOARD}/customercategory/new`,
+        list: `${ROOTS.DASHBOARD}/customercategory/list`,
+        edit: (id: number) => `${ROOTS.DASHBOARD}/customercategory/${id}/edit`,
+      }
+    },
     services: {
       root: `${ROOTS.DASHBOARD}/service`,
       new: `${ROOTS.DASHBOARD}/service/new`,
@@ -68,13 +80,53 @@ export const paths = {
       new: `${ROOTS.DASHBOARD}/employee/new`,
       list: `${ROOTS.DASHBOARD}/employee/list`,
       edit: (id: number) => `${ROOTS.DASHBOARD}/employee/${id}/edit`,
+      timeslots: {
+        root: `${ROOTS.DASHBOARD}/timeslot`,
+        new: `${ROOTS.DASHBOARD}/timeslot/new`,
+        list: `${ROOTS.DASHBOARD}/timeslot/list`,
+        edit: (id: number) => `${ROOTS.DASHBOARD}/timeslot/${id}/edit`,
+        details: (id: string) => `${ROOTS.DASHBOARD}/timeslot/${id}`,
+      },
+      workschedule: {
+        root: `${ROOTS.DASHBOARD}/workschedule`,
+      }
+    },
+    branches: {
+      root: `${ROOTS.DASHBOARD}/branch`,
+      list: `${ROOTS.DASHBOARD}/branch/list`,
+      new: `${ROOTS.DASHBOARD}/branch/new`,
+      details: (id: string) => `${ROOTS.DASHBOARD}/branch/${id}`,
+      edit: (id: string) => `${ROOTS.DASHBOARD}/branch/${id}/edit`,
     },
     report: {
       root: `${ROOTS.DASHBOARD}/report`,
       list: `${ROOTS.DASHBOARD}/retail/list`,
       details: (id: string) => `${ROOTS.DASHBOARD}/report/${id}`,
       edit: (id: string) => `${ROOTS.DASHBOARD}/report/${id}/edit`,
-
     },
+    organization: {
+      root: `${ROOTS.DASHBOARD}/organization`,
+      list: `${ROOTS.DASHBOARD}/organization/list`,
+      new: `${ROOTS.DASHBOARD}/organization/new`,
+      details: (id: string) => `${ROOTS.DASHBOARD}/organization/${id}`,
+      edit: (id: string) => `${ROOTS.DASHBOARD}/organization/${id}/edit`,
+    },
+    location: {
+      root: `${ROOTS.DASHBOARD}/location`,
+      list: `${ROOTS.DASHBOARD}/location/list`,
+      new: `${ROOTS.DASHBOARD}/location/new`,
+      details: (id: string) => `${ROOTS.DASHBOARD}/location/${id}`,
+      edit: (id: string) => `${ROOTS.DASHBOARD}/location/${id}/edit`,
+    },
+    user: {
+      root: `${ROOTS.DASHBOARD}/user`,
+      list: `${ROOTS.DASHBOARD}/user/list`,
+      new: `${ROOTS.DASHBOARD}/user/new`,
+      details: (id: string) => `${ROOTS.DASHBOARD}/user/${id}`,
+      edit: (id: string) => `${ROOTS.DASHBOARD}/user/${id}/edit`,
+    },
+    settings: {
+      root: `${ROOTS.DASHBOARD}/settings`,
+    }
   }
 }

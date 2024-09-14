@@ -1,7 +1,6 @@
 import * as Yup from 'yup'
+import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import { useMemo, useState } from 'react'
-import { MuiColorInput } from 'mui-color-input'
 import { yupResolver } from '@hookform/resolvers/yup'
 
 import Box from '@mui/material/Box'
@@ -18,7 +17,6 @@ import { useTranslate } from 'src/locales';
 import { useSnackbar } from 'src/components/snackbar'
 import FormProvider, {
   RHFSwitch,
-  RHFSelect,
   RHFTextField
 } from 'src/components/hook-form'
 
@@ -79,7 +77,6 @@ export default function PaymentTypeNewEditForm ({ currentPaymentType}: Props) {
       is_authcode: data.is_authcode,
     }
 
-    console.log(paymenttypeData)
     try {
       
       // Post the data 

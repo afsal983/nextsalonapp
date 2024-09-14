@@ -22,7 +22,7 @@ import FormProvider, {
   RHFTextField
 } from 'src/components/hook-form'
 
-import { type ServiceItem, type ServiceCategoryItem, type RetailBrandItem } from 'src/types/service'
+import { type ServiceItem, type RetailBrandItem, type ServiceCategoryItem } from 'src/types/service'
 
 // ----------------------------------------------------------------------
 

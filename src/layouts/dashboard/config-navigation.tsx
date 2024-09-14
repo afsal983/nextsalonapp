@@ -21,22 +21,23 @@ const icon = (name: string) => (
 
 const ICONS = {
   dashboard: icon('ic_dashboard'),
-  services: icon('ic_job'),
+  services: icon('ic_services'),
+  customers: icon('ic_customers'),
   retails: icon('ic_blog'),
   packages: icon('ic_chat'),
-  appointments: icon('ic_mail'),
-  invoices: icon('ic_user'),
-  employees: icon('ic_file'),
-  locations: icon('ic_lock'),
-  organizations: icon('ic_tour'),
-  branches: icon('ic_order'),
-  reports: icon('ic_label'),
-  audits: icon('ic_blank'),
-  settings: icon('ic_kanban'),
-  users: icon('ic_folder'),
-  messagebuilder: icon('ic_banking'),
-  marketing: icon('ic_booking'),
-  adapters: icon('ic_invoice')
+  appointments: icon('ic_appointments'),
+  invoices: icon('ic_invoices'),
+  employees: icon('ic_employees'),
+  locations: icon('ic_locations'),
+  organizations: icon('ic_organizations'),
+  branches: icon('ic_branches'),
+  reports: icon('ic_reports'),
+  audits: icon('ic_audits'),
+  settings: icon('ic_settings'),
+  users: icon('ic_users'),
+  messagebuilder: icon('ic_messagebuilder'),
+  marketing: icon('ic_marketing'),
+  adapters: icon('ic_adapters')
 }
 
 // ----------------------------------------------------------------------
@@ -64,6 +65,18 @@ export function useNavData () {
       {
         subheader: t('salonapp.management'),
         items: [
+          {
+            title: t('salonapp.customers'),
+            path: paths.dashboard.customers.root,
+            icon: ICONS.customers,
+            children: [
+              { title: t('salonapp.customer.customer_list'), path: paths.dashboard.customers.root },
+              {
+                title: t('salonapp.customer_category'),
+                path: paths.dashboard.customers.customercategory.root
+              },
+            ]
+          },
           {
             title: t('salonapp.services'),
             path: paths.dashboard.services.root,
@@ -95,27 +108,27 @@ export function useNavData () {
           },
           {
             title: t('general.employees'),
-            path: paths.dashboard.retails.root,
+            path: paths.dashboard.employees.root,
             icon: ICONS.employees,
             children: [
               { title: t('general.employee'), path: paths.dashboard.employees.root },
-              { title: t('salonapp.work_schedule'), path: paths.dashboard.employees.root },
-              { title: t('salonapp.timeslots'), path: paths.dashboard.employees.root }
+              { title: t('salonapp.work_schedule'), path: paths.dashboard.employees.workschedule.root },
+              { title: t('salonapp.timeslots'), path: paths.dashboard.employees.timeslots.root }
             ]
           },
           {
-            title: t('salonapp.locations'),
-            path: paths.dashboard.retails.root,
+            title: t('salonapp.location.locations'),
+            path: paths.dashboard.location.root,
             icon: ICONS.locations
           },
           {
             title: t('salonapp.organizations'),
-            path: paths.dashboard.retails.root,
+            path: paths.dashboard.organization.root,
             icon: ICONS.organizations
           },
           {
             title: t('salonapp.branches'),
-            path: paths.dashboard.retails.root,
+            path: paths.dashboard.branches.root,
             icon: ICONS.branches
           },
           {
@@ -130,18 +143,19 @@ export function useNavData () {
           },
           {
             title: t('salonapp.settings'),
-            path: paths.dashboard.retails.root,
+            path: paths.dashboard.settings.root,
             icon: ICONS.settings
           },
           {
             title: t('salonapp.users'),
-            path: paths.dashboard.retails.root,
+            path: paths.dashboard.user.root,
             icon: ICONS.users,
             children: [
-              { title: t('salonapp.user_list'), path: paths.dashboard.retails.root },
-              { title: t('salonapp.roles'), path: paths.dashboard.retails.root }
+              { title: t('salonapp.user_list'), path: paths.dashboard.user.root },
+              { title: t('salonapp.roles'), path: paths.dashboard.user.root }
             ]
           },
+          /*
           {
             title: t('salonapp.message_builder'),
             path: paths.dashboard.retails.root,
@@ -165,6 +179,7 @@ export function useNavData () {
               { title: t('salonapp.whatsapp'), path: paths.dashboard.retails.root }
             ]
           }
+          */
         ]
       }
     ],

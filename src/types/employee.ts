@@ -1,12 +1,20 @@
-import { type Branches_organization } from 'src/types/branches_organizations'
+
 import { type UserItem } from 'src/types/user'
+import { type BranchItem } from 'src/types/branch'
+
 // ----------------------------------------------------------------------
 
 export type EmployeeTableFilterValue = string | string[]
+export type TimeSlotTableFilterValue = string | string[]
 
 export interface EmployeeTableFilters {
   name: string
   branches: string[]
+  status: string
+}
+
+export interface TimeSlotTableFilters {
+  name: string
   status: string
 }
 
@@ -20,7 +28,7 @@ export interface EmployeeItem {
   email: string
   deleted: number
   branch_id: number
-  Branches_organization: Branches_organization
+  Branches_organization: BranchItem
   user_id: number
   user: UserItem
   employeeservice: EmployeeService[]   
@@ -47,3 +55,32 @@ export interface EmployeeSettings {
 
 }
 
+
+export interface TimeSlotItem {
+  id: string
+  name: string
+  desc: string
+  starttime:  string
+  endtime:string
+  built_in: boolean
+}
+
+
+export interface WorkScheduleItem {
+  employee_id: number
+  day: number
+  timeslotid: number
+}
+
+export interface  Schedule  {
+  employee_id:  number
+  dayschedule: DaySchedule[] 
+}
+
+export interface DaySchedule {
+  day: number  
+  slots: {
+    id: number
+    name: string
+  }[]
+}

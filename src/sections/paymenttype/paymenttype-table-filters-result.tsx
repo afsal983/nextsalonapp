@@ -8,7 +8,7 @@ import Stack, { type StackProps } from '@mui/material/Stack'
 
 import Iconify from 'src/components/iconify'
 
-import { type PaymentTypeTableFilters, type PaymentTypeFilterValue } from 'src/types/paymenttype'
+import { type PaymentTypeFilterValue, type PaymentTypeTableFilters } from 'src/types/paymenttype'
 
 // ----------------------------------------------------------------------
 

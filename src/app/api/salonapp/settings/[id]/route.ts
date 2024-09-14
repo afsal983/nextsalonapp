@@ -64,7 +64,6 @@ export async function GET(request: NextRequest, response: NextResponse) {
 
 export async function DELETE(request: NextRequest, response: NextResponse) {
 
-  console.log("sdddd")
   const { pathname } = new URL(request.url);
   const serviceId = pathname.split('/')[4]
 

@@ -17,11 +17,11 @@ import { useTranslate } from 'src/locales';
 import FormProvider from 'src/components/hook-form';
 import { useSnackbar } from 'src/components/snackbar'
 
-import { EmployeeItem } from 'src/types/employee';
+import { BranchItem } from 'src/types/branch';
 import { ServiceItem } from 'src/types/service';
 import { AppSettings } from 'src/types/settings';
+import { EmployeeItem } from 'src/types/employee';
 import { IPaymenttypes } from 'src/types/payment';
-import { Branches_organization } from 'src/types/branches_organizations';
 import { Retails, IInvoice, Products, Packages, Payments } from 'src/types/invoice';
 
 import PaymentNewEditForm from './payment-new-edit-form'
@@ -34,7 +34,7 @@ import InvoiceNewEditStatusDate from './invoice-new-edit-status-date';
 type Props = {
   currentInvoice?: IInvoice;
   services?: ServiceItem[];
-  branches: Branches_organization[];
+  branches: BranchItem[];
   employees: EmployeeItem[];
   appsettings: AppSettings[];
   paymenttypes: IPaymenttypes[];

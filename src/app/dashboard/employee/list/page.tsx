@@ -9,6 +9,5 @@ export const metadata = {
 }
 
 export default function EmployeeListPage (context: any) {
-  console.log("dddd")
   return <EmployeeListView/>
 }

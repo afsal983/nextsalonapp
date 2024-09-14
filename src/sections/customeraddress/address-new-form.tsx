@@ -25,7 +25,7 @@ import FormProvider, {
   RHFRadioGroup
 } from 'src/components/hook-form';
 
-import { Customer, Customercategory } from 'src/types/customer';
+import { Customer, CustomerCategory } from 'src/types/customer';
 
 // ----------------------------------------------------------------------
 
@@ -89,7 +89,8 @@ export default function AddressNewForm({ open, onClose, onCreate }: Props) {
   const onSubmit = handleSubmit(async (data) => {
     try {
       onCreate({
-        id: 0,
+        id: '',
+        CustomerCategory: {id: '', name: '' , discount: 0, default_category: false},
         firstname: data.firstname,
         lastname: data.lastname|| '',
         comment: data.comments||'',
@@ -180,7 +181,7 @@ export default function AddressNewForm({ open, onClose, onCreate }: Props) {
 
             <RHFSelect native name="category_id" label={t('general.category')} InputLabelProps={{ shrink: true }}>
               <option key={0}>{ t('general.dropdown_select') }</option>
-              {customercategory.data.map((item : Customercategory) => (
+              {customercategory.data.map((item : CustomerCategory) => (
                 <option key={item.id} value={item.id}>
                   {item.name}
                 </option>

@@ -2,18 +2,15 @@ import { useCallback } from 'react'
 
 import Stack from '@mui/material/Stack'
 import MenuItem from '@mui/material/MenuItem'
-import Checkbox from '@mui/material/Checkbox'
 import TextField from '@mui/material/TextField'
-import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
-import OutlinedInput from '@mui/material/OutlinedInput'
 import InputAdornment from '@mui/material/InputAdornment'
-import Select, { type SelectChangeEvent } from '@mui/material/Select'
+import { type SelectChangeEvent } from '@mui/material/Select'
 
 import Iconify from 'src/components/iconify'
 import CustomPopover, { usePopover } from 'src/components/custom-popover'
 
-import { type PaymentTypeTableFilters, type PaymentTypeFilterValue } from 'src/types/paymenttype'
+import { type PaymentTypeFilterValue, type PaymentTypeTableFilters } from 'src/types/paymenttype'
 
 // ----------------------------------------------------------------------
 

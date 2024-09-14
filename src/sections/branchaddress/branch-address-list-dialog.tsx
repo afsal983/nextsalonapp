@@ -12,20 +12,20 @@ import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import SearchNotFound from 'src/components/search-not-found';
 
-import { Branches_organization } from 'src/types/branches_organizations';
+import { BranchItem } from 'src/types/branch';
 
 // ----------------------------------------------------------------------
 
 type Props = {
   title?: string;
-  list: Branches_organization[];
+  list: BranchItem[];
   action?: React.ReactNode;
   //
   open: boolean;
   onClose: VoidFunction;
   //
   selected: (selectedId: string) => boolean;
-  onSelect: (address: Branches_organization | null) => void;
+  onSelect: (address: BranchItem | null) => void;
 };
 
 // let dataFiltered: Branches_organization[] = [];
@@ -66,7 +66,7 @@ export default function BranchAddressListDialog({
 
   const handleSelectAddress = useCallback(
 
-    (address: Branches_organization | null) => {
+    (address: BranchItem | null) => {
       onSelect(address);
       setSearchAddress('');
       onClose();
@@ -167,7 +167,7 @@ export default function BranchAddressListDialog({
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, query }: { inputData: Branches_organization[]; query: string }) {
+function applyFilter({ inputData, query }: { inputData: BranchItem[]; query: string }) {
   if (query) {
     return inputData.filter(
       (address) =>

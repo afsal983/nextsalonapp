@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
 
   const { token } = cookiedata
   // Make an HTTP request to your API route with the token in the headers
-  const data = await fetch( `${baseUSRL}/apiserver/settings`, {
+  const data = await fetch( `${baseUSRL}/apiserver/settingsall`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -53,8 +53,7 @@ export async function GET(request: NextRequest) {
   return NextResponse.json(response, { status: 201 });
 
 }
-
-export async function POST(request: NextRequest, response: NextResponse) {
+export async function PUT(request: NextRequest, response: NextResponse) {
 
   const body = await request.json();
 
@@ -83,8 +82,8 @@ export async function POST(request: NextRequest, response: NextResponse) {
   }
   const { token } = cookiedata
 
-  if(body.id > 0 ) {
-    const data = await fetch(`${baseUSRL}/apiserver/product/${body.id}`, {
+
+    const data = await fetch(`${baseUSRL}/apiserver/settings`, {
       method: 'UPDATE',
       headers: {
         'Content-Type': 'application/json',
@@ -92,9 +91,11 @@ export async function POST(request: NextRequest, response: NextResponse) {
       },
       body: JSON.stringify(body),
     });
+
     // Get the data in JSON format 
     const apiResponse = await data.json();
 
+  
     if(apiResponse?.status === 401) {
       const res = {
         Title: 'NOK',
@@ -103,32 +104,8 @@ export async function POST(request: NextRequest, response: NextResponse) {
       }
       return NextResponse.json(res, { status: 401 });
     }
-  
+
     // Send the sucessful response back
     return NextResponse.json(apiResponse, { status: 201 });
-  } 
-
-  const data = await fetch(`${baseUSRL}/apiserver/product`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(body),
-  });
-
-  // Get the data in JSON format 
-  const apiResponse = await data.json();
-
-  if(apiResponse?.status === 401) {
-    const res = {
-      Title: 'NOK',
-      status: 401,
-      message: apiResponse?.message
-    }
-    return NextResponse.json(res, { status: 401 });
-  }
-
-  return NextResponse.json(apiResponse, { status: 201 });
 
 }

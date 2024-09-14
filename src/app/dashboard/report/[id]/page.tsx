@@ -1,6 +1,6 @@
 import { _jobs } from 'src/_mock/_job';
 
-import { ReportDetailsView } from 'src/sections/reports/view';
+import SalesReportDetailsView from 'src/sections/reports/sales/salesreport-details-view';
 
 // ----------------------------------------------------------------------
 
@@ -17,7 +17,25 @@ type Props = {
 export default function ReportDetailsPage({ params }: Props) {
   const { id } = params;
 
-  return <ReportDetailsView reportid={id} />;
+  switch(id) {
+    case 'e99f09a7-dd88-49d5-b1c8-1daf80c2d7b3':  
+      return <SalesReportDetailsView reportid={id} />;
+
+    case 'e99f09a7-dd88-49d5-b1c8-1daf80c2d7b4':  
+      return <SalesReportDetailsView reportid={id} />;
+
+    case 'e99f09a7-dd88-49d5-b1c8-1daf80c2d7b5':  
+      return <SalesReportDetailsView reportid={id} />;
+
+    case 'e99f09a7-dd88-49d5-b1c8-1daf80c2d7b6':  
+      return <SalesReportDetailsView reportid={id} />;
+
+    case 'e99f09a7-dd88-49d5-b1c8-1daf80c2d7b7':  
+      return <SalesReportDetailsView reportid={id} />;
+
+    default:
+      return <SalesReportDetailsView reportid={id} />;
+  }
 }
 
 export async function generateStaticParams() {

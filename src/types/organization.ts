@@ -1,22 +1,22 @@
 
 // ----------------------------------------------------------------------
 
-export type ServiceTableFilterValue = string | string[]
+export type OrganizationTableFilterValue = string | string[]
 
-export interface ServiceTableFilters {
+export interface OrganizationTableFilters {
   name: string
-  productcategory: string[]
+  location: string[]
   status: string
 }
 
 // ----------------------------------------------------------------------
 
-export interface Branches_organization {
-    branch_id: number
+export interface OrganizationItem {
+    org_id: string
     name: string
     address: string
     telephone: string
-
+    email: string
 }
 
 export interface ServiceCategoryItem {

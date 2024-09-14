@@ -45,13 +45,13 @@ import {
   TablePaginationCustom
 } from 'src/components/table'
 
+import { BranchItem } from 'src/types/branch';
 import {
   type EmployeeItem,
   type EmployeeTableFilters,
   type EmployeeTableFilterValue
 } from 'src/types/employee'
 
-import { Branches_organization } from 'src/types/branches_organizations';
 import EmployeeTableRow from '../employee-table-row'
 import EmployeeTableToolbar from '../employee-table-toolbar'
 import EmployeeTableFiltersResult from '../employee-table-filters-result'
@@ -84,7 +84,7 @@ export default  function EmployeeListView () {
 
   // Initialize
   const [tableData, setTableData] = useState<EmployeeItem[]>([])
-  const [branchData, setBranch] = useState<Branches_organization[]>([]);
+  const [branchData, setBranch] = useState<BranchItem[]>([]);
 
   const { logout } = useAuthContext()
 

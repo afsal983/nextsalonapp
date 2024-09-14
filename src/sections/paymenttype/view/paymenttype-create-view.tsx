@@ -1,12 +1,9 @@
 'use client'
 
-import useSWR from 'swr';
 
 import Container from '@mui/material/Container'
 
 import { paths } from 'src/routes/paths'
-
-import { fetcher } from 'src/utils/axios';
 
 import { useTranslate } from 'src/locales';
 
