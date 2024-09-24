@@ -66,7 +66,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
 export async function DELETE(request: NextRequest, response: NextResponse) {
 
   const { pathname } = new URL(request.url);
-  const serviceId = pathname.split('/')[4]
+  const branchId = pathname.split('/')[4]
 
   // Get the cookies
   const cookieStore = request.cookies
@@ -95,7 +95,7 @@ export async function DELETE(request: NextRequest, response: NextResponse) {
 
 
   // Make an HTTP request to your API route with the token in the headers
-  const data = await fetch( `${baseUSRL}/apiserver/product/${serviceId}`, {
+  const data = await fetch( `${baseUSRL}/apiserver/branches_organizations/${branchId}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${token}`,

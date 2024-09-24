@@ -99,7 +99,6 @@ export async function POST(request: NextRequest, response: NextResponse) {
   // Get the data in JSON format 
   const apiResponse = await data.json();
 
-  console.log(apiResponse)
   if(apiResponse?.status === 401) {
     const res = {
       Title: 'NOK',

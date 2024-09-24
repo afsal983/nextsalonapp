@@ -29,6 +29,8 @@ export interface ICalendarEvent {
   title: string
   allDay: boolean
   description: string
+  employee_id: number,
+  service_id: number,
   end: ICalendarDate
   start: ICalendarDate
 }

@@ -59,7 +59,6 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
   const body = await request.json();
 
-  // console.log(body)
   // Get the cookies
   const cookieStore = request.cookies
   const sessionCookie  = cookieStore?.get('session')?.value

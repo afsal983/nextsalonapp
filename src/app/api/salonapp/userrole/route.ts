@@ -112,7 +112,7 @@ export async function PUT(request: NextRequest, response: NextResponse) {
 
   const body = await request.json();
 
-  const userId = body.id
+  const userroleId = body.id
 
   // Get the cookies
   const cookieStore = request.cookies
@@ -139,7 +139,7 @@ export async function PUT(request: NextRequest, response: NextResponse) {
   }
   const { token } = cookiedata
 
-    const data = await fetch(`${baseUSRL}/apiserver/users/${userId}`, {
+    const data = await fetch(`${baseUSRL}/apiserver/userroles/${userroleId}`, {
       method: 'UPDATE',
       headers: {
         'Content-Type': 'application/json',

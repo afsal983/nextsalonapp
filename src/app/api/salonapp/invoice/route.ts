@@ -11,6 +11,12 @@ export async function GET(request: NextRequest) {
   const cookieStore = request.cookies
   const sessionCookie  =cookieStore.get('session')?.value
   
+  const { searchParams } = new URL(request.url);
+
+    // Accessing query parameters
+    const startDate = searchParams.get('startdate');
+    const endDate = searchParams.get('enddate');
+
   if (sessionCookie === undefined) {
     const res = {
       Title: 'NOK',
@@ -32,7 +38,7 @@ export async function GET(request: NextRequest) {
 
   const { token } = cookiedata
   // Make an HTTP request to your API route with the token in the headers
-  const data = await fetch( `${baseUSRL}/apiserver/invoices?startdate=2024-01-12T03:00:00Z&enddate=2024-07-30T03:45:00Z`, {
+  const data = await fetch( `${baseUSRL}/apiserver/invoices?startdate=${startDate}&enddate=${endDate}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

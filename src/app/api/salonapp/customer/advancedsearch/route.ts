@@ -34,7 +34,6 @@ export async function POST(request: NextRequest, response: NextResponse) {
   }
   const { token } = cookiedata  
 
-  console.log(JSON.stringify(body))
   const data = await fetch(`${baseUSRL}/apiserver/customers`, {
     method: 'POST',
     headers: {

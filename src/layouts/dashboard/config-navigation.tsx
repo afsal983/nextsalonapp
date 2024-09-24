@@ -89,13 +89,17 @@ export function useNavData () {
               },
               { title: t('general.retail_brand'), 
                 path: paths.dashboard.retailbrands.root 
-              }
+              },
             ]
           },
           {
             title: t('salonapp.appointments'),
-            path: paths.dashboard.retails.root,
-            icon: ICONS.appointments
+            path: paths.dashboard.appointments.root,
+            icon: ICONS.appointments,
+            children: [
+              { title: t('salonapp.appointments'), path: paths.dashboard.appointments.root, },
+              { title: t('salonapp.calander'), path: paths.dashboard.appointments.calander.root }
+            ]
           },
           {
             title: t('salonapp.invoices'),

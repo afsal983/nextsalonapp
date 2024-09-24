@@ -164,7 +164,7 @@ export default  function CustomerListView () {
   // Delete an item
   const handleDeleteRow = useCallback(
     async (id: string) => {
-      const response = await fetch(`/api/salonapp/customers/${id}`, {
+      const response = await fetch(`/api/salonapp/customer/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -185,6 +185,9 @@ export default  function CustomerListView () {
       setTableData(deleteRow)
 
       table.onUpdatePageDeleteRow(dataInPage.length)
+
+      router.push(paths.dashboard.customers.list);
+      
     },
     [dataInPage.length, enqueueSnackbar, table, tableData,t]
   )

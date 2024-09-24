@@ -16,7 +16,8 @@ import { useTranslate } from 'src/locales';
 
 import { useSnackbar } from 'src/components/snackbar'
 import FormProvider, {
-  RHFTextField
+  RHFTextField,
+  RHFEditor
 } from 'src/components/hook-form'
 
 import { type ServiceCategoryItem } from 'src/types/service'
@@ -109,7 +110,6 @@ export default function ServiceCategoryNewEditForm ({ currentServiceCategory }: 
             >
               <RHFTextField name="name" label={t('salonapp.service.servicecategory.servicecategory_name')} helperText={t('salonapp.service.servicecategory.sn_helper')}/>
             </Box>
-
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
               <LoadingButton
                 type="submit"

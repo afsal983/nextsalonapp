@@ -14,8 +14,7 @@ export async function GET(request: NextRequest) {
 
   // Accessing query parameters
   const searchString = searchParams.get('search');
-  console.log("ddd")
-  console.log(searchString)
+
   if (sessionCookie === undefined) {
     const res = {
       Title: 'NOK',
@@ -35,7 +34,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(res, { status: 401 });
   }
 
-  console.log(searchString)
   const { token } = cookiedata
   // Make an HTTP request to your API route with the token in the headers
   const data = await fetch( `${baseUSRL}/apiserver/customerlike/${searchString}`, {
@@ -117,7 +115,7 @@ export async function PUT(request: NextRequest, response: NextResponse) {
 
   const body = await request.json();
 
-  const customerid = body.id
+  const customerId = body.id
 
   // Get the cookies
   const cookieStore = request.cookies
@@ -144,7 +142,7 @@ export async function PUT(request: NextRequest, response: NextResponse) {
   }
   const { token } = cookiedata
 
-    const data = await fetch(`${baseUSRL}/apiserver/customer/${customerid}`, {
+    const data = await fetch(`${baseUSRL}/apiserver/customer/${customerId}`, {
       method: 'UPDATE',
       headers: {
         'Content-Type': 'application/json',

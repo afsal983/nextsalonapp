@@ -94,7 +94,7 @@ export async function DELETE(request: NextRequest, response: NextResponse) {
 
 
   // Make an HTTP request to your API route with the token in the headers
-  const data = await fetch( `${baseUSRL}/apiserver/product/${userId}`, {
+  const data = await fetch( `${baseUSRL}/apiserver/users/${userId}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${token}`,

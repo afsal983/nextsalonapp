@@ -61,6 +61,16 @@ export const paths = {
       list: `${ROOTS.DASHBOARD}/package/list`,
       edit: (id: number) => `${ROOTS.DASHBOARD}/service/${id}/edit`
     },
+    appointments: {
+      root: `${ROOTS.DASHBOARD}/appointment`,
+      list: `${ROOTS.DASHBOARD}/appointment/list`,
+      new: `${ROOTS.DASHBOARD}/appointment/new`,
+      details: (id: string) => `${ROOTS.DASHBOARD}/appointment/${id}`,
+      edit: (id: string) => `${ROOTS.DASHBOARD}/appointment/${id}/edit`,
+      calander: {
+        root: `${ROOTS.DASHBOARD}/appointment/calander`,
+      }
+    },
     invoice: {
       root: `${ROOTS.DASHBOARD}/invoice`,
       new: `${ROOTS.DASHBOARD}/invoice/new`,
@@ -127,6 +137,9 @@ export const paths = {
     },
     settings: {
       root: `${ROOTS.DASHBOARD}/settings`,
+    },
+    product: {
+      root: `${ROOTS.DASHBOARD}/product`,
     }
   }
 }

@@ -9,7 +9,7 @@ const baseUSRL = process.env.NEXT_PUBLIC_HOST_API
 export async function GET(request: NextRequest, response: NextResponse) {
 
   const { pathname } = new URL(request.url);
-  const customerid = pathname.split('/')[4]
+  const customerId = pathname.split('/')[4]
 
   // Get the cookies
   const cookieStore = request.cookies
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
 
 
   // Make an HTTP request to your API route with the token in the headers
-  const data = await fetch( `${baseUSRL}/apiserver/customer/${customerid}`, {
+  const data = await fetch( `${baseUSRL}/apiserver/customer/${customerId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -65,7 +65,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
 export async function DELETE(request: NextRequest, response: NextResponse) {
 
   const { pathname } = new URL(request.url);
-  const customerid = pathname.split('/')[4]
+  const customerId = pathname.split('/')[4]
 
   // Get the cookies
   const cookieStore = request.cookies
@@ -92,9 +92,9 @@ export async function DELETE(request: NextRequest, response: NextResponse) {
 
   const { token } = cookiedata
 
-
+   console.log("ddd")
   // Make an HTTP request to your API route with the token in the headers
-  const data = await fetch( `${baseUSRL}/apiserver/product/${customerid}`, {
+  const data = await fetch( `${baseUSRL}/apiserver/customer/${customerId}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${token}`,

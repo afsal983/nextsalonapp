@@ -67,12 +67,18 @@ const TABLE_HEAD = [
   { id: '' },
 ];
 
+const start = new Date();
+start.setDate(start.getDate() - 120);
+
+const end = new Date();
+end.setDate(end.getDate() + 7);
+
 const defaultFilters: IInvoiceTableFilters = {
   name: '',
   service: [],
   status: 'all',
-  startDate: null,
-  endDate: null,
+  startDate: start,
+  endDate: end,
 };
 
 // ----------------------------------------------------------------------
@@ -231,13 +237,15 @@ export default function InvoiceListView() {
     [handleFilters]
   );
 
-  // Use useEffect to update state when invoice data is loaded by useSWR hook.
   useEffect(() => {
-    if (invoice) {
-      setTableData(invoice.data);
+    if(filters.startDate && filters.endDate) {
+      const datefilter = `startdate=${filters.startDate.toISOString()}&enddate=${filters.endDate.toISOString()}`
+      fetch(`/api/salonapp/invoice?${datefilter}`)
+      .then(response => response.json())
+          // 4. Setting *dogImage* to the image url that we received from the response above
+      .then(data => setTableData(data.data))
     }
-  }, [invoice]);
-
+    },[filters.startDate, filters.endDate]) 
 
   // Display loading page 
   if ( isinvoiceLoading || isserviceLoading) return <div>Loading...</div>;
@@ -551,12 +559,14 @@ function applyFilter({
       invoice.Invoice_line.some((filterItem) => service.includes(filterItem.Product.name))
     );
   }
-
+  /*
   if (!dateError) {
     if (startDate && endDate) {
       inputData = inputData.filter((invoice) => isBetween(invoice.date, startDate, endDate));
     }
   }
+
+  */
 
   return inputData;
 }

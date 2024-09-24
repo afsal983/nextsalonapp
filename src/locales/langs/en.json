@@ -114,10 +114,13 @@
       "cn_helper": "Loyalty card issued to customer", 
       "en_helper": "Enable appointment events notification",
       "pn_helper": "Enable promotional events notification",
+      "search_customer":"Search customer using name or telephone or email( John , +971123456789, john@test.com",
       "customercategory" : { 
         "name": "Customer Category",
         "new_customercategory": "New Customer Category",
         "name_fvalid_error": "Invalid Customer Category Name",
+        "telephone_fvalid_error": "Invalid phonenumber",
+        "category_fvalid_error": "Invalid category",
         "customercategory_name": "Customer Category Name",
         "customercategory_discount": "Discount applied for customer category",
         "create_customercategory": "Create Customer Category",

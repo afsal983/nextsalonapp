@@ -9,7 +9,7 @@ import FormControl from '@mui/material/FormControl'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import InputAdornment from '@mui/material/InputAdornment'
 import Select, { type SelectChangeEvent } from '@mui/material/Select'
-
+import { useTranslate } from 'src/locales';
 import Iconify from 'src/components/iconify'
 import CustomPopover, { usePopover } from 'src/components/custom-popover'
 
@@ -31,6 +31,7 @@ export default function CustomerTableToolbar ({
   customerCategory
 }: Props) {
   const popover = usePopover()
+  const { t } = useTranslate();
 
   const handleFilterName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,7 +112,7 @@ export default function CustomerTableToolbar ({
             fullWidth
             value={filters.name}
             onChange={handleFilterName}
-            placeholder="Search..."
+            placeholder={ t('salonapp.customer.search_customer') }
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">

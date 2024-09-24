@@ -7,11 +7,11 @@ const baseUSRL = process.env.NEXT_PUBLIC_HOST_API
 
 export async function GET(request: NextRequest) {
 
-  console.log("dddsal")
+
   // Get the cookies
   const cookieStore = request.cookies
   const sessionCookie  =cookieStore.get('session')?.value
-  console.log("ssss")
+
   const params = {
     "start" : "2024-01-05T00:30:00Z",
     "end": "2024-04-05T01:50:00Z",
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
   }
 
   const { token } = cookiedata
-  console.log(token)
+
   // Make an HTTP request to your API route with the token in the headers
   const data = await fetch( `${baseUSRL}/storyteller/reports/newsalesreport`, {
     method: "POST",
@@ -50,8 +50,6 @@ export async function GET(request: NextRequest) {
 
   // Get the data in JSON format 
   const response = await data.json();
-  console.log(response)
-  console.log("CCC")
 
   if(response?.status === 401) {
     const res = {
