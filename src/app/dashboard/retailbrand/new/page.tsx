@@ -4,7 +4,7 @@ import { RetailBrandCreateView } from 'src/sections/retailbrand/view'
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Create new retail'
+  title: 'Dashboard: Retailbrand New'
 }
 
 export default async function RetailCreatePage () {

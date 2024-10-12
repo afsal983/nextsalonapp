@@ -131,7 +131,7 @@ export default function OrganizationNewEditForm ({ currentOrganization }: Props)
 
   
   return (
-    <FormProvider methods={methods} onSubmit={onSubmit}>
+    <FormProvider methods={methods}>
       <Grid container spacing={3}>
         <Grid xs={12} md={12}>
           <Card sx={{ p: 3 }}>

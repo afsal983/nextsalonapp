@@ -4,7 +4,7 @@ import { EmployeeCreateView } from 'src/sections/employee/view'
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Create new employee'
+  title: 'Dashboard: Employee Create'
 }
 
 export default async function EmployeeCreatePage () {

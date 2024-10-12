@@ -5,7 +5,7 @@ import listPlugin from '@fullcalendar/list';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, ChangeEvent } from 'react';
 import interactionPlugin from '@fullcalendar/interaction';
 import { Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import Card from '@mui/material/Card';
@@ -46,7 +46,7 @@ const start = new Date();
 start.setDate(start.getDate() - 120);
 
 const end = new Date();
-end.setDate(end.getDate() + 7);
+end.setDate(end.getDate() + 30);
 
 const defaultFilters: ICalendarFilters = {
   colors: [],
@@ -76,6 +76,7 @@ export default function CalendarView() {
   }
 
   const { events, eventsLoading } = useGetEvents(appFilters );
+
 
   const dateError = isAfter(filters.startDate, filters.endDate);
 
@@ -108,9 +109,9 @@ export default function CalendarView() {
     onClickEventInFilters,
   } = useCalendar();
 
-  const currentEvent = useEvent(events, selectEventId, selectedRange, openForm);
 
-  console.log(currentEvent)
+  const currentEvent = useEvent(events, selectEventId, selectedRange, openForm, Number(selectedEmployee));
+
 
   useEffect(() => {
     onInitialView();
@@ -135,10 +136,10 @@ export default function CalendarView() {
     dateError,
   });
 
+  const handleEmployeeChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    setSelectedEmployee(event.target.value);
+};
 
-  const handleEmployeeChange = (event )  => {
-      setSelectedEmployee(event.target.value)
-  }
 
   const renderResults = (
     <CalendarFiltersResult
@@ -250,9 +251,14 @@ export default function CalendarView() {
         <CalendarForm
           currentEvent={currentEvent}
           employees= {employees?.data}
+          customer_id={currentEvent?.customer_id|| 0}
+          Customer={currentEvent?.Customer || null}
+          Product={currentEvent?.Product || null}
+          employee={selectedEmployee}
           services= {services?.data}
           colorOptions={CALENDAR_COLOR_OPTIONS}
           onClose={onCloseForm}
+          appFilters= {appFilters}
         />
       </Dialog>
 

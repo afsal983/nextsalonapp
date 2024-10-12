@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useTranslate } from 'src/locales';
@@ -11,21 +11,24 @@ import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 import DialogActions from '@mui/material/DialogActions';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
-
+import { useBoolean } from 'src/hooks/use-boolean';
 import uuidv4 from 'src/utils/uuidv4';
 import { isAfter, fTimestamp } from 'src/utils/format-time';
-
+import Typography from '@mui/material/Typography';
 import { createEvent, updateEvent, deleteEvent } from 'src/app/api/salonapp/appointments/calendar';
-
+import useSWR,{mutate} from 'swr';
 import Iconify from 'src/components/iconify';
 import { useSnackbar } from 'src/components/snackbar';
 import { ColorPicker } from 'src/components/color-utils';
 import FormProvider, { RHFSwitch, RHFTextField } from 'src/components/hook-form';
-
+import { fetcher } from 'src/utils/axios';
 import { ICalendarDate, ICalendarEvent } from 'src/types/calendar';
-import { ServiceItem } from 'src/types/service';
 import { EmployeeItem } from 'src/types/employee';
+import { Customer } from 'src/types/customer';
+import { ServiceItem } from 'src/types/service';
 import {  } from 'src/types/service';
+
+import { CustomerAddressListDialog } from '../../customeraddress';
 
 import  {
 
@@ -39,22 +42,41 @@ type Props = {
   colorOptions: string[];
   onClose: VoidFunction;
   currentEvent?: ICalendarEvent;
+  Customer: Customer| null;
+  Product: ServiceItem| null;
+  customer_id: number
   services:ServiceItem[]
   employees: EmployeeItem[] 
+  employee: string
+  appFilters : {
+    employeeId: number;
+    startDate: Date| null,
+    endDate: Date| null,
+  }
 };
 
-export default function CalendarForm({ currentEvent, colorOptions, onClose, employees, services }: Props) {
+
+
+export default function CalendarForm({ currentEvent, colorOptions, onClose, customer_id, employees, services, employee, appFilters, Customer, Product}: Props) {
   const { enqueueSnackbar } = useSnackbar();
 
-  console.log(currentEvent)
+  console.log(Customer)
+  
+  const from = useBoolean();
+
+  const to = useBoolean();
+
   const { t } = useTranslate();
 
+  const [customer, setCustomer] = useState<Customer | null>(Customer);
+
+
   const EventSchema = Yup.object().shape({
-    title: Yup.string().max(255).required('Title is required'),
-    description: Yup.string().max(5000, 'Description must be at most 5000 characters'),
+    notes: Yup.string().max(5000, 'Notes must be at most 5000 characters'),
     // not required
     color: Yup.string(),
     allDay: Yup.boolean(),
+    customer_id: Yup.number(),
     employee_id: Yup.number(),
     service_id: Yup.number(),
     start: Yup.mixed(),
@@ -69,22 +91,30 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose, empl
   const {
     reset,
     watch,
+    setValue,
     control,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
+
   const values = watch();
+
 
   const dateError = isAfter(values.start, values.end);
 
   const onSubmit = handleSubmit(async (data) => {
+    // Convert the data into appoitment format
     const eventData: ICalendarEvent = {
+      customer_id: Number(customer?.id),
+      Customer: customer,
+      employee_id: data.employee_id,
+      service_id: data.service_id,
+      Product: Product,
       id: currentEvent?.id ? currentEvent?.id : uuidv4(),
       color: data?.color,
-      title: data?.title,
+      notes: data?.notes,
       allDay: data?.allDay,
-      description: data?.description,
       end: data?.end,
       start: data?.start,
     } as ICalendarEvent;
@@ -95,7 +125,8 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose, empl
           await updateEvent(eventData);
           enqueueSnackbar('Update success!');
         } else {
-          await createEvent(eventData);
+          
+          await createEvent(eventData, appFilters);
           enqueueSnackbar('Create success!');
         }
         onClose();
@@ -119,12 +150,50 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose, empl
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Stack spacing={3} sx={{ px: 3 }}>
-        <RHFTextField name="title" label="Title" />
+
+      <CustomerAddressListDialog
+        title="Customers"
+        open={to.value}
+        onClose={to.onFalse}
+        selected={(selectedId: string) => String(customer_id) === selectedId}
+        onSelect={(customer) => setCustomer(customer)}
+        list={[]}
+        action={
+          <Button
+            size="small"
+            startIcon={<Iconify icon="mingcute:add-line" />}
+            sx={{ alignSelf: 'flex-end' }}
+          >
+            New
+          </Button>
+        }
+      />
+
+
+        <Stack direction="row" alignItems="center" sx={{ mb: 1 }}>
+          <Typography variant="subtitle2" sx={{ color: 'text.disabled', flexGrow: 1 }}>
+            Customer:
+          </Typography>
+
+          {customer ? (
+            <Stack spacing={1}>
+              <Typography variant="subtitle2">{`${customer?.firstname} ${customer?.lastname}`}</Typography>
+            </Stack>
+          ) : (
+            <Typography typography="caption" sx={{ color: 'error.main' }}>
+              {(" " as any)?.message}
+            </Typography>
+          )}
+
+          <IconButton onClick={to.onTrue}>
+            <Iconify icon={customer_id ? 'solar:pen-bold' : 'mingcute:add-line'} />
+          </IconButton>
+        </Stack>
 
         <RHFSelect native name="employee_id" label="Employee" InputLabelProps={{ shrink: true }}>
           <option key={0}>{ t('general.dropdown_select') }</option>
           {employees.map((item : EmployeeItem) => (
-            <option key={item.id} value={item.id}>
+            <option key={item.id} value={item.id} >
               {item.name}
             </option>
           ))}
@@ -139,7 +208,7 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose, empl
           ))}
         </RHFSelect>
 
-        <RHFTextField name="description" label="Description" multiline rows={3} />
+        <RHFTextField name="notes" label="Notes" multiline rows={3} />
 
         <RHFSwitch name="allDay" label="All day" />
 

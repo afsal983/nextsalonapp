@@ -4,7 +4,7 @@ import { PaymentTypeListView } from 'src/sections/paymenttype/view'
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: PaymentType Profile'
+  title: 'Dashboard: PaymentType Create'
 }
 
 export default  function PaymentTypesPage () {

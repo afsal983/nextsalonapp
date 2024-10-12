@@ -4,10 +4,10 @@ import { InvoiceCreateView } from 'src/sections/invoice/view'
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Create new invoice'
+  title: 'Dashboard: Invoice Create'
 }
 
-export default async function InvoiceCreatePage () {
+export default function InvoiceCreatePage () {
 
   return <InvoiceCreateView/>
 }

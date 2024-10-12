@@ -16,7 +16,6 @@ interface Props {
 
 export default function BranchEditPage ({ params }: Props) {
   const { id } = params
-
   return <BranchEditView id={id} />
 }
 

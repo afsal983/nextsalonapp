@@ -44,12 +44,10 @@ export async function GET(request: NextRequest) {
     },
   });
 
-  console.log("ddddsss")
+
   // Get the data in JSON format 
   const response = await data.json();
-  console.log("cccc")
-  
-  console.log(response)
+
 
   if(response?.status === 401) {
     const res = {
@@ -95,28 +93,29 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
   const { token } = cookiedata
 
-    const data = await fetch(`${baseUSRL}/apiserver/instantinvoice?notify=1`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(body),
-    });
-    // Get the data in JSON format 
-    const apiResponse = await data.json();
+  const data = await fetch(`${baseUSRL}/timekeeper/appointment?notify=0`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
 
-    if(apiResponse?.status === 401) {
-      const res = {
-        Title: 'NOK',
-        status: 401,
-        message: apiResponse?.message
-      }
-      return NextResponse.json(res, { status: 401 });
+  // Get the data in JSON format 
+  const apiResponse = await data.json();
+
+  if(apiResponse?.status === 401) {
+    const res = {
+      Title: 'NOK',
+      status: 401,
+      message: apiResponse?.message
     }
-  
-    // Send the sucessful response back
-    return NextResponse.json(apiResponse, { status: 201 });
+    return NextResponse.json(res, { status: 401 });
+  }
+
+  // Send the sucessful response back
+  return NextResponse.json(apiResponse, { status: 201 });
 
 }
 

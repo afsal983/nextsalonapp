@@ -4,7 +4,7 @@ import { EmployeeListView } from 'src/sections/employee/view'
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Employee Profile'
+  title: 'Dashboard: Employee List'
 }
 
 export default  function EmployeesPage () {

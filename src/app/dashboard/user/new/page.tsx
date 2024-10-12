@@ -4,7 +4,7 @@ import { UserCreateView } from 'src/sections/user/view'
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Create new service'
+  title: 'Dashboard: User New'
 }
 
 export default async function UserCreatePage () {

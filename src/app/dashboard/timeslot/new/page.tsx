@@ -4,7 +4,7 @@ import { TimeSlotCreateView } from 'src/sections/timeslot/view'
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Create new service category'
+  title: 'Dashboard: TimeSlot Create'
 }
 
 export default async function TimeSlotCreatePage () {

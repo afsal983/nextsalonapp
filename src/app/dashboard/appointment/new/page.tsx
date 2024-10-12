@@ -4,7 +4,7 @@ import { BranchCreateView } from 'src/sections/branch/view'
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Create new service category'
+  title: 'Dashboard: Create new branch'
 }
 
 export default async function BranchCreatePage () {

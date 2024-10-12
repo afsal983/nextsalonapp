@@ -4,7 +4,7 @@ import { OrganizationCreateView } from 'src/sections/organization/view'
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Create new service category'
+  title: 'Dashboard: Organization Create'
 }
 
 export default async function OrganizationCreatePage () {

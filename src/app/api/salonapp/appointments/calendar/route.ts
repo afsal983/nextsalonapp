@@ -18,10 +18,6 @@ export async function GET(request: NextRequest, response: NextResponse) {
   const endDate = searchParams.get('endDate');
   const employeeID = searchParams.get('employeeId');
 
-  console.log(startDate)
-  console.log(endDate)
-  console.log(employeeID)
-
   // Get the cookies
   const cookieStore = request.cookies
   const sessionCookie  = cookieStore?.get('session')?.value
@@ -68,7 +64,6 @@ export async function GET(request: NextRequest, response: NextResponse) {
   // Get the data in JSON format 
   const apiResponse = await data.json();
 
-  console.log(apiResponse)
 
   if(apiResponse?.status === 401) {
     const res = {

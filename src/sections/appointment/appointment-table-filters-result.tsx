@@ -9,13 +9,13 @@ import Stack, { StackProps } from '@mui/material/Stack';
 import Iconify from 'src/components/iconify';
 import { shortDateLabel } from 'src/components/custom-date-range-picker';
 
-import { IAppointmentTableFilters, IAppointmentTableFilterValue } from 'src/types/appointment';
+import { AppointmentTableFilters, AppointmentTableFilterValue } from 'src/types/appointment';
 
 // ----------------------------------------------------------------------
 
 type Props = StackProps & {
-  filters: IAppointmentTableFilters;
-  onFilters: (name: string, value: IAppointmentTableFilterValue) => void;
+  filters: AppointmentTableFilters;
+  onFilters: (name: string, value: AppointmentTableFilterValue) => void;
   //
   onResetFilters: VoidFunction;
   //

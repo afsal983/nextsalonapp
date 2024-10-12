@@ -59,11 +59,10 @@ export default function CustomerAddressListDialog({
   const [opencustomerform, setIsopencustomerform ] = useState(false)
   if(data) {
     dataFiltered = data.data
-    console.log(dataFiltered)
   }
 
   const handleCreateCustomer = useCallback((address: Customer) => {
-    console.info('ADDRESS', address);
+  
   }, []); 
 
   const notFound = !dataFiltered.length && !!searchAddress;
@@ -79,10 +78,6 @@ export default function CustomerAddressListDialog({
 
   const handleSearchAddress = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchAddress(event.target.value);
-    console.log(event.target.value)
-
-
-
   }, []);
 
   const handleSelectAddress = useCallback(

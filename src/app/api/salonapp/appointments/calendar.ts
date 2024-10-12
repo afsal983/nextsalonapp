@@ -6,6 +6,7 @@ import { fetcher, endpoints } from 'src/utils/axios';
 import { ICalendarEvent } from 'src/types/calendar';
 import { AppointmentItem} from 'src/types/appointment';
 
+import { useSnackbar } from 'src/components/snackbar'
 // ----------------------------------------------------------------------
 
 const URL = endpoints.calendar;
@@ -25,14 +26,15 @@ type Props = {
 export function useGetEvents({ employeeId, startDate, endDate }: Props) {
   //const { data, isLoading, error, isValidating } = useSWR(URL, fetcher, options);
 
-  console.log(employeeId)
 
-
-  console.log("CAL")
   // Get All invoices and services
-  const { data: data,isLoading,  error, isValidating } = useSWR(`/api/salonapp/appointments/calendar?employeeId=${employeeId}&startDate=${startDate?.toISOString()}&endDate=${endDate?.toISOString()}`, fetcher);
+  const { data: data,isLoading,  error, isValidating } = useSWR(`/api/salonapp/appointments/calendar?employeeId=${employeeId}&startDate=${startDate?.toISOString()}&endDate=${endDate?.toISOString()}`, fetcher, {
+    revalidateOnFocus: true,
+    revalidateIfStale: true,
+    dedupingInterval: 500, // Set to 500ms to revalidate more frequently
+  });
 
-  console.log(data)
+
   const memoizedValue = useMemo(() => {
     /*
     const events = data?.data?.map((event: ICalendarEvent) => ({
@@ -43,13 +45,17 @@ export function useGetEvents({ employeeId, startDate, endDate }: Props) {
     const events = data?.data?.map((event: AppointmentItem) => ({
       id: String(event.id),
       color: "red",
-      title: event.Product.name,
+      title: event?.Product?.name,
       allDay: false,
-      description: event.Customer.firstname,
-      employee_id: event.employee_id,
-      service_id: event.product_id,
-      end: event.start,
-      start: event.end,
+      description: event?.Customer?.firstname,
+      customer_id: event?.customer_id,
+      Customer: event?.Customer,
+      employee_id: event?.employee_id,
+      service_id: event?.product_id,
+      Product: event?.Product,
+      start: event.start,
+      end: event.end,
+      notes: event?.notes,
       textColor: "red",
     }));
 
@@ -67,33 +73,70 @@ export function useGetEvents({ employeeId, startDate, endDate }: Props) {
 
 // ----------------------------------------------------------------------
 
-export async function createEvent(eventData: ICalendarEvent) {
+export async function createEvent(eventData: ICalendarEvent, appFilters) {
   /**
    * Work on server
    */
-  // const data = { eventData };
-  // await axios.post(URL, data);
+
+  // Convert the ICalendarEvent to Actual Event
+  let  newevent = {
+    id: 0,
+    start: new Date(eventData?.start).toISOString(),
+    end: new Date(eventData?.end).toISOString(),
+    customer_id:eventData.customer_id ,
+    Customer: undefined,
+    product_id: eventData?.service_id,
+    Product: undefined,
+    employee_id: eventData?.employee_id,
+    branch_id: 1,
+    reminder_count: 0,
+    notes: eventData.notes,
+    deleted: 0,
+    Additional_products: [],
+  }
+
+    // Post the data to remote server
+    const response = await fetch(`/api/salonapp/appointments`, {
+      method:  "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newevent),
+    });
+
+    const responseData = await response.json();
+
+    newevent.id = responseData?.data[0].id
+    newevent.Customer = eventData.Customer
+    newevent.Product = eventData.Product
 
   /**
    * Work in local
    */
+  // Access and log the cache for a specific key
+
   mutate(
-    URL,
+    `/api/salonapp/appointments/calendar?employeeId=${eventData?.employee_id}&startDate=${appFilters.startDate?.toISOString()}&endDate=${appFilters.endDate?.toISOString()}`,
     (currentData: any) => {
-      const events: ICalendarEvent[] = [...currentData.events, eventData];
+      const data = [...currentData.data, newevent];
 
       return {
         ...currentData,
-        events,
+        data,
       };
     },
     false
   );
+
+  
+
+  
 }
 
 // ----------------------------------------------------------------------
 
 export async function updateEvent(eventData: Partial<ICalendarEvent>) {
+
   /**
    * Work on server
    */

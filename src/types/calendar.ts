@@ -1,5 +1,6 @@
 // ----------------------------------------------------------------------
-
+import { Customer } from 'src/types/customer';
+import { ServiceItem } from 'src/types/service';
 export type ICalendarFilterValue = string[] | Date | null
 
 export interface ICalendarFilters {
@@ -26,11 +27,13 @@ export type ICalendarRange = {
 export interface ICalendarEvent {
   id: string
   color: string
-  title: string
+  notes: string
   allDay: boolean
-  description: string
-  employee_id: number,
-  service_id: number,
+  customer_id: number
+  Customer: Customer | undefined
+  employee_id: number
+  service_id: number
+  Product:ServiceItem | undefined
   end: ICalendarDate
   start: ICalendarDate
 }

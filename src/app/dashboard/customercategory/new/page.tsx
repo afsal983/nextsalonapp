@@ -4,7 +4,7 @@ import { CustomerCategoryCreateView } from 'src/sections/customercategory/view'
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Create new service category'
+  title: 'Dashboard: New Customercategory'
 }
 
 export default async function CustomerCategoryCreatePage () {

@@ -4,9 +4,9 @@ import { BranchListView } from 'src/sections/branch/view'
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: ServiceCategory Profile'
+  title: 'Dashboard: Branch List'
 }
 
-export default  function ServiceCategorysPage () {
+export default  function ServiceListPage () {
   return <BranchListView/>
 }

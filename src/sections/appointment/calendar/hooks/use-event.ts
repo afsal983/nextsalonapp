@@ -4,6 +4,7 @@ import merge from 'lodash/merge';
 import { CALENDAR_COLOR_OPTIONS } from 'src/_mock/_calendar';
 
 import { ICalendarRange, ICalendarEvent } from 'src/types/calendar';
+import { Customer } from 'src/types/customer';
 
 // ----------------------------------------------------------------------
 
@@ -11,19 +12,25 @@ export default function useEvent(
   events: ICalendarEvent[],
   selectEventId: string,
   selectedRange: ICalendarRange,
-  openForm: boolean
+  openForm: boolean,
+  selectedEmployee: number
 ) {
 
 
   const currentEvent = events.find((event) => event.id === selectEventId);
-  console.log(currentEvent)
+
   const defaultValues: ICalendarEvent = useMemo(
     () => ({
       id: '',
       title: '',
-      description: '',
+      notes: '',
       color: CALENDAR_COLOR_OPTIONS[1],
       allDay: false,
+      customer_id: 0,
+      Customer: undefined,
+      employee_id: selectedEmployee || 0,
+      service_id: 0,
+      Product: undefined,
       start: selectedRange ? selectedRange.start : new Date().getTime(),
       end: selectedRange ? selectedRange.end : new Date().getTime(),
     }),
@@ -35,8 +42,10 @@ export default function useEvent(
   }
 
   if (currentEvent || selectedRange) {
+
     return merge({}, defaultValues, currentEvent);
   }
+
 
   return defaultValues;
 }

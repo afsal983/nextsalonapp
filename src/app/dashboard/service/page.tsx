@@ -4,7 +4,7 @@ import { ServiceListView } from 'src/sections/service/view'
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Service Profile'
+  title: 'Dashboard: Service List'
 }
 
 export default  function ServicesPage () {

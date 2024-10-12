@@ -4,7 +4,7 @@ import { ServiceCreateView } from 'src/sections/service/view'
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Create new service'
+  title: 'Dashboard: Service New'
 }
 
 export default async function ServiceCreatePage () {

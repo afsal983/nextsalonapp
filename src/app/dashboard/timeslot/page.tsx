@@ -4,7 +4,7 @@ import { TimeSlotListView } from 'src/sections/timeslot/view'
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: ServiceCategory Profile'
+  title: 'Dashboard: TimeSlot List'
 }
 
 export default  function ServiceCategorysPage () {

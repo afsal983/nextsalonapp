@@ -4,7 +4,7 @@ import { LocationListView } from 'src/sections/location/view'
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: ServiceCategory Profile'
+  title: 'Dashboard: Location List'
 }
 
 export default  function ServiceCategorysPage () {

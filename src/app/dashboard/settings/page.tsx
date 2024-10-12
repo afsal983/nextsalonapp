@@ -4,7 +4,7 @@ import { SettingsEditView } from 'src/sections/settings/view'
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: WorkSchedule Profile'
+  title: 'Dashboard: Settings List'
 }
 
 export default  function WorkSchedulePage () {
