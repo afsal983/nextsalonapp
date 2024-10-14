@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useMemo, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -10,21 +10,22 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { useMockedUser } from 'src/hooks/use-mocked-user';
+
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+
+import { useMockedUser } from 'src/hooks/use-mocked-user';
+
 import { fData } from 'src/utils/format-number';
-import { useTranslate } from 'src/locales';
 import { base64ToBlob, blobToBase64} from 'src/utils/base64convert'
 
-import { countries } from 'src/assets/data';
+import { useTranslate } from 'src/locales';
 
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, {
   RHFSwitch,
   RHFTextField,
   RHFUploadAvatar,
-  RHFAutocomplete,
 } from 'src/components/hook-form';
 
 import { type AppSettings } from 'src/types/settings'

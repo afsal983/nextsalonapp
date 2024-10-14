@@ -1,16 +1,17 @@
 'use client';
 
-import { useState, useCallback } from 'react';
 import useSWR from 'swr'
+import { useState, useCallback } from 'react';
+
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Container from '@mui/material/Container';
 
-import { fetcher } from 'src/utils/axios'
-
 import { paths } from 'src/routes/paths';
 
-import { _userAbout, _userPlans, _userPayment, _userInvoices, _userAddressBook } from 'src/_mock';
+import { fetcher } from 'src/utils/axios'
+
+import { _userAbout } from 'src/_mock';
 
 import Iconify from 'src/components/iconify';
 import { useSettingsContext } from 'src/components/settings';

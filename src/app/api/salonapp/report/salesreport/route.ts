@@ -11,12 +11,10 @@ export async function POST(request: NextRequest) {
   const cookieStore = request.cookies
   const sessionCookie  =cookieStore.get('session')?.value
 
-  const params = {
-    "start" : "2024-01-05T00:30:00Z",
-    "end": "2024-04-05T01:50:00Z",
-    "filtername":"all",
-    "filterid":1
-  }
+  const filterData = await request.json();
+
+  console.log(filterData)
+
   if (sessionCookie === undefined) {
     const res = {
       Title: 'NOK',
@@ -44,7 +42,7 @@ export async function POST(request: NextRequest) {
     headers: {
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(params),
+    body: JSON.stringify(filterData),
   });
 
   // Get the data in JSON format 

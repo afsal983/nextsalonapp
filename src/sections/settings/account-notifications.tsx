@@ -1,5 +1,5 @@
 import { useForm, Controller } from 'react-hook-form';
-import { useTranslate } from 'src/locales';
+
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
@@ -7,10 +7,15 @@ import Grid from '@mui/material/Unstable_Grid2';
 import LoadingButton from '@mui/lab/LoadingButton';
 import ListItemText from '@mui/material/ListItemText';
 import FormControlLabel from '@mui/material/FormControlLabel';
+
 import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks'
+
+import { useTranslate } from 'src/locales';
+
 import FormProvider from 'src/components/hook-form';
 import { useSnackbar } from 'src/components/snackbar';
-import { useRouter } from 'src/routes/hooks'
+
 import { type AppSettings } from 'src/types/settings'
 // ----------------------------------------------------------------------
 

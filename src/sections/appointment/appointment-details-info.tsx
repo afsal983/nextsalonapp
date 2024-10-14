@@ -12,22 +12,22 @@ import Typography from '@mui/material/Typography';
 import Iconify from 'src/components/iconify';
 
 import {
-  IAppointmentPayment,
-  IAppointmentCustomer,
-  IAppointmentDelivery,
-  IAppointmentShippingAddress,
-} from 'src/types/appointment';
+  IOrderPayment,
+  IOrderCustomer,
+  IOrderDelivery,
+  IOrderShippingAddress,
+} from 'src/types/order';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  customer: IAppointmentCustomer;
-  delivery: IAppointmentDelivery;
-  payment: IAppointmentPayment;
-  shippingAddress: IAppointmentShippingAddress;
+  customer: IOrderCustomer;
+  delivery: IOrderDelivery;
+  payment: IOrderPayment;
+  shippingAddress: IOrderShippingAddress;
 };
 
-export default function AppointmentDetailsInfo({ customer, delivery, payment, shippingAddress }: Props) {
+export default function OrderDetailsInfo({ customer, delivery, payment, shippingAddress }: Props) {
   const renderCustomer = (
     <>
       <CardHeader

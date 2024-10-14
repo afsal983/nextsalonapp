@@ -2,7 +2,6 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
 import Collapse from '@mui/material/Collapse';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
@@ -69,7 +68,7 @@ export default function AppointmentTableRow({
       </TableCell>
 
       <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-        <Avatar alt={Customer.firstname} src={Customer.avatarUrl} sx={{ mr: 2 }} />
+        { /* <Avatar alt={Customer.firstname} src={Customer.avatarUrl} sx={{ mr: 2 }} /> */ }
 
         <ListItemText
           primary={Customer.firstname}
@@ -166,15 +165,16 @@ export default function AppointmentTableRow({
                   },
                 }}
               >
+                {/*
                 <Avatar
                   src={item.coverUrl}
                   variant="rounded"
                   sx={{ width: 48, height: 48, mr: 2 }}
                 />
-
+                */}
                 <ListItemText
-                  primary={item.name}
-                  secondary={item.sku}
+                  primary={item.Product.name}
+                  secondary={item.Product.name}
                   primaryTypographyProps={{
                     typography: 'body2',
                   }}
@@ -185,9 +185,9 @@ export default function AppointmentTableRow({
                   }}
                 />
 
-                <Box>x{item.quantity}</Box>
+                <Box>x{item.Product.name}</Box>
 
-                <Box sx={{ width: 110, textAlign: 'right' }}>{fCurrency(item.price)}</Box>
+                <Box sx={{ width: 110, textAlign: 'right' }}>{fCurrency(item.Product.name)}</Box>
               </Stack>
             ))}
           </Stack>

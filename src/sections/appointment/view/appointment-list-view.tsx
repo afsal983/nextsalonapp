@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
-import useSWR,{mutate} from 'swr';
+import { useState, useEffect, useCallback } from 'react';
+
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
@@ -14,14 +14,12 @@ import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
 
-import { fetcher } from 'src/utils/axios';
-
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { isAfter, isBetween } from 'src/utils/format-time';
+import { isAfter } from 'src/utils/format-time';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -81,7 +79,7 @@ const defaultFilters: AppointmentTableFilters = {
 export default function AppointmentListView() {
   const { enqueueSnackbar } = useSnackbar();
 
-  const table = useTable({ defaultAppointmentBy: 'orderNumber' });
+  const table = useTable({ defaultOrderBy: 'orderNumber' });
 
   const settings = useSettingsContext();
 
@@ -97,7 +95,7 @@ export default function AppointmentListView() {
 
   const dataFiltered = applyFilter({
     inputData: tableData,
-    comparator: getComparator(table.appointment, table.orderBy),
+    comparator: getComparator(table.order, table.orderBy),
     filters,
     dateError,
   });
@@ -231,7 +229,7 @@ export default function AppointmentListView() {
                     }
                   >
                     {['completed', 'pending', 'cancelled', 'refunded'].includes(tab.value)
-                      ? tableData.filter((user) => user.status === tab.value).length
+                      ? tableData.filter((user) => user.resource === tab.value).length
                       : tableData.length}
                   </Label>
                 }
@@ -281,7 +279,7 @@ export default function AppointmentListView() {
             <Scrollbar>
               <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
                 <TableHeadCustom
-                  appointment={table.appointment}
+                  order={table.order}
                   orderBy={table.orderBy}
                   headLabel={TABLE_HEAD}
                   rowCount={dataFiltered.length}
@@ -388,17 +386,17 @@ function applyFilter({
 
   inputData = stabilizedThis.map((el) => el[0]);
 
+  /*
   if (!dateError) {
     if (startDate && endDate) {
     
       if (!dateError) {
         if (startDate && endDate) {
-         
-          
         }
       }
     }
   }
+  */
 
   if (name) {
     inputData = inputData.filter(
@@ -410,7 +408,7 @@ function applyFilter({
   }
 
   if (status !== 'all') {
-    inputData = inputData.filter((appointment) => appointment.is_invoiced ? "invoiced": "pendinginvoice" === status);
+    inputData = inputData.filter((appointment) => appointment.is_invoiced ? "invoiced": status === "pendinginvoice");
   }
 
 

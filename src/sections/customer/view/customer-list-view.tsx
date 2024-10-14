@@ -15,7 +15,7 @@ import Container from '@mui/material/Container'
 import TableBody from '@mui/material/TableBody'
 import IconButton from '@mui/material/IconButton'
 import TableContainer from '@mui/material/TableContainer'
-import { useQuery } from 'react-query';
+
 import { paths } from 'src/routes/paths'
 import { useRouter } from 'src/routes/hooks'
 import { RouterLink } from 'src/routes/components'
@@ -38,7 +38,6 @@ import {
   useTable,
   emptyRows,
   TableNoData,
-  getComparator,
   TableEmptyRows,
   TableHeadCustom,
   TableSelectedAction,
@@ -47,8 +46,8 @@ import {
 
 import {
   type Customer,
-  type CustomerTableFilters,
   type CustomerCategory,
+  type CustomerTableFilters,
   type CustomerTableFilterValue
 } from 'src/types/customer'
 
@@ -189,7 +188,7 @@ export default  function CustomerListView () {
       router.push(paths.dashboard.customers.list);
       
     },
-    [dataInPage.length, enqueueSnackbar, table, tableData,t]
+    [dataInPage.length, enqueueSnackbar, table, tableData,t,router]
   )
 
   const handleDeleteRows = useCallback(() => {

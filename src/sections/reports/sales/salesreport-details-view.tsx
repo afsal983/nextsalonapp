@@ -3,18 +3,15 @@
 import sumBy from 'lodash/sumBy';
 import { useState, useCallback } from 'react';
 
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
+import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
-import { alpha, useTheme } from '@mui/material/styles';
 import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
@@ -27,7 +24,6 @@ import { isAfter, isBetween } from 'src/utils/format-time';
 import { useTranslate } from 'src/locales';
 import { INVOICE_SERVICE_OPTIONS } from 'src/_mock';
 
-import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 import { useSnackbar } from 'src/components/snackbar';
@@ -67,9 +63,17 @@ const TABLE_HEAD = [
   { id: '' },
 ];
 
+const FILTER_OPTIONS = [
+  { id: 'all', name: 'All Sales', value:"all" },
+  { id: 'detailedsales', name: 'Detailed Sales', value:"detailedsales" },
+  { id: 'salesb', name: 'Sales By Branch', value:"salesb"},
+  { id: 'salesbycus', name: 'Sales By Customer', value:"salesbycus" },
+]
+
 const defaultFilters: IInvoiceTableFilters = {
   name: '',
-  service: [],
+  filtername: "",
+  filtervalue: 0,
   status: 'all',
   startDate: null,
   endDate: null,
@@ -105,13 +109,15 @@ export default function SalesReportDetailsView({ reportid }: Props) {
    // Use SWR to fetch data from multiple endpoints in parallel
   // const { data: invoice,isLoading: isinvoiceLoading,  error: errorI } = useSWR('/api/salonapp/report/salesreport', fetcher);
 
-   console.log(filters)
+  /*
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
     filters,
     dateError,
   });
+  */
+ const dataFiltered = tableData
 
   const dataInPage = dataFiltered.slice(
     table.page * table.rowsPerPage,
@@ -122,7 +128,6 @@ export default function SalesReportDetailsView({ reportid }: Props) {
 
   const canReset =
     !!filters.name ||
-    !!filters.service.length ||
     filters.status !== 'all' ||
     (!!filters.startDate && !!filters.endDate);
 
@@ -184,63 +189,28 @@ export default function SalesReportDetailsView({ reportid }: Props) {
   }, []);
 
   const  handleSearch  = async () => {
+
+    const filter = FILTER_OPTIONS.find((item) => item.name === filters.filtername)
+
     const data = {
-      "start" : "2024-01-05T00:30:00Z",
-      "end": "2024-04-05T01:50:00Z",
-      "filtername":"all",
+      "start" : filters.startDate,
+      "end": filters.endDate,
+      "filtername": filter?.value,
       "filterid":1
     }
     const response = await fetch('/api/salonapp/report/salesreport', {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
-      mode: "cors", // no-cors, *cors, same-origin
-      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: "same-origin", // include, *same-origin, omit
       headers: {
         "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
       },
-      redirect: "follow", // manual, *follow, error
-      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
       body: JSON.stringify(data), // body data type must match "Content-Type" header
     });
-    // return response.json(); // parses JSON response into native JavaScript object
-    const invoices = await response.json()
-    console.log(invoices)
-    setTableData(invoices.data)
+    const responseData = await response.json()
+
+    
+
+    setTableData(responseData.data)
   };
-
-  const handleDeleteRow = useCallback(
-    (id: string) => {
-      const deleteRow = tableData.filter((row) => row.id !== id);
-
-      enqueueSnackbar('Delete success!');
-
-      setTableData(deleteRow);
-
-      table.onUpdatePageDeleteRow(dataInPage.length);
-    },
-    [dataInPage.length, enqueueSnackbar, table, tableData]
-  );
-
-  const handleDeleteRows = useCallback(() => {
-    const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
-
-    enqueueSnackbar('Delete success!');
-
-    setTableData(deleteRows);
-
-    table.onUpdatePageDeleteRows({
-      totalRowsInPage: dataInPage.length,
-      totalRowsFiltered: dataFiltered.length,
-    });
-  }, [dataFiltered.length, dataInPage.length, enqueueSnackbar, table, tableData]);
-
-  const handleEditRow = useCallback(
-    (id: string) => {
-      router.push(paths.dashboard.invoice.edit(Number(id)));
-    },
-    [router]
-  );
 
   const handleViewRow = useCallback(
     (id: string) => {
@@ -275,17 +245,6 @@ export default function SalesReportDetailsView({ reportid }: Props) {
               name: t('general.report'),
             },
           ]}
-          action={
-            <Button
-              onClick={() => {
-                handleSearch();
-              }}
-              variant="contained"
-              startIcon={<Iconify icon="material-symbols:search" />}
-            >
-              Search
-            </Button>
-          }
           sx={{
             mb: { xs: 3, md: 5 },
           }}
@@ -295,9 +254,10 @@ export default function SalesReportDetailsView({ reportid }: Props) {
           <InvoiceTableToolbar
             filters={filters}
             onFilters={handleFilters}
+            handleSearch={handleSearch}
             //
             dateError={dateError}
-            serviceOptions={INVOICE_SERVICE_OPTIONS.map((option) => option.name)}
+            serviceOptions={FILTER_OPTIONS.map((option) => option.name)}
           />
 
           {canReset && (
@@ -382,8 +342,6 @@ export default function SalesReportDetailsView({ reportid }: Props) {
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
                         onViewRow={() => handleViewRow(row.id)}
-                        onEditRow={() => handleEditRow(row.id)}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
                       />
                     ))}
 
@@ -438,7 +396,7 @@ export default function SalesReportDetailsView({ reportid }: Props) {
 }
 
 // ----------------------------------------------------------------------
-
+/*
 function applyFilter({
   inputData,
   comparator,
@@ -488,3 +446,4 @@ function applyFilter({
 
   return inputData;
 }
+*/

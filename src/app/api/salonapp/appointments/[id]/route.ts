@@ -66,7 +66,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
 export async function DELETE(request: NextRequest, response: NextResponse) {
 
   const { pathname } = new URL(request.url);
-  const invoiceId = pathname.split('/')[4]
+  const eventId = pathname.split('/')[4]
 
   // Get the cookies
   const cookieStore = request.cookies
@@ -93,9 +93,10 @@ export async function DELETE(request: NextRequest, response: NextResponse) {
 
   const { token } = cookiedata
 
+  console.log(eventId)
 
   // Make an HTTP request to your API route with the token in the headers
-  const data = await fetch( `${baseUSRL}/apiserver/invoice/${invoiceId}`, {
+  const data = await fetch( `${baseUSRL}/timekeeper/appointment/${eventId}?notify=0`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${token}`,

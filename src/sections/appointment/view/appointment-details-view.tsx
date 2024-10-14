@@ -1,12 +1,15 @@
 'use client';
 
+import useSWR from 'swr';
 import { useState, useCallback } from 'react';
-import useSWR,{mutate} from 'swr';
+
 import Stack from '@mui/material/Stack';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
-import { fetcher } from 'src/utils/axios';
+
 import { paths } from 'src/routes/paths';
+
+import { fetcher } from 'src/utils/axios';
 
 import { _orders, ORDER_STATUS_OPTIONS } from 'src/_mock';
 

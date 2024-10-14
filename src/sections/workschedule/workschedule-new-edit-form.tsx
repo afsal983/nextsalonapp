@@ -17,8 +17,8 @@ import { useTranslate } from 'src/locales';
 import FormProvider from 'src/components/hook-form';
 import { useSnackbar } from 'src/components/snackbar'
 
+import { Schedule, EmployeeItem, type TimeSlotItem  } from 'src/types/employee'
 
-import { type TimeSlotItem, Schedule, EmployeeItem  } from 'src/types/employee'
 import WorkScheduleNewEditDetails from './workschedule-new-edit-details';
 
 // ----------------------------------------------------------------------

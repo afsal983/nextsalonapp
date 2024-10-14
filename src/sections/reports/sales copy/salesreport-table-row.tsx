@@ -29,6 +29,8 @@ type Props = {
   selected: boolean;
   onSelectRow: VoidFunction;
   onViewRow: VoidFunction;
+  onEditRow: VoidFunction;
+  onDeleteRow: VoidFunction;
 };
 
 export default function InvoiceTableRow({
@@ -36,6 +38,8 @@ export default function InvoiceTableRow({
   selected,
   onSelectRow,
   onViewRow,
+  onEditRow,
+  onDeleteRow,
 }: Props) {
   const { invoicenumber, total, tip, Customer, date, Invstatus, Branches_organization
   } = row;
@@ -147,6 +151,15 @@ export default function InvoiceTableRow({
           View
         </MenuItem>
 
+        <MenuItem
+          onClick={() => {
+            onEditRow();
+            popover.onClose();
+          }}
+        >
+          <Iconify icon="solar:pen-bold" />
+          Edit
+        </MenuItem>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
@@ -161,6 +174,18 @@ export default function InvoiceTableRow({
           Delete
         </MenuItem>
       </CustomPopover>
+
+      <ConfirmDialog
+        open={confirm.value}
+        onClose={confirm.onFalse}
+        title="Delete"
+        content="Are you sure want to delete?"
+        action={
+          <Button variant="contained" color="error" onClick={onDeleteRow}>
+            Delete
+          </Button>
+        }
+      />
     </>
   );
 }

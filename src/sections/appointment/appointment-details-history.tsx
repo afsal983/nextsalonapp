@@ -13,7 +13,7 @@ import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
 
 import { fDateTime } from 'src/utils/format-time';
 
-import { IOrderHistory } from 'src/types/appointment';
+import { IOrderHistory } from 'src/types/order';
 
 // ----------------------------------------------------------------------
 

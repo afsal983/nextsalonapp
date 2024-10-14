@@ -1,7 +1,7 @@
-import { EmployeeItem } from '../types/employee';
-import { ServiceItem } from '../types/service';
-import { BranchItem } from '../types/branch';
-import { Customer } from '../types/customer';
+import { BranchItem } from './branch';
+import { Customer } from './customer';
+import { ServiceItem } from './service';
+import { EmployeeItem } from './employee';
 // ----------------------------------------------------------------------
 
 export type AppointmentTableFilterValue = string | Date | null

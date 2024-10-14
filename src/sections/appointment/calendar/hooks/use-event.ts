@@ -4,7 +4,6 @@ import merge from 'lodash/merge';
 import { CALENDAR_COLOR_OPTIONS } from 'src/_mock/_calendar';
 
 import { ICalendarRange, ICalendarEvent } from 'src/types/calendar';
-import { Customer } from 'src/types/customer';
 
 // ----------------------------------------------------------------------
 
@@ -27,14 +26,14 @@ export default function useEvent(
       color: CALENDAR_COLOR_OPTIONS[1],
       allDay: false,
       customer_id: 0,
-      Customer: undefined,
+      Customer: null,
       employee_id: selectedEmployee || 0,
       service_id: 0,
-      Product: undefined,
+      Product: null,
       start: selectedRange ? selectedRange.start : new Date().getTime(),
       end: selectedRange ? selectedRange.end : new Date().getTime(),
     }),
-    [selectedRange]
+    [selectedRange, selectedEmployee]
   );
 
   if (!openForm) {

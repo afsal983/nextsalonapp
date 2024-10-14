@@ -1,6 +1,5 @@
 import * as Yup from 'yup'
-import { useMemo, useState } from 'react'
-import { MuiColorInput } from 'mui-color-input'
+import { useMemo } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm, Controller } from 'react-hook-form';
 
@@ -11,6 +10,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import LoadingButton from '@mui/lab/LoadingButton'
 import Typography from '@mui/material/Typography';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
 import { paths } from 'src/routes/paths'
 import { useRouter } from 'src/routes/hooks'
 

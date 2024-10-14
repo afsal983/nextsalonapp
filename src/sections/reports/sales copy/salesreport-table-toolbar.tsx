@@ -2,32 +2,54 @@ import { useCallback } from 'react';
 
 import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
+import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
+import InputLabel from '@mui/material/InputLabel';
 import IconButton from '@mui/material/IconButton';
+import FormControl from '@mui/material/FormControl';
+import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { formHelperTextClasses } from '@mui/material/FormHelperText';
-
+import Button from '@mui/material/Button';
 import Iconify from 'src/components/iconify';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
-import { AppointmentTableFilters, AppointmentTableFilterValue } from 'src/types/appointment';
+import { IInvoiceTableFilters, IInvoiceTableFilterValue } from 'src/types/invoice';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  filters: AppointmentTableFilters;
-  onFilters: (name: string, value: AppointmentTableFilterValue) => void;
+  filters: IInvoiceTableFilters;
+  onFilters: (name: string, value: IInvoiceTableFilterValue) => void;
   //
   dateError: boolean;
+  serviceOptions: string[];
 };
 
-export default function AppointmentTableToolbar({ filters, onFilters, dateError }: Props) {
+export default function InvoiceTableToolbar({
+  filters,
+  onFilters,
+  //
+  dateError,
+  serviceOptions,
+}: Props) {
   const popover = usePopover();
 
   const handleFilterName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       onFilters('name', event.target.value);
+    },
+    [onFilters]
+  );
+
+  const handleFilterService = useCallback(
+    (event: SelectChangeEvent<string[]>) => {
+      onFilters(
+        'service',
+        typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value
+      );
     },
     [onFilters]
   );
@@ -60,17 +82,38 @@ export default function AppointmentTableToolbar({ filters, onFilters, dateError 
           pr: { xs: 2.5, md: 1 },
         }}
       >
+        <FormControl
+          sx={{
+            flexShrink: 0,
+            width: { xs: 1, md: 180 },
+          }}
+        >
+          <InputLabel>Service</InputLabel>
+
+          <Select
+            multiple
+            value={filters.service}
+            onChange={handleFilterService}
+            input={<OutlinedInput label="Service" />}
+            renderValue={(selected) => selected.map((value) => value).join(', ')}
+            sx={{ textTransform: 'capitalize' }}
+          >
+            {serviceOptions.map((option) => (
+              <MenuItem key={option} value={option}>
+                <Checkbox disableRipple size="small" checked={filters.service.includes(option)} />
+                {option}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
         <DatePicker
           label="Start date"
           value={filters.startDate}
           onChange={handleFilterStartDate}
-          slotProps={{
-            textField: {
-              fullWidth: true,
-            },
-          }}
+          slotProps={{ textField: { fullWidth: true } }}
           sx={{
-            maxWidth: { md: 200 },
+            maxWidth: { md: 180 },
           }}
         />
 
@@ -86,7 +129,7 @@ export default function AppointmentTableToolbar({ filters, onFilters, dateError 
             },
           }}
           sx={{
-            maxWidth: { md: 200 },
+            maxWidth: { md: 180 },
             [`& .${formHelperTextClasses.root}`]: {
               position: { md: 'absolute' },
               bottom: { md: -40 },
@@ -99,7 +142,7 @@ export default function AppointmentTableToolbar({ filters, onFilters, dateError 
             fullWidth
             value={filters.name}
             onChange={handleFilterName}
-            placeholder="Search customer or appointment number..."
+            placeholder="Search customer or invoice number..."
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -108,6 +151,15 @@ export default function AppointmentTableToolbar({ filters, onFilters, dateError 
               ),
             }}
           />
+
+          <IconButton
+          onClick={() => {
+            handleSearch();
+          }}
+          variant="contained"
+        >
+          Search1
+        </IconButton>
 
           <IconButton onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />

@@ -1,40 +1,42 @@
 import * as Yup from 'yup';
-import { useCallback, useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useTranslate } from 'src/locales';
+
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 import DialogActions from '@mui/material/DialogActions';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
+
 import { useBoolean } from 'src/hooks/use-boolean';
+
 import uuidv4 from 'src/utils/uuidv4';
 import { isAfter, fTimestamp } from 'src/utils/format-time';
-import Typography from '@mui/material/Typography';
+
+import { useTranslate } from 'src/locales';
 import { createEvent, updateEvent, deleteEvent } from 'src/app/api/salonapp/appointments/calendar';
-import useSWR,{mutate} from 'swr';
+
 import Iconify from 'src/components/iconify';
 import { useSnackbar } from 'src/components/snackbar';
 import { ColorPicker } from 'src/components/color-utils';
-import FormProvider, { RHFSwitch, RHFTextField } from 'src/components/hook-form';
-import { fetcher } from 'src/utils/axios';
-import { ICalendarDate, ICalendarEvent } from 'src/types/calendar';
-import { EmployeeItem } from 'src/types/employee';
-import { Customer } from 'src/types/customer';
-import { ServiceItem } from 'src/types/service';
-import {  } from 'src/types/service';
-
-import { CustomerAddressListDialog } from '../../customeraddress';
-
-import  {
-
+import  FormProvider, {
   RHFSelect,
+  RHFSwitch, 
+  RHFTextField
 
 } from 'src/components/hook-form'
+
+import { Customer } from 'src/types/customer';
+import { ServiceItem } from 'src/types/service';
+import { EmployeeItem } from 'src/types/employee';
+import { ICalendarDate, ICalendarEvent } from 'src/types/calendar';
+
+import { CustomerAddressListDialog } from '../../customeraddress';
 
 // ----------------------------------------------------------------------
 
@@ -42,7 +44,7 @@ type Props = {
   colorOptions: string[];
   onClose: VoidFunction;
   currentEvent?: ICalendarEvent;
-  Customer: Customer| null;
+  SelectedCustomer: Customer| null;
   Product: ServiceItem| null;
   customer_id: number
   services:ServiceItem[]
@@ -57,10 +59,8 @@ type Props = {
 
 
 
-export default function CalendarForm({ currentEvent, colorOptions, onClose, customer_id, employees, services, employee, appFilters, Customer, Product}: Props) {
+export default function CalendarForm({ currentEvent, colorOptions, onClose, customer_id, employees, services, SelectedCustomer, Product}: Props) {
   const { enqueueSnackbar } = useSnackbar();
-
-  console.log(Customer)
   
   const from = useBoolean();
 
@@ -68,7 +68,7 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose, cust
 
   const { t } = useTranslate();
 
-  const [customer, setCustomer] = useState<Customer | null>(Customer);
+  const [customer, setCustomer] = useState<Customer | null>(SelectedCustomer);
 
 
   const EventSchema = Yup.object().shape({
@@ -110,7 +110,7 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose, cust
       Customer: customer,
       employee_id: data.employee_id,
       service_id: data.service_id,
-      Product: Product,
+      Product,
       id: currentEvent?.id ? currentEvent?.id : uuidv4(),
       color: data?.color,
       notes: data?.notes,
@@ -122,12 +122,22 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose, cust
     try {
       if (!dateError) {
         if (currentEvent?.id) {
-          await updateEvent(eventData);
-          enqueueSnackbar('Update success!');
+          const responseData = await updateEvent(eventData ) ;
+          console.log("Here")
+          if(responseData?.status <300) {
+            enqueueSnackbar('Appointment Updated Sucessfully!'); 
+          } else {
+            enqueueSnackbar(currentEvent ? `${t('general.update_failed')}:${responseData?.message}` : `${t('general.create_failed')}:${responseData.message}`, { variant: 'error' });
+          }
+
         } else {
           
-          await createEvent(eventData, appFilters);
-          enqueueSnackbar('Create success!');
+          const responseData = await createEvent(eventData);
+          if(responseData.status <300) {
+            enqueueSnackbar('Appointment Created Sucessfully!'); 
+          } else {
+            enqueueSnackbar(currentEvent ? `${t('general.update_failed')}:${responseData.message}` : `${t('general.create_failed')}:${responseData.message}`, { variant: 'error' });
+          }
         }
         onClose();
         reset();
@@ -139,13 +149,18 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose, cust
 
   const onDelete = useCallback(async () => {
     try {
-      await deleteEvent(`${currentEvent?.id}`);
-      enqueueSnackbar('Delete success!');
+      const responseData = await deleteEvent(`${currentEvent?.id}` );
+      console.log(responseData)
+      if(responseData?.status <300) {
+        enqueueSnackbar('Appointment Deleted Sucessfully!'); 
+      } else {
+        enqueueSnackbar(`${t('general.delete_failed')}:${responseData.message}`, { variant: 'error' });
+      }
       onClose();
     } catch (error) {
       console.error(error);
     }
-  }, [currentEvent?.id, enqueueSnackbar, onClose]);
+  }, [currentEvent?.id, enqueueSnackbar, onClose,t]);
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -156,7 +171,7 @@ export default function CalendarForm({ currentEvent, colorOptions, onClose, cust
         open={to.value}
         onClose={to.onFalse}
         selected={(selectedId: string) => String(customer_id) === selectedId}
-        onSelect={(customer) => setCustomer(customer)}
+        onSelect={(customerinfo) => setCustomer(customerinfo)}
         list={[]}
         action={
           <Button

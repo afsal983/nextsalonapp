@@ -16,8 +16,7 @@ import { useTranslate } from 'src/locales';
 
 import { useSnackbar } from 'src/components/snackbar'
 import FormProvider, {
-  RHFTextField,
-  RHFEditor
+  RHFTextField
 } from 'src/components/hook-form'
 
 import { type ServiceCategoryItem } from 'src/types/service'

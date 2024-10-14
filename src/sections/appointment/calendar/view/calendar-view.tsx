@@ -1,13 +1,14 @@
 'use client';
-import useSWR,{mutate} from 'swr';
+
+import useSWR from 'swr';
 import Calendar from '@fullcalendar/react'; // => request placed at the top
 import listPlugin from '@fullcalendar/list';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
-import { useState, useEffect, useCallback, ChangeEvent } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import interactionPlugin from '@fullcalendar/interaction';
-import { Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -16,12 +17,12 @@ import { useTheme } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
-
-import { fetcher } from 'src/utils/axios';
+import { Select , SelectChangeEvent } from '@mui/material';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 import { useResponsive } from 'src/hooks/use-responsive';
 
+import { fetcher } from 'src/utils/axios';
 import { isAfter, isBetween } from 'src/utils/format-time';
 
 import { CALENDAR_COLOR_OPTIONS } from 'src/_mock/_calendar';
@@ -30,8 +31,8 @@ import { updateEvent, useGetEvents } from 'src/app/api/salonapp/appointments/cal
 import Iconify from 'src/components/iconify';
 import { useSettingsContext } from 'src/components/settings';
 
-import { ICalendarEvent, ICalendarFilters, ICalendarFilterValue } from 'src/types/calendar';
 import { EmployeeItem } from 'src/types/employee';
+import { ICalendarEvent, ICalendarFilters, ICalendarFilterValue } from 'src/types/calendar';
 
 import { StyledCalendar } from '../styles';
 import CalendarForm from '../calendar-form';
@@ -136,7 +137,7 @@ export default function CalendarView() {
     dateError,
   });
 
-  const handleEmployeeChange = (event: ChangeEvent<HTMLSelectElement>) => {
+  const handleEmployeeChange = (event: SelectChangeEvent<string>) => {
     setSelectedEmployee(event.target.value);
 };
 
@@ -217,10 +218,10 @@ export default function CalendarView() {
               eventClick={onClickEvent}
               height={smUp ? 720 : 'auto'}
               eventDrop={(arg) => {
-                onDropEvent(arg, updateEvent);
+                onDropEvent(arg ,updateEvent);
               }}
               eventResize={(arg) => {
-                onResizeEvent(arg, updateEvent);
+                onResizeEvent(arg,updateEvent);
               }}
               plugins={[
                 listPlugin,
@@ -252,7 +253,7 @@ export default function CalendarView() {
           currentEvent={currentEvent}
           employees= {employees?.data}
           customer_id={currentEvent?.customer_id|| 0}
-          Customer={currentEvent?.Customer || null}
+          SelectedCustomer={currentEvent?.Customer || null}
           Product={currentEvent?.Product || null}
           employee={selectedEmployee}
           services= {services?.data}

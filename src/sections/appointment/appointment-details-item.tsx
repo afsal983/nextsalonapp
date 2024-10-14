@@ -11,7 +11,7 @@ import { fCurrency } from 'src/utils/format-number';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
-import { AppointmentProductItem } from 'src/types/appointment';
+import { IOrderProductItem } from 'src/types/order';
 
 // ----------------------------------------------------------------------
 
@@ -21,10 +21,10 @@ type Props = {
   discount: number;
   subTotal: number;
   totalAmount: number;
-  items: IAppointmentProductItem[];
+  items: IOrderProductItem[];
 };
 
-export default function AppointmentDetailsItems({
+export default function OrderDetailsItems({
   items,
   taxes,
   shipping,

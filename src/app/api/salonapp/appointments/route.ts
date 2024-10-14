@@ -123,8 +123,6 @@ export async function PUT(request: NextRequest, response: NextResponse) {
 
   const body = await request.json();
 
-  const invoiceId = body.id
-
   // Get the cookies
   const cookieStore = request.cookies
   const sessionCookie  = cookieStore?.get('session')?.value
@@ -149,29 +147,32 @@ export async function PUT(request: NextRequest, response: NextResponse) {
     return NextResponse.json(res, { status: 401 });
   }
 
+  console.log(body.id)
+  console.log(body)
   const { token } = cookiedata
 
-    const data = await fetch(`${baseUSRL}/apiserver/invoice/${invoiceId}`, {
-      method: 'UPDATE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(body),
-    });
-    // Get the data in JSON format 
-    const apiResponse = await data.json();
+  const data = await fetch(`${baseUSRL}/timekeeper/appointment/${body.id}?notify=0`, {
+    method: 'UPDATE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
 
-    if(apiResponse?.status === 401) {
-      const res = {
-        Title: 'NOK',
-        status: 401,
-        message: apiResponse?.message
-      }
-      return NextResponse.json(res, { status: 401 });
+  // Get the data in JSON format 
+  const apiResponse = await data.json();
+
+  if(apiResponse?.status === 401) {
+    const res = {
+      Title: 'NOK',
+      status: 401,
+      message: apiResponse?.message
     }
-  
-    // Send the sucessful response back
-    return NextResponse.json(apiResponse, { status: 201 });
+    return NextResponse.json(res, { status: 401 });
+  }
+
+  // Send the sucessful response back
+  return NextResponse.json(apiResponse, { status: 201 });
 
 }

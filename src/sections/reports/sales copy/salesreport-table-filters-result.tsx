@@ -39,10 +39,11 @@ export default function InvoiceTableFiltersResult({
 
   const handleRemoveService = useCallback(
     (inputValue: string) => {
+      const newValue = filters.service.filter((item) => item !== inputValue);
 
-      onFilters('service', inputValue);
+      onFilters('service', newValue);
     },
-    [filters.filtername, onFilters]
+    [filters.service, onFilters]
   );
 
   const handleRemoveStatus = useCallback(() => {
@@ -64,14 +65,16 @@ export default function InvoiceTableFiltersResult({
       </Box>
 
       <Stack flexGrow={1} spacing={1} direction="row" flexWrap="wrap" alignItems="center">
-        {filters.filtername && (
+        {!!filters.service.length && (
           <Block label="Service:">
+            {filters.service.map((item) => (
               <Chip
-                key={filters.filtername}
-                label={filters.filtername}
+                key={item}
+                label={item}
                 size="small"
-                onDelete={() => handleRemoveService(filters.filtername)}
+                onDelete={() => handleRemoveService(item)}
               />
+            ))}
           </Block>
         )}
 
@@ -98,7 +101,7 @@ export default function InvoiceTableFiltersResult({
           onClick={onResetFilters}
           startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
         >
-          Clear
+          Clear2
         </Button>
       </Stack>
     </Stack>

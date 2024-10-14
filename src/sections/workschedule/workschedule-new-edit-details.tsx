@@ -1,26 +1,26 @@
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import Chip from '@mui/material/Chip';
+
+import { useRouter } from 'src/routes/hooks'
 
 import { useTranslate } from 'src/locales';
 
-import FormProvider, {
-  RHFTextField,
+import Iconify from 'src/components/iconify';
+import { useSnackbar } from 'src/components/snackbar'
+import {
   RHFSelect,
   RHFAutocomplete
 } from 'src/components/hook-form'
 
-import Iconify from 'src/components/iconify';
-import { useRouter } from 'src/routes/hooks'
-import { useSnackbar } from 'src/components/snackbar'
-import { EmployeeItem, type TimeSlotItem } from 'src/types/employee';
 import { Schedule } from 'src/types/employee';
+import { EmployeeItem, type TimeSlotItem } from 'src/types/employee';
 
 
 // ----------------------------------------------------------------------

@@ -10,6 +10,7 @@ import { useAuthContext } from 'src/auth/hooks';
 import { AuthContext } from './auth-context'
 import { setSession, isValidToken } from './utils'
 import { type AuthUserType, type ActionMapType, type AuthStateType } from '../../types'
+import { first } from 'lodash';
 
 // ----------------------------------------------------------------------
 /**
@@ -91,13 +92,35 @@ export function AuthProvider ({ children }: Props) {
   
   const initialize = useCallback(async () => {
     try {
-      const token = sessionStorage.getItem(STORAGE_KEY)
+      const storedToken = sessionStorage.getItem(STORAGE_KEY)
+      const storedrefreshtoken= sessionStorage.getItem('refreshtoken')
 
    
-      if (token && isValidToken(token)) {
+      if (storedToken && isValidToken(storedToken)) {
+        
+        const data = {
+          "refresh_token": storedrefreshtoken
+        }
+
+        const res = await axios.post(endpoints.auth.me, data)
+        const { token, refresh_token, firstname, lastname,email, telephone, id, localid,roleid, group_id, is_admin, orgroleid} = res.data
+
+        const user = {
+          "firstname": firstname,
+          "lastname": lastname,
+          "email":  email,
+          "telephone": telephone,
+          "id": id,
+          "localid": localid,
+          "group_id": group_id,
+          "roleid": roleid,
+          "is_admin": is_admin,
+          "orgroleid": orgroleid
+        }
+
         setSession(token)
-
-
+        localStorage.setItem(STORAGE_KEY, token)
+        localStorage.setItem('refreshtoken', refresh_token)
         // /const res = await axios.get(endpoints.auth.me)
 
         
