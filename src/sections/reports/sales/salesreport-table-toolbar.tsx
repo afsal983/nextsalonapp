@@ -49,7 +49,6 @@ export default function InvoiceTableToolbar({
 
   const handleFilterService = useCallback(
     (event: SelectChangeEvent<string>) => {
-      console.log(event.target)
       onFilters(
         'filtername',
         event.target.value

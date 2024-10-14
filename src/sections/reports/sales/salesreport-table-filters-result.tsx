@@ -22,6 +22,7 @@ type Props = StackProps & {
   results: number;
 };
 
+
 export default function InvoiceTableFiltersResult({
   filters,
   onFilters,
@@ -40,7 +41,7 @@ export default function InvoiceTableFiltersResult({
   const handleRemoveService = useCallback(
     (inputValue: string) => {
 
-      onFilters('service', inputValue);
+      onFilters('filtername', inputValue);
     },
     [filters.filtername, onFilters]
   );

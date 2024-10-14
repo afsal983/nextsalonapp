@@ -128,6 +128,7 @@ export default function SalesReportDetailsView({ reportid }: Props) {
 
   const canReset =
     !!filters.name ||
+    !!filters.filtername ||
     filters.status !== 'all' ||
     (!!filters.startDate && !!filters.endDate);
 
@@ -368,82 +369,6 @@ export default function SalesReportDetailsView({ reportid }: Props) {
           />
         </Card>
       </Container>
-
-      <ConfirmDialog
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {table.selected.length} </strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows();
-              confirm.onFalse();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      />
     </>
   );
 }
-
-// ----------------------------------------------------------------------
-/*
-function applyFilter({
-  inputData,
-  comparator,
-  filters,
-  dateError,
-}: {
-  inputData: IInvoice[];
-  comparator: (a: any, b: any) => number;
-  filters: IInvoiceTableFilters;
-  dateError: boolean;
-}) {
-  const { name, status, service, startDate, endDate } = filters;
-
-  const stabilizedThis = inputData.map((el, index) => [el, index] as const);
-
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  inputData = stabilizedThis.map((el) => el[0]);
-
-  if (name) {
-    inputData = inputData.filter(
-      (invoice) =>
-        invoice.invoicenumber.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-        invoice.Customer.firstname.toLowerCase().indexOf(name.toLowerCase()) !== -1
-    );
-  }
-
-  if (status !== 'all') {
-    inputData = inputData.filter((invoice) => invoice.Invstatus?.name === status);
-  }
-
-  if (service.length) {
-    inputData = inputData.filter((invoice) =>
-      invoice.Invoice_line.some((filterItem) => service.includes(filterItem.Product.name))
-    );
-  }
-
-  if (!dateError) {
-    if (startDate && endDate) {
-      inputData = inputData.filter((invoice) => isBetween(invoice.date, startDate, endDate));
-    }
-  }
-
-  return inputData;
-}
-*/
