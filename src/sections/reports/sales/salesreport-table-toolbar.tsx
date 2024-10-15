@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
@@ -16,9 +16,10 @@ import { formHelperTextClasses } from '@mui/material/FormHelperText';
 import Button from '@mui/material/Button';
 import Iconify from 'src/components/iconify';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
-
+import LoadingButton from '@mui/lab/LoadingButton'
 import { IInvoiceTableFilters, IInvoiceTableFilterValue } from 'src/types/invoice';
-
+import { useForm, Controller } from 'react-hook-form';
+import { CSVLink } from 'react-csv';
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -27,7 +28,8 @@ type Props = {
   handleSearch: () => void;
   //
   dateError: boolean;
-  serviceOptions: string[]
+  serviceOptions: string[];
+  getcsvData: () => string[][];
 };
 
 export default function InvoiceTableToolbar({
@@ -37,8 +39,19 @@ export default function InvoiceTableToolbar({
   //
   dateError,
   serviceOptions,
+  getcsvData,
 }: Props) {
   const popover = usePopover();
+
+  const methods = useForm({
+  })  
+  const {     
+    formState: { isSubmitting }
+  } = methods
+
+  const csvLinkRef = useRef(null);
+
+  const [csvData, setcsVData] = useState<string[][]>([])
 
   const handleFilterName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,6 +83,15 @@ export default function InvoiceTableToolbar({
     },
     [onFilters]
   );
+
+  const handleExportCSV = () => {
+    // Retrieve the data using the callback function
+    const csvdata = getcsvData();
+    setcsVData(csvdata)
+    csvLinkRef?.current?.link?.click();
+  };
+  
+
 
   return (
     <>
@@ -143,57 +165,36 @@ export default function InvoiceTableToolbar({
             </Select>
           </FormControl>
 
-          <Button 
-            size="large" 
-            onClick={() => {
-              handleSearch();
-            }}
-            variant="contained"
-            startIcon={<Iconify icon="material-symbols:search" />}
-          >
-            Search
-          </Button>
+          <LoadingButton
+                type="submit"
+                size="large" 
+                variant="contained"
+                onClick={() => {
+                  handleSearch();
+                }}
+                startIcon={<Iconify icon="material-symbols:search" />}
+                loading={isSubmitting}
+              >
+                Search
+              </LoadingButton>
         </Stack>
-   
-        <Stack spacing={2}>
-          <IconButton onClick={popover.onOpen}>
-            <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
-        </Stack>  
+
+        <IconButton 
+        size="large" 
+        color="info"
+        onClick={() => handleExportCSV()}
+        >
+          <Iconify icon="iwwa:file-csv" />
+        </IconButton>
+
+        <CSVLink
+        data={csvData}  // Call the function to fetch data
+        filename={"salesdata.csv"}
+        ref={csvLinkRef}
+        style={{ display: 'none' }}
+      />
       </Box>
-      <CustomPopover
-        open={popover.open}
-        onClose={popover.onClose}
-        arrow="right-top"
-        sx={{ width: 140 }}
-      >
-        <MenuItem
-          onClick={() => {
-            popover.onClose();
-          }}
-        >
-          <Iconify icon="solar:printer-minimalistic-bold" />
-          Print
-        </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            popover.onClose();
-          }}
-        >
-          <Iconify icon="solar:import-bold" />
-          Import
-        </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            popover.onClose();
-          }}
-        >
-          <Iconify icon="solar:export-bold" />
-          Export
-        </MenuItem>
-      </CustomPopover>
+      
     </>
   );
 }

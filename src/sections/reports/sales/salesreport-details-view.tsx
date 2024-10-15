@@ -13,6 +13,8 @@ import TableBody from '@mui/material/TableBody';
 import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
+import { CSVLink, CSVDownload } from "react-csv";
+
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -146,6 +148,8 @@ export default function SalesReportDetailsView({ reportid }: Props) {
   const getPercentByStatus = (status: string) =>
     (getInvoiceLength(status) / tableData.length) * 100;
 
+
+
   const TABS = [
     { value: 'all', label: 'All', color: 'default', count: tableData.length },
     {
@@ -227,6 +231,38 @@ export default function SalesReportDetailsView({ reportid }: Props) {
     [handleFilters]
   );
 
+  const headers = [
+    'Invoice Number',
+    'Total',
+    'Tip',
+    'Customer First Name',
+    'Customer Last Name',
+    'Date',
+    'Invoice Status',
+    'Branch Name',
+  ];
+
+  const getcsvData = useCallback(
+    () => {
+      const csvData = [
+        headers,
+        ...dataFiltered.map(({ invoicenumber, total, tip, Customer, date, Invstatus, Branches_organization }) => [
+          invoicenumber,
+          total,
+          tip,
+          Customer.firstname ,
+          Customer.lastname ,
+          date,
+          Invstatus.name,
+          Branches_organization.name,
+        ]),
+      ];
+      console.log(csvData)
+      return csvData
+    },
+    [dataFiltered]
+  );
+
 
   return (
     <>
@@ -259,6 +295,7 @@ export default function SalesReportDetailsView({ reportid }: Props) {
             //
             dateError={dateError}
             serviceOptions={FILTER_OPTIONS.map((option) => option.name)}
+            getcsvData= {getcsvData}
           />
 
           {canReset && (
