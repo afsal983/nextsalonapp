@@ -1,45 +1,53 @@
-import Button from '@mui/material/Button'
-import MenuItem from '@mui/material/MenuItem'
-import TableRow from '@mui/material/TableRow'
-import Checkbox from '@mui/material/Checkbox'
-import TableCell from '@mui/material/TableCell'
-import IconButton from '@mui/material/IconButton'
-import ListItemText from '@mui/material/ListItemText'
+import Button from "@mui/material/Button";
+import MenuItem from "@mui/material/MenuItem";
+import TableRow from "@mui/material/TableRow";
+import Checkbox from "@mui/material/Checkbox";
+import TableCell from "@mui/material/TableCell";
+import IconButton from "@mui/material/IconButton";
+import ListItemText from "@mui/material/ListItemText";
 
-import { useBoolean } from 'src/hooks/use-boolean'
+import { useBoolean } from "src/hooks/use-boolean";
 
-import { fDate } from 'src/utils/format-time';
+import { fDate } from "src/utils/format-time";
 
-import Label from 'src/components/label';
-import Iconify from 'src/components/iconify'
-import { ConfirmDialog } from 'src/components/custom-dialog'
-import CustomPopover, { usePopover } from 'src/components/custom-popover'
+import Label from "src/components/label";
+import Iconify from "src/components/iconify";
+import { ConfirmDialog } from "src/components/custom-dialog";
+import CustomPopover, { usePopover } from "src/components/custom-popover";
 
-import { type Customer } from 'src/types/customer'
+import { type Customer } from "src/types/customer";
 
 // ----------------------------------------------------------------------
 
 interface Props {
-  selected: boolean
-  onEditRow: VoidFunction
-  row: Customer
-  onSelectRow: VoidFunction
-  onDeleteRow: VoidFunction
+  selected: boolean;
+  onEditRow: VoidFunction;
+  row: Customer;
+  onSelectRow: VoidFunction;
+  onDeleteRow: VoidFunction;
 }
 
-export default function CustomerTableRow ({
+export default function CustomerTableRow({
   row,
   selected,
   onEditRow,
   onSelectRow,
-  onDeleteRow
+  onDeleteRow,
 }: Props) {
-  const { id, firstname, lastname, telephone, email, sex, dob , CustomerCategory} =
-    row
+  const {
+    id,
+    firstname,
+    lastname,
+    telephone,
+    email,
+    sex,
+    dob,
+    CustomerCategory,
+  } = row;
 
-  const confirm = useBoolean()
+  const confirm = useBoolean();
 
-  const popover = usePopover()
+  const popover = usePopover();
 
   return (
     <>
@@ -48,46 +56,47 @@ export default function CustomerTableRow ({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
 
-        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
+        <TableCell sx={{ display: "flex", alignItems: "center" }}>
           <ListItemText
             primary={`${firstname} ${lastname}`}
             secondary={CustomerCategory.name}
-            primaryTypographyProps={{ typography: 'body2' }}
+            primaryTypographyProps={{ typography: "body2" }}
             secondaryTypographyProps={{
-              component: 'span',
-              color: 'text.disabled'
+              component: "span",
+              color: "text.disabled",
             }}
           />
         </TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{telephone}</TableCell>
+        <TableCell sx={{ whiteSpace: "nowrap" }}>{telephone}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{email}</TableCell>
+        <TableCell sx={{ whiteSpace: "nowrap" }}>{email}</TableCell>
 
         <TableCell>
           <Label
             variant="soft"
             color={
-              (sex === 0 && 'success') ||
-              (sex === 1 && 'warning') ||
-              (sex === 2 && 'error') ||
-              'default'
+              (sex === 0 && "success") ||
+              (sex === 1 && "warning") ||
+              (sex === 2 && "error") ||
+              "default"
             }
           >
-            {(sex === 0 && 'Female') ||
-              (sex === 1 && 'Male') ||
-              (sex === 2 && 'Other') }
+            {(sex === 0 && "Female") ||
+              (sex === 1 && "Male") ||
+              (sex === 2 && "Other")}
           </Label>
         </TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{fDate(dob)}</TableCell>
+        <TableCell sx={{ whiteSpace: "nowrap" }}>{fDate(dob)}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{CustomerCategory.name}</TableCell>
+        <TableCell sx={{ whiteSpace: "nowrap" }}>
+          {CustomerCategory.name}
+        </TableCell>
 
-
-        <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+        <TableCell align="right" sx={{ px: 1, whiteSpace: "nowrap" }}>
           <IconButton
-            color={popover.open ? 'inherit' : 'default'}
+            color={popover.open ? "inherit" : "default"}
             onClick={popover.onOpen}
           >
             <Iconify icon="eva:more-vertical-fill" />
@@ -103,10 +112,10 @@ export default function CustomerTableRow ({
       >
         <MenuItem
           onClick={() => {
-            confirm.onTrue()
-            popover.onClose()
+            confirm.onTrue();
+            popover.onClose();
           }}
-          sx={{ color: 'error.main' }}
+          sx={{ color: "error.main" }}
         >
           <Iconify icon="solar:trash-bin-trash-bold" />
           Delete
@@ -114,8 +123,8 @@ export default function CustomerTableRow ({
 
         <MenuItem
           onClick={() => {
-            onEditRow()
-            popover.onClose()
+            onEditRow();
+            popover.onClose();
           }}
         >
           <Iconify icon="solar:pen-bold" />
@@ -135,5 +144,5 @@ export default function CustomerTableRow ({
         }
       />
     </>
-  )
+  );
 }

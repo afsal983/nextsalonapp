@@ -1,39 +1,39 @@
-'use client'
+"use client";
 
-import useSWR,{mutate} from 'swr';
-import isEqual from 'lodash/isEqual'
-import { useState, useEffect, useCallback } from 'react'
+import useSWR, { mutate } from "swr";
+import isEqual from "lodash/isEqual";
+import { useState, useEffect, useCallback } from "react";
 
-import Tab from '@mui/material/Tab'
-import Tabs from '@mui/material/Tabs'
-import Card from '@mui/material/Card'
-import Table from '@mui/material/Table'
-import Button from '@mui/material/Button'
-import Tooltip from '@mui/material/Tooltip'
-import { alpha } from '@mui/material/styles'
-import Container from '@mui/material/Container'
-import TableBody from '@mui/material/TableBody'
-import IconButton from '@mui/material/IconButton'
-import TableContainer from '@mui/material/TableContainer'
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import Card from "@mui/material/Card";
+import Table from "@mui/material/Table";
+import Button from "@mui/material/Button";
+import Tooltip from "@mui/material/Tooltip";
+import { alpha } from "@mui/material/styles";
+import Container from "@mui/material/Container";
+import TableBody from "@mui/material/TableBody";
+import IconButton from "@mui/material/IconButton";
+import TableContainer from "@mui/material/TableContainer";
 
-import { paths } from 'src/routes/paths'
-import { useRouter } from 'src/routes/hooks'
-import { RouterLink } from 'src/routes/components'
+import { paths } from "src/routes/paths";
+import { useRouter } from "src/routes/hooks";
+import { RouterLink } from "src/routes/components";
 
-import { useBoolean } from 'src/hooks/use-boolean'
+import { useBoolean } from "src/hooks/use-boolean";
 
-import { fetcher } from 'src/utils/axios';
+import { fetcher } from "src/utils/axios";
 
-import { useTranslate } from 'src/locales';
-import { useAuthContext } from 'src/auth/hooks'
+import { useTranslate } from "src/locales";
+import { useAuthContext } from "src/auth/hooks";
 
-import Label from 'src/components/label'
-import Iconify from 'src/components/iconify'
-import Scrollbar from 'src/components/scrollbar'
-import { useSnackbar } from 'src/components/snackbar'
-import { ConfirmDialog } from 'src/components/custom-dialog'
-import { useSettingsContext } from 'src/components/settings'
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs'
+import Label from "src/components/label";
+import Iconify from "src/components/iconify";
+import Scrollbar from "src/components/scrollbar";
+import { useSnackbar } from "src/components/snackbar";
+import { ConfirmDialog } from "src/components/custom-dialog";
+import { useSettingsContext } from "src/components/settings";
+import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 import {
   useTable,
   emptyRows,
@@ -42,217 +42,229 @@ import {
   TableEmptyRows,
   TableHeadCustom,
   TableSelectedAction,
-  TablePaginationCustom
-} from 'src/components/table'
+  TablePaginationCustom,
+} from "src/components/table";
 
 import {
   type ServiceItem,
   type ServiceTableFilters,
   type ServiceCategoryItem,
-  type ServiceTableFilterValue
-} from 'src/types/service'
+  type ServiceTableFilterValue,
+} from "src/types/service";
 
-import ServiceTableRow from '../service-table-row'
-import ServiceTableToolbar from '../service-table-toolbar'
-import ServiceTableFiltersResult from '../service-table-filters-result'
-
-
+import ServiceTableRow from "../service-table-row";
+import ServiceTableToolbar from "../service-table-toolbar";
+import ServiceTableFiltersResult from "../service-table-filters-result";
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [{ value: 'all', label: 'All' }]
+const STATUS_OPTIONS = [{ value: "all", label: "All" }];
 
 const defaultFilters: ServiceTableFilters = {
-  name: '',
+  name: "",
   productcategory: [],
-  status: 'all'
-}
+  status: "all",
+};
 
 // ----------------------------------------------------------------------
-export default  function ServiceListView () {
-
+export default function ServiceListView() {
   const { t } = useTranslate();
 
   const TABLE_HEAD = [
-    { id: 'name', label: t('general.name'), width: 320 },
-    { id: 'price', label: t('general.price'), width: 120 },
-    { id: 'tax', label: t('general.tax') },
-    { id: 'duration', label: t('general.duration') },
-    { id: 'commission', label: t('general.commission') },
-    { id: 'color', label: t('general.color'), width: 100 },
-    { id: '', width: 18 }
-  ]
+    { id: "name", label: t("general.name"), width: 320 },
+    { id: "price", label: t("general.price"), width: 120 },
+    { id: "tax", label: t("general.tax") },
+    { id: "duration", label: t("general.duration") },
+    { id: "commission", label: t("general.commission") },
+    { id: "color", label: t("general.color"), width: 100 },
+    { id: "", width: 18 },
+  ];
 
   // Initialize
-  const [tableData, setTableData] = useState<ServiceItem[]>([])
-  const [serviceCategory, setserviceCategory] = useState<ServiceCategoryItem[]>([]);
+  const [tableData, setTableData] = useState<ServiceItem[]>([]);
+  const [serviceCategory, setserviceCategory] = useState<ServiceCategoryItem[]>(
+    []
+  );
 
-  const { logout } = useAuthContext()
+  const { logout } = useAuthContext();
 
   // Use SWR to fetch data from multiple endpoints in parallel
-  const { data: service,isLoading: isserviceLoading,  error: errorA } = useSWR('/api/salonapp/services', fetcher);
-  const { data: servicecategory,isLoading: isservicecategoryLoading, error: errorB } = useSWR('/api/salonapp/servicecategory', fetcher);
+  const {
+    data: service,
+    isLoading: isserviceLoading,
+    error: errorA,
+  } = useSWR("/api/salonapp/services", fetcher);
+  const {
+    data: servicecategory,
+    isLoading: isservicecategoryLoading,
+    error: errorB,
+  } = useSWR("/api/salonapp/servicecategory", fetcher);
 
+  const { enqueueSnackbar } = useSnackbar();
 
-  const { enqueueSnackbar } = useSnackbar()
+  const table = useTable();
 
-  const table = useTable()
+  const settings = useSettingsContext();
 
-  const settings = useSettingsContext()
+  const router = useRouter();
 
-  const router = useRouter()
+  const confirm = useBoolean();
 
-  const confirm = useBoolean()
+  const [filters, setFilters] = useState(defaultFilters);
 
-  const [filters, setFilters] = useState(defaultFilters)
- 
-  // Logout the user 
+  // Logout the user
   const handleLogout = async () => {
     try {
-      await logout()
-      router.replace('/')
+      await logout();
+      router.replace("/");
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
-    filters
-  })
+    filters,
+  });
 
   const dataInPage = dataFiltered.slice(
     table.page * table.rowsPerPage,
     table.page * table.rowsPerPage + table.rowsPerPage
-  )
+  );
 
-  const denseHeight = table.dense ? 56 : 56 + 20
+  const denseHeight = table.dense ? 56 : 56 + 20;
 
-  const canReset = !isEqual(defaultFilters, filters)
+  const canReset = !isEqual(defaultFilters, filters);
 
-  const notFound = ((dataFiltered.length === 0) && canReset) || (dataFiltered.length === 0)
+  const notFound =
+    (dataFiltered.length === 0 && canReset) || dataFiltered.length === 0;
 
   const handleFilters = useCallback(
     (name: string, value: ServiceTableFilterValue) => {
-      table.onResetPage()
+      table.onResetPage();
       setFilters((prevState) => ({
         ...prevState,
-        [name]: value
-      }))
+        [name]: value,
+      }));
     },
     [table]
-  )
+  );
 
   const handleResetFilters = useCallback(() => {
-    setFilters(defaultFilters)
-  }, [])
+    setFilters(defaultFilters);
+  }, []);
 
   // Delete an item
   const handleDeleteRow = useCallback(
     async (id: string) => {
       const response = await fetch(`/api/salonapp/services/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
-  
+
       const responseData = await response.json();
-  
-      if(responseData?.status > 401 ) {
-        enqueueSnackbar(t('general.delete_fail'), { variant: 'error' });
+
+      if (responseData?.status > 401) {
+        enqueueSnackbar(t("general.delete_fail"), { variant: "error" });
         return;
-      } 
-      
-      const deleteRow = tableData.filter((row: ServiceItem) => row.id !== id)
+      }
 
-      enqueueSnackbar(t('general.delete_success'))
+      const deleteRow = tableData.filter((row: ServiceItem) => row.id !== id);
 
-      setTableData(deleteRow)
+      enqueueSnackbar(t("general.delete_success"));
 
-      table.onUpdatePageDeleteRow(dataInPage.length)
+      setTableData(deleteRow);
+
+      table.onUpdatePageDeleteRow(dataInPage.length);
     },
-    [dataInPage.length, enqueueSnackbar, table, tableData,t]
-  )
+    [dataInPage.length, enqueueSnackbar, table, tableData, t]
+  );
 
   const handleDeleteRows = useCallback(() => {
     const deleteRows = tableData.filter(
       (row: ServiceItem) => !table.selected.includes(row.id)
-    )
+    );
 
-    enqueueSnackbar(t('general.delete_success'))
+    enqueueSnackbar(t("general.delete_success"));
 
-    setTableData(deleteRows)
+    setTableData(deleteRows);
 
     table.onUpdatePageDeleteRows({
       totalRowsInPage: dataInPage.length,
-      totalRowsFiltered: dataFiltered.length
-    })
+      totalRowsFiltered: dataFiltered.length,
+    });
   }, [
     dataFiltered.length,
     dataInPage.length,
     enqueueSnackbar,
     table,
     tableData,
-    t
-  ])
+    t,
+  ]);
 
   const handleEditRow = useCallback(
     (id: string) => {
-      router.push(paths.dashboard.services.edit(Number(id)))
+      router.push(paths.dashboard.services.edit(Number(id)));
     },
     [router]
-  )
+  );
 
   const handleFilterStatus = useCallback(
     (event: React.SyntheticEvent, newValue: string) => {
-      handleFilters('status', newValue)
+      handleFilters("status", newValue);
     },
     [handleFilters]
-  )
+  );
 
-  
-    // Use useEffect to update state1 when data1 is available
-    useEffect(() => {
-      if (service) {
-        setTableData(service.data);
-      }
-    }, [service]);
-  
-    // Use useEffect to update state2 when data2 is available
-    useEffect(() => {
-      if (servicecategory) {
-        setserviceCategory(servicecategory.data);
-      }
-    }, [servicecategory]);
-  
-
-    if (errorA || errorB) {
-      if (errorA?.response?.data?.status === 401 || errorB?.response?.data?.status === 401 ){
-        mutate(
-          key => true, // which cache keys are updated
-          undefined,   // update cache data to `undefined`
-          { revalidate: false } // do not revalidate
-        );
-        handleLogout();
-      }
-      return <div>Error loading data1.</div>;
+  // Use useEffect to update state1 when data1 is available
+  useEffect(() => {
+    if (service) {
+      setTableData(service.data);
     }
- 
-      // Display loading page 
-  if ( isserviceLoading || isservicecategoryLoading) return <div>Loading...</div>;
-  if ( errorA || errorB) return <div>Error Loading...</div>;
+  }, [service]);
+
+  // Use useEffect to update state2 when data2 is available
+  useEffect(() => {
+    if (servicecategory) {
+      setserviceCategory(servicecategory.data);
+    }
+  }, [servicecategory]);
+
+  if (errorA || errorB) {
+    if (
+      errorA?.response?.data?.status === 401 ||
+      errorB?.response?.data?.status === 401
+    ) {
+      mutate(
+        (key) => true, // which cache keys are updated
+        undefined, // update cache data to `undefined`
+        { revalidate: false } // do not revalidate
+      );
+      handleLogout();
+    }
+    return <div>Error loading data1.</div>;
+  }
+
+  // Display loading page
+  if (isserviceLoading || isservicecategoryLoading)
+    return <div>Loading...</div>;
+  if (errorA || errorB) return <div>Error Loading...</div>;
 
   return (
     <>
-      <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+      <Container maxWidth={settings.themeStretch ? false : "lg"}>
         <CustomBreadcrumbs
           heading="List"
           links={[
-            { name: t('salonapp.dashboard'), href: paths.dashboard.root },
-            { name: t('salonapp.services'), href: paths.dashboard.services.root },
-            { name: t('general.list') }
+            { name: t("salonapp.dashboard"), href: paths.dashboard.root },
+            {
+              name: t("salonapp.services"),
+              href: paths.dashboard.services.root,
+            },
+            { name: t("general.list") },
           ]}
           action={
             <Button
@@ -261,11 +273,11 @@ export default  function ServiceListView () {
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >
-              { t('salonapp.service.new_service') }
+              {t("salonapp.service.new_service")}
             </Button>
           }
           sx={{
-            mb: { xs: 3, md: 5 }
+            mb: { xs: 3, md: 5 },
           }}
         />
 
@@ -276,7 +288,7 @@ export default  function ServiceListView () {
             sx={{
               px: 2.5,
               boxShadow: (theme) =>
-                `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`
+                `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
             }}
           >
             {STATUS_OPTIONS.map((tab) => (
@@ -288,18 +300,17 @@ export default  function ServiceListView () {
                 icon={
                   <Label
                     variant={
-                      ((tab.value === 'all' || tab.value === filters.status) &&
-                        'filled') ||
-                      'soft'
+                      ((tab.value === "all" || tab.value === filters.status) &&
+                        "filled") ||
+                      "soft"
                     }
-                    color='default'
+                    color="default"
                   >
-                    {['active'].includes(
-                      tab.value
-                    )
+                    {["active"].includes(tab.value)
                       ? tableData.filter(
-                        (serviceitem: ServiceItem) => serviceitem.name === tab.value
-                      ).length
+                          (serviceitem: ServiceItem) =>
+                            serviceitem.name === tab.value
+                        ).length
                       : tableData.length}
                   </Label>
                 }
@@ -311,7 +322,7 @@ export default  function ServiceListView () {
             filters={filters}
             onFilters={handleFilters}
             //
-            productCategory={serviceCategory.map(obj => obj.name)}
+            productCategory={serviceCategory.map((obj) => obj.name)}
           />
 
           {canReset && (
@@ -326,7 +337,7 @@ export default  function ServiceListView () {
             />
           )}
 
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          <TableContainer sx={{ position: "relative", overflow: "unset" }}>
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
@@ -335,9 +346,8 @@ export default  function ServiceListView () {
                 table.onSelectAllRows(
                   checked,
                   dataFiltered.map((row) => row.id)
-                )
-              }
-              }
+                );
+              }}
               action={
                 <Tooltip title="Delete">
                   <IconButton color="primary" onClick={confirm.onTrue}>
@@ -349,7 +359,7 @@ export default  function ServiceListView () {
 
             <Scrollbar>
               <Table
-                size={table.dense ? 'small' : 'medium'}
+                size={table.dense ? "small" : "medium"}
                 sx={{ minWidth: 960 }}
               >
                 <TableHeadCustom
@@ -363,9 +373,8 @@ export default  function ServiceListView () {
                     table.onSelectAllRows(
                       checked,
                       dataFiltered.map((row) => row.id)
-                    )
-                  }
-                  }
+                    );
+                  }}
                 />
 
                 <TableBody>
@@ -379,9 +388,15 @@ export default  function ServiceListView () {
                         key={row.id}
                         row={row}
                         selected={table.selected.includes(row.id)}
-                        onSelectRow={() => { table.onSelectRow(row.id) }}
-                        onDeleteRow={() => { handleDeleteRow(row.id) }}
-                        onEditRow={() => { handleEditRow(row.id) }}
+                        onSelectRow={() => {
+                          table.onSelectRow(row.id);
+                        }}
+                        onDeleteRow={() => {
+                          handleDeleteRow(row.id);
+                        }}
+                        onEditRow={() => {
+                          handleEditRow(row.id);
+                        }}
                       />
                     ))}
 
@@ -419,7 +434,7 @@ export default  function ServiceListView () {
         title="Delete"
         content={
           <>
-            Are you sure want to delete{' '}
+            Are you sure want to delete{" "}
             <strong> {table.selected.length} </strong> items?
           </>
         }
@@ -428,8 +443,8 @@ export default  function ServiceListView () {
             variant="contained"
             color="error"
             onClick={() => {
-              handleDeleteRows()
-              confirm.onFalse()
+              handleDeleteRows();
+              confirm.onFalse();
             }}
           >
             Delete
@@ -437,44 +452,43 @@ export default  function ServiceListView () {
         }
       />
     </>
-  )
+  );
 }
 
 // ----------------------------------------------------------------------
 
-function applyFilter ({
+function applyFilter({
   inputData,
   comparator,
-  filters
+  filters,
 }: {
-  inputData: ServiceItem[]
-  comparator: (a: any, b: any) => number
-  filters: ServiceTableFilters
+  inputData: ServiceItem[];
+  comparator: (a: any, b: any) => number;
+  filters: ServiceTableFilters;
 }) {
-  const { name, productcategory } = filters
+  const { name, productcategory } = filters;
 
-  const stabilizedThis = inputData.map((el, index) => [el, index] as const)
+  const stabilizedThis = inputData.map((el, index) => [el, index] as const);
 
   stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0])
-    if (order !== 0) return order
-    return a[1] - b[1]
-  })
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
 
-  inputData = stabilizedThis.map((el) => el[0])
+  inputData = stabilizedThis.map((el) => el[0]);
 
   if (name) {
-    inputData = inputData.filter(
-      (service) =>
-        service.name.toLowerCase().includes(name.toLowerCase())
-    )
+    inputData = inputData.filter((service) =>
+      service.name.toLowerCase().includes(name.toLowerCase())
+    );
   }
-  
+
   if (productcategory.length > 0) {
     inputData = inputData.filter((service) =>
       productcategory.includes(service.ProductCategory.name)
-    )
+    );
   }
 
-  return inputData
+  return inputData;
 }

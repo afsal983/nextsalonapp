@@ -1,17 +1,20 @@
-import { useCallback } from 'react';
+import { useCallback } from "react";
 
-import Stack from '@mui/material/Stack';
-import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { formHelperTextClasses } from '@mui/material/FormHelperText';
+import Stack from "@mui/material/Stack";
+import MenuItem from "@mui/material/MenuItem";
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { formHelperTextClasses } from "@mui/material/FormHelperText";
 
-import Iconify from 'src/components/iconify';
-import CustomPopover, { usePopover } from 'src/components/custom-popover';
+import Iconify from "src/components/iconify";
+import CustomPopover, { usePopover } from "src/components/custom-popover";
 
-import { AppointmentTableFilters, AppointmentTableFilterValue } from 'src/types/appointment';
+import {
+  AppointmentTableFilters,
+  AppointmentTableFilterValue,
+} from "src/types/appointment";
 
 // ----------------------------------------------------------------------
 
@@ -22,26 +25,30 @@ type Props = {
   dateError: boolean;
 };
 
-export default function AppointmentTableToolbar({ filters, onFilters, dateError }: Props) {
+export default function AppointmentTableToolbar({
+  filters,
+  onFilters,
+  dateError,
+}: Props) {
   const popover = usePopover();
 
   const handleFilterName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      onFilters('name', event.target.value);
+      onFilters("name", event.target.value);
     },
     [onFilters]
   );
 
   const handleFilterStartDate = useCallback(
     (newValue: Date | null) => {
-      onFilters('startDate', newValue);
+      onFilters("startDate", newValue);
     },
     [onFilters]
   );
 
   const handleFilterEndDate = useCallback(
     (newValue: Date | null) => {
-      onFilters('endDate', newValue);
+      onFilters("endDate", newValue);
     },
     [onFilters]
   );
@@ -50,10 +57,10 @@ export default function AppointmentTableToolbar({ filters, onFilters, dateError 
     <>
       <Stack
         spacing={2}
-        alignItems={{ xs: 'flex-end', md: 'center' }}
+        alignItems={{ xs: "flex-end", md: "center" }}
         direction={{
-          xs: 'column',
-          md: 'row',
+          xs: "column",
+          md: "row",
         }}
         sx={{
           p: 2.5,
@@ -82,19 +89,25 @@ export default function AppointmentTableToolbar({ filters, onFilters, dateError 
             textField: {
               fullWidth: true,
               error: dateError,
-              helperText: dateError && 'End date must be later than start date',
+              helperText: dateError && "End date must be later than start date",
             },
           }}
           sx={{
             maxWidth: { md: 200 },
             [`& .${formHelperTextClasses.root}`]: {
-              position: { md: 'absolute' },
+              position: { md: "absolute" },
               bottom: { md: -40 },
             },
           }}
         />
 
-        <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          spacing={2}
+          flexGrow={1}
+          sx={{ width: 1 }}
+        >
           <TextField
             fullWidth
             value={filters.name}
@@ -103,7 +116,10 @@ export default function AppointmentTableToolbar({ filters, onFilters, dateError 
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                  <Iconify
+                    icon="eva:search-fill"
+                    sx={{ color: "text.disabled" }}
+                  />
                 </InputAdornment>
               ),
             }}

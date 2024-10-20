@@ -1,27 +1,27 @@
-import { _userList } from 'src/_mock/_user'
+import { _userList } from "src/_mock/_user";
 
-import { ServiceCategoryEditView } from 'src/sections/servicecategory/view'
+import { ServiceCategoryEditView } from "src/sections/servicecategory/view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: ServiceCategory Edit'
-}
+  title: "Dashboard: ServiceCategory Edit",
+};
 
 interface Props {
   params: {
-    id: string
-  }
+    id: string;
+  };
 }
 
-export default function ServiceCategoryEditPage ({ params }: Props) {
-  const { id } = params
+export default function ServiceCategoryEditPage({ params }: Props) {
+  const { id } = params;
 
-  return <ServiceCategoryEditView id={id} />
+  return <ServiceCategoryEditView id={id} />;
 }
 
-export async function generateStaticParams () {
+export async function generateStaticParams() {
   return _userList.map((user) => ({
-    id: user.id
-  }))
+    id: user.id,
+  }));
 }

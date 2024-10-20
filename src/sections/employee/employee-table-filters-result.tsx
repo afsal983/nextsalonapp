@@ -1,27 +1,30 @@
-import { useCallback } from 'react'
+import { useCallback } from "react";
 
-import Box from '@mui/material/Box'
-import Chip from '@mui/material/Chip'
-import Paper from '@mui/material/Paper'
-import Button from '@mui/material/Button'
-import Stack, { type StackProps } from '@mui/material/Stack'
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
+import Paper from "@mui/material/Paper";
+import Button from "@mui/material/Button";
+import Stack, { type StackProps } from "@mui/material/Stack";
 
-import Iconify from 'src/components/iconify'
+import Iconify from "src/components/iconify";
 
-import { type EmployeeTableFilters, type EmployeeTableFilterValue } from 'src/types/employee'
+import {
+  type EmployeeTableFilters,
+  type EmployeeTableFilterValue,
+} from "src/types/employee";
 
 // ----------------------------------------------------------------------
 
 type Props = StackProps & {
-  filters: EmployeeTableFilters
-  onFilters: (name: string, value: EmployeeTableFilterValue) => void
+  filters: EmployeeTableFilters;
+  onFilters: (name: string, value: EmployeeTableFilterValue) => void;
   //
-  onResetFilters: VoidFunction
+  onResetFilters: VoidFunction;
   //
-  results: number
-}
+  results: number;
+};
 
-export default function EmployeeTableFiltersResult ({
+export default function EmployeeTableFiltersResult({
   filters,
   onFilters,
   //
@@ -31,29 +34,27 @@ export default function EmployeeTableFiltersResult ({
   ...other
 }: Props) {
   const handleRemoveKeyword = useCallback(() => {
-    onFilters('name', '')
-  }, [onFilters])
+    onFilters("name", "");
+  }, [onFilters]);
 
   const handleRemoveStatus = useCallback(() => {
-    onFilters('status', 'all')
-  }, [onFilters])
+    onFilters("status", "all");
+  }, [onFilters]);
 
   const handleRemoveRole = useCallback(
     (inputValue: string) => {
-      const newValue = filters.branches.filter(
-        (item) => item !== inputValue
-      )
+      const newValue = filters.branches.filter((item) => item !== inputValue);
 
-      onFilters('productcategory', newValue)
+      onFilters("productcategory", newValue);
     },
     [filters.branches, onFilters]
-  )
+  );
 
   return (
     <Stack spacing={1.5} {...other}>
-      <Box sx={{ typography: 'body2' }}>
+      <Box sx={{ typography: "body2" }}>
         <strong>{results}</strong>
-        <Box component="span" sx={{ color: 'text.secondary', ml: 0.25 }}>
+        <Box component="span" sx={{ color: "text.secondary", ml: 0.25 }}>
           results found
         </Box>
       </Box>
@@ -65,7 +66,7 @@ export default function EmployeeTableFiltersResult ({
         flexWrap="wrap"
         alignItems="center"
       >
-        {filters.status !== 'all' && (
+        {filters.status !== "all" && (
           <Block label="Status:">
             <Chip
               size="small"
@@ -82,7 +83,9 @@ export default function EmployeeTableFiltersResult ({
                 key={item}
                 label={item}
                 size="small"
-                onDelete={() => { handleRemoveRole(item) }}
+                onDelete={() => {
+                  handleRemoveRole(item);
+                }}
               />
             ))}
           </Block>
@@ -107,16 +110,16 @@ export default function EmployeeTableFiltersResult ({
         </Button>
       </Stack>
     </Stack>
-  )
+  );
 }
 
 // ----------------------------------------------------------------------
 
 type BlockProps = StackProps & {
-  label: string
-}
+  label: string;
+};
 
-function Block ({ label, children, sx, ...other }: BlockProps) {
+function Block({ label, children, sx, ...other }: BlockProps) {
   return (
     <Stack
       component={Paper}
@@ -126,13 +129,13 @@ function Block ({ label, children, sx, ...other }: BlockProps) {
       sx={{
         p: 1,
         borderRadius: 1,
-        overflow: 'hidden',
-        borderStyle: 'dashed',
-        ...sx
+        overflow: "hidden",
+        borderStyle: "dashed",
+        ...sx,
       }}
       {...other}
     >
-      <Box component="span" sx={{ typography: 'subtitle2' }}>
+      <Box component="span" sx={{ typography: "subtitle2" }}>
         {label}
       </Box>
 
@@ -140,5 +143,5 @@ function Block ({ label, children, sx, ...other }: BlockProps) {
         {children}
       </Stack>
     </Stack>
-  )
+  );
 }

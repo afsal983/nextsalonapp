@@ -1,61 +1,62 @@
-'use client'
+"use client";
 
-import useSWR from 'swr'
-import React from 'react'
+import useSWR from "swr";
+import React from "react";
 
-import Container from '@mui/material/Container'
+import Container from "@mui/material/Container";
 
-import { paths } from 'src/routes/paths'
+import { paths } from "src/routes/paths";
 
-import { fetcher } from 'src/utils/axios'
+import { fetcher } from "src/utils/axios";
 
-import { useTranslate } from 'src/locales';
+import { useTranslate } from "src/locales";
 
-import { useSettingsContext } from 'src/components/settings'
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs'
+import { useSettingsContext } from "src/components/settings";
+import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
-import PaymentTypeNewEditForm from '../paymenttype-new-edit-form'
+import PaymentTypeNewEditForm from "../paymenttype-new-edit-form";
 
 // ----------------------------------------------------------------------
 
 interface Props {
-  id: string
+  id: string;
 }
 
-export default function PaymenttypeEditView ({ id }: Props) {
-
+export default function PaymenttypeEditView({ id }: Props) {
   const { t } = useTranslate();
 
-  const settings = useSettingsContext()
+  const settings = useSettingsContext();
 
   // Pre data fetching via API calls
-  const { data: paymenttypeData , error: paymenttypeError} = useSWR( `/api/salonapp/paymenttype/${id}`, fetcher)
+  const { data: paymenttypeData, error: paymenttypeError } = useSWR(
+    `/api/salonapp/paymenttype/${id}`,
+    fetcher
+  );
 
+  if (paymenttypeError) return <div>Failed to load</div>;
+  if (!paymenttypeData) return <div>Loading...</div>;
 
-  if (paymenttypeError  ) return <div>Failed to load</div>
-  if (!paymenttypeData ) return <div>Loading...</div>
- 
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+    <Container maxWidth={settings.themeStretch ? false : "lg"}>
       <CustomBreadcrumbs
         heading="Edit"
         links={[
           {
-            name: t('salonapp.dashboard'),
-            href: paths.dashboard.root
+            name: t("salonapp.dashboard"),
+            href: paths.dashboard.root,
           },
           {
-            name: t('salonapp.retails'),
-            href: paths.dashboard.invoice.paymenttypes.root
+            name: t("salonapp.retails"),
+            href: paths.dashboard.invoice.paymenttypes.root,
           },
-          { name: paymenttypeData?.data[0].name }
+          { name: paymenttypeData?.data[0].name },
         ]}
         sx={{
-          mb: { xs: 3, md: 5 }
+          mb: { xs: 3, md: 5 },
         }}
       />
 
-      <PaymentTypeNewEditForm currentPaymentType={paymenttypeData?.data[0]}/>
+      <PaymentTypeNewEditForm currentPaymentType={paymenttypeData?.data[0]} />
     </Container>
-  )
+  );
 }

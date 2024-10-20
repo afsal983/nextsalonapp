@@ -1,42 +1,41 @@
-import Button from '@mui/material/Button'
-import MenuItem from '@mui/material/MenuItem'
-import TableRow from '@mui/material/TableRow'
-import Checkbox from '@mui/material/Checkbox'
-import TableCell from '@mui/material/TableCell'
-import IconButton from '@mui/material/IconButton'
-import ListItemText from '@mui/material/ListItemText'
+import Button from "@mui/material/Button";
+import MenuItem from "@mui/material/MenuItem";
+import TableRow from "@mui/material/TableRow";
+import Checkbox from "@mui/material/Checkbox";
+import TableCell from "@mui/material/TableCell";
+import IconButton from "@mui/material/IconButton";
+import ListItemText from "@mui/material/ListItemText";
 
-import { useBoolean } from 'src/hooks/use-boolean'
+import { useBoolean } from "src/hooks/use-boolean";
 
-import Iconify from 'src/components/iconify'
-import { ConfirmDialog } from 'src/components/custom-dialog'
-import CustomPopover, { usePopover } from 'src/components/custom-popover'
+import Iconify from "src/components/iconify";
+import { ConfirmDialog } from "src/components/custom-dialog";
+import CustomPopover, { usePopover } from "src/components/custom-popover";
 
-import { type PaymentTypeItem } from 'src/types/paymenttype'
+import { type PaymentTypeItem } from "src/types/paymenttype";
 
 // ----------------------------------------------------------------------
 
 interface Props {
-  selected: boolean
-  onEditRow: VoidFunction
-  row: PaymentTypeItem
-  onSelectRow: VoidFunction
-  onDeleteRow: VoidFunction
+  selected: boolean;
+  onEditRow: VoidFunction;
+  row: PaymentTypeItem;
+  onSelectRow: VoidFunction;
+  onDeleteRow: VoidFunction;
 }
 
-export default function RetailTableRow ({
+export default function RetailTableRow({
   row,
   selected,
   onEditRow,
   onSelectRow,
-  onDeleteRow
+  onDeleteRow,
 }: Props) {
-  const { name, description,default_paymenttype, is_authcode  } =
-    row
+  const { name, description, default_paymenttype, is_authcode } = row;
 
-  const confirm = useBoolean()
+  const confirm = useBoolean();
 
-  const popover = usePopover()
+  const popover = usePopover();
 
   return (
     <>
@@ -45,28 +44,31 @@ export default function RetailTableRow ({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
 
-        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
+        <TableCell sx={{ display: "flex", alignItems: "center" }}>
           <ListItemText
             primary={name}
             secondary=""
-            primaryTypographyProps={{ typography: 'body2' }}
+            primaryTypographyProps={{ typography: "body2" }}
             secondaryTypographyProps={{
-              component: 'span',
-              color: 'text.disabled'
+              component: "span",
+              color: "text.disabled",
             }}
           />
         </TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{description}</TableCell>
+        <TableCell sx={{ whiteSpace: "nowrap" }}>{description}</TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{default_paymenttype?"Yes": "No"}</TableCell>
+        <TableCell sx={{ whiteSpace: "nowrap" }}>
+          {default_paymenttype ? "Yes" : "No"}
+        </TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{is_authcode?"Yes": "No"}</TableCell>
-  
+        <TableCell sx={{ whiteSpace: "nowrap" }}>
+          {is_authcode ? "Yes" : "No"}
+        </TableCell>
 
-        <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+        <TableCell align="right" sx={{ px: 1, whiteSpace: "nowrap" }}>
           <IconButton
-            color={popover.open ? 'inherit' : 'default'}
+            color={popover.open ? "inherit" : "default"}
             onClick={popover.onOpen}
           >
             <Iconify icon="eva:more-vertical-fill" />
@@ -82,10 +84,10 @@ export default function RetailTableRow ({
       >
         <MenuItem
           onClick={() => {
-            confirm.onTrue()
-            popover.onClose()
+            confirm.onTrue();
+            popover.onClose();
           }}
-          sx={{ color: 'error.main' }}
+          sx={{ color: "error.main" }}
         >
           <Iconify icon="solar:trash-bin-trash-bold" />
           Delete
@@ -93,8 +95,8 @@ export default function RetailTableRow ({
 
         <MenuItem
           onClick={() => {
-            onEditRow()
-            popover.onClose()
+            onEditRow();
+            popover.onClose();
           }}
         >
           <Iconify icon="solar:pen-bold" />
@@ -114,5 +116,5 @@ export default function RetailTableRow ({
         }
       />
     </>
-  )
+  );
 }

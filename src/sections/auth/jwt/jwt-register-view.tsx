@@ -1,71 +1,71 @@
-'use client'
+"use client";
 
-import * as Yup from 'yup'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
+import * as Yup from "yup";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import Link from '@mui/material/Link'
-import Alert from '@mui/material/Alert'
-import Stack from '@mui/material/Stack'
-import IconButton from '@mui/material/IconButton'
-import Typography from '@mui/material/Typography'
-import LoadingButton from '@mui/lab/LoadingButton'
-import InputAdornment from '@mui/material/InputAdornment'
+import Link from "@mui/material/Link";
+import Alert from "@mui/material/Alert";
+import Stack from "@mui/material/Stack";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import LoadingButton from "@mui/lab/LoadingButton";
+import InputAdornment from "@mui/material/InputAdornment";
 
-import { paths } from 'src/routes/paths'
-import { RouterLink } from 'src/routes/components'
-import { useRouter, useSearchParams } from 'src/routes/hooks'
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
+import { useRouter, useSearchParams } from "src/routes/hooks";
 
-import { useBoolean } from 'src/hooks/use-boolean'
+import { useBoolean } from "src/hooks/use-boolean";
 
-import { useAuthContext } from 'src/auth/hooks'
-import { PATH_AFTER_LOGIN } from 'src/config-global'
+import { useAuthContext } from "src/auth/hooks";
+import { PATH_AFTER_LOGIN } from "src/config-global";
 
-import Iconify from 'src/components/iconify'
-import FormProvider, { RHFTextField } from 'src/components/hook-form'
+import Iconify from "src/components/iconify";
+import FormProvider, { RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
-export default function JwtRegisterView () {
-  const { register } = useAuthContext()
+export default function JwtRegisterView() {
+  const { register } = useAuthContext();
 
-  const router = useRouter()
+  const router = useRouter();
 
-  const [errorMsg, setErrorMsg] = useState('')
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParams();
 
-  const returnTo = searchParams.get('returnTo')
+  const returnTo = searchParams.get("returnTo");
 
-  const password = useBoolean()
+  const password = useBoolean();
 
   const RegisterSchema = Yup.object().shape({
-    firstName: Yup.string().required('First name required'),
-    lastName: Yup.string().required('Last name required'),
+    firstName: Yup.string().required("First name required"),
+    lastName: Yup.string().required("Last name required"),
     email: Yup.string()
-      .required('Email is required')
-      .email('Email must be a valid email address'),
-    password: Yup.string().required('Password is required')
-  })
+      .required("Email is required")
+      .email("Email must be a valid email address"),
+    password: Yup.string().required("Password is required"),
+  });
 
   const defaultValues = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: ''
-  }
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+  };
 
   const methods = useForm({
     resolver: yupResolver(RegisterSchema),
-    defaultValues
-  })
+    defaultValues,
+  });
 
   const {
     reset,
     handleSubmit,
-    formState: { isSubmitting }
-  } = methods
+    formState: { isSubmitting },
+  } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -74,18 +74,18 @@ export default function JwtRegisterView () {
         data.password,
         data.firstName,
         data.lastName
-      )
+      );
 
-      router.push(returnTo || PATH_AFTER_LOGIN)
+      router.push(returnTo || PATH_AFTER_LOGIN);
     } catch (error) {
-      console.error(error)
-      reset()
-      setErrorMsg(typeof error === 'string' ? error : error.message)
+      console.error(error);
+      reset();
+      setErrorMsg(typeof error === "string" ? error : error.message);
     }
-  })
+  });
 
   const renderHead = (
-    <Stack spacing={2} sx={{ mb: 5, position: 'relative' }}>
+    <Stack spacing={2} sx={{ mb: 5, position: "relative" }}>
       <Typography variant="h4">Get started absolutely free</Typography>
 
       <Stack direction="row" spacing={0.5}>
@@ -100,33 +100,33 @@ export default function JwtRegisterView () {
         </Link>
       </Stack>
     </Stack>
-  )
+  );
 
   const renderTerms = (
     <Typography
       component="div"
       sx={{
         mt: 2.5,
-        textAlign: 'center',
-        typography: 'caption',
-        color: 'text.secondary'
+        textAlign: "center",
+        typography: "caption",
+        color: "text.secondary",
       }}
     >
-      {'By signing up, I agree to '}
+      {"By signing up, I agree to "}
       <Link underline="always" color="text.primary">
         Terms of Service
       </Link>
-      {' and '}
+      {" and "}
       <Link underline="always" color="text.primary">
         Privacy Policy
       </Link>
       .
     </Typography>
-  )
+  );
 
   const renderForm = (
     <Stack spacing={2.5}>
-      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+      <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
         <RHFTextField name="firstName" label="First name" />
         <RHFTextField name="lastName" label="Last name" />
       </Stack>
@@ -136,19 +136,19 @@ export default function JwtRegisterView () {
       <RHFTextField
         name="password"
         label="Password"
-        type={password.value ? 'text' : 'password'}
+        type={password.value ? "text" : "password"}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
               <IconButton onClick={password.onToggle} edge="end">
                 <Iconify
                   icon={
-                    password.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'
+                    password.value ? "solar:eye-bold" : "solar:eye-closed-bold"
                   }
                 />
               </IconButton>
             </InputAdornment>
-          )
+          ),
         }}
       />
 
@@ -163,7 +163,7 @@ export default function JwtRegisterView () {
         Create account
       </LoadingButton>
     </Stack>
-  )
+  );
 
   return (
     <>
@@ -181,5 +181,5 @@ export default function JwtRegisterView () {
 
       {renderTerms}
     </>
-  )
+  );
 }

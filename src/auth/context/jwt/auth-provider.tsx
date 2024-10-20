@@ -7,10 +7,11 @@ import axios, { endpoints } from 'src/utils/axios'
 
 import { useAuthContext } from 'src/auth/hooks';
 
+import { first } from 'lodash';
 import { AuthContext } from './auth-context'
 import { setSession, isValidToken } from './utils'
 import { type AuthUserType, type ActionMapType, type AuthStateType } from '../../types'
-import { first } from 'lodash';
+
 
 // ----------------------------------------------------------------------
 /**
@@ -92,56 +93,49 @@ export function AuthProvider ({ children }: Props) {
   
   const initialize = useCallback(async () => {
     try {
-      const storedToken = sessionStorage.getItem(STORAGE_KEY)
-      const storedrefreshtoken= sessionStorage.getItem('refreshtoken')
-
    
-      if (storedToken && isValidToken(storedToken)) {
+        // Use the existing credentials to renew your identity
+        // It calls refresh token 
+        const res = await fetch(endpoints.auth.me, {
+          method: 'POST',
+          headers: {
+              'Content-type': 'application/json',
+          },
+        })
         
-        const data = {
-          "refresh_token": storedrefreshtoken
-        }
+        const logindata = await res.json()
 
-        const res = await axios.post(endpoints.auth.me, data)
-        const { token, refresh_token, firstname, lastname,email, telephone, id, localid,roleid, group_id, is_admin, orgroleid} = res.data
-
-        const user = {
-          "firstname": firstname,
-          "lastname": lastname,
-          "email":  email,
-          "telephone": telephone,
-          "id": id,
-          "localid": localid,
-          "group_id": group_id,
-          "roleid": roleid,
-          "is_admin": is_admin,
-          "orgroleid": orgroleid
-        }
-
-        setSession(token)
-        localStorage.setItem(STORAGE_KEY, token)
-        localStorage.setItem('refreshtoken', refresh_token)
-        // /const res = await axios.get(endpoints.auth.me)
-
-        
+        const {
+          firstname,
+          lastname,
+          email,
+          telephone,
+          id,
+          roleid,
+          domain_id,
+          orgroleid,
+          branch_id,
+          orgsettings,
+        } = logindata
 
         dispatch({
           type: Types.INITIAL,
           payload: {
             user: {
-              ...currentuser.user,
-              token
+              firstname,
+              lastname,
+              email,
+              telephone,
+              id,
+              roleid,
+              domain_id,
+              orgroleid,
+              branch_id,
+              orgsettings,
             }
           }
         })
-      } else {
-        dispatch({
-          type: Types.INITIAL,
-          payload: {
-            user: null
-          }
-        })
-      }
+
     } catch (error) {
       dispatch({
         type: Types.INITIAL,
@@ -150,7 +144,7 @@ export function AuthProvider ({ children }: Props) {
         }
       })
     }
-  }, [currentuser])
+  }, [])
 
   useEffect(() => {
     initialize()
@@ -161,7 +155,7 @@ export function AuthProvider ({ children }: Props) {
 
     setSession("")
     // const res = await axios.post(endpoints.auth.login, data)
-    const res = await fetch('/api/login', {
+    const res = await fetch(endpoints.auth.login, {
       method: 'POST',
       headers: {
           'Content-type': 'application/json',
@@ -181,8 +175,7 @@ export function AuthProvider ({ children }: Props) {
       domain_id,
       orgroleid,
       branch_id,
-      token,
-      refresh_token
+      orgsettings,
     } = logindata
 
     // setSession(token)
@@ -200,8 +193,7 @@ export function AuthProvider ({ children }: Props) {
           domain_id,
           orgroleid,
           branch_id,
-          token,
-          refresh_token
+          orgsettings,
         }
       }
     })

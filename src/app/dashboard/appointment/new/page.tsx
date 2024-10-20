@@ -1,13 +1,11 @@
-import { BranchCreateView } from 'src/sections/branch/view'
-
+import { BranchCreateView } from "src/sections/branch/view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Create new branch'
-}
+  title: "Dashboard: Create new branch",
+};
 
-export default async function BranchCreatePage () {
-
-  return <BranchCreateView/>
+export default async function BranchCreatePage() {
+  return <BranchCreateView />;
 }

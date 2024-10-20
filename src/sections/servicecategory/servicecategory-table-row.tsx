@@ -1,42 +1,41 @@
-import Button from '@mui/material/Button'
-import MenuItem from '@mui/material/MenuItem'
-import TableRow from '@mui/material/TableRow'
-import Checkbox from '@mui/material/Checkbox'
-import TableCell from '@mui/material/TableCell'
-import IconButton from '@mui/material/IconButton'
-import ListItemText from '@mui/material/ListItemText'
+import Button from "@mui/material/Button";
+import MenuItem from "@mui/material/MenuItem";
+import TableRow from "@mui/material/TableRow";
+import Checkbox from "@mui/material/Checkbox";
+import TableCell from "@mui/material/TableCell";
+import IconButton from "@mui/material/IconButton";
+import ListItemText from "@mui/material/ListItemText";
 
-import { useBoolean } from 'src/hooks/use-boolean'
+import { useBoolean } from "src/hooks/use-boolean";
 
-import Iconify from 'src/components/iconify'
-import { ConfirmDialog } from 'src/components/custom-dialog'
-import CustomPopover, { usePopover } from 'src/components/custom-popover'
+import Iconify from "src/components/iconify";
+import { ConfirmDialog } from "src/components/custom-dialog";
+import CustomPopover, { usePopover } from "src/components/custom-popover";
 
-import { type ServiceCategoryItem } from 'src/types/service'
+import { type ServiceCategoryItem } from "src/types/service";
 
 // ----------------------------------------------------------------------
 
 interface Props {
-  selected: boolean
-  onEditRow: VoidFunction
-  row: ServiceCategoryItem
-  onSelectRow: VoidFunction
-  onDeleteRow: VoidFunction
+  selected: boolean;
+  onEditRow: VoidFunction;
+  row: ServiceCategoryItem;
+  onSelectRow: VoidFunction;
+  onDeleteRow: VoidFunction;
 }
 
-export default function ServiceCategoryTableRow ({
+export default function ServiceCategoryTableRow({
   row,
   selected,
   onEditRow,
   onSelectRow,
-  onDeleteRow
+  onDeleteRow,
 }: Props) {
-  const { name } =
-    row
+  const { name } = row;
 
-  const confirm = useBoolean()
+  const confirm = useBoolean();
 
-  const popover = usePopover()
+  const popover = usePopover();
 
   return (
     <>
@@ -45,20 +44,20 @@ export default function ServiceCategoryTableRow ({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
 
-        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
+        <TableCell sx={{ display: "flex", alignItems: "center" }}>
           <ListItemText
             primary={name}
             // secondary={ProductCategory.name}
-            primaryTypographyProps={{ typography: 'body2' }}
+            primaryTypographyProps={{ typography: "body2" }}
             secondaryTypographyProps={{
-              component: 'span',
-              color: 'text.disabled'
+              component: "span",
+              color: "text.disabled",
             }}
           />
         </TableCell>
-        <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+        <TableCell align="right" sx={{ px: 1, whiteSpace: "nowrap" }}>
           <IconButton
-            color={popover.open ? 'inherit' : 'default'}
+            color={popover.open ? "inherit" : "default"}
             onClick={popover.onOpen}
           >
             <Iconify icon="eva:more-vertical-fill" />
@@ -74,10 +73,10 @@ export default function ServiceCategoryTableRow ({
       >
         <MenuItem
           onClick={() => {
-            confirm.onTrue()
-            popover.onClose()
+            confirm.onTrue();
+            popover.onClose();
           }}
-          sx={{ color: 'error.main' }}
+          sx={{ color: "error.main" }}
         >
           <Iconify icon="solar:trash-bin-trash-bold" />
           Delete
@@ -85,8 +84,8 @@ export default function ServiceCategoryTableRow ({
 
         <MenuItem
           onClick={() => {
-            onEditRow()
-            popover.onClose()
+            onEditRow();
+            popover.onClose();
           }}
         >
           <Iconify icon="solar:pen-bold" />
@@ -106,5 +105,5 @@ export default function ServiceCategoryTableRow ({
         }
       />
     </>
-  )
+  );
 }

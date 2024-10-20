@@ -1,12 +1,11 @@
-import { ServiceListView } from 'src/sections/service/view'
-
+import { ServiceListView } from "src/sections/service/view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Service List'
-}
+  title: "Dashboard: Service List",
+};
 
-export default  function ServicesPage () {
-  return <ServiceListView/>
+export default function ServicesPage() {
+  return <ServiceListView />;
 }

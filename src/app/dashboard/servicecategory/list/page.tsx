@@ -1,13 +1,11 @@
-
-
-import { ServiceCategoryListView } from 'src/sections/servicecategory/view'
+import { ServiceCategoryListView } from "src/sections/servicecategory/view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: ServiceCategory List'
-}
+  title: "Dashboard: ServiceCategory List",
+};
 
-export default function ServiceCategoryListPage (context: any) {
-  return <ServiceCategoryListView/>
+export default function ServiceCategoryListPage(context: any) {
+  return <ServiceCategoryListView />;
 }

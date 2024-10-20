@@ -1,14 +1,14 @@
-import { useMemo } from 'react';
-import merge from 'lodash/merge';
-import useSWR, { mutate } from 'swr';
+import { useMemo } from "react";
+import merge from "lodash/merge";
+import useSWR, { mutate } from "swr";
 
-import { fetcher } from 'src/utils/axios';
+import { fetcher } from "src/utils/axios";
 
-import { ICalendarEvent } from 'src/types/calendar';
-import { AppointmentItem} from 'src/types/appointment';
+import { ICalendarEvent } from "src/types/calendar";
+import { AppointmentItem } from "src/types/appointment";
 // ----------------------------------------------------------------------
 
-let  URL : string;
+let URL: string;
 
 const options = {
   revalidateIfStale: false,
@@ -17,9 +17,9 @@ const options = {
 };
 
 type Props = {
-  employeeId: Number,
-  startDate: Date| null,
-  endDate: Date| null,
+  employeeId: Number;
+  startDate: Date | null;
+  endDate: Date | null;
 };
 
 export function useGetEvents({ employeeId, startDate, endDate }: Props) {
@@ -27,12 +27,15 @@ export function useGetEvents({ employeeId, startDate, endDate }: Props) {
 
   URL = `/api/salonapp/appointments/calendar?employeeId=${employeeId}&startDate=${startDate?.toISOString()}&endDate=${endDate?.toISOString()}`;
   // Get All invoices and services
-  const { data,isLoading,  error, isValidating } = useSWR(`/api/salonapp/appointments/calendar?employeeId=${employeeId}&startDate=${startDate?.toISOString()}&endDate=${endDate?.toISOString()}`, fetcher, {
-    revalidateOnFocus: true,
-    revalidateIfStale: true,
-    dedupingInterval: 500, // Set to 500ms to revalidate more frequently
-  });
-
+  const { data, isLoading, error, isValidating } = useSWR(
+    `/api/salonapp/appointments/calendar?employeeId=${employeeId}&startDate=${startDate?.toISOString()}&endDate=${endDate?.toISOString()}`,
+    fetcher,
+    {
+      revalidateOnFocus: true,
+      revalidateIfStale: true,
+      dedupingInterval: 500, // Set to 500ms to revalidate more frequently
+    }
+  );
 
   const memoizedValue = useMemo(() => {
     /*
@@ -44,7 +47,7 @@ export function useGetEvents({ employeeId, startDate, endDate }: Props) {
     const events = data?.data?.map((event: AppointmentItem) => ({
       id: String(event.id),
       color: "red",
-      title: `${event?.Customer?.firstname} ${event?.Customer?.lastname}` ,
+      title: `${event?.Customer?.firstname} ${event?.Customer?.lastname}`,
       allDay: false,
       description: event?.Customer?.firstname,
       customer_id: event?.customer_id,
@@ -73,13 +76,12 @@ export function useGetEvents({ employeeId, startDate, endDate }: Props) {
 // ----------------------------------------------------------------------
 
 export async function createEvent(eventData: ICalendarEvent) {
-
   // Convert the ICalendarEvent to Actual Event supported in the server
-  const  newevent = {
+  const newevent = {
     id: 0,
     start: new Date(eventData?.start).toISOString(),
     end: new Date(eventData?.end).toISOString(),
-    customer_id:eventData.customer_id ,
+    customer_id: eventData.customer_id,
     product_id: eventData?.service_id,
     employee_id: eventData?.employee_id,
     branch_id: 1,
@@ -87,31 +89,29 @@ export async function createEvent(eventData: ICalendarEvent) {
     notes: eventData.notes,
     deleted: 0,
     Additional_products: [],
-  }
+  };
 
   // Post the data to remote server
   const response = await fetch(`/api/salonapp/appointments`, {
-    method:  "POST",
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(newevent),
   });
 
-  // Get the response 
+  // Get the response
   const responseData = await response.json();
 
-  if(responseData?.status !== 200 ) {
-    return responseData ;
+  if (responseData?.status !== 200) {
+    return responseData;
   }
- 
-  const updatedevent =  merge({}, 
-                              newevent, 
-                              {
-                                id : responseData?.data[0].id ,
-                                Customer : eventData?.Customer,
-                                Product : eventData?.Product 
-                              },);
+
+  const updatedevent = merge({}, newevent, {
+    id: responseData?.data[0].id,
+    Customer: eventData?.Customer,
+    Product: eventData?.Product,
+  });
 
   // Access and log the cache for a specific key for better user experience
   mutate(
@@ -127,53 +127,52 @@ export async function createEvent(eventData: ICalendarEvent) {
     false
   );
 
-  
-  return responseData ;
-  
+  return responseData;
 }
 
 // ----------------------------------------------------------------------
 
 export async function updateEvent(eventData: Partial<ICalendarEvent>) {
+  // Convert the ICalendarEvent to Actual Event supported in the server
+  const newevent = {
+    id: Number(eventData?.id),
+    start: new Date(eventData?.start || "").toISOString(),
+    end: new Date(eventData?.end || "").toISOString(),
+    customer_id: eventData.customer_id,
+    product_id: eventData?.service_id,
+    employee_id: eventData?.employee_id,
+    branch_id: 1,
+    reminder_count: 0,
+    notes: eventData.notes,
+    deleted: 0,
+    Additional_products: [],
+  };
 
- // Convert the ICalendarEvent to Actual Event supported in the server
- const  newevent = {
-  id: Number(eventData?.id),
-  start: new Date(eventData?.start|| "").toISOString(),
-  end: new Date(eventData?.end|| "").toISOString(),
-  customer_id:eventData.customer_id ,
-  product_id: eventData?.service_id,
-  employee_id: eventData?.employee_id,
-  branch_id: 1,
-  reminder_count: 0,
-  notes: eventData.notes,
-  deleted: 0,
-  Additional_products: [],
-}
+  // Post the data to remote server
+  const response = await fetch(`/api/salonapp/appointments`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newevent),
+  });
 
-// Post the data to remote server
-const response = await fetch(`/api/salonapp/appointments`, {
-  method:  "PUT",
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify(newevent),
-});
-
-  // Get the response 
+  // Get the response
   const responseData = await response.json();
-  if(responseData?.status !== 200 ) {
-    console.log("dddssd")
-    console.log(responseData)
-    return responseData ;
+  if (responseData?.status !== 200) {
+    console.log("dddssd");
+    console.log(responseData);
+    return responseData;
   }
- 
-  
+
   mutate(
     URL,
     (currentData: any) => {
-      const data: ICalendarEvent[] = currentData?.data?.map((event: AppointmentItem) =>
-        Number(event.id) ===  Number(eventData.id) ? { ...event, ...newevent } : event
+      const data: ICalendarEvent[] = currentData?.data?.map(
+        (event: AppointmentItem) =>
+          Number(event.id) === Number(eventData.id)
+            ? { ...event, ...newevent }
+            : event
       );
 
       return {
@@ -184,28 +183,27 @@ const response = await fetch(`/api/salonapp/appointments`, {
     false
   );
 
-  return responseData ;
+  return responseData;
 }
 
 // ----------------------------------------------------------------------
 
 export async function deleteEvent(eventId: string) {
+  // Post the data to remote server
+  const response = await fetch(`/api/salonapp/appointments/${eventId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
-// Post the data to remote server
-const response = await fetch(`/api/salonapp/appointments/${eventId}`, {
-  method:  "DELETE",
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-  // Get the response 
+  // Get the response
   const responseData = await response.json();
-  if(responseData?.status !== 200 ) {
-    console.log(responseData)
-    return responseData ;
+  if (responseData?.status !== 200) {
+    console.log(responseData);
+    return responseData;
   }
- 
+
   mutate(
     URL,
     (currentData: any) => {
@@ -213,7 +211,7 @@ const response = await fetch(`/api/salonapp/appointments/${eventId}`, {
         (event: AppointmentItem) => Number(event.id) !== Number(eventId)
       );
 
-      console.log(currentData)
+      console.log(currentData);
       return {
         ...currentData.data,
         data,
@@ -221,5 +219,5 @@ const response = await fetch(`/api/salonapp/appointments/${eventId}`, {
     },
     false
   );
-  return responseData ;
+  return responseData;
 }

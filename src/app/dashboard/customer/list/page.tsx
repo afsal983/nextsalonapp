@@ -1,13 +1,11 @@
-
-
-import { CustomerListView } from 'src/sections/customer/view'
+import { CustomerListView } from "src/sections/customer/view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Customer List'
-}
+  title: "Dashboard: Customer List",
+};
 
-export default function CustomerListPage (context: any) {
-  return <CustomerListView/>
+export default function CustomerListPage(context: any) {
+  return <CustomerListView />;
 }

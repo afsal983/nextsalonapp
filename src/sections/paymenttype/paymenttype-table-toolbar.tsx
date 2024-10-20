@@ -1,72 +1,74 @@
-import { useCallback } from 'react'
+import { useCallback } from "react";
 
-import Stack from '@mui/material/Stack'
-import MenuItem from '@mui/material/MenuItem'
-import TextField from '@mui/material/TextField'
-import FormControl from '@mui/material/FormControl'
-import InputAdornment from '@mui/material/InputAdornment'
-import { type SelectChangeEvent } from '@mui/material/Select'
+import Stack from "@mui/material/Stack";
+import MenuItem from "@mui/material/MenuItem";
+import TextField from "@mui/material/TextField";
+import FormControl from "@mui/material/FormControl";
+import InputAdornment from "@mui/material/InputAdornment";
+import { type SelectChangeEvent } from "@mui/material/Select";
 
-import Iconify from 'src/components/iconify'
-import CustomPopover, { usePopover } from 'src/components/custom-popover'
+import Iconify from "src/components/iconify";
+import CustomPopover, { usePopover } from "src/components/custom-popover";
 
-import { type PaymentTypeFilterValue, type PaymentTypeTableFilters } from 'src/types/paymenttype'
+import {
+  type PaymentTypeFilterValue,
+  type PaymentTypeTableFilters,
+} from "src/types/paymenttype";
 
 // ----------------------------------------------------------------------
 
 interface Props {
-  filters: PaymentTypeTableFilters
-  onFilters: (name: string, value: PaymentTypeFilterValue) => void
+  filters: PaymentTypeTableFilters;
+  onFilters: (name: string, value: PaymentTypeFilterValue) => void;
   //
 }
 
-export default function PaymentTypeTableToolbar ({
+export default function PaymentTypeTableToolbar({
   filters,
   onFilters,
-  //
-}: Props) {
-  const popover = usePopover()
+} //
+: Props) {
+  const popover = usePopover();
 
   const handleFilterName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      onFilters('name', event.target.value)
+      onFilters("name", event.target.value);
     },
     [onFilters]
-  )
+  );
 
   const handleFilterRole = useCallback(
     (event: SelectChangeEvent<string[]>) => {
       onFilters(
-        'productcategory',
-        typeof event.target.value === 'string'
-          ? event.target.value.split(',')
+        "productcategory",
+        typeof event.target.value === "string"
+          ? event.target.value.split(",")
           : event.target.value
-      )
+      );
     },
     [onFilters]
-  )
+  );
 
   return (
     <>
       <Stack
         spacing={2}
-        alignItems={{ xs: 'flex-end', md: 'center' }}
+        alignItems={{ xs: "flex-end", md: "center" }}
         direction={{
-          xs: 'column',
-          md: 'row'
+          xs: "column",
+          md: "row",
         }}
         sx={{
           p: 2.5,
-          pr: { xs: 2.5, md: 1 }
+          pr: { xs: 2.5, md: 1 },
         }}
       >
         <FormControl
           sx={{
             flexShrink: 0,
-            width: { xs: 1, md: 200 }
+            width: { xs: 1, md: 200 },
           }}
         />
-     
 
         <Stack
           direction="row"
@@ -85,17 +87,17 @@ export default function PaymentTypeTableToolbar ({
                 <InputAdornment position="start">
                   <Iconify
                     icon="eva:search-fill"
-                    sx={{ color: 'text.disabled' }}
+                    sx={{ color: "text.disabled" }}
                   />
                 </InputAdornment>
-              )
+              ),
             }}
           />
-          { /*
+          {/*
           <IconButton onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
-          */ }
+          */}
         </Stack>
       </Stack>
 
@@ -107,7 +109,7 @@ export default function PaymentTypeTableToolbar ({
       >
         <MenuItem
           onClick={() => {
-            popover.onClose()
+            popover.onClose();
           }}
         >
           <Iconify icon="solar:printer-minimalistic-bold" />
@@ -116,7 +118,7 @@ export default function PaymentTypeTableToolbar ({
 
         <MenuItem
           onClick={() => {
-            popover.onClose()
+            popover.onClose();
           }}
         >
           <Iconify icon="solar:import-bold" />
@@ -125,7 +127,7 @@ export default function PaymentTypeTableToolbar ({
 
         <MenuItem
           onClick={() => {
-            popover.onClose()
+            popover.onClose();
           }}
         >
           <Iconify icon="solar:export-bold" />
@@ -133,5 +135,5 @@ export default function PaymentTypeTableToolbar ({
         </MenuItem>
       </CustomPopover>
     </>
-  )
+  );
 }

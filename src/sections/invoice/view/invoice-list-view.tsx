@@ -76,6 +76,7 @@ end.setDate(end.getDate() + 7);
 const defaultFilters: IInvoiceTableFilters = {
   name: '',
   service: [],
+  filtervalue: 0,
   status: 'all',
   startDate: start,
   endDate: end,

@@ -1,24 +1,26 @@
-import useSWR from 'swr';
-import React,{ useState, useCallback } from 'react';
+import useSWR from "swr";
+import React, { useState, useCallback } from "react";
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Dialog from '@mui/material/Dialog';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import InputAdornment from '@mui/material/InputAdornment';
-import ListItemButton, { listItemButtonClasses } from '@mui/material/ListItemButton';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Dialog from "@mui/material/Dialog";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import InputAdornment from "@mui/material/InputAdornment";
+import ListItemButton, {
+  listItemButtonClasses,
+} from "@mui/material/ListItemButton";
 
-import { fetcher } from 'src/utils/axios';
+import { fetcher } from "src/utils/axios";
 
-import Label from 'src/components/label';
-import Iconify from 'src/components/iconify';
-import SearchNotFound from 'src/components/search-not-found';
+import Label from "src/components/label";
+import Iconify from "src/components/iconify";
+import SearchNotFound from "src/components/search-not-found";
 
-import { Customer } from 'src/types/customer';
-import { IAddressItem } from 'src/types/address';
+import { Customer } from "src/types/customer";
+import { IAddressItem } from "src/types/address";
 
-import AddressNewForm from './address-new-form';
+import AddressNewForm from "./address-new-form";
 
 // ----------------------------------------------------------------------
 
@@ -37,7 +39,7 @@ type Props = {
 let dataFiltered: Customer[] = [];
 
 export default function CustomerAddressListDialog({
-  title = 'Address Book',
+  title = "Address Book",
   list,
   action,
   //
@@ -47,23 +49,24 @@ export default function CustomerAddressListDialog({
   selected,
   onSelect,
 }: Props) {
-  const [searchAddress, setSearchAddress] = useState('');
+  const [searchAddress, setSearchAddress] = useState("");
 
   // const dataFiltered = applyFilter({
   //  inputData: list,
   //  query: searchAddress,
   // });
 
-  const { data } = useSWR(`/api/salonapp/customer?search=${searchAddress}`, fetcher);
+  const { data } = useSWR(
+    `/api/salonapp/customer?search=${searchAddress}`,
+    fetcher
+  );
 
-  const [opencustomerform, setIsopencustomerform ] = useState(false)
-  if(data) {
-    dataFiltered = data.data
+  const [opencustomerform, setIsopencustomerform] = useState(false);
+  if (data) {
+    dataFiltered = data.data;
   }
 
-  const handleCreateCustomer = useCallback((address: Customer) => {
-  
-  }, []); 
+  const handleCreateCustomer = useCallback((address: Customer) => {}, []);
 
   const notFound = !dataFiltered.length && !!searchAddress;
 
@@ -72,19 +75,20 @@ export default function CustomerAddressListDialog({
   // }, []);
 
   const handleButtonClick = () => {
-    setIsopencustomerform(true)
+    setIsopencustomerform(true);
   };
 
-
-  const handleSearchAddress = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchAddress(event.target.value);
-  }, []);
+  const handleSearchAddress = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchAddress(event.target.value);
+    },
+    []
+  );
 
   const handleSelectAddress = useCallback(
-
     (address: Customer | null) => {
       onSelect(address);
-      setSearchAddress('');
+      setSearchAddress("");
       onClose();
     },
     [onClose, onSelect]
@@ -96,7 +100,7 @@ export default function CustomerAddressListDialog({
       sx={{
         p: 0.5,
         maxHeight: 80 * 8,
-        overflowX: 'hidden',
+        overflowX: "hidden",
       }}
     >
       {dataFiltered.map((address) => (
@@ -110,12 +114,12 @@ export default function CustomerAddressListDialog({
             py: 1,
             px: 1.5,
             borderRadius: 1,
-            flexDirection: 'column',
-            alignItems: 'flex-start',
+            flexDirection: "column",
+            alignItems: "flex-start",
             [`&.${listItemButtonClasses.selected}`]: {
-              bgcolor: 'action.selected',
-              '&:hover': {
-                bgcolor: 'action.selected',
+              bgcolor: "action.selected",
+              "&:hover": {
+                bgcolor: "action.selected",
               },
             },
           }}
@@ -127,15 +131,17 @@ export default function CustomerAddressListDialog({
           </Stack>
 
           {address.address && (
-            <Box sx={{ color: 'primary.main', typography: 'caption' }}>{address.address}</Box>
+            <Box sx={{ color: "primary.main", typography: "caption" }}>
+              {address.address}
+            </Box>
           )}
 
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          <Typography variant="body2" sx={{ color: "text.secondary" }}>
             {address.address}
           </Typography>
 
           {address.telephone && (
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
               {address.telephone}
             </Typography>
           )}
@@ -153,11 +159,16 @@ export default function CustomerAddressListDialog({
         sx={{ p: 3, pr: 1.5 }}
       >
         <Typography variant="h6"> {title} </Typography>
-        {action && React.cloneElement(action  , {
-          onClick: handleButtonClick,
-        })}
+        {action &&
+          React.cloneElement(action, {
+            onClick: handleButtonClick,
+          })}
       </Stack>
-      <AddressNewForm open={opencustomerform} onClose={onClose} onCreate={handleCreateCustomer}/> 
+      <AddressNewForm
+        open={opencustomerform}
+        onClose={onClose}
+        onCreate={handleCreateCustomer}
+      />
       <Stack sx={{ p: 2, pt: 0 }}>
         <TextField
           value={searchAddress}
@@ -166,7 +177,10 @@ export default function CustomerAddressListDialog({
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                <Iconify
+                  icon="eva:search-fill"
+                  sx={{ color: "text.disabled" }}
+                />
               </InputAdornment>
             ),
           }}

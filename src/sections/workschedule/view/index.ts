@@ -1,1 +1,1 @@
-export { default as WorkScheduleEditView } from './workschedule-edit-view'
+export { default as WorkScheduleEditView } from "./workschedule-edit-view";

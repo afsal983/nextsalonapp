@@ -1,16 +1,16 @@
-import Link from '@mui/material/Link';
-import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemText from '@mui/material/ListItemText';
+import Link from "@mui/material/Link";
+import Card from "@mui/material/Card";
+import Stack from "@mui/material/Stack";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemText from "@mui/material/ListItemText";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import Iconify from 'src/components/iconify';
-import CustomPopover, { usePopover } from 'src/components/custom-popover';
+import Iconify from "src/components/iconify";
+import CustomPopover, { usePopover } from "src/components/custom-popover";
 
-import {Item } from 'src/types/report';
+import { Item } from "src/types/report";
 
 // ----------------------------------------------------------------------
 
@@ -21,11 +21,15 @@ type Props = {
   onDelete: VoidFunction;
 };
 
-export default function ReportItem({ report, onView, onEdit, onDelete }: Props) {
+export default function ReportItem({
+  report,
+  onView,
+  onEdit,
+  onDelete,
+}: Props) {
   const popover = usePopover();
 
-  const { id, name, url } =
-    report;
+  const { id, name, url } = report;
 
   return (
     <>
@@ -34,11 +38,14 @@ export default function ReportItem({ report, onView, onEdit, onDelete }: Props) 
           <ListItemText
             sx={{ mb: 1 }}
             primary={
-              <Link component={RouterLink} href={paths.dashboard.report.details(id)} color="inherit">
+              <Link
+                component={RouterLink}
+                href={paths.dashboard.report.details(id)}
+                color="inherit"
+              >
                 {name}
               </Link>
             }
-  
           />
         </Stack>
       </Card>
@@ -74,7 +81,7 @@ export default function ReportItem({ report, onView, onEdit, onDelete }: Props) 
             popover.onClose();
             onDelete();
           }}
-          sx={{ color: 'error.main' }}
+          sx={{ color: "error.main" }}
         >
           <Iconify icon="solar:trash-bin-trash-bold" />
           Delete

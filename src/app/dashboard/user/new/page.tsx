@@ -1,13 +1,11 @@
-import { UserCreateView } from 'src/sections/user/view'
-
+import { UserCreateView } from "src/sections/user/view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: User New'
-}
+  title: "Dashboard: User New",
+};
 
-export default async function UserCreatePage () {
-
-  return <UserCreateView/>
+export default async function UserCreatePage() {
+  return <UserCreateView />;
 }

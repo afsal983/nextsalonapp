@@ -1,39 +1,39 @@
-'use client';
+"use client";
 
-import sumBy from 'lodash/sumBy';
-import { useState, useCallback } from 'react';
+import sumBy from "lodash/sumBy";
+import { useState, useCallback } from "react";
 
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
-import Card from '@mui/material/Card';
-import Table from '@mui/material/Table';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import Tooltip from '@mui/material/Tooltip';
-import Container from '@mui/material/Container';
-import TableBody from '@mui/material/TableBody';
-import IconButton from '@mui/material/IconButton';
-import { alpha, useTheme } from '@mui/material/styles';
-import TableContainer from '@mui/material/TableContainer';
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import Card from "@mui/material/Card";
+import Table from "@mui/material/Table";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import Tooltip from "@mui/material/Tooltip";
+import Container from "@mui/material/Container";
+import TableBody from "@mui/material/TableBody";
+import IconButton from "@mui/material/IconButton";
+import { alpha, useTheme } from "@mui/material/styles";
+import TableContainer from "@mui/material/TableContainer";
 
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
+import { paths } from "src/routes/paths";
+import { useRouter } from "src/routes/hooks";
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from "src/hooks/use-boolean";
 
-import { isAfter, isBetween } from 'src/utils/format-time';
+import { isAfter, isBetween } from "src/utils/format-time";
 
-import { useTranslate } from 'src/locales';
-import { INVOICE_SERVICE_OPTIONS } from 'src/_mock';
+import { useTranslate } from "src/locales";
+import { INVOICE_SERVICE_OPTIONS } from "src/_mock";
 
-import Label from 'src/components/label';
-import Iconify from 'src/components/iconify';
-import Scrollbar from 'src/components/scrollbar';
-import { useSnackbar } from 'src/components/snackbar';
-import { ConfirmDialog } from 'src/components/custom-dialog';
-import { useSettingsContext } from 'src/components/settings';
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
+import Label from "src/components/label";
+import Iconify from "src/components/iconify";
+import Scrollbar from "src/components/scrollbar";
+import { useSnackbar } from "src/components/snackbar";
+import { ConfirmDialog } from "src/components/custom-dialog";
+import { useSettingsContext } from "src/components/settings";
+import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 import {
   useTable,
   emptyRows,
@@ -43,35 +43,40 @@ import {
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
-} from 'src/components/table';
+} from "src/components/table";
 
-import { IInvoice, IInvoiceTableFilters, IInvoiceTableFilterValue } from 'src/types/invoice';
+import {
+  IInvoice,
+  IInvoiceTableFilters,
+  IInvoiceTableFilterValue,
+} from "src/types/invoice";
 
-import InvoiceAnalytic from '../invoice-analytic';
-import InvoiceTableRow from '../invoice-table-row';
-import InvoiceTableToolbar from '../invoice-table-toolbar';
-import InvoiceTableFiltersResult from '../report-table-filters-result';
+import InvoiceAnalytic from "../invoice-analytic";
+import InvoiceTableRow from "../invoice-table-row";
+import InvoiceTableToolbar from "../invoice-table-toolbar";
+import InvoiceTableFiltersResult from "../report-table-filters-result";
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'serial', label: 'Serial' },
-  { id: 'invoicenumber', label: 'Invoice Number' },
-  { id: 'date', label: 'Date' },
-  { id: 'invoicevalue', label: 'Invoice Value' },
-  { id: 'sgst', label: 'CGST' },
-  { id: 'cgst', label: 'CGST' },
-  { id: 'tax', label: 'TAX' },
-  { id: 'name', label: 'Name' },
-  { id: 'branchname', label: 'Branch Name' },
-  { id: 'status', label: 'Status' },
-  { id: '' },
+  { id: "serial", label: "Serial" },
+  { id: "invoicenumber", label: "Invoice Number" },
+  { id: "date", label: "Date" },
+  { id: "invoicevalue", label: "Invoice Value" },
+  { id: "sgst", label: "CGST" },
+  { id: "cgst", label: "CGST" },
+  { id: "tax", label: "TAX" },
+  { id: "name", label: "Name" },
+  { id: "branchname", label: "Branch Name" },
+  { id: "status", label: "Status" },
+  { id: "" },
 ];
 
 const defaultFilters: IInvoiceTableFilters = {
-  name: '',
+  name: "",
   service: [],
-  status: 'all',
+  filtervalue: 0,
+  status: "all",
   startDate: null,
   endDate: null,
 };
@@ -82,7 +87,6 @@ type Props = {
 };
 
 export default function ReportDetailsView({ reportid }: Props) {
-
   const { t } = useTranslate();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -93,7 +97,7 @@ export default function ReportDetailsView({ reportid }: Props) {
 
   const router = useRouter();
 
-  const table = useTable({ defaultOrderBy: 'createDate' });
+  const table = useTable({ defaultOrderBy: "createDate" });
 
   const confirm = useBoolean();
 
@@ -103,10 +107,10 @@ export default function ReportDetailsView({ reportid }: Props) {
 
   const dateError = isAfter(filters.startDate, filters.endDate);
 
-   // Use SWR to fetch data from multiple endpoints in parallel
+  // Use SWR to fetch data from multiple endpoints in parallel
   // const { data: invoice,isLoading: isinvoiceLoading,  error: errorI } = useSWR('/api/salonapp/report/salesreport', fetcher);
 
-   console.log(filters)
+  console.log(filters);
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
@@ -124,7 +128,7 @@ export default function ReportDetailsView({ reportid }: Props) {
   const canReset =
     !!filters.name ||
     !!filters.service.length ||
-    filters.status !== 'all' ||
+    filters.status !== "all" ||
     (!!filters.startDate && !!filters.endDate);
 
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
@@ -135,37 +139,37 @@ export default function ReportDetailsView({ reportid }: Props) {
   const getTotalAmount = (status: string) =>
     sumBy(
       tableData.filter((item) => item?.Invstatus.name === status),
-      'totalAmount'
+      "totalAmount"
     );
 
   const getPercentByStatus = (status: string) =>
     (getInvoiceLength(status) / tableData.length) * 100;
 
   const TABS = [
-    { value: 'all', label: 'All', color: 'default', count: tableData.length },
+    { value: "all", label: "All", color: "default", count: tableData.length },
     {
-      value: 'paid',
-      label: 'Paid',
-      color: 'success',
-      count: getInvoiceLength('paid'),
+      value: "paid",
+      label: "Paid",
+      color: "success",
+      count: getInvoiceLength("paid"),
     },
     {
-      value: 'pending',
-      label: 'Pending',
-      color: 'warning',
-      count: getInvoiceLength('pending'),
+      value: "pending",
+      label: "Pending",
+      color: "warning",
+      count: getInvoiceLength("pending"),
     },
     {
-      value: 'overdue',
-      label: 'Overdue',
-      color: 'error',
-      count: getInvoiceLength('overdue'),
+      value: "overdue",
+      label: "Overdue",
+      color: "error",
+      count: getInvoiceLength("overdue"),
     },
     {
-      value: 'draft',
-      label: 'Draft',
-      color: 'default',
-      count: getInvoiceLength('draft'),
+      value: "draft",
+      label: "Draft",
+      color: "default",
+      count: getInvoiceLength("draft"),
     },
   ] as const;
 
@@ -184,14 +188,14 @@ export default function ReportDetailsView({ reportid }: Props) {
     setFilters(defaultFilters);
   }, []);
 
-  const  handleSearch  = async () => {
+  const handleSearch = async () => {
     const data = {
-      "start" : "2024-01-05T00:30:00Z",
-      "end": "2024-04-05T01:50:00Z",
-      "filtername":"all",
-      "filterid":1
-    }
-    const response = await fetch('/api/salonapp/report/salesreport', {
+      start: "2024-01-05T00:30:00Z",
+      end: "2024-04-05T01:50:00Z",
+      filtername: "all",
+      filterid: 1,
+    };
+    const response = await fetch("/api/salonapp/report/salesreport", {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       mode: "cors", // no-cors, *cors, same-origin
       cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
@@ -205,16 +209,16 @@ export default function ReportDetailsView({ reportid }: Props) {
       body: JSON.stringify(data), // body data type must match "Content-Type" header
     });
     // return response.json(); // parses JSON response into native JavaScript object
-    const invoices = await response.json()
-    console.log(invoices)
-    setTableData(invoices.data)
+    const invoices = await response.json();
+    console.log(invoices);
+    setTableData(invoices.data);
   };
 
   const handleDeleteRow = useCallback(
     (id: string) => {
       const deleteRow = tableData.filter((row) => row.id !== id);
 
-      enqueueSnackbar('Delete success!');
+      enqueueSnackbar("Delete success!");
 
       setTableData(deleteRow);
 
@@ -224,9 +228,11 @@ export default function ReportDetailsView({ reportid }: Props) {
   );
 
   const handleDeleteRows = useCallback(() => {
-    const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
+    const deleteRows = tableData.filter(
+      (row) => !table.selected.includes(row.id)
+    );
 
-    enqueueSnackbar('Delete success!');
+    enqueueSnackbar("Delete success!");
 
     setTableData(deleteRows);
 
@@ -234,7 +240,13 @@ export default function ReportDetailsView({ reportid }: Props) {
       totalRowsInPage: dataInPage.length,
       totalRowsFiltered: dataFiltered.length,
     });
-  }, [dataFiltered.length, dataInPage.length, enqueueSnackbar, table, tableData]);
+  }, [
+    dataFiltered.length,
+    dataInPage.length,
+    enqueueSnackbar,
+    table,
+    tableData,
+  ]);
 
   const handleEditRow = useCallback(
     (id: string) => {
@@ -252,28 +264,27 @@ export default function ReportDetailsView({ reportid }: Props) {
 
   const handleFilterStatus = useCallback(
     (event: React.SyntheticEvent, newValue: string) => {
-      handleFilters('status', newValue);
+      handleFilters("status", newValue);
     },
     [handleFilters]
   );
 
-
   return (
     <>
-      <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+      <Container maxWidth={settings.themeStretch ? false : "lg"}>
         <CustomBreadcrumbs
           heading="List"
           links={[
             {
-              name: t('salonapp.dashboard'),
+              name: t("salonapp.dashboard"),
               href: paths.dashboard.root,
             },
             {
-              name: t('salonapp.invoice.invoice'),
+              name: t("salonapp.invoice.invoice"),
               href: paths.dashboard.invoice.root,
             },
             {
-              name: t('general.report'),
+              name: t("general.report"),
             },
           ]}
           action={
@@ -300,50 +311,56 @@ export default function ReportDetailsView({ reportid }: Props) {
           <Scrollbar>
             <Stack
               direction="row"
-              divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+              divider={
+                <Divider
+                  orientation="vertical"
+                  flexItem
+                  sx={{ borderStyle: "dashed" }}
+                />
+              }
               sx={{ py: 2 }}
             >
               <InvoiceAnalytic
                 title="Total"
                 total={tableData.length}
                 percent={100}
-                price={sumBy(tableData, 'totalAmount')}
+                price={sumBy(tableData, "totalAmount")}
                 icon="solar:bill-list-bold-duotone"
                 color={theme.palette.info.main}
               />
 
               <InvoiceAnalytic
                 title="Paid"
-                total={getInvoiceLength('paid')}
-                percent={getPercentByStatus('paid')}
-                price={getTotalAmount('paid')}
+                total={getInvoiceLength("paid")}
+                percent={getPercentByStatus("paid")}
+                price={getTotalAmount("paid")}
                 icon="solar:file-check-bold-duotone"
                 color={theme.palette.success.main}
               />
 
               <InvoiceAnalytic
                 title="Pending"
-                total={getInvoiceLength('pending')}
-                percent={getPercentByStatus('pending')}
-                price={getTotalAmount('pending')}
+                total={getInvoiceLength("pending")}
+                percent={getPercentByStatus("pending")}
+                price={getTotalAmount("pending")}
                 icon="solar:sort-by-time-bold-duotone"
                 color={theme.palette.warning.main}
               />
 
               <InvoiceAnalytic
                 title="Overdue"
-                total={getInvoiceLength('overdue')}
-                percent={getPercentByStatus('overdue')}
-                price={getTotalAmount('overdue')}
+                total={getInvoiceLength("overdue")}
+                percent={getPercentByStatus("overdue")}
+                price={getTotalAmount("overdue")}
                 icon="solar:bell-bing-bold-duotone"
                 color={theme.palette.error.main}
               />
 
               <InvoiceAnalytic
                 title="Draft"
-                total={getInvoiceLength('draft')}
-                percent={getPercentByStatus('draft')}
-                price={getTotalAmount('draft')}
+                total={getInvoiceLength("draft")}
+                percent={getPercentByStatus("draft")}
+                price={getTotalAmount("draft")}
                 icon="solar:file-corrupted-bold-duotone"
                 color={theme.palette.text.secondary}
               />
@@ -357,7 +374,10 @@ export default function ReportDetailsView({ reportid }: Props) {
             onChange={handleFilterStatus}
             sx={{
               px: 2.5,
-              boxShadow: `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
+              boxShadow: `inset 0 -2px 0 0 ${alpha(
+                theme.palette.grey[500],
+                0.08
+              )}`,
             }}
           >
             {TABS.map((tab) => (
@@ -369,7 +389,9 @@ export default function ReportDetailsView({ reportid }: Props) {
                 icon={
                   <Label
                     variant={
-                      ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
+                      ((tab.value === "all" || tab.value === filters.status) &&
+                        "filled") ||
+                      "soft"
                     }
                     color={tab.color}
                   >
@@ -385,7 +407,9 @@ export default function ReportDetailsView({ reportid }: Props) {
             onFilters={handleFilters}
             //
             dateError={dateError}
-            serviceOptions={INVOICE_SERVICE_OPTIONS.map((option) => option.name)}
+            serviceOptions={INVOICE_SERVICE_OPTIONS.map(
+              (option) => option.name
+            )}
           />
 
           {canReset && (
@@ -400,7 +424,7 @@ export default function ReportDetailsView({ reportid }: Props) {
             />
           )}
 
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          <TableContainer sx={{ position: "relative", overflow: "unset" }}>
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
@@ -441,7 +465,10 @@ export default function ReportDetailsView({ reportid }: Props) {
             />
 
             <Scrollbar>
-              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+              <Table
+                size={table.dense ? "small" : "medium"}
+                sx={{ minWidth: 800 }}
+              >
                 <TableHeadCustom
                   order={table.order}
                   orderBy={table.orderBy}
@@ -477,7 +504,11 @@ export default function ReportDetailsView({ reportid }: Props) {
 
                   <TableEmptyRows
                     height={denseHeight}
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
+                    emptyRows={emptyRows(
+                      table.page,
+                      table.rowsPerPage,
+                      dataFiltered.length
+                    )}
                   />
 
                   <TableNoData notFound={notFound} />
@@ -505,7 +536,8 @@ export default function ReportDetailsView({ reportid }: Props) {
         title="Delete"
         content={
           <>
-            Are you sure want to delete <strong> {table.selected.length} </strong> items?
+            Are you sure want to delete{" "}
+            <strong> {table.selected.length} </strong> items?
           </>
         }
         action={
@@ -553,24 +585,32 @@ function applyFilter({
   if (name) {
     inputData = inputData.filter(
       (invoice) =>
-        invoice.invoicenumber.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-        invoice.Customer.firstname.toLowerCase().indexOf(name.toLowerCase()) !== -1
+        invoice.invoicenumber.toLowerCase().indexOf(name.toLowerCase()) !==
+          -1 ||
+        invoice.Customer.firstname.toLowerCase().indexOf(name.toLowerCase()) !==
+          -1
     );
   }
 
-  if (status !== 'all') {
-    inputData = inputData.filter((invoice) => invoice.Invstatus?.name === status);
+  if (status !== "all") {
+    inputData = inputData.filter(
+      (invoice) => invoice.Invstatus?.name === status
+    );
   }
 
   if (service.length) {
     inputData = inputData.filter((invoice) =>
-      invoice.Invoice_line.some((filterItem) => service.includes(filterItem.Product.name))
+      invoice.Invoice_line.some((filterItem) =>
+        service.includes(filterItem.Product.name)
+      )
     );
   }
 
   if (!dateError) {
     if (startDate && endDate) {
-      inputData = inputData.filter((invoice) => isBetween(invoice.date, startDate, endDate));
+      inputData = inputData.filter((invoice) =>
+        isBetween(invoice.date, startDate, endDate)
+      );
     }
   }
 

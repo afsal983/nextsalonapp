@@ -1,66 +1,66 @@
-import { type ApexOptions } from 'apexcharts'
-import { useState, useCallback } from 'react'
+import { type ApexOptions } from "apexcharts";
+import { useState, useCallback } from "react";
 
-import Box from '@mui/material/Box'
-import MenuItem from '@mui/material/MenuItem'
-import ButtonBase from '@mui/material/ButtonBase'
-import CardHeader from '@mui/material/CardHeader'
-import Card, { type CardProps } from '@mui/material/Card'
+import Box from "@mui/material/Box";
+import MenuItem from "@mui/material/MenuItem";
+import ButtonBase from "@mui/material/ButtonBase";
+import CardHeader from "@mui/material/CardHeader";
+import Card, { type CardProps } from "@mui/material/Card";
 
-import Iconify from 'src/components/iconify'
-import Chart, { useChart } from 'src/components/chart'
-import CustomPopover, { usePopover } from 'src/components/custom-popover'
+import Iconify from "src/components/iconify";
+import Chart, { useChart } from "src/components/chart";
+import CustomPopover, { usePopover } from "src/components/custom-popover";
 
 // ----------------------------------------------------------------------
 
 interface Props extends CardProps {
-  title?: string
-  subheader?: string
+  title?: string;
+  subheader?: string;
   chart: {
-    categories?: string[]
-    colors?: string[]
+    categories?: string[];
+    colors?: string[];
     series: Array<{
-      year: string
+      year: string;
       data: Array<{
-        name: string
-        data: number[]
-      }>
-    }>
-    options?: ApexOptions
-  }
+        name: string;
+        data: number[];
+      }>;
+    }>;
+    options?: ApexOptions;
+  };
 }
 
-export default function EcommerceYearlySales ({
+export default function EcommerceYearlySales({
   title,
   subheader,
   chart,
   ...other
 }: Props) {
-  const { colors, categories, series, options } = chart
+  const { colors, categories, series, options } = chart;
 
-  const popover = usePopover()
+  const popover = usePopover();
 
-  const [seriesData, setSeriesData] = useState('2019')
+  const [seriesData, setSeriesData] = useState("2019");
 
   const chartOptions = useChart({
     colors,
     legend: {
-      position: 'top',
-      horizontalAlign: 'right'
+      position: "top",
+      horizontalAlign: "right",
     },
     xaxis: {
-      categories
+      categories,
     },
-    ...options
-  })
+    ...options,
+  });
 
   const handleChangeSeries = useCallback(
     (newValue: string) => {
-      popover.onClose()
-      setSeriesData(newValue)
+      popover.onClose();
+      setSeriesData(newValue);
     },
     [popover]
-  )
+  );
 
   return (
     <>
@@ -76,8 +76,8 @@ export default function EcommerceYearlySales ({
                 py: 0.5,
                 pr: 0.5,
                 borderRadius: 1,
-                typography: 'subtitle2',
-                bgcolor: 'background.neutral'
+                typography: "subtitle2",
+                bgcolor: "background.neutral",
               }}
             >
               {seriesData}
@@ -86,8 +86,8 @@ export default function EcommerceYearlySales ({
                 width={16}
                 icon={
                   popover.open
-                    ? 'eva:arrow-ios-upward-fill'
-                    : 'eva:arrow-ios-downward-fill'
+                    ? "eva:arrow-ios-upward-fill"
+                    : "eva:arrow-ios-downward-fill"
                 }
                 sx={{ ml: 0.5 }}
               />
@@ -120,12 +120,14 @@ export default function EcommerceYearlySales ({
           <MenuItem
             key={option.year}
             selected={option.year === seriesData}
-            onClick={() => { handleChangeSeries(option.year) }}
+            onClick={() => {
+              handleChangeSeries(option.year);
+            }}
           >
             {option.year}
           </MenuItem>
         ))}
       </CustomPopover>
     </>
-  )
+  );
 }

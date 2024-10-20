@@ -1,43 +1,42 @@
-import Link from '@mui/material/Link';
-import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
-import Divider from '@mui/material/Divider';
-import MenuItem from '@mui/material/MenuItem';
-import TableRow from '@mui/material/TableRow';
-import Checkbox from '@mui/material/Checkbox';
-import TableCell from '@mui/material/TableCell';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import ListItemText from '@mui/material/ListItemText';
+import Link from "@mui/material/Link";
+import Button from "@mui/material/Button";
+import Avatar from "@mui/material/Avatar";
+import Divider from "@mui/material/Divider";
+import MenuItem from "@mui/material/MenuItem";
+import TableRow from "@mui/material/TableRow";
+import Checkbox from "@mui/material/Checkbox";
+import TableCell from "@mui/material/TableCell";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import ListItemText from "@mui/material/ListItemText";
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from "src/hooks/use-boolean";
 
-import { fCurrency } from 'src/utils/format-number';
-import { fDate, fTime } from 'src/utils/format-time';
+import { fCurrency } from "src/utils/format-number";
+import { fDate, fTime } from "src/utils/format-time";
 
-import Label from 'src/components/label';
-import Iconify from 'src/components/iconify';
-import { ConfirmDialog } from 'src/components/custom-dialog';
-import CustomPopover, { usePopover } from 'src/components/custom-popover';
-
-import { IInvoice } from 'src/types/invoice';
+import Label from "src/components/label";
+import Iconify from "src/components/iconify";
+import { ConfirmDialog } from "src/components/custom-dialog";
+import CustomPopover, { usePopover } from "src/components/custom-popover";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: IInvoice;
-  selected: boolean;
-  onSelectRow: VoidFunction;
-  onViewRow: VoidFunction;
+  row: any;
 };
 
-export default function InvoiceTableRow({
-  row,
-  selected,
-  onSelectRow,
-  onViewRow,
-}: Props) {
-  const { invoicenumber, total, tip, Customer, date, Invstatus, Branches_organization
+export default function SalesReportTableRow({ row }: Props) {
+  const {
+    serial,
+    invoicenumber,
+    date,
+    invoicevalue,
+    tax,
+    taxby2,
+    billingname,
+    branchname,
+    status,
   } = row;
 
   const confirm = useBoolean();
@@ -46,121 +45,31 @@ export default function InvoiceTableRow({
 
   return (
     <>
-      <TableRow hover selected={selected}>
-        <TableCell padding="checkbox">
-          <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell>
-
-        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-          <Avatar alt={Customer.firstname} sx={{ mr: 2 }}>
-            {Customer.firstname.charAt(0).toUpperCase()}
-          </Avatar>
-
-          <ListItemText
-            disableTypography
-            primary={
-              <Typography variant="body2" noWrap>
-                { `${Customer.firstname} ${Customer.lastname}` }
-              </Typography>
-            }
-            secondary={
-              <Link
-                noWrap
-                variant="body2"
-                onClick={onViewRow}
-                sx={{ color: 'text.disabled', cursor: 'pointer' }}
-              >
-                {invoicenumber}
-              </Link>
-            }
-          />
-        </TableCell>
-
-        <TableCell>
-          <ListItemText
-            primary={fDate(date)}
-            secondary={fTime(date)}
-            primaryTypographyProps={{ typography: 'body2', noWrap: true }}
-            secondaryTypographyProps={{
-              mt: 0.5,
-              component: 'span',
-              typography: 'caption',
-            }}
-          />
-        </TableCell>
-
-        <TableCell>
-          <ListItemText
-            primary={fDate(date)}
-            secondary={fTime(date)}
-            primaryTypographyProps={{ typography: 'body2', noWrap: true }}
-            secondaryTypographyProps={{
-              mt: 0.5,
-              component: 'span',
-              typography: 'caption',
-            }}
-          />
-        </TableCell>
-
-        <TableCell>{fCurrency(total)}</TableCell>
-
-        <TableCell>{tip}</TableCell>
-        <TableCell>{tip}</TableCell>
-        <TableCell>{tip}</TableCell>
-
-        <TableCell>{Customer.firstname}</TableCell>
-        <TableCell>{Branches_organization.name}</TableCell>
+      <TableRow>
+        <TableCell />
+        <TableCell>{serial}</TableCell>
+        <TableCell>{invoicenumber}</TableCell>
+        <TableCell>{date}</TableCell>
+        <TableCell>{invoicevalue}</TableCell>
+        <TableCell>{taxby2}</TableCell>
+        <TableCell>{taxby2}</TableCell>
+        <TableCell>{tax}</TableCell>
+        <TableCell>{billingname}</TableCell>
+        <TableCell>{branchname}</TableCell>
         <TableCell>
           <Label
             variant="soft"
             color={
-              (Invstatus.name === 'paid' && 'success') ||
-              (Invstatus.name === 'pending' && 'warning') ||
-              (Invstatus.name === 'overdue' && 'error') ||
-              'default'
+              (status === "paid" && "success") ||
+              (status === "pending" && "warning") ||
+              (status === "overdue" && "error") ||
+              "default"
             }
           >
-            {Invstatus.name}
+            {status}
           </Label>
         </TableCell>
-
-        <TableCell align="right" sx={{ px: 1 }}>
-          <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
-            <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
-        </TableCell>
       </TableRow>
-
-      <CustomPopover
-        open={popover.open}
-        onClose={popover.onClose}
-        arrow="right-top"
-        sx={{ width: 160 }}
-      >
-        <MenuItem
-          onClick={() => {
-            onViewRow();
-            popover.onClose();
-          }}
-        >
-          <Iconify icon="solar:eye-bold" />
-          View
-        </MenuItem>
-
-
-        <Divider sx={{ borderStyle: 'dashed' }} />
-
-        <MenuItem
-          onClick={() => {
-            confirm.onTrue();
-            popover.onClose();
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <Iconify icon="solar:trash-bin-trash-bold" />
-          Delete
-        </MenuItem>
-      </CustomPopover>
     </>
   );
 }

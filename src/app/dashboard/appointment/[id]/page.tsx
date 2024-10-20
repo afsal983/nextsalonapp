@@ -1,27 +1,27 @@
-import { _userList } from 'src/_mock/_user'
+import { _userList } from "src/_mock/_user";
 
-import { AppointmentDetailsView } from 'src/sections/appointment/view'
+import { AppointmentDetailsView } from "src/sections/appointment/view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Branch Edit'
-}
+  title: "Dashboard: Branch Edit",
+};
 
 interface Props {
   params: {
-    id: string
-  }
+    id: string;
+  };
 }
 
-export default function AppointmentEditPage ({ params }: Props) {
-  const { id } = params
+export default function AppointmentEditPage({ params }: Props) {
+  const { id } = params;
 
-  return <AppointmentDetailsView id={id} />
+  return <AppointmentDetailsView id={id} />;
 }
 
-export async function generateStaticParams () {
+export async function generateStaticParams() {
   return _userList.map((user) => ({
-    id: user.id
-  }))
+    id: user.id,
+  }));
 }

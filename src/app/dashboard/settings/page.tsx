@@ -1,12 +1,11 @@
-import { SettingsEditView } from 'src/sections/settings/view'
-
+import { SettingsEditView } from "src/sections/settings/view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Settings List'
-}
+  title: "Dashboard: Settings List",
+};
 
-export default  function WorkSchedulePage () {
-  return <SettingsEditView/>
+export default function WorkSchedulePage() {
+  return <SettingsEditView />;
 }

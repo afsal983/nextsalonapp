@@ -1,4 +1,3 @@
-
 // ----------------------------------------------------------------------
 
 export const report_types = [
@@ -30,7 +29,7 @@ export const report_types = [
         name: "Sales by products",
         url: "test",
       },
-    ]
+    ],
   },
   {
     category: "Appointments",
@@ -40,7 +39,6 @@ export const report_types = [
         name: "All Appointments",
         url: "test",
       },
-    ]
+    ],
   },
-]
-
+];

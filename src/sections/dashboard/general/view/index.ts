@@ -1,1 +1,1 @@
-export { default as OverviewSalonView } from './overview-salon-view'
+export { default as OverviewSalonView } from "./overview-salon-view";

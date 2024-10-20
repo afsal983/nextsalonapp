@@ -1,18 +1,20 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Dialog from '@mui/material/Dialog';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import InputAdornment from '@mui/material/InputAdornment';
-import ListItemButton, { listItemButtonClasses } from '@mui/material/ListItemButton';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Dialog from "@mui/material/Dialog";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import InputAdornment from "@mui/material/InputAdornment";
+import ListItemButton, {
+  listItemButtonClasses,
+} from "@mui/material/ListItemButton";
 
-import Label from 'src/components/label';
-import Iconify from 'src/components/iconify';
-import SearchNotFound from 'src/components/search-not-found';
+import Label from "src/components/label";
+import Iconify from "src/components/iconify";
+import SearchNotFound from "src/components/search-not-found";
 
-import { BranchItem } from 'src/types/branch';
+import { BranchItem } from "src/types/branch";
 
 // ----------------------------------------------------------------------
 
@@ -31,7 +33,7 @@ type Props = {
 // let dataFiltered: Branches_organization[] = [];
 
 export default function BranchAddressListDialog({
-  title = 'Address Book',
+  title = "Address Book",
   list,
   action,
   //
@@ -41,14 +43,12 @@ export default function BranchAddressListDialog({
   selected,
   onSelect,
 }: Props) {
-  const [searchAddress, setSearchAddress] = useState('');
+  const [searchAddress, setSearchAddress] = useState("");
 
   const dataFiltered = applyFilter({
     inputData: list,
     query: searchAddress,
   });
-
-
 
   const notFound = !dataFiltered.length && !!searchAddress;
 
@@ -56,19 +56,18 @@ export default function BranchAddressListDialog({
   //  setSearchAddress(event.target.value);
   // }, []);
 
-  const handleSearchAddress = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchAddress(event.target.value);
-    console.log(event.target.value)
-
-
-
-  }, []);
+  const handleSearchAddress = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchAddress(event.target.value);
+      console.log(event.target.value);
+    },
+    []
+  );
 
   const handleSelectAddress = useCallback(
-
     (address: BranchItem | null) => {
       onSelect(address);
-      setSearchAddress('');
+      setSearchAddress("");
       onClose();
     },
     [onClose, onSelect]
@@ -80,7 +79,7 @@ export default function BranchAddressListDialog({
       sx={{
         p: 0.5,
         maxHeight: 80 * 8,
-        overflowX: 'hidden',
+        overflowX: "hidden",
       }}
     >
       {dataFiltered.map((address) => (
@@ -94,32 +93,34 @@ export default function BranchAddressListDialog({
             py: 1,
             px: 1.5,
             borderRadius: 1,
-            flexDirection: 'column',
-            alignItems: 'flex-start',
+            flexDirection: "column",
+            alignItems: "flex-start",
             [`&.${listItemButtonClasses.selected}`]: {
-              bgcolor: 'action.selected',
-              '&:hover': {
-                bgcolor: 'action.selected',
+              bgcolor: "action.selected",
+              "&:hover": {
+                bgcolor: "action.selected",
               },
             },
           }}
         >
           <Stack direction="row" alignItems="center" spacing={1}>
-            <Typography variant="subtitle2">{address.name }</Typography>
+            <Typography variant="subtitle2">{address.name}</Typography>
 
             {address && <Label color="info">Default</Label>}
           </Stack>
 
           {address.address && (
-            <Box sx={{ color: 'primary.main', typography: 'caption' }}>{address.address}</Box>
+            <Box sx={{ color: "primary.main", typography: "caption" }}>
+              {address.address}
+            </Box>
           )}
 
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          <Typography variant="body2" sx={{ color: "text.secondary" }}>
             {address.address}
           </Typography>
 
           {address.telephone && (
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
               {address.telephone}
             </Typography>
           )}
@@ -149,7 +150,10 @@ export default function BranchAddressListDialog({
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                <Iconify
+                  icon="eva:search-fill"
+                  sx={{ color: "text.disabled" }}
+                />
               </InputAdornment>
             ),
           }}
@@ -167,7 +171,13 @@ export default function BranchAddressListDialog({
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, query }: { inputData: BranchItem[]; query: string }) {
+function applyFilter({
+  inputData,
+  query,
+}: {
+  inputData: BranchItem[];
+  query: string;
+}) {
   if (query) {
     return inputData.filter(
       (address) =>

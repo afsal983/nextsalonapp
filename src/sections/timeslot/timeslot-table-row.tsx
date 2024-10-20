@@ -1,42 +1,41 @@
-import Button from '@mui/material/Button'
-import MenuItem from '@mui/material/MenuItem'
-import TableRow from '@mui/material/TableRow'
-import Checkbox from '@mui/material/Checkbox'
-import TableCell from '@mui/material/TableCell'
-import IconButton from '@mui/material/IconButton'
-import ListItemText from '@mui/material/ListItemText'
+import Button from "@mui/material/Button";
+import MenuItem from "@mui/material/MenuItem";
+import TableRow from "@mui/material/TableRow";
+import Checkbox from "@mui/material/Checkbox";
+import TableCell from "@mui/material/TableCell";
+import IconButton from "@mui/material/IconButton";
+import ListItemText from "@mui/material/ListItemText";
 
-import { useBoolean } from 'src/hooks/use-boolean'
+import { useBoolean } from "src/hooks/use-boolean";
 
-import Iconify from 'src/components/iconify'
-import { ConfirmDialog } from 'src/components/custom-dialog'
-import CustomPopover, { usePopover } from 'src/components/custom-popover'
+import Iconify from "src/components/iconify";
+import { ConfirmDialog } from "src/components/custom-dialog";
+import CustomPopover, { usePopover } from "src/components/custom-popover";
 
-import { type TimeSlotItem } from 'src/types/employee'
+import { type TimeSlotItem } from "src/types/employee";
 
 // ----------------------------------------------------------------------
 
 interface Props {
-  selected: boolean
-  onEditRow: VoidFunction
-  row: TimeSlotItem
-  onSelectRow: VoidFunction
-  onDeleteRow: VoidFunction
+  selected: boolean;
+  onEditRow: VoidFunction;
+  row: TimeSlotItem;
+  onSelectRow: VoidFunction;
+  onDeleteRow: VoidFunction;
 }
 
-export default function TimeSlotTableRow ({
+export default function TimeSlotTableRow({
   row,
   selected,
   onEditRow,
   onSelectRow,
-  onDeleteRow
+  onDeleteRow,
 }: Props) {
-  const { name, desc, starttime, endtime } =
-    row
+  const { name, desc, starttime, endtime } = row;
 
-  const confirm = useBoolean()
+  const confirm = useBoolean();
 
-  const popover = usePopover()
+  const popover = usePopover();
 
   return (
     <>
@@ -45,23 +44,23 @@ export default function TimeSlotTableRow ({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
 
-        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
+        <TableCell sx={{ display: "flex", alignItems: "center" }}>
           <ListItemText
             primary={name}
             // secondary={ProductCategory.name}
-            primaryTypographyProps={{ typography: 'body2' }}
+            primaryTypographyProps={{ typography: "body2" }}
             secondaryTypographyProps={{
-              component: 'span',
-              color: 'text.disabled'
+              component: "span",
+              color: "text.disabled",
             }}
           />
         </TableCell>
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{desc}</TableCell>
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{starttime}</TableCell>
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{endtime}</TableCell>
-        <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+        <TableCell sx={{ whiteSpace: "nowrap" }}>{desc}</TableCell>
+        <TableCell sx={{ whiteSpace: "nowrap" }}>{starttime}</TableCell>
+        <TableCell sx={{ whiteSpace: "nowrap" }}>{endtime}</TableCell>
+        <TableCell align="right" sx={{ px: 1, whiteSpace: "nowrap" }}>
           <IconButton
-            color={popover.open ? 'inherit' : 'default'}
+            color={popover.open ? "inherit" : "default"}
             onClick={popover.onOpen}
           >
             <Iconify icon="eva:more-vertical-fill" />
@@ -77,10 +76,10 @@ export default function TimeSlotTableRow ({
       >
         <MenuItem
           onClick={() => {
-            confirm.onTrue()
-            popover.onClose()
+            confirm.onTrue();
+            popover.onClose();
           }}
-          sx={{ color: 'error.main' }}
+          sx={{ color: "error.main" }}
         >
           <Iconify icon="solar:trash-bin-trash-bold" />
           Delete
@@ -88,8 +87,8 @@ export default function TimeSlotTableRow ({
 
         <MenuItem
           onClick={() => {
-            onEditRow()
-            popover.onClose()
+            onEditRow();
+            popover.onClose();
           }}
         >
           <Iconify icon="solar:pen-bold" />
@@ -109,5 +108,5 @@ export default function TimeSlotTableRow ({
         }
       />
     </>
-  )
+  );
 }

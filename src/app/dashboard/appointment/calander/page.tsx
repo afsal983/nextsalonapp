@@ -1,12 +1,11 @@
-import { CalendarView } from 'src/sections/appointment/calendar/view'
-
+import { CalendarView } from "src/sections/appointment/calendar/view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Appointment Calander'
-}
+  title: "Dashboard: Appointment Calander",
+};
 
-export default  function AppointmentCalanderPage () {
-  return <CalendarView/>
+export default function AppointmentCalanderPage() {
+  return <CalendarView />;
 }

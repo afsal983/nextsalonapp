@@ -6,7 +6,7 @@ export type IInvoiceTableFilterValue = string | string[] | Date | null
 export interface IInvoiceTableFilters {
   name: string
   status: string
-  filtername: "",
+  service: string[],
   filtervalue: 0,
   startDate: Date | null
   endDate: Date | null

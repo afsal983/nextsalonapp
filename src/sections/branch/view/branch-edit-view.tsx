@@ -1,63 +1,76 @@
-'use client'
+"use client";
 
-import useSWR from 'swr'
-import React from 'react'
+import useSWR from "swr";
+import React from "react";
 
-import Container from '@mui/material/Container'
+import Container from "@mui/material/Container";
 
-import { paths } from 'src/routes/paths'
+import { paths } from "src/routes/paths";
 
-import { fetcher } from 'src/utils/axios'
+import { fetcher } from "src/utils/axios";
 
-import { useTranslate } from 'src/locales';
+import { useTranslate } from "src/locales";
 
-import { useSettingsContext } from 'src/components/settings'
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs'
+import { useSettingsContext } from "src/components/settings";
+import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
-import BranchNewEditForm from '../branch-new-edit-form'
+import BranchNewEditForm from "../branch-new-edit-form";
 
 // ----------------------------------------------------------------------
 
 interface Props {
-  id: string
+  id: string;
 }
 
-export default function BranchEditView ({ id }: Props) {
-
+export default function BranchEditView({ id }: Props) {
   const { t } = useTranslate();
 
-  const settings = useSettingsContext()
+  const settings = useSettingsContext();
 
   // Pre data fetching via API calls
-  const { data: branchData , error: categoryError } = useSWR( `/api/salonapp/branches/${id}`, fetcher)
-  const { data: organization, error: organizationError } = useSWR('/api/salonapp/organization', fetcher);
-  const { data: location, error: locationError } = useSWR('/api/salonapp/location', fetcher);
+  const { data: branchData, error: categoryError } = useSWR(
+    `/api/salonapp/branches/${id}`,
+    fetcher
+  );
+  const { data: organization, error: organizationError } = useSWR(
+    "/api/salonapp/organization",
+    fetcher
+  );
+  const { data: location, error: locationError } = useSWR(
+    "/api/salonapp/location",
+    fetcher
+  );
 
+  if (categoryError || organizationError || locationError)
+    return <div>Failed to load</div>;
+  if (!organization || !branchData || !organization)
+    return <div>Loading...</div>;
 
-  if (categoryError || organizationError || locationError) return <div>Failed to load</div>
-  if (!organization || !branchData || !organization ) return <div>Loading...</div>
- 
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+    <Container maxWidth={settings.themeStretch ? false : "lg"}>
       <CustomBreadcrumbs
         heading="Edit"
         links={[
           {
-            name: t('salonapp.dashboard'),
-            href: paths.dashboard.root
+            name: t("salonapp.dashboard"),
+            href: paths.dashboard.root,
           },
           {
-            name: t('salonapp.services'),
-            href: paths.dashboard.employees.timeslots.root
+            name: t("salonapp.services"),
+            href: paths.dashboard.employees.timeslots.root,
           },
-          { name: branchData?.data[0].name }
+          { name: branchData?.data[0].name },
         ]}
         sx={{
-          mb: { xs: 3, md: 5 }
+          mb: { xs: 3, md: 5 },
         }}
       />
 
-      <BranchNewEditForm currentBranch={branchData?.data[0]}  organization={organization.data} location={location.data} />
+      <BranchNewEditForm
+        currentBranch={branchData?.data[0]}
+        organization={organization.data}
+        location={location.data}
+      />
     </Container>
-  )
+  );
 }

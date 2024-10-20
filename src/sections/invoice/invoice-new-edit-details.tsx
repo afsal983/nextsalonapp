@@ -1,28 +1,26 @@
-import sum from 'lodash/sum';
-import { useEffect, useCallback } from 'react';
-import { useFieldArray, useFormContext } from 'react-hook-form';
+import sum from "lodash/sum";
+import { useEffect, useCallback } from "react";
+import { useFieldArray, useFormContext } from "react-hook-form";
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import MenuItem from '@mui/material/MenuItem';
-import Typography from '@mui/material/Typography';
-import InputAdornment from '@mui/material/InputAdornment';
-import { inputBaseClasses } from '@mui/material/InputBase';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
+import InputAdornment from "@mui/material/InputAdornment";
+import { inputBaseClasses } from "@mui/material/InputBase";
 
-import { FnCurrency } from 'src/utils/format-number';
+import { FnCurrency } from "src/utils/format-number";
 
-import Iconify from 'src/components/iconify';
-import { RHFSelect, RHFTextField } from 'src/components/hook-form';
+import Iconify from "src/components/iconify";
+import { RHFSelect, RHFTextField } from "src/components/hook-form";
 
-import { BranchItem } from 'src/types/branch';
-import { ServiceItem } from 'src/types/service';
-import { AppSettings } from 'src/types/settings';
-import { EmployeeItem } from 'src/types/employee';
-import { IInvoice, IInvoiceItem} from 'src/types/invoice';
-
-
+import { BranchItem } from "src/types/branch";
+import { ServiceItem } from "src/types/service";
+import { AppSettings } from "src/types/settings";
+import { EmployeeItem } from "src/types/employee";
+import { IInvoice, IInvoiceItem } from "src/types/invoice";
 
 // ----------------------------------------------------------------------
 
@@ -35,43 +33,58 @@ type Props = {
   // paymentypes: IPaymenttypes[]
 };
 
-export default function InvoiceNewEditDetails({ services, employees, appsettings, currentInvoice, branches }: Props) {
+export default function InvoiceNewEditDetails({
+  services,
+  employees,
+  appsettings,
+  currentInvoice,
+  branches,
+}: Props) {
   const { control, setValue, watch, resetField } = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'items',
+    name: "items",
   });
 
-  const taxValue = appsettings.find((appsetting) => appsetting.name === "taxValue")?.value
+  const taxValue = appsettings.find(
+    (appsetting) => appsetting.name === "taxValue"
+  )?.value;
 
-  const currency = appsettings.find((appsetting) => appsetting.name === "currency")?.value || "INR"
+  const currency =
+    appsettings.find((appsetting) => appsetting.name === "currency")?.value ||
+    "INR";
 
-  const tax = Number(taxValue)/100
+  const tax = Number(taxValue) / 100;
 
   const values = watch();
 
-  const actualtotalOnRow = values.items.map((item: IInvoiceItem) => item.quantity * item.price );
+  const actualtotalOnRow = values.items.map(
+    (item: IInvoiceItem) => item.quantity * item.price
+  );
 
-  const actualTotal =  sum(actualtotalOnRow);
+  const actualTotal = sum(actualtotalOnRow);
 
-  const totalOnRow = values.items.map((item: IInvoiceItem) => item.quantity * (item.price - (item.price * item.discount/100)) );
+  const totalOnRow = values.items.map(
+    (item: IInvoiceItem) =>
+      item.quantity * (item.price - (item.price * item.discount) / 100)
+  );
 
-  const subTotal = sum(totalOnRow) - (sum(totalOnRow) * values.discount/100);
+  const subTotal = sum(totalOnRow) - (sum(totalOnRow) * values.discount) / 100;
 
   // const taxTotalOnRow = values.items.map((item: IInvoiceItem) => item.quantity * (item.price - (item.price * item.discount/100)) * tax );
 
   // const taxTotal = sum(taxTotalOnRow);
-  const taxTotal = subTotal *  tax;
+  const taxTotal = subTotal * tax;
 
-  const discount  = actualTotal - subTotal
+  const discount = actualTotal - subTotal;
 
   const totalAmount = subTotal + values.tip + taxTotal;
 
-  const customerSavings = discount + discount * tax 
-  
+  const customerSavings = discount + discount * tax;
+
   useEffect(() => {
-    setValue('totalAmount', totalAmount);
+    setValue("totalAmount", totalAmount);
   }, [setValue, totalAmount]);
 
   const handleAdd = () => {
@@ -101,137 +114,165 @@ export default function InvoiceNewEditDetails({ services, employees, appsettings
 
   const handleSelectService = useCallback(
     (index: number, option: string) => {
+      const selected_service = services?.find(
+        (service) => service.name === option
+      );
 
-      const selected_service = services?.find((service) => service.name === option)
-
-      // This is for retails 
-      if(selected_service?.type !==2) {
-        setValue(
-          `items[${index}].price`,
-          selected_service?.price
-        );
+      // This is for retails
+      if (selected_service?.type !== 2) {
+        setValue(`items[${index}].price`, selected_service?.price);
       } else {
-        const actual_price = selected_service.price/(1+tax)
-        setValue(
-          `items[${index}].price`,
-          actual_price
-        );
+        const actual_price = selected_service.price / (1 + tax);
+        setValue(`items[${index}].price`, actual_price);
       }
 
       setValue(
         `items[${index}].total`,
-        values.items.map((item: IInvoiceItem) => item.quantity * item.price)[index]
+        values.items.map((item: IInvoiceItem) => item.quantity * item.price)[
+          index
+        ]
       );
 
-      setValue(
-        `items[${index}].type`,
-        selected_service?.type
-      );
+      setValue(`items[${index}].type`, selected_service?.type);
     },
-    [setValue, values.items,services,tax]
+    [setValue, values.items, services, tax]
   );
 
   const handleSelectEmployee = useCallback(
-    (index: number, option: string) => {
-    },
+    (index: number, option: string) => {},
     []
   );
 
   const handleChangeQuantity = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number) => {
-
+    (
+      event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+      index: number
+    ) => {
       setValue(`items[${index}].quantity`, Number(event.target.value));
       setValue(
         `items[${index}].total`,
-        values.items.map((item: IInvoiceItem) => item.quantity * (item.price - (item.price * item.discount/100)) )[index]
+        values.items.map(
+          (item: IInvoiceItem) =>
+            item.quantity * (item.price - (item.price * item.discount) / 100)
+        )[index]
       );
     },
     [setValue, values.items]
   );
 
   const handleChangePrice = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number) => {
+    (
+      event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+      index: number
+    ) => {
       setValue(`items[${index}].price`, Number(event.target.value));
       setValue(
         `items[${index}].total`,
-        values.items.map((item: IInvoiceItem) => item.quantity * (item.price - (item.price * item.discount/100)) )[index]
+        values.items.map(
+          (item: IInvoiceItem) =>
+            item.quantity * (item.price - (item.price * item.discount) / 100)
+        )[index]
       );
     },
     [setValue, values.items]
   );
 
   const handleItemDiscount = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number) => {
+    (
+      event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+      index: number
+    ) => {
       setValue(`items[${index}].discount`, Number(event.target.value));
       setValue(
         `items[${index}].total`,
-        values.items.map((item: IInvoiceItem) => item.quantity * (item.price - (item.price * item.discount/100)) )[index]
+        values.items.map(
+          (item: IInvoiceItem) =>
+            item.quantity * (item.price - (item.price * item.discount) / 100)
+        )[index]
       );
     },
     [setValue, values.items]
   );
 
-
   const renderTotal = (
     <Stack
       spacing={2}
       alignItems="flex-end"
-      sx={{ mt: 3, textAlign: 'right', typography: 'body2' }}
+      sx={{ mt: 3, textAlign: "right", typography: "body2" }}
     >
       <Stack direction="row">
-        <Box sx={{ color: 'text.secondary' }}>Subtotal</Box>
-        <Box sx={{ width: 160, typography: 'subtitle2' }}>{FnCurrency(subTotal, currency)}</Box>
-      </Stack>
-
-      <Stack direction="row">
-        <Box sx={{ color: 'text.secondary' }}>Overerall Discount</Box>
-        <Box sx={{ width: 160, typography: 'subtitle2' }}>{FnCurrency(discount, currency) || '-'}</Box>
-      </Stack>
-
-      <Stack direction="row">
-        <Box sx={{ color: 'text.secondary' }}>Tax Amount</Box>
-        <Box sx={{ width: 160, typography: 'subtitle2' }}>{FnCurrency(taxTotal, currency) || '-'}</Box>
-      </Stack>
-
-      <Stack direction="row">
-        <Box sx={{ color: 'text.secondary' }}>Tip</Box>
-          <Box
-            sx={{
-              width: 160,
-              ...(values.tip && { color: 'error.main' }),
-            }}
-          >
-            {values.tip ? `+ ${FnCurrency(values.tip, currency)}` : '+'}
+        <Box sx={{ color: "text.secondary" }}>Subtotal</Box>
+        <Box sx={{ width: 160, typography: "subtitle2" }}>
+          {FnCurrency(subTotal, currency)}
         </Box>
       </Stack>
 
-      <Stack direction="row" sx={{ typography: 'subtitle1' }}>
+      <Stack direction="row">
+        <Box sx={{ color: "text.secondary" }}>Overerall Discount</Box>
+        <Box sx={{ width: 160, typography: "subtitle2" }}>
+          {FnCurrency(discount, currency) || "-"}
+        </Box>
+      </Stack>
+
+      <Stack direction="row">
+        <Box sx={{ color: "text.secondary" }}>Tax Amount</Box>
+        <Box sx={{ width: 160, typography: "subtitle2" }}>
+          {FnCurrency(taxTotal, currency) || "-"}
+        </Box>
+      </Stack>
+
+      <Stack direction="row">
+        <Box sx={{ color: "text.secondary" }}>Tip</Box>
+        <Box
+          sx={{
+            width: 160,
+            ...(values.tip && { color: "error.main" }),
+          }}
+        >
+          {values.tip ? `+ ${FnCurrency(values.tip, currency)}` : "+"}
+        </Box>
+      </Stack>
+
+      <Stack direction="row" sx={{ typography: "subtitle1" }}>
         <Box>Total</Box>
-        <Box sx={{ width: 160 }}>{FnCurrency(totalAmount, currency) || '-'}</Box>
+        <Box sx={{ width: 160 }}>
+          {FnCurrency(totalAmount, currency) || "-"}
+        </Box>
       </Stack>
 
       <Stack direction="row">
-        <Box sx={{ color: 'text.secondary' }}>Rounded Total</Box>
-        <Box sx={{ width: 160, typography: 'subtitle2' }}>{FnCurrency(totalAmount, currency) || '-'}</Box>
+        <Box sx={{ color: "text.secondary" }}>Rounded Total</Box>
+        <Box sx={{ width: 160, typography: "subtitle2" }}>
+          {FnCurrency(totalAmount, currency) || "-"}
+        </Box>
       </Stack>
 
       <Stack direction="row">
-        <Box sx={{ color: 'text.secondary' }}>Customer Savings</Box>
-        <Box sx={{ width: 160, typography: 'subtitle2' }}>{FnCurrency(customerSavings, currency) || '-'}</Box>
+        <Box sx={{ color: "text.secondary" }}>Customer Savings</Box>
+        <Box sx={{ width: 160, typography: "subtitle2" }}>
+          {FnCurrency(customerSavings, currency) || "-"}
+        </Box>
       </Stack>
     </Stack>
   );
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h6" sx={{ color: 'text.disabled', mb: 3 }}>
+      <Typography variant="h6" sx={{ color: "text.disabled", mb: 3 }}>
         Details:
       </Typography>
 
-      <Stack divider={<Divider flexItem sx={{ borderStyle: 'dashed' }} />} spacing={3}>
+      <Stack
+        divider={<Divider flexItem sx={{ borderStyle: "dashed" }} />}
+        spacing={3}
+      >
         {fields.map((item, index) => (
           <Stack key={item.id} alignItems="flex-end" spacing={1.5}>
-            <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ width: 1 }}>
+            <Stack
+              direction={{ xs: "column", md: "row" }}
+              spacing={2}
+              sx={{ width: 1 }}
+            >
               <RHFSelect
                 name={`items[${index}].service`}
                 size="small"
@@ -244,12 +285,12 @@ export default function InvoiceNewEditDetails({ services, employees, appsettings
                 <MenuItem
                   value=""
                   onClick={() => handleClearService(index)}
-                  sx={{ fontStyle: 'italic', color: 'text.secondary' }}
+                  sx={{ fontStyle: "italic", color: "text.secondary" }}
                 >
                   None
                 </MenuItem>
 
-                <Divider sx={{ borderStyle: 'dashed' }} />
+                <Divider sx={{ borderStyle: "dashed" }} />
 
                 {services?.map((service) => (
                   <MenuItem
@@ -273,12 +314,12 @@ export default function InvoiceNewEditDetails({ services, employees, appsettings
               >
                 <MenuItem
                   value=""
-                  sx={{ fontStyle: 'italic', color: 'text.secondary' }}
+                  sx={{ fontStyle: "italic", color: "text.secondary" }}
                 >
                   None
                 </MenuItem>
 
-                <Divider sx={{ borderStyle: 'dashed' }} />
+                <Divider sx={{ borderStyle: "dashed" }} />
 
                 {employees?.map((employee) => (
                   <MenuItem
@@ -290,7 +331,6 @@ export default function InvoiceNewEditDetails({ services, employees, appsettings
                   </MenuItem>
                 ))}
               </RHFSelect>
-
 
               <RHFTextField
                 size="small"
@@ -313,7 +353,11 @@ export default function InvoiceNewEditDetails({ services, employees, appsettings
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Box sx={{ typography: 'subtitle2', color: 'text.disabled' }}>$</Box>
+                      <Box
+                        sx={{ typography: "subtitle2", color: "text.disabled" }}
+                      >
+                        {currency}
+                      </Box>
                     </InputAdornment>
                   ),
                 }}
@@ -330,7 +374,11 @@ export default function InvoiceNewEditDetails({ services, employees, appsettings
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Box sx={{ typography: 'subtitle2', color: 'text.disabled' }}>$</Box>
+                      <Box
+                        sx={{ typography: "subtitle2", color: "text.disabled" }}
+                      >
+                        {currency}
+                      </Box>
                     </InputAdornment>
                   ),
                 }}
@@ -344,19 +392,27 @@ export default function InvoiceNewEditDetails({ services, employees, appsettings
                 name={`items[${index}].total`}
                 label="Total"
                 placeholder="0.00"
-                value={values.items[index].total === 0 ? '' : values.items[index].total.toFixed(2)}
+                value={
+                  values.items[index].total === 0
+                    ? ""
+                    : values.items[index].total.toFixed(2)
+                }
                 onChange={(event) => handleChangePrice(event, index)}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Box sx={{ typography: 'subtitle2', color: 'text.disabled' }}>$</Box>
+                      <Box
+                        sx={{ typography: "subtitle2", color: "text.disabled" }}
+                      >
+                        {currency}
+                      </Box>
                     </InputAdornment>
                   ),
                 }}
                 sx={{
                   maxWidth: { md: 104 },
                   [`& .${inputBaseClasses.input}`]: {
-                    textAlign: { md: 'right' },
+                    textAlign: { md: "right" },
                   },
                 }}
               />
@@ -367,10 +423,9 @@ export default function InvoiceNewEditDetails({ services, employees, appsettings
                 name={`items[${index}].type`}
                 label="Type"
                 placeholder="0"
-                style={{ display: 'none' }}
+                style={{ display: "none" }}
                 InputLabelProps={{ shrink: true }}
               />
-
             </Stack>
 
             <Button
@@ -385,12 +440,12 @@ export default function InvoiceNewEditDetails({ services, employees, appsettings
         ))}
       </Stack>
 
-      <Divider sx={{ my: 3, borderStyle: 'dashed' }} />
+      <Divider sx={{ my: 3, borderStyle: "dashed" }} />
 
       <Stack
         spacing={3}
-        direction={{ xs: 'column', md: 'row' }}
-        alignItems={{ xs: 'flex-end', md: 'center' }}
+        direction={{ xs: "column", md: "row" }}
+        alignItems={{ xs: "flex-end", md: "center" }}
       >
         <Button
           size="small"
@@ -405,7 +460,7 @@ export default function InvoiceNewEditDetails({ services, employees, appsettings
         <Stack
           spacing={2}
           justifyContent="flex-end"
-          direction={{ xs: 'column', md: 'row' }}
+          direction={{ xs: "column", md: "row" }}
           sx={{ width: 1 }}
         >
           <RHFTextField
@@ -427,9 +482,8 @@ export default function InvoiceNewEditDetails({ services, employees, appsettings
       </Stack>
 
       {renderTotal}
-     
-    
-      { /* <PaymentNewEditForm currentPayment={currentInvoice?.payment} paymentTypes={paymentypes} open={quickEdit.value} onClose={quickEdit.onFalse} /> */ }
+
+      {/* <PaymentNewEditForm currentPayment={currentInvoice?.payment} paymentTypes={paymentypes} open={quickEdit.value} onClose={quickEdit.onFalse} /> */}
     </Box>
   );
 }

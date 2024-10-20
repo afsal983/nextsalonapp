@@ -1,9 +1,9 @@
-import { ReportListView } from 'src/sections/reports/view';
+import { ReportListView } from "src/sections/reports/view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Report List',
+  title: "Dashboard: Report List",
 };
 
 export default function JobListPage() {

@@ -1,13 +1,11 @@
-import { ServiceCreateView } from 'src/sections/service/view'
-
+import { ServiceCreateView } from "src/sections/service/view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Service New'
-}
+  title: "Dashboard: Service New",
+};
 
-export default async function ServiceCreatePage () {
-
-  return <ServiceCreateView/>
+export default async function ServiceCreatePage() {
+  return <ServiceCreateView />;
 }

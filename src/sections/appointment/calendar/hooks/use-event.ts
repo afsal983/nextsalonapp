@@ -1,9 +1,9 @@
-import { useMemo } from 'react';
-import merge from 'lodash/merge';
+import { useMemo } from "react";
+import merge from "lodash/merge";
 
-import { CALENDAR_COLOR_OPTIONS } from 'src/_mock/_calendar';
+import { CALENDAR_COLOR_OPTIONS } from "src/_mock/_calendar";
 
-import { ICalendarRange, ICalendarEvent } from 'src/types/calendar';
+import { ICalendarRange, ICalendarEvent } from "src/types/calendar";
 
 // ----------------------------------------------------------------------
 
@@ -14,15 +14,13 @@ export default function useEvent(
   openForm: boolean,
   selectedEmployee: number
 ) {
-
-
   const currentEvent = events.find((event) => event.id === selectEventId);
 
   const defaultValues: ICalendarEvent = useMemo(
     () => ({
-      id: '',
-      title: '',
-      notes: '',
+      id: "",
+      title: "",
+      notes: "",
       color: CALENDAR_COLOR_OPTIONS[1],
       allDay: false,
       customer_id: 0,
@@ -41,10 +39,8 @@ export default function useEvent(
   }
 
   if (currentEvent || selectedRange) {
-
     return merge({}, defaultValues, currentEvent);
   }
-
 
   return defaultValues;
 }

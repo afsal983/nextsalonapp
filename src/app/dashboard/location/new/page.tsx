@@ -1,13 +1,11 @@
-import { LocationCreateView } from 'src/sections/location/view'
-
+import { LocationCreateView } from "src/sections/location/view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Dashboard: Location New'
-}
+  title: "Dashboard: Location New",
+};
 
-export default async function LocationCreatePage () {
-
-  return <LocationCreateView/>
+export default async function LocationCreatePage() {
+  return <LocationCreateView />;
 }

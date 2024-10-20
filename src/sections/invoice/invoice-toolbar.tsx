@@ -1,29 +1,29 @@
-import { useRef, useCallback } from 'react';
-import { useReactToPrint } from 'react-to-print';
-import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
+import { useRef, useCallback } from "react";
+import { useReactToPrint } from "react-to-print";
+import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import DialogActions from '@mui/material/DialogActions';
-import CircularProgress from '@mui/material/CircularProgress';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import Tooltip from "@mui/material/Tooltip";
+import MenuItem from "@mui/material/MenuItem";
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import DialogActions from "@mui/material/DialogActions";
+import CircularProgress from "@mui/material/CircularProgress";
 
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
+import { paths } from "src/routes/paths";
+import { useRouter } from "src/routes/hooks";
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from "src/hooks/use-boolean";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import { Printinvoice } from 'src/types/invoice';
+import { Printinvoice } from "src/types/invoice";
 
-import InvoicePDF from './invoice-pdf';
-import InvoiceThermalReceipt from './invoice-thermal-receipt';
+import InvoicePDF from "./invoice-pdf";
+import InvoiceThermalReceipt from "./invoice-thermal-receipt";
 
 // ----------------------------------------------------------------------
 
@@ -53,9 +53,7 @@ export default function InvoiceToolbar({
 
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
-   
   });
-
 
   const handleEdit = useCallback(() => {
     router.push(paths.dashboard.invoice.edit(Number(printinvoice.invoiceid)));
@@ -65,8 +63,8 @@ export default function InvoiceToolbar({
     <>
       <Stack
         spacing={3}
-        direction={{ xs: 'column', sm: 'row' }}
-        alignItems={{ xs: 'flex-end', sm: 'center' }}
+        direction={{ xs: "column", sm: "row" }}
+        alignItems={{ xs: "flex-end", sm: "center" }}
         sx={{ mb: { xs: 3, md: 5 } }}
       >
         <Stack direction="row" spacing={1} flexGrow={1} sx={{ width: 1 }}>
@@ -83,9 +81,14 @@ export default function InvoiceToolbar({
           </Tooltip>
 
           <PDFDownloadLink
-            document={<InvoicePDF printinvoice={printinvoice} currentStatus={currentStatus} />}
+            document={
+              <InvoicePDF
+                printinvoice={printinvoice}
+                currentStatus={currentStatus}
+              />
+            }
             fileName={printinvoice.invoiceid}
-            style={{ textDecoration: 'none' }}
+            style={{ textDecoration: "none" }}
           >
             {({ loading }) => (
               <Tooltip title="Download">
@@ -102,7 +105,10 @@ export default function InvoiceToolbar({
 
           <Tooltip title="Print">
             <IconButton>
-              <Iconify icon="solar:printer-minimalistic-bold" onClick={handlePrint}/>
+              <Iconify
+                icon="solar:printer-minimalistic-bold"
+                onClick={handlePrint}
+              />
             </IconButton>
           </Tooltip>
 
@@ -138,7 +144,7 @@ export default function InvoiceToolbar({
       </Stack>
 
       <Dialog fullScreen open={view.value}>
-        <Box sx={{ height: 1, display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ height: 1, display: "flex", flexDirection: "column" }}>
           <DialogActions
             sx={{
               p: 1.5,
@@ -149,36 +155,46 @@ export default function InvoiceToolbar({
             </Button>
           </DialogActions>
 
-          <Box sx={{ flexGrow: 1, height: 1, overflow: 'hidden' }}>
-            <PDFViewer width="100%" height="100%" style={{ border: 'none' }}>
-              <InvoicePDF printinvoice={printinvoice} currentStatus={currentStatus} />
+          <Box sx={{ flexGrow: 1, height: 1, overflow: "hidden" }}>
+            <PDFViewer width="100%" height="100%" style={{ border: "none" }}>
+              <InvoicePDF
+                printinvoice={printinvoice}
+                currentStatus={currentStatus}
+              />
             </PDFViewer>
           </Box>
         </Box>
       </Dialog>
 
       <Dialog fullScreen open={printview.value}>
-        <Box sx={{ height: 1, display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ height: 1, display: "flex", flexDirection: "column" }}>
           <DialogActions
             sx={{
               p: 1.5,
             }}
           >
-            <Button color="inherit" variant="contained" onClick={printview.onFalse}>
+            <Button
+              color="inherit"
+              variant="contained"
+              onClick={printview.onFalse}
+            >
               Close
             </Button>
           </DialogActions>
 
-          <Box sx={{ flexGrow: 1, height: 1, overflow: 'hidden' }}>
-            <PDFViewer width="100%" height="100%" style={{ border: 'none' }}>
-              <InvoicePDF printinvoice={printinvoice} currentStatus={currentStatus} />
+          <Box sx={{ flexGrow: 1, height: 1, overflow: "hidden" }}>
+            <PDFViewer width="100%" height="100%" style={{ border: "none" }}>
+              <InvoicePDF
+                printinvoice={printinvoice}
+                currentStatus={currentStatus}
+              />
             </PDFViewer>
           </Box>
         </Box>
       </Dialog>
-      <div style={{ display: 'none' }}>
-        <InvoiceThermalReceipt ref={componentRef} printinvoice={printinvoice}/>
-        </div>
+      <div style={{ display: "none" }}>
+        <InvoiceThermalReceipt ref={componentRef} printinvoice={printinvoice} />
+      </div>
     </>
   );
 }

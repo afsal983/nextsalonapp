@@ -1,45 +1,50 @@
-'use client'
+"use client";
 
+import Container from "@mui/material/Container";
 
-import Container from '@mui/material/Container'
+import { paths } from "src/routes/paths";
 
-import { paths } from 'src/routes/paths'
+import { useTranslate } from "src/locales";
 
-import { useTranslate } from 'src/locales';
+import { useSettingsContext } from "src/components/settings";
+import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
-import { useSettingsContext } from 'src/components/settings'
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs'
-
-import CustomerCategoryNewEditForm from '../customercategory-new-edit-form'
+import CustomerCategoryNewEditForm from "../customercategory-new-edit-form";
 
 // ----------------------------------------------------------------------
 
-export default function CustomerCategoryCreateView () {
+export default function CustomerCategoryCreateView() {
   const { t } = useTranslate();
 
-  const settings = useSettingsContext()
+  const settings = useSettingsContext();
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+    <Container maxWidth={settings.themeStretch ? false : "lg"}>
       <CustomBreadcrumbs
-        heading={ t('salonapp.customer.customercategory.create_customercategory') }
+        heading={t(
+          "salonapp.customer.customercategory.create_customercategory"
+        )}
         links={[
           {
-            name: t('salonapp.dashboard'),
-            href: paths.dashboard.root
+            name: t("salonapp.dashboard"),
+            href: paths.dashboard.root,
           },
           {
-            name: t('salonapp.customer_category'),
-            href: paths.dashboard.services.servicecategory.root
+            name: t("salonapp.customer_category"),
+            href: paths.dashboard.services.servicecategory.root,
           },
-          { name: t('salonapp.customer.customercategory.create_customercategory') }
+          {
+            name: t(
+              "salonapp.customer.customercategory.create_customercategory"
+            ),
+          },
         ]}
         sx={{
-          mb: { xs: 3, md: 5 }
+          mb: { xs: 3, md: 5 },
         }}
       />
 
-      <CustomerCategoryNewEditForm/>
+      <CustomerCategoryNewEditForm />
     </Container>
-  )
+  );
 }

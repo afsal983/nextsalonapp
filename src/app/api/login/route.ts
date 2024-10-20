@@ -3,53 +3,47 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { encrypt } from "src/utils/encrypt";
 
-
-const baseUSRL = process.env.NEXT_PUBLIC_HOST_API
+const baseUSRL = process.env.NEXT_PUBLIC_HOST_API;
 
 export async function POST(request: NextRequest, response: NextResponse) {
-  
-    // Get the credetials 
-    const body = await request.json();
-    const { email, password} = body
+  // Get the credetials
+  const body = await request.json();
+  const { email, password } = body;
 
-    // POST data preparation
-    const logincred = {
-        "username" : email,
-        "password": password,
-    }
+  // POST data preparation
+  const logincred = {
+    username: email,
+    password: password,
+  };
 
-    // Send the API request to backend 
-    const data = await fetch(`${baseUSRL}/secretkeeper/signin`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(logincred),
-      });
-      
-      // Get the data in JSON format 
-      const userdata = await data.json();
+  // Send the API request to backend
+  const data = await fetch(`${baseUSRL}/secretkeeper/signin`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(logincred),
+  });
 
-      const {
-        token,
-        refresh_token
-      } =  userdata
-  
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+  // Get the data in JSON format
+  const userdata = await data.json();
 
-    // Encryt the session data to use it in the cookie
-    const sessionData = { token, refresh_token}
-    const encryptedSessionData = await encrypt(sessionData)
-  
+  const { token, refresh_token } = userdata;
 
-    // Set encrypted cookies for the browser
-    cookies().set('session', encryptedSessionData, {
-      httpOnly: true,
-      secure: true,
-      expires: expiresAt,
-      sameSite: 'lax',
-      path: '/',
-    })
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
-    return NextResponse.json(userdata, { status: 201 });
-  }
+  // Encryt the session data to use it in the cookie
+  const sessionData = { token, refresh_token };
+  const encryptedSessionData = await encrypt(sessionData);
+
+  // Set encrypted cookies for the browser
+  cookies().set("session", encryptedSessionData, {
+    httpOnly: true,
+    secure: true,
+    expires: expiresAt,
+    sameSite: "lax",
+    path: "/",
+  });
+
+  return NextResponse.json(userdata, { status: 201 });
+}

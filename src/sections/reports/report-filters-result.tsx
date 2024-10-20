@@ -1,12 +1,12 @@
-import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import Stack, { StackProps } from '@mui/material/Stack';
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
+import Paper from "@mui/material/Paper";
+import Button from "@mui/material/Button";
+import Stack, { StackProps } from "@mui/material/Stack";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import { ReportFilters, ReportFilterValue } from 'src/types/report';
+import { ReportFilters, ReportFilterValue } from "src/types/report";
 
 // ----------------------------------------------------------------------
 
@@ -32,20 +32,25 @@ export default function ReportFiltersResult({
 }: Props) {
   const handleRemoveEmploymentTypes = (inputValue: string) => {
     const newValue = filters.name.filter((item) => item !== inputValue);
-    onFilters('employmentTypes', newValue);
+    onFilters("employmentTypes", newValue);
   };
-
 
   return (
     <Stack spacing={1.5} {...other}>
-      <Box sx={{ typography: 'body2' }}>
+      <Box sx={{ typography: "body2" }}>
         <strong>{results}</strong>
-        <Box component="span" sx={{ color: 'text.secondary', ml: 0.25 }}>
+        <Box component="span" sx={{ color: "text.secondary", ml: 0.25 }}>
           results found
         </Box>
       </Box>
 
-      <Stack flexGrow={1} spacing={1} direction="row" flexWrap="wrap" alignItems="center">
+      <Stack
+        flexGrow={1}
+        spacing={1}
+        direction="row"
+        flexWrap="wrap"
+        alignItems="center"
+      >
         {!!filters.name.length && (
           <Block label="Employment Types:">
             {filters.name.map((item) => (
@@ -58,7 +63,6 @@ export default function ReportFiltersResult({
             ))}
           </Block>
         )}
-
 
         {canReset && (
           <Button
@@ -90,13 +94,13 @@ function Block({ label, children, sx, ...other }: BlockProps) {
       sx={{
         p: 1,
         borderRadius: 1,
-        overflow: 'hidden',
-        borderStyle: 'dashed',
+        overflow: "hidden",
+        borderStyle: "dashed",
         ...sx,
       }}
       {...other}
     >
-      <Box component="span" sx={{ typography: 'subtitle2' }}>
+      <Box component="span" sx={{ typography: "subtitle2" }}>
         {label}
       </Box>
 

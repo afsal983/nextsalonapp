@@ -1,27 +1,30 @@
-import { useCallback } from 'react'
+import { useCallback } from "react";
 
-import Box from '@mui/material/Box'
-import Chip from '@mui/material/Chip'
-import Paper from '@mui/material/Paper'
-import Button from '@mui/material/Button'
-import Stack, { type StackProps } from '@mui/material/Stack'
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
+import Paper from "@mui/material/Paper";
+import Button from "@mui/material/Button";
+import Stack, { type StackProps } from "@mui/material/Stack";
 
-import Iconify from 'src/components/iconify'
+import Iconify from "src/components/iconify";
 
-import { type BranchTableFilters, type BranchTableFilterValue } from 'src/types/branch'
+import {
+  type BranchTableFilters,
+  type BranchTableFilterValue,
+} from "src/types/branch";
 
 // ----------------------------------------------------------------------
 
 type Props = StackProps & {
-  filters: BranchTableFilters
-  onFilters: (name: string, value: BranchTableFilterValue) => void
+  filters: BranchTableFilters;
+  onFilters: (name: string, value: BranchTableFilterValue) => void;
   //
-  onResetFilters: VoidFunction
+  onResetFilters: VoidFunction;
   //
-  results: number
-}
+  results: number;
+};
 
-export default function ServicecategoryTableFiltersResult ({
+export default function ServicecategoryTableFiltersResult({
   filters,
   onFilters,
   //
@@ -31,19 +34,18 @@ export default function ServicecategoryTableFiltersResult ({
   ...other
 }: Props) {
   const handleRemoveKeyword = useCallback(() => {
-    onFilters('name', '')
-  }, [onFilters])
+    onFilters("name", "");
+  }, [onFilters]);
 
   const handleRemoveStatus = useCallback(() => {
-    onFilters('status', 'all')
-  }, [onFilters])
-
+    onFilters("status", "all");
+  }, [onFilters]);
 
   return (
     <Stack spacing={1.5} {...other}>
-      <Box sx={{ typography: 'body2' }}>
+      <Box sx={{ typography: "body2" }}>
         <strong>{results}</strong>
-        <Box component="span" sx={{ color: 'text.secondary', ml: 0.25 }}>
+        <Box component="span" sx={{ color: "text.secondary", ml: 0.25 }}>
           results found
         </Box>
       </Box>
@@ -55,7 +57,7 @@ export default function ServicecategoryTableFiltersResult ({
         flexWrap="wrap"
         alignItems="center"
       >
-        {filters.status !== 'all' && (
+        {filters.status !== "all" && (
           <Block label="Status:">
             <Chip
               size="small"
@@ -84,16 +86,16 @@ export default function ServicecategoryTableFiltersResult ({
         </Button>
       </Stack>
     </Stack>
-  )
+  );
 }
 
 // ----------------------------------------------------------------------
 
 type BlockProps = StackProps & {
-  label: string
-}
+  label: string;
+};
 
-function Block ({ label, children, sx, ...other }: BlockProps) {
+function Block({ label, children, sx, ...other }: BlockProps) {
   return (
     <Stack
       component={Paper}
@@ -103,13 +105,13 @@ function Block ({ label, children, sx, ...other }: BlockProps) {
       sx={{
         p: 1,
         borderRadius: 1,
-        overflow: 'hidden',
-        borderStyle: 'dashed',
-        ...sx
+        overflow: "hidden",
+        borderStyle: "dashed",
+        ...sx,
       }}
       {...other}
     >
-      <Box component="span" sx={{ typography: 'subtitle2' }}>
+      <Box component="span" sx={{ typography: "subtitle2" }}>
         {label}
       </Box>
 
@@ -117,5 +119,5 @@ function Block ({ label, children, sx, ...other }: BlockProps) {
         {children}
       </Stack>
     </Stack>
-  )
+  );
 }

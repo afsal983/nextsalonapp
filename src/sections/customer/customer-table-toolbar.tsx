@@ -1,77 +1,80 @@
-import { useCallback } from 'react'
+import { useCallback } from "react";
 
-import Stack from '@mui/material/Stack'
-import MenuItem from '@mui/material/MenuItem'
-import Checkbox from '@mui/material/Checkbox'
-import TextField from '@mui/material/TextField'
-import InputLabel from '@mui/material/InputLabel'
-import FormControl from '@mui/material/FormControl'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import InputAdornment from '@mui/material/InputAdornment'
-import Select, { type SelectChangeEvent } from '@mui/material/Select'
+import Stack from "@mui/material/Stack";
+import MenuItem from "@mui/material/MenuItem";
+import Checkbox from "@mui/material/Checkbox";
+import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputAdornment from "@mui/material/InputAdornment";
+import Select, { type SelectChangeEvent } from "@mui/material/Select";
 
-import { useTranslate } from 'src/locales';
+import { useTranslate } from "src/locales";
 
-import Iconify from 'src/components/iconify'
-import CustomPopover, { usePopover } from 'src/components/custom-popover'
+import Iconify from "src/components/iconify";
+import CustomPopover, { usePopover } from "src/components/custom-popover";
 
-import { type CustomerTableFilters, type CustomerTableFilterValue } from 'src/types/customer'
+import {
+  type CustomerTableFilters,
+  type CustomerTableFilterValue,
+} from "src/types/customer";
 
 // ----------------------------------------------------------------------
 
 interface Props {
-  filters: CustomerTableFilters
-  onFilters: (name: string, value: CustomerTableFilterValue) => void
+  filters: CustomerTableFilters;
+  onFilters: (name: string, value: CustomerTableFilterValue) => void;
   //
-  customerCategory: string[]
+  customerCategory: string[];
 }
 
-export default function CustomerTableToolbar ({
+export default function CustomerTableToolbar({
   filters,
   onFilters,
   //
-  customerCategory
+  customerCategory,
 }: Props) {
-  const popover = usePopover()
+  const popover = usePopover();
   const { t } = useTranslate();
 
   const handleFilterName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      onFilters('name', event.target.value)
+      onFilters("name", event.target.value);
     },
     [onFilters]
-  )
+  );
 
   const handleFilterRole = useCallback(
     (event: SelectChangeEvent<string[]>) => {
       onFilters(
-        'customercategory',
-        typeof event.target.value === 'string'
-          ? event.target.value.split(',')
+        "customercategory",
+        typeof event.target.value === "string"
+          ? event.target.value.split(",")
           : event.target.value
-      )
+      );
     },
     [onFilters]
-  )
+  );
 
   return (
     <>
       <Stack
         spacing={2}
-        alignItems={{ xs: 'flex-end', md: 'center' }}
+        alignItems={{ xs: "flex-end", md: "center" }}
         direction={{
-          xs: 'column',
-          md: 'row'
+          xs: "column",
+          md: "row",
         }}
         sx={{
           p: 2.5,
-          pr: { xs: 2.5, md: 1 }
+          pr: { xs: 2.5, md: 1 },
         }}
       >
         <FormControl
           sx={{
             flexShrink: 0,
-            width: { xs: 1, md: 200 }
+            width: { xs: 1, md: 200 },
           }}
         >
           <InputLabel>Category</InputLabel>
@@ -82,12 +85,12 @@ export default function CustomerTableToolbar ({
             onChange={handleFilterRole}
             input={<OutlinedInput label="Role" />}
             renderValue={(selected) =>
-              selected.map((value) => value).join(', ')
+              selected.map((value) => value).join(", ")
             }
             MenuProps={{
               PaperProps: {
-                sx: { maxHeight: 240 }
-              }
+                sx: { maxHeight: 240 },
+              },
             }}
           >
             {customerCategory.map((option) => (
@@ -114,23 +117,23 @@ export default function CustomerTableToolbar ({
             fullWidth
             value={filters.name}
             onChange={handleFilterName}
-            placeholder={ t('salonapp.customer.search_customer') }
+            placeholder={t("salonapp.customer.search_customer")}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
                   <Iconify
                     icon="eva:search-fill"
-                    sx={{ color: 'text.disabled' }}
+                    sx={{ color: "text.disabled" }}
                   />
                 </InputAdornment>
-              )
+              ),
             }}
           />
-          { /*
+          {/*
           <IconButton onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
-          */ }
+          */}
         </Stack>
       </Stack>
 
@@ -142,7 +145,7 @@ export default function CustomerTableToolbar ({
       >
         <MenuItem
           onClick={() => {
-            popover.onClose()
+            popover.onClose();
           }}
         >
           <Iconify icon="solar:printer-minimalistic-bold" />
@@ -151,7 +154,7 @@ export default function CustomerTableToolbar ({
 
         <MenuItem
           onClick={() => {
-            popover.onClose()
+            popover.onClose();
           }}
         >
           <Iconify icon="solar:import-bold" />
@@ -160,7 +163,7 @@ export default function CustomerTableToolbar ({
 
         <MenuItem
           onClick={() => {
-            popover.onClose()
+            popover.onClose();
           }}
         >
           <Iconify icon="solar:export-bold" />
@@ -168,5 +171,5 @@ export default function CustomerTableToolbar ({
         </MenuItem>
       </CustomPopover>
     </>
-  )
+  );
 }

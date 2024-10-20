@@ -1,18 +1,18 @@
-'use client'
+"use client";
 
-import { AuthGuard } from 'src/auth/guard'
-import DashboardLayout from 'src/layouts/dashboard'
+import { AuthGuard } from "src/auth/guard";
+import DashboardLayout from "src/layouts/dashboard";
 
 // ----------------------------------------------------------------------
 
 interface Props {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
-export default function Layout ({ children }: Props) {
+export default function Layout({ children }: Props) {
   return (
     <AuthGuard>
       <DashboardLayout>{children}</DashboardLayout>
     </AuthGuard>
-  )
+  );
 }
