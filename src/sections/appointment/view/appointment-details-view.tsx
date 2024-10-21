@@ -29,17 +29,12 @@ type Props = {
 export default function AppointmentDetailsView({ id }: Props) {
   const settings = useSettingsContext();
 
-  const currentOrder = _orders.filter(
-    (appointment) => appointment.id === id
-  )[0];
-
   const [status, setStatus] = useState("pending");
 
-  const {
-    data: appointment,
-    isLoading: appointmentLoading,
-    error: errorA,
-  } = useSWR(`/api/salonapp/appointments/${id}`, fetcher);
+  const { data: appointment, isLoading: appointmentLoading } = useSWR(
+    `/api/salonapp/appointments/${id}`,
+    fetcher
+  );
 
   const handleChangeStatus = useCallback((newValue: string) => {
     setStatus(newValue);

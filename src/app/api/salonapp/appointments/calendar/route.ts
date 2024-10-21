@@ -5,8 +5,6 @@ import { decrypt } from "src/utils/encrypt";
 const baseUSRL = process.env.NEXT_PUBLIC_HOST_API;
 
 export async function GET(request: NextRequest, response: NextResponse) {
-  const { pathname } = new URL(request.url);
-
   const { searchParams } = new URL(request.url);
 
   // Accessing query parameters

@@ -93,11 +93,10 @@ export default function CustomerListView() {
 
   // Use SWR to fetch data from multiple endpoints in parallel
 
-  const {
-    data: customercategory,
-    isLoading: iscustomercategoryLoading,
-    error: errorB,
-  } = useSWR("/api/salonapp/customercategory", fetcher);
+  const { data: customercategory, error: errorB } = useSWR(
+    "/api/salonapp/customercategory",
+    fetcher
+  );
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -134,11 +133,10 @@ export default function CustomerListView() {
   // return
   // }
 
-  const {
-    data,
-    isLoading,
-    error: errorA,
-  } = useSWR(`/api/salonapp/customer?search=${filters.name}`, fetcher);
+  const { data } = useSWR(
+    `/api/salonapp/customer?search=${filters.name}`,
+    fetcher
+  );
 
   if (data) {
     dataFiltered = data.data;
@@ -456,44 +454,4 @@ export default function CustomerListView() {
       />
     </>
   );
-}
-
-// ----------------------------------------------------------------------
-
-function applyFilter({
-  inputData,
-  comparator,
-  filters,
-}: {
-  inputData: Customer[];
-  comparator: (a: any, b: any) => number;
-  filters: CustomerTableFilters;
-}) {
-  const { name, customercategory } = filters;
-
-  const stabilizedThis = inputData.map((el, index) => [el, index] as const);
-
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  inputData = stabilizedThis.map((el) => el[0]);
-
-  if (name) {
-    inputData = inputData.filter((customer) =>
-      customer.firstname.toLowerCase().includes(name.toLowerCase())
-    );
-
-    // inputData =  fetchCustomers()
-  }
-
-  if (customercategory.length > 0) {
-    inputData = inputData.filter((customer) =>
-      customercategory.includes(customer.CustomerCategory.name)
-    );
-  }
-
-  return inputData;
 }

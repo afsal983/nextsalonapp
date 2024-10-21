@@ -5,9 +5,6 @@ import { decrypt } from "src/utils/encrypt";
 const baseUSRL = process.env.NEXT_PUBLIC_HOST_API;
 
 export async function GET(request: NextRequest, response: NextResponse) {
-  const { pathname } = new URL(request.url);
-  const serviceId = pathname.split("/")[4];
-
   // Get the cookies
   const cookieStore = request.cookies;
   const sessionCookie = cookieStore?.get("session")?.value;

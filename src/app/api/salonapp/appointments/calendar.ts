@@ -10,12 +10,6 @@ import { AppointmentItem } from "src/types/appointment";
 
 let URL: string;
 
-const options = {
-  revalidateIfStale: false,
-  revalidateOnFocus: false,
-  revalidateOnReconnect: false,
-};
-
 type Props = {
   employeeId: Number;
   startDate: Date | null;

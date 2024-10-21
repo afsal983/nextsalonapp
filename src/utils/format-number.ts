@@ -1,5 +1,5 @@
 import { useLocales as getLocales } from "src/locales";
-import { AppSettings } from "src/types/settings";
+
 // ----------------------------------------------------------------------
 
 /*

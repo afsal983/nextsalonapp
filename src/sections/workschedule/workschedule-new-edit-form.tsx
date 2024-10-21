@@ -40,8 +40,6 @@ export default function WorkScheduleNewEditForm({
 
   const { t } = useTranslate();
 
-  const loadingSave = useBoolean();
-
   const loadingSend = useBoolean();
 
   // Define the schema for each slot

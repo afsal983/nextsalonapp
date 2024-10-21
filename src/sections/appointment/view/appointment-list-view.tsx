@@ -404,7 +404,7 @@ function applyFilter({
   filters: AppointmentTableFilters;
   dateError: boolean;
 }) {
-  const { status, name, startDate, endDate } = filters;
+  const { status, name } = filters;
 
   const stabilizedThis = inputData.map((el, index) => [el, index] as const);
 

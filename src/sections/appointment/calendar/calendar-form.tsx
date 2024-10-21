@@ -72,8 +72,6 @@ export default function CalendarForm({
 }: Props) {
   const { enqueueSnackbar } = useSnackbar();
 
-  const from = useBoolean();
-
   const to = useBoolean();
 
   const { t } = useTranslate();
@@ -100,7 +98,6 @@ export default function CalendarForm({
   const {
     reset,
     watch,
-    setValue,
     control,
     handleSubmit,
     formState: { isSubmitting },

@@ -87,16 +87,14 @@ export default function CalendarView() {
 
   const dateError = isAfter(filters.startDate, filters.endDate);
 
-  const {
-    data: employees,
-    isLoading: isemployeeLoading,
-    error: errorE,
-  } = useSWR("/api/salonapp/employee", fetcher);
-  const {
-    data: services,
-    isLoading: isservicesLoading,
-    error: errorS,
-  } = useSWR("/api/salonapp/services", fetcher);
+  const { data: employees, isLoading: isemployeeLoading } = useSWR(
+    "/api/salonapp/employee",
+    fetcher
+  );
+  const { data: services, isLoading: isservicesLoading } = useSWR(
+    "/api/salonapp/services",
+    fetcher
+  );
 
   const {
     calendarRef,

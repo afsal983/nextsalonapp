@@ -32,7 +32,7 @@ export default function WorkScheduleNewEditDetails({
   timeSlot,
   employee,
 }: Props) {
-  const { control, setValue, watch, resetField } = useFormContext();
+  const { control } = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -40,9 +40,6 @@ export default function WorkScheduleNewEditDetails({
   });
 
   const { t } = useTranslate();
-
-  const { enqueueSnackbar } = useSnackbar();
-  const router = useRouter();
 
   const handleAdd = () => {
     append({

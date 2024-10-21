@@ -1,17 +1,17 @@
-'use client'
+"use client";
 
 // Import the library
-import { useMemo, useEffect, useReducer, useCallback } from 'react'
+import { useMemo, useEffect, useReducer, useCallback } from "react";
 
-import axios, { endpoints } from 'src/utils/axios'
+import axios, { endpoints } from "src/utils/axios";
 
-import { useAuthContext } from 'src/auth/hooks';
-
-import { first } from 'lodash';
-import { AuthContext } from './auth-context'
-import { setSession, isValidToken } from './utils'
-import { type AuthUserType, type ActionMapType, type AuthStateType } from '../../types'
-
+import { setSession } from "./utils";
+import { AuthContext } from "./auth-context";
+import {
+  type AuthUserType,
+  type ActionMapType,
+  type AuthStateType,
+} from "../../types";
 
 // ----------------------------------------------------------------------
 /**
@@ -22,148 +22,143 @@ import { type AuthUserType, type ActionMapType, type AuthStateType } from '../..
 // ----------------------------------------------------------------------
 
 enum Types {
-  INITIAL = 'INITIAL',
-  LOGIN = 'LOGIN',
-  REGISTER = 'REGISTER',
-  LOGOUT = 'LOGOUT',
+  INITIAL = "INITIAL",
+  LOGIN = "LOGIN",
+  REGISTER = "REGISTER",
+  LOGOUT = "LOGOUT",
 }
 
 interface Payload {
   [Types.INITIAL]: {
-    user: AuthUserType
-  }
+    user: AuthUserType;
+  };
   [Types.LOGIN]: {
-    user: AuthUserType
-  }
+    user: AuthUserType;
+  };
   [Types.REGISTER]: {
-    user: AuthUserType
-  }
-  [Types.LOGOUT]: undefined
+    user: AuthUserType;
+  };
+  [Types.LOGOUT]: undefined;
 }
 
-type ActionsType = ActionMapType<Payload>[keyof ActionMapType<Payload>]
+type ActionsType = ActionMapType<Payload>[keyof ActionMapType<Payload>];
 
 // ----------------------------------------------------------------------
 
 const initialState: AuthStateType = {
   user: null,
-  loading: true
-}
+  loading: true,
+};
 
 const reducer = (state: AuthStateType, action: ActionsType) => {
   if (action.type === Types.INITIAL) {
     return {
       loading: false,
-      user: action.payload.user
-    }
+      user: action.payload.user,
+    };
   }
   if (action.type === Types.LOGIN) {
     return {
       ...state,
-      user: action.payload.user
-    }
+      user: action.payload.user,
+    };
   }
   if (action.type === Types.REGISTER) {
     return {
       ...state,
-      user: action.payload.user
-    }
+      user: action.payload.user,
+    };
   }
   if (action.type === Types.LOGOUT) {
     return {
       ...state,
-      user: null
-    }
+      user: null,
+    };
   }
-  return state
-}
+  return state;
+};
 
 // ----------------------------------------------------------------------
 
-const STORAGE_KEY = 'token'
+const STORAGE_KEY = "token";
 
 interface Props {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
-export function AuthProvider ({ children }: Props) {
-  const [state, dispatch] = useReducer(reducer, initialState)
+export function AuthProvider({ children }: Props) {
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  const currentuser  = useAuthContext();
-  
   const initialize = useCallback(async () => {
     try {
-   
-        // Use the existing credentials to renew your identity
-        // It calls refresh token 
-        const res = await fetch(endpoints.auth.me, {
-          method: 'POST',
-          headers: {
-              'Content-type': 'application/json',
+      // Use the existing credentials to renew your identity
+      // It calls refresh token
+      const res = await fetch(endpoints.auth.me, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+      });
+
+      const logindata = await res.json();
+
+      const {
+        firstname,
+        lastname,
+        email,
+        telephone,
+        id,
+        roleid,
+        domain_id,
+        orgroleid,
+        branch_id,
+        orgsettings,
+      } = logindata;
+
+      dispatch({
+        type: Types.INITIAL,
+        payload: {
+          user: {
+            firstname,
+            lastname,
+            email,
+            telephone,
+            id,
+            roleid,
+            domain_id,
+            orgroleid,
+            branch_id,
+            orgsettings,
           },
-        })
-        
-        const logindata = await res.json()
-
-        const {
-          firstname,
-          lastname,
-          email,
-          telephone,
-          id,
-          roleid,
-          domain_id,
-          orgroleid,
-          branch_id,
-          orgsettings,
-        } = logindata
-
-        dispatch({
-          type: Types.INITIAL,
-          payload: {
-            user: {
-              firstname,
-              lastname,
-              email,
-              telephone,
-              id,
-              roleid,
-              domain_id,
-              orgroleid,
-              branch_id,
-              orgsettings,
-            }
-          }
-        })
-
+        },
+      });
     } catch (error) {
       dispatch({
         type: Types.INITIAL,
         payload: {
-          user: null
-        }
-      })
+          user: null,
+        },
+      });
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    initialize()
-  }, [initialize])
+    initialize();
+  }, [initialize]);
 
   // LOGIN
   const login = useCallback(async (username: string, password: string) => {
-
-    setSession("")
+    setSession("");
     // const res = await axios.post(endpoints.auth.login, data)
     const res = await fetch(endpoints.auth.login, {
-      method: 'POST',
+      method: "POST",
       headers: {
-          'Content-type': 'application/json',
+        "Content-type": "application/json",
       },
-      body: JSON.stringify({ "email": username, "password": password }),
-    })
+      body: JSON.stringify({ email: username, password }),
+    });
 
-    const logindata = await res.json()
+    const logindata = await res.json();
 
     const {
       firstname,
@@ -176,7 +171,7 @@ export function AuthProvider ({ children }: Props) {
       orgroleid,
       branch_id,
       orgsettings,
-    } = logindata
+    } = logindata;
 
     // setSession(token)
 
@@ -194,10 +189,10 @@ export function AuthProvider ({ children }: Props) {
           orgroleid,
           branch_id,
           orgsettings,
-        }
-      }
-    })
-  }, [])
+        },
+      },
+    });
+  }, []);
 
   // REGISTER
   const register = useCallback(
@@ -211,60 +206,60 @@ export function AuthProvider ({ children }: Props) {
         email,
         password,
         firstName,
-        lastName
-      }
+        lastName,
+      };
 
-      const res = await axios.post(endpoints.auth.register, data)
+      const res = await axios.post(endpoints.auth.register, data);
 
-      const { token, user } = res.data
+      const { token, user } = res.data;
 
-      sessionStorage.setItem(STORAGE_KEY, token)
+      sessionStorage.setItem(STORAGE_KEY, token);
 
       dispatch({
         type: Types.REGISTER,
         payload: {
           user: {
             ...user,
-            token
-          }
-        }
-      })
+            token,
+          },
+        },
+      });
     },
     []
-  )
+  );
 
   // LOGOUT
   const logout = useCallback(async () => {
-    setSession(null)
+    setSession(null);
     dispatch({
-      type: Types.LOGOUT
-    })
-  }, [])
+      type: Types.LOGOUT,
+    });
+  }, []);
 
   // ----------------------------------------------------------------------
 
-  const checkAuthenticated = state.user ? 'authenticated' : 'unauthenticated'
+  const checkAuthenticated = state.user ? "authenticated" : "unauthenticated";
 
-  const status = state.loading ? 'loading' : checkAuthenticated
+  const status = state.loading ? "loading" : checkAuthenticated;
 
   const memoizedValue = useMemo(
     () => ({
       user: state.user,
-      method: 'jwt',
-      loading: status === 'loading',
-      authenticated: status === 'authenticated',
-      unauthenticated: status === 'unauthenticated',
+      method: "jwt",
+      loading: status === "loading",
+      authenticated: status === "authenticated",
+      unauthenticated: status === "unauthenticated",
       //
       login,
       register,
       logout,
     }),
     [login, logout, register, state.user, status]
-  )
+  );
 
   return (
     <AuthContext.Provider value={memoizedValue}>
       {children}
     </AuthContext.Provider>
-  )
+  );
 }

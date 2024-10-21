@@ -1,31 +1,29 @@
-import { useCallback, useRef, useState } from "react";
+import { CSVLink } from "react-csv";
+import { useForm } from "react-hook-form";
+import { useRef, useState, useCallback } from "react";
 
+import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import MenuItem from "@mui/material/MenuItem";
-import Checkbox from "@mui/material/Checkbox";
-import TextField from "@mui/material/TextField";
 import InputLabel from "@mui/material/InputLabel";
 import IconButton from "@mui/material/IconButton";
+import LoadingButton from "@mui/lab/LoadingButton";
 import FormControl from "@mui/material/FormControl";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import InputAdornment from "@mui/material/InputAdornment";
-import Box from "@mui/material/Box";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { formHelperTextClasses } from "@mui/material/FormHelperText";
-import Button from "@mui/material/Button";
+
 import Iconify from "src/components/iconify";
-import CustomPopover, { usePopover } from "src/components/custom-popover";
-import LoadingButton from "@mui/lab/LoadingButton";
+import { usePopover } from "src/components/custom-popover";
+import { LiveCustomerSearch } from "src/components/livecustomersearch";
+
+import { BranchItem } from "src/types/branch";
+import { EmployeeItem } from "src/types/employee";
 import {
   SalesReportTableFilters,
   SalesReportTableFilterValue,
 } from "src/types/report";
-import { useForm, Controller } from "react-hook-form";
-import { CSVLink } from "react-csv";
-import { LiveCustomerSearch } from "src/components/livecustomersearch";
-import { EmployeeItem } from "src/types/employee";
-import { BranchItem } from "src/types/branch";
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -132,8 +130,7 @@ export default function SalesReportTableToolbar({
   };
 
   return (
-    <>
-      <Box
+    <Box
         sx={{
           display: "flex", // Use flex to position the two stacks
           justifyContent: "space-between", // Space between left and right stacks
@@ -288,6 +285,5 @@ export default function SalesReportTableToolbar({
           style={{ display: "none" }}
         />
       </Box>
-    </>
   );
 }

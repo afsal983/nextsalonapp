@@ -32,7 +32,7 @@ export default function CustomerEditView({ id }: Props) {
     `/api/salonapp/customer/${id}`,
     fetcher
   );
-  const { data: customercategoryData, error: categoryError } = useSWR(
+  const { data: customercategoryData } = useSWR(
     `/api/salonapp/customercategory`,
     fetcher
   );

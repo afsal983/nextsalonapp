@@ -34,16 +34,8 @@ export default function CustomerTableRow({
   onSelectRow,
   onDeleteRow,
 }: Props) {
-  const {
-    id,
-    firstname,
-    lastname,
-    telephone,
-    email,
-    sex,
-    dob,
-    CustomerCategory,
-  } = row;
+  const { firstname, lastname, telephone, email, sex, dob, CustomerCategory } =
+    row;
 
   const confirm = useBoolean();
 

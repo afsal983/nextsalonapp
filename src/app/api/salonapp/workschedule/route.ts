@@ -107,8 +107,6 @@ export async function POST(request: NextRequest, response: NextResponse) {
 export async function PUT(request: NextRequest, response: NextResponse) {
   const body = await request.json();
 
-  const timeslotId = body.id;
-
   // Get the cookies
   const cookieStore = request.cookies;
   const sessionCookie = cookieStore?.get("session")?.value;

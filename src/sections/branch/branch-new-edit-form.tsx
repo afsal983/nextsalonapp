@@ -39,30 +39,6 @@ export default function BranchNewEditForm({
 }: Props) {
   const router = useRouter();
 
-  const timeStringToDate = (timeString: string) => {
-    const [hours, minutes, seconds] = timeString.split(":").map(Number);
-    const date = new Date();
-    date.setHours(hours);
-    date.setMinutes(minutes);
-    date.setSeconds(seconds);
-    date.setMilliseconds(0);
-    return date;
-  };
-
-  const DatetoStimeString = (date: Date) => {
-    // Extract hours and minutes
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-
-    // Format to HH:MM
-    const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes
-      .toString()
-      .padStart(2, "0")}`;
-
-    return date;
-  };
-
-  console.log(currentBranch);
   const { enqueueSnackbar } = useSnackbar();
 
   const { t } = useTranslate();

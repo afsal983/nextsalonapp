@@ -1,58 +1,49 @@
 "use client";
 
-import sumBy from "lodash/sumBy";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import Card from "@mui/material/Card";
 import Table from "@mui/material/Table";
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
 import Divider from "@mui/material/Divider";
 import Container from "@mui/material/Container";
 import TableBody from "@mui/material/TableBody";
 import { useTheme } from "@mui/material/styles";
-import IconButton from "@mui/material/IconButton";
 import TableContainer from "@mui/material/TableContainer";
-import { CSVLink, CSVDownload } from "react-csv";
 
 import { paths } from "src/routes/paths";
 import { useRouter } from "src/routes/hooks";
 
 import { useBoolean } from "src/hooks/use-boolean";
 
-import { isAfter, isBetween } from "src/utils/format-time";
+import { isAfter } from "src/utils/format-time";
 
 import { useTranslate } from "src/locales";
 
-import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
 import { useSnackbar } from "src/components/snackbar";
-import { ConfirmDialog } from "src/components/custom-dialog";
 import { useSettingsContext } from "src/components/settings";
 import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 import {
   useTable,
   emptyRows,
   TableNoData,
-  getComparator,
   TableEmptyRows,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from "src/components/table";
 
+import { BranchItem } from "src/types/branch";
+import { EmployeeItem } from "src/types/employee";
 import {
   SalesReportTableFilters,
   SalesReportTableFilterValue,
 } from "src/types/report";
 
-import { EmployeeItem } from "src/types/employee";
-import { BranchItem } from "src/types/branch";
+import SalesReportAnalytic from "../invoice-analytic";
 import SalesReportTableRow from "./salesreport-table-row";
 import SalesReportTableToolbar from "./salesreport-table-toolbar";
 import SalesReportTableFiltersResult from "./salesreport-table-filters-result";
-import SalesReportAnalytic from "../invoice-analytic";
 
 // ----------------------------------------------------------------------
 
@@ -279,8 +270,7 @@ export default function SalesReportDetailsView({ reportid }: Props) {
   }, []);
 
   return (
-    <>
-      <Container maxWidth={settings.themeStretch ? false : "lg"}>
+    <Container maxWidth={settings.themeStretch ? false : "lg"}>
         <CustomBreadcrumbs
           heading="List"
           links={[
@@ -439,6 +429,5 @@ export default function SalesReportDetailsView({ reportid }: Props) {
           />
         </Card>
       </Container>
-    </>
   );
 }

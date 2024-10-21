@@ -1,34 +1,31 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
-import Autocomplete from '@mui/material/Autocomplete';
-import Box from '@mui/material/Box';
-import { fetcher } from 'src/utils/axios';
-import {Customer} from 'src/types/customer';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
-import { Divider } from '@mui/material';
-import Chip from '@mui/material/Chip';
+import { useState, useEffect } from "react";
+
+import Box from "@mui/material/Box";
+import List from "@mui/material/List";
+import Stack from "@mui/material/Stack";
+import Avatar from "@mui/material/Avatar";
+import ListItem from "@mui/material/ListItem";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+
+import { Customer } from "src/types/customer";
 
 // ----------------------------------------------------------------------
 
 type props = {
-   handleSelectedCustomer : (value: string | undefined) => void;
-}
-export default function LiveCustomerSearch ({handleSelectedCustomer}: props) {
-
-  const [ customerData, setCustomerData] = useState<Customer[]>([])
-  const [inputValue, setInputValue] = useState<string>(''); // The current input value in the search field
+  handleSelectedCustomer: (value: string | undefined) => void;
+};
+export default function LiveCustomerSearch({ handleSelectedCustomer }: props) {
+  const [customerData, setCustomerData] = useState<Customer[]>([]);
+  const [inputValue, setInputValue] = useState<string>(""); // The current input value in the search field
   const [loading, setLoading] = useState<boolean>(false); // Loading state
   // Fetch customer data from API when the input value changes
   useEffect(() => {
-    if (inputValue === '') {
+    if (inputValue === "") {
       setCustomerData([]);
       return;
     }
@@ -38,12 +35,13 @@ export default function LiveCustomerSearch ({handleSelectedCustomer}: props) {
 
     const fetchCustomers = async () => {
       try {
-        const response = await fetch(`/api/salonapp/customer?search=${inputValue}`);
-        const responseData = await response.json()
+        const response = await fetch(
+          `/api/salonapp/customer?search=${inputValue}`
+        );
+        const responseData = await response.json();
         setCustomerData(responseData?.data); // Update state with fetched data
-
       } catch (error) {
-        console.error('Error fetching customer data:', error);
+        console.error("Error fetching customer data:", error);
       } finally {
         setLoading(false); // Set loading to false once the data is fetched
       }
@@ -55,30 +53,34 @@ export default function LiveCustomerSearch ({handleSelectedCustomer}: props) {
     }, 100); // Adjust debounce delay if needed
 
     // return () => {
-      // clearTimeout(delayDebounceFn); // Cleanup, no return value expected
-  // };
+    // clearTimeout(delayDebounceFn); // Cleanup, no return value expected
+    // };
   }, [inputValue]); // The effect runs whenever the input value changes
 
   return (
     <Stack>
       <Autocomplete
         id="customer-autocomplete"
-        getOptionLabel={(customer: Customer) => `${customer.firstname} ${customer.lastname}`}
+        getOptionLabel={(customer: Customer) =>
+          `${customer.firstname} ${customer.lastname}`
+        }
         options={customerData} // Assuming this is an array of Customer objects
-  
         isOptionEqualToValue={(option, value) => option.id === value.id} // Compare by unique ID or another unique property
         noOptionsText="Search Customer"
         renderOption={(props, customer) => (
-          <Box component="li" {...props} key={customer.id}  >
-            <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+          <Box component="li" {...props} key={customer.id}>
+            <List
+              sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+            >
               <ListItem>
                 <ListItemAvatar>
                   <Avatar alt={customer.firstname} sx={{ mr: 2 }}>
                     A
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText primary={`${customer.firstname} ${customer.lastname}`} 
-                              secondary= {customer.telephone}
+                <ListItemText
+                  primary={`${customer.firstname} ${customer.lastname}`}
+                  secondary={customer.telephone}
                 />
               </ListItem>
             </List>
@@ -96,5 +98,5 @@ export default function LiveCustomerSearch ({handleSelectedCustomer}: props) {
         }}
       />
     </Stack>
-  )
+  );
 }

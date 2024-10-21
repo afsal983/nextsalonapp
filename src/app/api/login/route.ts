@@ -13,7 +13,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
   // POST data preparation
   const logincred = {
     username: email,
-    password: password,
+    password,
   };
 
   // Send the API request to backend
