@@ -20,6 +20,7 @@ import { LiveCustomerSearch } from "src/components/livecustomersearch";
 
 import { BranchItem } from "src/types/branch";
 import { EmployeeItem } from "src/types/employee";
+import { Customer } from "src/types/customer";
 import {
   SalesReportTableFilters,
   SalesReportTableFilterValue,
@@ -101,8 +102,8 @@ export default function SalesReportTableToolbar({
 
   // handle customer
   const handleSelectCustomer = useCallback(
-    (value: string | undefined) => {
-      onFilters("filtervalue", typeof value === undefined ? "" : value);
+    (value: Customer | null) => {
+      onFilters("filtervalue", typeof value?.id === undefined ? "" : value?.id);
       console.log(value);
     },
     [onFilters]
@@ -131,159 +132,156 @@ export default function SalesReportTableToolbar({
 
   return (
     <Box
+      sx={{
+        display: "flex", // Use flex to position the two stacks
+        justifyContent: "space-between", // Space between left and right stacks
+        alignItems: "center", // Vertically center items
+      }}
+    >
+      <Stack
+        spacing={2}
+        alignItems={{ xs: "flex-end", md: "center" }}
+        direction={{
+          xs: "column",
+          md: "row",
+        }}
         sx={{
-          display: "flex", // Use flex to position the two stacks
-          justifyContent: "space-between", // Space between left and right stacks
-          alignItems: "center", // Vertically center items
+          p: 2.5,
+          pr: { xs: 2.5, md: 1 },
         }}
       >
-        <Stack
-          spacing={2}
-          alignItems={{ xs: "flex-end", md: "center" }}
-          direction={{
-            xs: "column",
-            md: "row",
+        <DatePicker
+          label="Start date"
+          value={filters.startDate}
+          onChange={handleFilterStartDate}
+          slotProps={{ textField: { fullWidth: true } }}
+          sx={{
+            maxWidth: { md: 180 },
+          }}
+        />
+
+        <DatePicker
+          label="End date"
+          value={filters.endDate}
+          onChange={handleFilterEndDate}
+          slotProps={{
+            textField: {
+              fullWidth: true,
+              error: dateError,
+              helperText: dateError && "End date must be later than start date",
+            },
           }}
           sx={{
-            p: 2.5,
-            pr: { xs: 2.5, md: 1 },
+            maxWidth: { md: 180 },
+            [`& .${formHelperTextClasses.root}`]: {
+              position: { md: "absolute" },
+              bottom: { md: -40 },
+            },
+          }}
+        />
+        <FormControl
+          sx={{
+            flexShrink: 0,
+            width: { xs: 1, md: 180 },
           }}
         >
-          <DatePicker
-            label="Start date"
-            value={filters.startDate}
-            onChange={handleFilterStartDate}
-            slotProps={{ textField: { fullWidth: true } }}
-            sx={{
-              maxWidth: { md: 180 },
-            }}
-          />
-
-          <DatePicker
-            label="End date"
-            value={filters.endDate}
-            onChange={handleFilterEndDate}
-            slotProps={{
-              textField: {
-                fullWidth: true,
-                error: dateError,
-                helperText:
-                  dateError && "End date must be later than start date",
-              },
-            }}
-            sx={{
-              maxWidth: { md: 180 },
-              [`& .${formHelperTextClasses.root}`]: {
-                position: { md: "absolute" },
-                bottom: { md: -40 },
-              },
-            }}
-          />
+          <InputLabel>Filter</InputLabel>
+          <Select
+            value={filters.filtername}
+            onChange={handleFilterName}
+            input={<OutlinedInput label="Filter" />}
+            renderValue={(selected) => selected}
+            sx={{ textTransform: "capitalize" }}
+          >
+            {serviceOptions.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        {isOpenEmployee && (
           <FormControl
             sx={{
               flexShrink: 0,
               width: { xs: 1, md: 180 },
             }}
           >
-            <InputLabel>Filter</InputLabel>
+            <InputLabel>Employee</InputLabel>
+
             <Select
-              value={filters.filtername}
-              onChange={handleFilterName}
+              value={filters.filtervalue}
+              onChange={handleFilterValue}
               input={<OutlinedInput label="Filter" />}
               renderValue={(selected) => selected}
               sx={{ textTransform: "capitalize" }}
             >
-              {serviceOptions.map((option) => (
-                <MenuItem key={option} value={option}>
-                  {option}
+              {employees.map((option) => (
+                <MenuItem key={option.id} value={option.name}>
+                  {option.name}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
-          {isOpenEmployee && (
-            <FormControl
-              sx={{
-                flexShrink: 0,
-                width: { xs: 1, md: 180 },
-              }}
-            >
-              <InputLabel>Employee</InputLabel>
-
-              <Select
-                value={filters.filtervalue}
-                onChange={handleFilterValue}
-                input={<OutlinedInput label="Filter" />}
-                renderValue={(selected) => selected}
-                sx={{ textTransform: "capitalize" }}
-              >
-                {employees.map((option) => (
-                  <MenuItem key={option.id} value={option.name}>
-                    {option.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          )}
-          {isOpenBranch && (
-            <FormControl
-              sx={{
-                flexShrink: 0,
-                width: { xs: 1, md: 180 },
-              }}
-            >
-              <InputLabel>Branch</InputLabel>
-              <Select
-                value={filters.filtervalue}
-                onChange={handleFilterValue}
-                input={<OutlinedInput label="Filter" />}
-                renderValue={(selected) => selected}
-                sx={{ textTransform: "capitalize" }}
-              >
-                {branches.map((option) => (
-                  <MenuItem key={option.name} value={option.name}>
-                    {option.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          )}
-          {isOpenCustomer && (
-            <FormControl
-              sx={{
-                flexShrink: 0,
-                width: { xs: 1, md: 280 },
-              }}
-            >
-              <LiveCustomerSearch
-                handleSelectedCustomer={handleSelectCustomer}
-              />
-            </FormControl>
-          )}
-
-          <LoadingButton
-            type="submit"
-            size="large"
-            variant="contained"
-            onClick={() => {
-              handleSearch();
+        )}
+        {isOpenBranch && (
+          <FormControl
+            sx={{
+              flexShrink: 0,
+              width: { xs: 1, md: 180 },
             }}
-            startIcon={<Iconify icon="material-symbols:search" />}
-            loading={isLoading}
           >
-            Search
-          </LoadingButton>
-        </Stack>
+            <InputLabel>Branch</InputLabel>
+            <Select
+              value={filters.filtervalue}
+              onChange={handleFilterValue}
+              input={<OutlinedInput label="Filter" />}
+              renderValue={(selected) => selected}
+              sx={{ textTransform: "capitalize" }}
+            >
+              {branches.map((option) => (
+                <MenuItem key={option.name} value={option.name}>
+                  {option.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
+        {isOpenCustomer && (
+          <FormControl
+            sx={{
+              flexShrink: 0,
+              width: { xs: 1, md: 280 },
+            }}
+          >
+            <LiveCustomerSearch handleSelectedCustomer={handleSelectCustomer} />
+          </FormControl>
+        )}
 
-        <IconButton size="large" color="info" onClick={() => handleExportCSV()}>
-          <Iconify icon="iwwa:file-csv" />
-        </IconButton>
+        <LoadingButton
+          type="submit"
+          size="large"
+          variant="contained"
+          onClick={() => {
+            handleSearch();
+          }}
+          startIcon={<Iconify icon="material-symbols:search" />}
+          loading={isLoading}
+        >
+          Search
+        </LoadingButton>
+      </Stack>
 
-        <CSVLink
-          data={csvData} // Call the function to fetch data
-          filename="salesdata.csv"
-          ref={csvLinkRef}
-          style={{ display: "none" }}
-        />
-      </Box>
+      <IconButton size="large" color="info" onClick={() => handleExportCSV()}>
+        <Iconify icon="iwwa:file-csv" />
+      </IconButton>
+
+      <CSVLink
+        data={csvData} // Call the function to fetch data
+        filename="salesdata.csv"
+        ref={csvLinkRef}
+        style={{ display: "none" }}
+      />
+    </Box>
   );
 }

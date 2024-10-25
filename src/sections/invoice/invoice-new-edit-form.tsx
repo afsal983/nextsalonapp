@@ -2,6 +2,15 @@ import * as Yup from "yup";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import {
+  CardActions,
+  CardContent,
+  CardHeader,
+  Grid,
+  Box,
+  FormLabel,
+  Typography,
+} from "@mui/material";
 
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
@@ -64,123 +73,90 @@ export default function InvoiceNewEditForm({
 
   const loadingSend = useBoolean();
 
-  const NewInvoiceSchema = Yup.object().shape({
-    invoiceTo: Yup.mixed<any>().nullable().required("Invoice to is required"),
-    createDate: Yup.mixed<any>().nullable().required("Create date is required"),
-    dueDate: Yup.mixed<any>().required("Due date is required"),
-    // .test(
-    //  'date-min',
-    //  'Due date must be later than create date',
-    //  (value, { parent }) => value.getTime() > parent.createDate.getTime()
-    // ),
-    items: Yup.lazy(() =>
+  // Same as database structure
+  const InvoiceSchema = Yup.object().shape({
+    id: Yup.string(),
+    invoicenumber: Yup.string(),
+    date: Yup.mixed<any>().required("Date is required"),
+    dueDate: Yup.mixed<any>(),
+    total: Yup.number(),
+    discount: Yup.number(),
+    tax_rate: Yup.number(),
+    tip: Yup.number(),
+    customer_id: Yup.number().required("Customer required"),
+    Customer: Yup.mixed<any>(),
+    event_id: Yup.number(),
+    Event: Yup.mixed<any>(),
+    Invoice_line: Yup.lazy(() =>
       Yup.array().of(
         Yup.object({
           id: Yup.number(),
-          service: Yup.number()
-            .positive("Choose a service")
-            .required("Service is required"),
-          employee: Yup.number()
-            .positive("Choose an employee")
-            .required("Employee is required"),
           quantity: Yup.number()
             .required("Quantity is required")
             .min(1, "Quantity must be more than 0"),
           price: Yup.number()
             .positive("Discount must be a positive value")
-            .required("Service is required"),
+            .required("Price is required"),
           discount: Yup.number().min(0, "Discount cannot be negative"),
-          total: Yup.number().positive("Discount must be a positive value"),
-          type: Yup.number(),
+          invoice_id: Yup.number(),
+          product_id: Yup.number().required("Product is required"),
+          Product: Yup.mixed<any>(),
+          employee_id: Yup.number().required("Employee is required"),
+          Employee: Yup.mixed<any>(),
+          branch_id: Yup.number(),
+          Branches_organization: Yup.mixed<any>(),
+          deleted: Yup.number(),
         })
       )
     ),
-    payments: Yup.lazy(() =>
+    branch_id: Yup.number().required("Branch required"),
+    Branches_organization: Yup.mixed<any>(),
+    status: Yup.number().required("Status required"),
+    Invstatus: Yup.mixed<any>(),
+    deleted: Yup.number(),
+    Payment: Yup.lazy(() =>
       Yup.array().of(
         Yup.object({
           id: Yup.number(),
           invoice_id: Yup.number(),
-          value: Yup.number(),
-          payment_type: Yup.number(),
+          value: Yup.number()
+            .required("Payment amount is required")
+            .positive("Payment value must be a positive value"),
+          payment_type: Yup.number().required("Payment amount is required"),
           auth_code: Yup.string(),
         })
       )
     ),
-    // not required
-    taxes: Yup.number(),
-    status: Yup.string(),
-    discount: Yup.number(),
-    tip: Yup.number(),
-    invoiceFrom: Yup.mixed(),
-    totalAmount: Yup.number(),
-    invoiceNumber: Yup.string(),
   });
-
-  // Wrap the initialization of currentitems in useMemo()
-  let currentitems = useMemo(
-    () => [
-      {
-        id: 0,
-        service: 0,
-        employee: 0,
-        quantity: 1,
-        price: 0,
-        discount: 0,
-        total: 0,
-        type: 0,
-      },
-    ],
-    []
-  );
-
-  if (currentInvoice?.Invoice_line) {
-    currentitems = [];
-    currentInvoice?.Invoice_line.map((item) => {
-      const tmp = {
-        id: item.id,
-        service: item.Product.id,
-        quantity: item.quantity,
-        price: item.price,
-        total: item.quantity * item.price,
-        discount: item.discount,
-        employee: item.Employee.id,
-        type: item.Product.type,
-      };
-      currentitems.push(tmp);
-      return tmp;
-    });
-  }
 
   const defaultValues = useMemo(
     () => ({
-      invoiceTo: currentInvoice?.Customer || null,
-      createDate:
+      id: currentInvoice?.id || "",
+      invoicenumber: currentInvoice?.invoicenumber || "",
+      date:
         (currentInvoice?.date && new Date(currentInvoice?.date)) || new Date(),
-      dueDate:
-        (currentInvoice?.date && new Date(currentInvoice?.date)) || new Date(),
-      items: currentitems,
-      payments: currentInvoice?.Payment || [
-        {
-          id: 0,
-          invoice_id: 0,
-          value: 0,
-          payment_type: 0,
-          auth_code: "",
-        },
-      ],
-      taxes: currentInvoice?.tax_rate || 0,
-      status: "paid",
+      total: currentInvoice?.total || 0,
+      dueDate: new Date(),
       discount: currentInvoice?.discount || 0,
+      tax_rate: currentInvoice?.tax_rate || 0,
       tip: currentInvoice?.tip || 0,
-      invoiceFrom: currentInvoice?.Branches_organization || branches[0],
-      totalAmount: currentInvoice?.total || 0,
-      invoiceNumber: currentInvoice?.invoicenumber || "INV-1990",
+      customer_id: currentInvoice?.customer_id || 0,
+      Customer: currentInvoice?.Customer || {},
+      event_id: currentInvoice?.event_id || 0,
+      Event: currentInvoice?.Event || {},
+      Invoice_line: currentInvoice?.Invoice_line || [],
+      branch_id: currentInvoice?.branch_id || 0,
+      Branches_organization: currentInvoice?.Branches_organization || {},
+      status: currentInvoice?.status || 1,
+      Invstatus: currentInvoice?.Invstatus || {},
+      deleted: currentInvoice?.deleted || 0,
+      Payment: currentInvoice?.Payment || [],
     }),
-    [currentInvoice, branches, currentitems]
+    [currentInvoice]
   );
 
   const methods = useForm({
-    resolver: yupResolver(NewInvoiceSchema),
+    resolver: yupResolver(InvoiceSchema),
     defaultValues,
   });
 
@@ -213,48 +189,48 @@ export default function InvoiceNewEditForm({
     const retails: Retails[] = [];
     const packages: Packages[] = [];
     const payments: Payments[] = [];
-    data?.items?.forEach((item) => {
-      if (item.type === 1) {
+    data?.Invoice_line?.forEach((item) => {
+      if (item.Product.type === 1) {
         const tmp = {
           id: item.id,
           start: new Date(),
           end: new Date(),
-          productid: item.service,
+          productid: item.product_id,
           price: item.price,
           quantity: item.quantity,
           discount: item.discount,
-          employeeid: item.employee,
-          deleted: 0,
+          employeeid: item.employee_id,
+          deleted: item?.deleted,
         };
         products.push(tmp);
-      } else if (item.type === 2) {
+      } else if (item.Product.type === 2) {
         const tmp = {
           id: item.id,
-          productid: item.service,
+          productid: item.product_id,
           price: item.price,
           quantity: item.quantity,
           discount: item.discount,
-          employeeid: item.employee,
-          deleted: 0,
+          employeeid: item.employee_id,
+          deleted: item.deleted,
         };
         retails.push(tmp);
-      } else if (item.type === 3) {
+      } else if (item.Product.type === 3) {
         const tmp = {
           id: item.id,
           start: new Date(),
           end: new Date(),
-          productid: item.service,
+          productid: item.product_id,
           price: item.price,
           quantity: item.quantity,
           discount: item.discount,
-          employeeid: item.employee,
-          deleted: 0,
+          employeeid: item.employee_id,
+          deleted: item.deleted,
         };
         packages.push(tmp);
       }
     });
 
-    data?.payments?.forEach((item) => {
+    data?.Payment?.forEach((item) => {
       if (item?.value && item?.value > 0) {
         const tmp = {
           id: item.id,
@@ -269,8 +245,8 @@ export default function InvoiceNewEditForm({
 
     const invoicedata = {
       id: currentInvoice?.id || 0,
-      customer: data.invoiceTo.id,
-      branch_id: data.invoiceFrom.branch_id,
+      customer: data.customer_id,
+      branch_id: data.branch_id,
       reminder_count: 0,
       products,
       retails,
@@ -312,7 +288,7 @@ export default function InvoiceNewEditForm({
           { variant: "success" }
         );
 
-        // Service listing again
+        // Invoice data after creation
         router.push(paths.dashboard.invoice.details(responseData.data[0].id));
       }
     } catch (error) {
@@ -327,15 +303,24 @@ export default function InvoiceNewEditForm({
 
         <InvoiceNewEditStatusDate />
 
-        <InvoiceNewEditDetails
-          services={services}
-          employees={employees}
-          appsettings={appsettings}
-          currentInvoice={currentInvoice}
-          branches={branches}
-        />
-
-        <PaymentNewEditForm paymenttypes={paymenttypes} />
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={8}>
+            <InvoiceNewEditDetails
+              services={services}
+              employees={employees}
+              appsettings={appsettings}
+              currentInvoice={currentInvoice}
+              branches={branches}
+            />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <PaymentNewEditForm
+              paymenttypes={paymenttypes}
+              appsettings={appsettings}
+            />
+          </Grid>
+          {/* <PaymentNewEditForm paymenttypes={paymenttypes} /> */}
+        </Grid>
       </Card>
 
       <Stack
@@ -344,6 +329,7 @@ export default function InvoiceNewEditForm({
         spacing={2}
         sx={{ mt: 3 }}
       >
+        {/*
         <LoadingButton
           color="inherit"
           size="large"
@@ -353,6 +339,7 @@ export default function InvoiceNewEditForm({
         >
           Save as Draft
         </LoadingButton>
+      */}
 
         <LoadingButton
           size="large"

@@ -13,6 +13,8 @@ export default function InvoiceNewEditStatusDate() {
 
   const values = watch();
 
+  const { invoicenumber, date } = values;
+
   return (
     <Stack
       spacing={2}
@@ -21,27 +23,33 @@ export default function InvoiceNewEditStatusDate() {
     >
       <RHFTextField
         disabled
-        name="invoiceNumber"
+        name="invoicenumber"
         label="Invoice number"
-        value={values.invoiceNumber}
+        value={invoicenumber}
       />
 
       <RHFSelect
         fullWidth
         name="status"
         label="Status"
+        value={values.status}
         InputLabelProps={{ shrink: true }}
         PaperPropsSx={{ textTransform: "capitalize" }}
       >
-        {["paid", "pending", "overdue", "draft"].map((option) => (
-          <MenuItem key={option} value={option}>
-            {option}
+        {[
+          { id: 1, name: "paid" },
+          { id: 2, name: "pending" },
+          { id: 3, name: "overdue" },
+          { id: 4, name: "draft" },
+        ].map((option) => (
+          <MenuItem key={option.id} value={option.id}>
+            {option.name}
           </MenuItem>
         ))}
       </RHFSelect>
 
       <Controller
-        name="createDate"
+        name="date"
         control={control}
         render={({ field, fieldState: { error } }) => (
           <DatePicker

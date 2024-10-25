@@ -12,7 +12,7 @@ import { _ecommerceLatestProducts } from "src/_mock";
 
 import { useSettingsContext } from "src/components/settings";
 
-import BookingDetails from "../invoice-details";
+import LatestTransactions from "../latest-transactions";
 import SalonBestCustomer from "../salon-best-customer";
 import SalonBestEmployee from "../salon-best-employee";
 import EcommerceWidgetSummary from "../ecommerce-widget-summary";
@@ -50,7 +50,7 @@ export default function OverviewSalonView() {
     data: bestemployee,
     isLoading: isbestemployee,
     error: errorE,
-  } = useSWR("/api/salonapp/dashboard/bestcustomer", fetcher);
+  } = useSWR("/api/salonapp/dashboard/bestemployee", fetcher);
 
   if (
     isappointmentsummaryLoading ||
@@ -112,7 +112,7 @@ export default function OverviewSalonView() {
           />
         </Grid>
         <Grid xs={12}>
-          <BookingDetails
+          <LatestTransactions
             title="Latest Transactions"
             tableData={latestsales.data}
             tableLabels={[

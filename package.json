@@ -34,6 +34,7 @@
     "@fullcalendar/timeline": "^6.1.15",
     "@hookform/resolvers": "^3.3.2",
     "@iconify/react": "^4.1.1",
+    "@mui/icons-material": "^5.16.7",
     "@mui/lab": "^5.0.0-alpha.155",
     "@mui/material": "^5.14.20",
     "@mui/x-data-grid": "^6.19.11",

@@ -20,7 +20,7 @@ import { BranchItem } from "src/types/branch";
 import { ServiceItem } from "src/types/service";
 import { AppSettings } from "src/types/settings";
 import { EmployeeItem } from "src/types/employee";
-import { IInvoice, IInvoiceItem } from "src/types/invoice";
+import { IInvoice, IInvoiceItem, Invoice_line } from "src/types/invoice";
 
 // ----------------------------------------------------------------------
 
@@ -40,11 +40,11 @@ export default function InvoiceNewEditDetails({
   currentInvoice,
   branches,
 }: Props) {
-  const { control, setValue, watch, resetField } = useFormContext();
+  const { control, setValue, getValues, watch, resetField } = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "items",
+    name: "Invoice_line",
   });
 
   const taxValue = appsettings.find(
@@ -59,22 +59,21 @@ export default function InvoiceNewEditDetails({
 
   const values = watch();
 
-  const actualtotalOnRow = values.items.map(
-    (item: IInvoiceItem) => item.quantity * item.price
-  );
+  const actualtotalOnRow = values.Invoice_line.filter(
+    (il: Invoice_line) => il.deleted === 0
+  ).map((item: IInvoiceItem) => item.quantity * item.price);
 
   const actualTotal = sum(actualtotalOnRow);
 
-  const totalOnRow = values.items.map(
+  const totalOnRow = values.Invoice_line.filter(
+    (il: Invoice_line) => il.deleted === 0
+  ).map(
     (item: IInvoiceItem) =>
       item.quantity * (item.price - (item.price * item.discount) / 100)
   );
 
   const subTotal = sum(totalOnRow) - (sum(totalOnRow) * values.discount) / 100;
 
-  // const taxTotalOnRow = values.items.map((item: IInvoiceItem) => item.quantity * (item.price - (item.price * item.discount/100)) * tax );
-
-  // const taxTotal = sum(taxTotalOnRow);
   const taxTotal = subTotal * tax;
 
   const discount = actualTotal - subTotal;
@@ -96,46 +95,50 @@ export default function InvoiceNewEditDetails({
       type: 0,
       discount: 0,
       total: 0,
+      deleted: 0,
     });
   };
 
   const handleRemove = (index: number) => {
-    remove(index);
+    const id = getValues(`Invoice_line[${index}].id`);
+    // Dont Actually delete the item. Just set deleted = 1 nad list deleted = 0 for existing items
+    if (id !== 0) {
+      setValue(`Invoice_line[${index}].deleted`, 1);
+    } else {
+      // Dont care.. just delete
+      remove(index);
+    }
   };
 
   const handleClearService = useCallback(
     (index: number) => {
-      resetField(`items[${index}].quantity`);
-      resetField(`items[${index}].price`);
-      resetField(`items[${index}].total`);
+      resetField(`Invoice_line[${index}].quantity`);
+      resetField(`Invoice_line[${index}].price`);
+      resetField(`Invoice_line[${index}].total`);
     },
     [resetField]
   );
 
   const handleSelectService = useCallback(
-    (index: number, option: string) => {
-      const selected_service = services?.find(
-        (service) => service.name === option
-      );
-
-      // This is for retails
-      if (selected_service?.type !== 2) {
-        setValue(`items[${index}].price`, selected_service?.price);
+    (index: number, service: ServiceItem) => {
+      // This is for retails.. as the price inclusive tax
+      if (service?.type !== 2) {
+        setValue(`Invoice_line[${index}].price`, service?.price);
       } else {
-        const actual_price = selected_service.price / (1 + tax);
-        setValue(`items[${index}].price`, actual_price);
+        const actual_price = service.price / (1 + tax);
+        setValue(`Invoice_line[${index}].price`, actual_price);
       }
 
       setValue(
-        `items[${index}].total`,
-        values.items.map((item: IInvoiceItem) => item.quantity * item.price)[
-          index
-        ]
+        `Invoice_line[${index}].total`,
+        values.Invoice_line.map(
+          (item: IInvoiceItem) => item.quantity * item.price
+        )[index]
       );
 
-      setValue(`items[${index}].type`, selected_service?.type);
+      setValue(`Invoice_line[${index}].Product`, service);
     },
-    [setValue, values.items, services, tax]
+    [setValue, tax, values.Invoice_line]
   );
 
   const handleSelectEmployee = useCallback(
@@ -148,16 +151,16 @@ export default function InvoiceNewEditDetails({
       event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
       index: number
     ) => {
-      setValue(`items[${index}].quantity`, Number(event.target.value));
+      setValue(`Invoice_line[${index}].quantity`, Number(event.target.value));
       setValue(
-        `items[${index}].total`,
-        values.items.map(
+        `Invoice_line[${index}].total`,
+        values.Invoice_line.map(
           (item: IInvoiceItem) =>
             item.quantity * (item.price - (item.price * item.discount) / 100)
         )[index]
       );
     },
-    [setValue, values.items]
+    [setValue, values.Invoice_line]
   );
 
   const handleChangePrice = useCallback(
@@ -165,16 +168,16 @@ export default function InvoiceNewEditDetails({
       event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
       index: number
     ) => {
-      setValue(`items[${index}].price`, Number(event.target.value));
+      setValue(`Invoice_line[${index}].price`, Number(event.target.value));
       setValue(
-        `items[${index}].total`,
-        values.items.map(
+        `Invoice_line[${index}].total`,
+        values.Invoice_line.map(
           (item: IInvoiceItem) =>
             item.quantity * (item.price - (item.price * item.discount) / 100)
         )[index]
       );
     },
-    [setValue, values.items]
+    [setValue, values.Invoice_line]
   );
 
   const handleItemDiscount = useCallback(
@@ -182,16 +185,16 @@ export default function InvoiceNewEditDetails({
       event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
       index: number
     ) => {
-      setValue(`items[${index}].discount`, Number(event.target.value));
+      setValue(`Invoice_line[${index}].discount`, Number(event.target.value));
       setValue(
-        `items[${index}].total`,
-        values.items.map(
+        `Invoice_line[${index}].total`,
+        values.Invoice_line.map(
           (item: IInvoiceItem) =>
             item.quantity * (item.price - (item.price * item.discount) / 100)
         )[index]
       );
     },
-    [setValue, values.items]
+    [setValue, values.Invoice_line]
   );
 
   const renderTotal = (
@@ -266,178 +269,194 @@ export default function InvoiceNewEditDetails({
         divider={<Divider flexItem sx={{ borderStyle: "dashed" }} />}
         spacing={3}
       >
-        {fields.map((item, index) => (
-          <Stack key={item.id} alignItems="flex-end" spacing={1.5}>
-            <Stack
-              direction={{ xs: "column", md: "row" }}
-              spacing={2}
-              sx={{ width: 1 }}
-            >
-              <RHFSelect
-                name={`items[${index}].service`}
-                size="small"
-                label="Service"
-                InputLabelProps={{ shrink: true }}
-                sx={{
-                  maxWidth: { md: 400 },
-                }}
+        {fields
+          .filter(
+            (field, index) => getValues(`Invoice_line[${index}].deleted`) === 0
+          )
+          .map((item, index) => (
+            <Stack key={item.id} alignItems="flex-end" spacing={1.5}>
+              <Stack
+                direction={{ xs: "column", md: "row" }}
+                spacing={2}
+                sx={{ width: 1 }}
               >
-                <MenuItem
-                  value=""
-                  onClick={() => handleClearService(index)}
-                  sx={{ fontStyle: "italic", color: "text.secondary" }}
+                <RHFSelect
+                  name={`Invoice_line[${index}].product_id`}
+                  size="small"
+                  label="Service"
+                  InputLabelProps={{ shrink: true }}
+                  sx={{
+                    maxWidth: { md: 400 },
+                  }}
                 >
-                  None
-                </MenuItem>
-
-                <Divider sx={{ borderStyle: "dashed" }} />
-
-                {services?.map((service) => (
                   <MenuItem
-                    key={service.id}
-                    value={service.id}
-                    onClick={() => handleSelectService(index, service.name)}
+                    value=""
+                    onClick={() => handleClearService(index)}
+                    sx={{ fontStyle: "italic", color: "text.secondary" }}
                   >
-                    {service.name}
+                    None
                   </MenuItem>
-                ))}
-              </RHFSelect>
 
-              <RHFSelect
-                name={`items[${index}].employee`}
-                size="small"
-                label="Employee"
-                InputLabelProps={{ shrink: true }}
-                sx={{
-                  maxWidth: { md: 400 },
-                }}
-              >
-                <MenuItem
-                  value=""
-                  sx={{ fontStyle: "italic", color: "text.secondary" }}
+                  <Divider sx={{ borderStyle: "dashed" }} />
+
+                  {services?.map((service) => (
+                    <MenuItem
+                      key={service.id}
+                      value={service.id}
+                      onClick={() => handleSelectService(index, service)}
+                    >
+                      {service.name}
+                    </MenuItem>
+                  ))}
+                </RHFSelect>
+
+                <RHFSelect
+                  name={`Invoice_line[${index}].employee_id`}
+                  size="small"
+                  label="Employee"
+                  InputLabelProps={{ shrink: true }}
+                  sx={{
+                    maxWidth: { md: 400 },
+                  }}
                 >
-                  None
-                </MenuItem>
-
-                <Divider sx={{ borderStyle: "dashed" }} />
-
-                {employees?.map((employee) => (
                   <MenuItem
-                    key={employee.id}
-                    value={employee.id}
-                    onClick={() => handleSelectEmployee(index, employee.name)}
+                    value=""
+                    sx={{ fontStyle: "italic", color: "text.secondary" }}
                   >
-                    {employee.name}
+                    None
                   </MenuItem>
-                ))}
-              </RHFSelect>
 
+                  <Divider sx={{ borderStyle: "dashed" }} />
+
+                  {employees?.map((employee) => (
+                    <MenuItem
+                      key={employee.id}
+                      value={employee.id}
+                      onClick={() => handleSelectEmployee(index, employee.name)}
+                    >
+                      {employee.name}
+                    </MenuItem>
+                  ))}
+                </RHFSelect>
+
+                <RHFTextField
+                  size="small"
+                  type="number"
+                  name={`Invoice_line[${index}].quantity`}
+                  label="Quantity"
+                  placeholder="0"
+                  onChange={(event) => handleChangeQuantity(event, index)}
+                  InputLabelProps={{ shrink: true }}
+                  sx={{ maxWidth: { md: 96 } }}
+                />
+
+                <RHFTextField
+                  size="small"
+                  type="number"
+                  name={`Invoice_line[${index}].price`}
+                  label="Price"
+                  placeholder="0.00"
+                  onChange={(event) => handleChangePrice(event, index)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Box
+                          sx={{
+                            typography: "subtitle2",
+                            color: "text.disabled",
+                          }}
+                        >
+                          {currency}
+                        </Box>
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{ maxWidth: { md: 96 } }}
+                />
+
+                <RHFTextField
+                  size="small"
+                  type="number"
+                  name={`Invoice_line[${index}].discount`}
+                  label="Discount(%)"
+                  placeholder="0%"
+                  onChange={(event) => handleItemDiscount(event, index)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Box
+                          sx={{
+                            typography: "subtitle2",
+                            color: "text.disabled",
+                          }}
+                        >
+                          {currency}
+                        </Box>
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{ maxWidth: { md: 96 } }}
+                />
+
+                <RHFTextField
+                  disabled
+                  size="small"
+                  type="number"
+                  name={`Invoice_line[${index}].total`}
+                  label="Total"
+                  placeholder="0.00"
+                  value={
+                    (values.Invoice_line[index].price -
+                      (values.Invoice_line[index].price *
+                        values.Invoice_line[index].discount) /
+                        100) *
+                    values.Invoice_line[index].quantity
+                  }
+                  onChange={(event) => handleChangePrice(event, index)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Box
+                          sx={{
+                            typography: "subtitle2",
+                            color: "text.disabled",
+                          }}
+                        >
+                          {currency}
+                        </Box>
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{
+                    maxWidth: { md: 104 },
+                    [`& .${inputBaseClasses.input}`]: {
+                      textAlign: { md: "right" },
+                    },
+                  }}
+                />
+                {/*
               <RHFTextField
                 size="small"
                 type="number"
-                name={`items[${index}].quantity`}
-                label="Quantity"
-                placeholder="0"
-                onChange={(event) => handleChangeQuantity(event, index)}
-                InputLabelProps={{ shrink: true }}
-                sx={{ maxWidth: { md: 96 } }}
-              />
-
-              <RHFTextField
-                size="small"
-                type="number"
-                name={`items[${index}].price`}
-                label="Price"
-                placeholder="0.00"
-                onChange={(event) => handleChangePrice(event, index)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Box
-                        sx={{ typography: "subtitle2", color: "text.disabled" }}
-                      >
-                        {currency}
-                      </Box>
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{ maxWidth: { md: 96 } }}
-              />
-
-              <RHFTextField
-                size="small"
-                type="number"
-                name={`items[${index}].discount`}
-                label="Discount(%)"
-                placeholder="0%"
-                onChange={(event) => handleItemDiscount(event, index)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Box
-                        sx={{ typography: "subtitle2", color: "text.disabled" }}
-                      >
-                        {currency}
-                      </Box>
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{ maxWidth: { md: 96 } }}
-              />
-
-              <RHFTextField
-                disabled
-                size="small"
-                type="number"
-                name={`items[${index}].total`}
-                label="Total"
-                placeholder="0.00"
-                value={
-                  values.items[index].total === 0
-                    ? ""
-                    : values.items[index].total.toFixed(2)
-                }
-                onChange={(event) => handleChangePrice(event, index)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Box
-                        sx={{ typography: "subtitle2", color: "text.disabled" }}
-                      >
-                        {currency}
-                      </Box>
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  maxWidth: { md: 104 },
-                  [`& .${inputBaseClasses.input}`]: {
-                    textAlign: { md: "right" },
-                  },
-                }}
-              />
-
-              <RHFTextField
-                size="small"
-                type="number"
-                name={`items[${index}].type`}
+                name={`Invoice_line[${index}].type`}
                 label="Type"
                 placeholder="0"
                 style={{ display: "none" }}
                 InputLabelProps={{ shrink: true }}
               />
-            </Stack>
+              */}
+              </Stack>
 
-            <Button
-              size="small"
-              color="error"
-              startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
-              onClick={() => handleRemove(index)}
-            >
-              Remove
-            </Button>
-          </Stack>
-        ))}
+              <Button
+                size="small"
+                color="error"
+                startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
+                onClick={() => handleRemove(index)}
+              >
+                Remove
+              </Button>
+            </Stack>
+          ))}
       </Stack>
 
       <Divider sx={{ my: 3, borderStyle: "dashed" }} />
@@ -482,8 +501,6 @@ export default function InvoiceNewEditDetails({
       </Stack>
 
       {renderTotal}
-
-      {/* <PaymentNewEditForm currentPayment={currentInvoice?.payment} paymentTypes={paymentypes} open={quickEdit.value} onClose={quickEdit.onFalse} /> */}
     </Box>
   );
 }

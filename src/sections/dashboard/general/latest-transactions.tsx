@@ -18,6 +18,7 @@ import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
 import { TableHeadCustom } from "src/components/table";
 import CustomPopover, { usePopover } from "src/components/custom-popover";
+import { Typography } from "@mui/material";
 
 // ----------------------------------------------------------------------
 
@@ -25,6 +26,7 @@ type RowProps = {
   id: string;
   invoicenumber: string;
   billingname: string;
+  telephone: string;
   employeename: string;
   total: string;
   date: string;
@@ -39,7 +41,7 @@ interface Props extends CardProps {
   tableData: RowProps[];
 }
 
-export default function BookingDetails({
+export default function LatestTransactions({
   title,
   subheader,
   tableLabels,
@@ -56,7 +58,7 @@ export default function BookingDetails({
             <TableHeadCustom headLabel={tableLabels} />
 
             <TableBody>
-              {tableData.map((row) => (
+              {tableData?.map((row) => (
                 <BookingDetailsRow key={row.id} row={row} />
               ))}
             </TableBody>
@@ -126,7 +128,7 @@ function BookingDetailsRow({ row }: BookingDetailsRowProps) {
         <TableCell>
           <ListItemText
             primary={row.billingname}
-            secondary={row.billingname}
+            secondary={row.telephone}
             primaryTypographyProps={{ typography: "body2", noWrap: true }}
             secondaryTypographyProps={{
               mt: 0.5,
@@ -136,7 +138,18 @@ function BookingDetailsRow({ row }: BookingDetailsRowProps) {
           />
         </TableCell>
 
-        <TableCell>{row.employeename}</TableCell>
+        <TableCell>
+          {row.employeename.length > 1 ? (
+            <>
+              {row.employeename[0]}
+              <Typography variant="body2" color="textSecondary">
+                and more
+              </Typography>
+            </>
+          ) : (
+            row.employeename[0]
+          )}
+        </TableCell>
 
         <TableCell>
           <ListItemText

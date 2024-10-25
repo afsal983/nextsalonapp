@@ -15,7 +15,7 @@ import { TableHeadCustom } from "src/components/table";
 
 interface RowProps {
   id: string;
-  name: string;
+  customer: string;
   telephone: string;
   revenue: string;
   amount: string;
@@ -45,7 +45,7 @@ export default function SalonBestCustomer({
             <TableHeadCustom headLabel={tableLabels} />
 
             <TableBody>
-              {tableData.map((row, index) => (
+              {tableData?.map((row, index) => (
                 <EcommerceBestSalesmanRow key={index} row={row} />
               ))}
             </TableBody>
@@ -66,14 +66,14 @@ function EcommerceBestSalesmanRow({ row }: EcommerceBestSalesmanRowProps) {
   return (
     <TableRow>
       <TableCell sx={{ display: "flex", alignItems: "center" }}>
-        {row.name}
+        {row.customer}
       </TableCell>
 
       <TableCell>{row.telephone}</TableCell>
 
-      <TableCell align="right">{fCurrency(row.revenue)}</TableCell>
+      <TableCell align="center">{fCurrency(row.revenue)}</TableCell>
 
-      <TableCell align="right">{row.amount}</TableCell>
+      <TableCell align="center">{row.amount}</TableCell>
     </TableRow>
   );
 }

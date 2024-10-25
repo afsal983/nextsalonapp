@@ -80,6 +80,7 @@
     "tax": "Tax(%)",
     "tax_helper": "Tax percentage such as 5, 10, 15 etc. This has no effect currently. Now avaiable under general settings",
     "commission": "Commission(%)",
+    "calander": "Calander",
     "demo": {
       "title": "English"
     },

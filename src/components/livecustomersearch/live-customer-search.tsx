@@ -17,7 +17,7 @@ import { Customer } from "src/types/customer";
 // ----------------------------------------------------------------------
 
 type props = {
-  handleSelectedCustomer: (value: string | undefined) => void;
+  handleSelectedCustomer: (value: Customer | null) => void;
 };
 export default function LiveCustomerSearch({ handleSelectedCustomer }: props) {
   const [customerData, setCustomerData] = useState<Customer[]>([]);
@@ -64,6 +64,7 @@ export default function LiveCustomerSearch({ handleSelectedCustomer }: props) {
         getOptionLabel={(customer: Customer) =>
           `${customer.firstname} ${customer.lastname}`
         }
+        sx={{ width: "100%", minWidth: 360, maxWidth: 360 }}
         options={customerData} // Assuming this is an array of Customer objects
         isOptionEqualToValue={(option, value) => option.id === value.id} // Compare by unique ID or another unique property
         noOptionsText="Search Customer"
@@ -94,7 +95,7 @@ export default function LiveCustomerSearch({ handleSelectedCustomer }: props) {
           setInputValue(newInputValue); // Update inputValue state
         }}
         onChange={(event: any, newValue: Customer | null) => {
-          handleSelectedCustomer(newValue?.id);
+          handleSelectedCustomer(newValue);
         }}
       />
     </Stack>
