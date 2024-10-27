@@ -45,7 +45,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
   // Get the data in JSON format
   const responseData = await data.json();
 
-  if (responseData?.status != 200) {
+  if (responseData?.status !== 200) {
     const res = {
       Title: "NOK",
       status: 400,
