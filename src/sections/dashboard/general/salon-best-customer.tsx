@@ -1,6 +1,11 @@
 import Table from "@mui/material/Table";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
+import { Avatar } from "@mui/material";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import Label from "src/components/label";
 import TableBody from "@mui/material/TableBody";
 import CardHeader from "@mui/material/CardHeader";
 import Card, { type CardProps } from "@mui/material/Card";
@@ -19,6 +24,7 @@ interface RowProps {
   telephone: string;
   revenue: string;
   amount: string;
+  rank: string;
 }
 
 interface Props extends CardProps {
@@ -46,7 +52,7 @@ export default function SalonBestCustomer({
 
             <TableBody>
               {tableData?.map((row, index) => (
-                <EcommerceBestSalesmanRow key={index} row={row} />
+                <EcommerceBestCsutomerRow key={index} row={row} rank={index} />
               ))}
             </TableBody>
           </Table>
@@ -58,22 +64,51 @@ export default function SalonBestCustomer({
 
 // ----------------------------------------------------------------------
 
-interface EcommerceBestSalesmanRowProps {
+interface EcommerceBestCsutomerRowProps {
   row: RowProps;
+  rank: number;
 }
 
-function EcommerceBestSalesmanRow({ row }: EcommerceBestSalesmanRowProps) {
+function EcommerceBestCsutomerRow({
+  row,
+  rank,
+}: EcommerceBestCsutomerRowProps) {
   return (
     <TableRow>
       <TableCell sx={{ display: "flex", alignItems: "center" }}>
-        {row.customer}
+        <ListItem>
+          <ListItemAvatar>
+            <Avatar sx={{ mr: 2 }}>{row.customer.charAt(0)}</Avatar>
+          </ListItemAvatar>
+          <ListItemText
+            primaryTypographyProps={{ typography: "body2", noWrap: true }}
+            secondaryTypographyProps={{
+              component: "span",
+              typography: "caption",
+            }}
+            primary={row.customer}
+            secondary={row.telephone}
+          />
+        </ListItem>
       </TableCell>
-
-      <TableCell>{row.telephone}</TableCell>
 
       <TableCell align="center">{fCurrency(row.revenue)}</TableCell>
 
       <TableCell align="center">{row.amount}</TableCell>
+      <TableCell align="right">
+        <Label
+          variant="soft"
+          color={
+            (rank === 0 && "primary") ||
+            (rank === 1 && "info") ||
+            (rank === 2 && "success") ||
+            (rank === 3 && "warning") ||
+            "error"
+          }
+        >
+          {rank + 1}
+        </Label>
+      </TableCell>
     </TableRow>
   );
 }

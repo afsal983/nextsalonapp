@@ -64,27 +64,35 @@ export default function InvoiceDetails({ printinvoice }: Props) {
         </TableCell>
       </StyledTableRow>
 
-      <StyledTableRow>
-        <TableCell colSpan={5} />
-        <TableCell sx={{ color: "text.secondary" }}>Customer Savings</TableCell>
-        <TableCell
-          width={120}
-          sx={{ color: "error.main", typography: "body2" }}
-        >
-          {printinvoice.customersavings}
-        </TableCell>
-      </StyledTableRow>
+      {printinvoice.customersavings && (
+        <StyledTableRow>
+          <TableCell colSpan={5} />
+          <TableCell sx={{ color: "text.secondary" }}>
+            Customer Savings
+          </TableCell>
+          <TableCell
+            width={120}
+            sx={{ color: "error.main", typography: "body2" }}
+          >
+            {printinvoice.customersavings}
+          </TableCell>
+        </StyledTableRow>
+      )}
 
-      <StyledTableRow>
-        <TableCell colSpan={5} />
-        <TableCell sx={{ color: "text.secondary" }}>Overall discount</TableCell>
-        <TableCell
-          width={120}
-          sx={{ color: "error.main", typography: "body2" }}
-        >
-          {printinvoice.discount}
-        </TableCell>
-      </StyledTableRow>
+      {printinvoice.discount && (
+        <StyledTableRow>
+          <TableCell colSpan={5} />
+          <TableCell sx={{ color: "text.secondary" }}>
+            Overall discount
+          </TableCell>
+          <TableCell
+            width={120}
+            sx={{ color: "error.main", typography: "body2" }}
+          >
+            {printinvoice.discount}
+          </TableCell>
+        </StyledTableRow>
+      )}
 
       <StyledTableRow>
         <TableCell colSpan={5} />
@@ -107,6 +115,19 @@ export default function InvoiceDetails({ printinvoice }: Props) {
           {printinvoice.tax}
         </TableCell>
       </StyledTableRow>
+
+      {printinvoice.tip && (
+        <StyledTableRow>
+          <TableCell colSpan={5} />
+          <TableCell sx={{ color: "text.secondary" }}>Tip</TableCell>
+          <TableCell
+            width={120}
+            sx={{ color: "error.secondary", typography: "body2" }}
+          >
+            {printinvoice.tip}
+          </TableCell>
+        </StyledTableRow>
+      )}
 
       <StyledTableRow>
         <TableCell colSpan={5} />
@@ -255,7 +276,10 @@ export default function InvoiceDetails({ printinvoice }: Props) {
             <br />
           </Stack>
 
-          <Stack sx={{ typography: "body2" }}>
+          <Stack
+            sx={{ typography: "body2" }}
+            alignItems={{ xs: "flex-start", md: "flex-end" }}
+          >
             <Typography variant="subtitle2" sx={{ mb: 1 }}>
               Invoice To
             </Typography>

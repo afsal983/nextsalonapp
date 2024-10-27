@@ -6,7 +6,12 @@ import Typography from "@mui/material/Typography";
 import { alpha, useTheme } from "@mui/material/styles";
 import Card, { type CardProps } from "@mui/material/Card";
 
-import { fNumber, fPercent } from "src/utils/format-number";
+import {
+  fCurrency,
+  FnCurrency,
+  fNumber,
+  fPercent,
+} from "src/utils/format-number";
 
 import Iconify from "src/components/iconify";
 import Chart, { useChart } from "src/components/chart";
@@ -16,7 +21,7 @@ import Chart, { useChart } from "src/components/chart";
 interface Props extends CardProps {
   title: string;
   total: number;
-  percent: number;
+  count: number;
   chart: {
     colors?: string[];
     series: number[];
@@ -24,9 +29,9 @@ interface Props extends CardProps {
   };
 }
 
-export default function EcommerceWidgetSummary({
+export default function SalonDashBoardWidgetSummary({
   title,
-  percent,
+  count,
   total,
   chart,
   sx,
@@ -78,33 +83,16 @@ export default function EcommerceWidgetSummary({
 
   const renderTrending = (
     <Stack direction="row" alignItems="center" sx={{ mt: 2, mb: 1 }}>
-      <Iconify
-        icon={percent < 0 ? "eva:trending-down-fill" : "eva:trending-up-fill"}
-        sx={{
-          mr: 1,
-          p: 0.5,
-          width: 24,
-          height: 24,
-          borderRadius: "50%",
-          color: "success.main",
-          bgcolor: alpha(theme.palette.success.main, 0.16),
-          ...(percent < 0 && {
-            color: "error.main",
-            bgcolor: alpha(theme.palette.error.main, 0.16),
-          }),
-        }}
-      />
-
       <Typography variant="subtitle2" component="div" noWrap>
-        {percent > 0 && "+"}
+        {count > 0 && "#"}
 
-        {fPercent(percent)}
+        {count}
 
         <Box
           component="span"
           sx={{ color: "text.secondary", typography: "body2" }}
         >
-          {" than last week"}
+          {" Sales"}
         </Box>
       </Typography>
     </Stack>
@@ -121,7 +109,7 @@ export default function EcommerceWidgetSummary({
         </Typography>
 
         <Typography variant="h3" gutterBottom>
-          {fNumber(total)}
+          {fCurrency(total)}
         </Typography>
 
         {renderTrending}

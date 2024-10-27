@@ -12,10 +12,10 @@ export async function POST(request: NextRequest, response: NextResponse) {
   if (sessionCookie === undefined) {
     const res = {
       Title: "NOK",
-      status: 401,
+      status: 400,
       message: "Cookie missing",
     };
-    return NextResponse.json(res, { status: 401 });
+    return NextResponse.json(res, { status: 400 });
   }
 
   const cookiedata = await decrypt(sessionCookie);
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
       status: 401,
       message: "Cookie missing",
     };
-    return NextResponse.json(res, { status: 401 });
+    return NextResponse.json(res, { status: 400 });
   }
 
   const refreshtokendata = {
@@ -43,9 +43,21 @@ export async function POST(request: NextRequest, response: NextResponse) {
   });
 
   // Get the data in JSON format
-  const userdata = await data.json();
+  const responseData = await data.json();
 
-  const { token, refresh_token } = userdata;
+  if (responseData?.status != 200) {
+    const res = {
+      Title: "NOK",
+      status: 400,
+      message: responseData?.message,
+    };
+
+    // Set encrypted cookies for the browser
+    cookies().delete("session");
+    return NextResponse.json(res, { status: 400 });
+  }
+
+  const { token, refresh_token } = responseData;
 
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 
@@ -61,5 +73,5 @@ export async function POST(request: NextRequest, response: NextResponse) {
     sameSite: "lax",
     path: "/",
   });
-  return NextResponse.json(userdata, { status: 201 });
+  return NextResponse.json(responseData, { status: 201 });
 }

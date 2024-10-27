@@ -12,7 +12,7 @@ import CardHeader from "@mui/material/CardHeader";
 import Card, { CardProps } from "@mui/material/Card";
 import ListItemText from "@mui/material/ListItemText";
 import TableContainer from "@mui/material/TableContainer";
-
+import { fCurrency } from "src/utils/format-number";
 import Label from "src/components/label";
 import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
@@ -59,7 +59,7 @@ export default function LatestTransactions({
 
             <TableBody>
               {tableData?.map((row) => (
-                <BookingDetailsRow key={row.id} row={row} />
+                <LatestTransactionsRow key={row.id} row={row} />
               ))}
             </TableBody>
           </Table>
@@ -89,11 +89,11 @@ export default function LatestTransactions({
 
 // ----------------------------------------------------------------------
 
-type BookingDetailsRowProps = {
+type LatestTransactionsRowProps = {
   row: RowProps;
 };
 
-function BookingDetailsRow({ row }: BookingDetailsRowProps) {
+function LatestTransactionsRow({ row }: LatestTransactionsRowProps) {
   const theme = useTheme();
 
   const lightMode = theme.palette.mode === "light";
@@ -164,7 +164,7 @@ function BookingDetailsRow({ row }: BookingDetailsRowProps) {
           />
         </TableCell>
 
-        <TableCell>{row.total}</TableCell>
+        <TableCell>{fCurrency(row.total)}</TableCell>
 
         <TableCell>
           <Label

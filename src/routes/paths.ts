@@ -1,21 +1,24 @@
 // ----------------------------------------------------------------------
 
 const ROOTS = {
-  AUTH: '/auth',
-  DASHBOARD: '/dashboard'
-}
+  AUTH: "/auth",
+  DASHBOARD: "/dashboard",
+};
 
 // ----------------------------------------------------------------------
 
 export const paths = {
-  minimalUI: 'https://mui.com/store/items/minimal-dashboard/',
+  SMEYE: "SMEEYE.COM",
   // AUTH
   auth: {
     jwt: {
       login: `${ROOTS.AUTH}/jwt/login`,
-      register: `${ROOTS.AUTH}/jwt/register`
-    }
+      register: `${ROOTS.AUTH}/jwt/register`,
+    },
   },
+  about: `${ROOTS.DASHBOARD}/about`,
+  contact: `${ROOTS.DASHBOARD}/contact`,
+  faqs: `${ROOTS.DASHBOARD}/faqs`,
   // DASHBOARD
   dashboard: {
     root: ROOTS.DASHBOARD,
@@ -29,7 +32,7 @@ export const paths = {
         new: `${ROOTS.DASHBOARD}/customercategory/new`,
         list: `${ROOTS.DASHBOARD}/customercategory/list`,
         edit: (id: number) => `${ROOTS.DASHBOARD}/customercategory/${id}/edit`,
-      }
+      },
     },
     services: {
       root: `${ROOTS.DASHBOARD}/service`,
@@ -41,25 +44,25 @@ export const paths = {
         new: `${ROOTS.DASHBOARD}/servicecategory/new`,
         list: `${ROOTS.DASHBOARD}/servicecategory/list`,
         edit: (id: number) => `${ROOTS.DASHBOARD}/servicecategory/${id}/edit`,
-      }
+      },
     },
     retails: {
       root: `${ROOTS.DASHBOARD}/retail`,
       new: `${ROOTS.DASHBOARD}/retail/new`,
       list: `${ROOTS.DASHBOARD}/retail/list`,
-      edit: (id: number) => `${ROOTS.DASHBOARD}/retail/${id}/edit`
+      edit: (id: number) => `${ROOTS.DASHBOARD}/retail/${id}/edit`,
     },
     retailbrands: {
       root: `${ROOTS.DASHBOARD}/retailbrand`,
       new: `${ROOTS.DASHBOARD}/retailbrand/new`,
       list: `${ROOTS.DASHBOARD}/retailbrand/list`,
-      edit: (id: number) => `${ROOTS.DASHBOARD}/retailbrand/${id}/edit`
+      edit: (id: number) => `${ROOTS.DASHBOARD}/retailbrand/${id}/edit`,
     },
     packages: {
       root: `${ROOTS.DASHBOARD}/package`,
       new: `${ROOTS.DASHBOARD}/package/new`,
       list: `${ROOTS.DASHBOARD}/package/list`,
-      edit: (id: number) => `${ROOTS.DASHBOARD}/service/${id}/edit`
+      edit: (id: number) => `${ROOTS.DASHBOARD}/service/${id}/edit`,
     },
     appointments: {
       root: `${ROOTS.DASHBOARD}/appointment`,
@@ -69,7 +72,7 @@ export const paths = {
       edit: (id: string) => `${ROOTS.DASHBOARD}/appointment/${id}/edit`,
       calander: {
         root: `${ROOTS.DASHBOARD}/appointment/calander`,
-      }
+      },
     },
     invoice: {
       root: `${ROOTS.DASHBOARD}/invoice`,
@@ -83,7 +86,7 @@ export const paths = {
         list: `${ROOTS.DASHBOARD}/paymenttype/list`,
         edit: (id: number) => `${ROOTS.DASHBOARD}/paymenttype/${id}/edit`,
         details: (id: string) => `${ROOTS.DASHBOARD}/paymenttype/${id}`,
-      }
+      },
     },
     employees: {
       root: `${ROOTS.DASHBOARD}/employee`,
@@ -99,7 +102,7 @@ export const paths = {
       },
       workschedule: {
         root: `${ROOTS.DASHBOARD}/workschedule`,
-      }
+      },
     },
     branches: {
       root: `${ROOTS.DASHBOARD}/branch`,
@@ -140,6 +143,6 @@ export const paths = {
     },
     product: {
       root: `${ROOTS.DASHBOARD}/product`,
-    }
-  }
-}
+    },
+  },
+};

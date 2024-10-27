@@ -41,6 +41,7 @@
     "management": "management",
     "dashboard": "Dashboard",
     "customers": "customers",
+    "employees": "employees",
     "customer_category": "Customer Category",
     "services": "services",
     "service_list": "Service list",

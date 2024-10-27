@@ -2,7 +2,14 @@ import { useEffect, useCallback } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import sum from "lodash/sum";
 import Box from "@mui/material/Box";
-import { Card, CardHeader, CardContent, Chip, Divider } from "@mui/material";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Chip,
+  Divider,
+  Icon,
+} from "@mui/material";
 
 import ControlPointIcon from "@mui/icons-material/ControlPoint";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
@@ -14,10 +21,11 @@ import { AppSettings } from "src/types/settings";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import Radio from "@mui/material/Radio";
 import { useBoolean } from "src/hooks/use-boolean";
 import Iconify from "src/components/iconify";
-
 import MenuItem from "@mui/material/MenuItem";
 import { FnCurrency } from "src/utils/format-number";
 import { Payment } from "src/types/invoice";
@@ -132,43 +140,52 @@ export default function PaymentNewEditForm({
   );
 
   return (
-    <Box
-      sx={{
-        height: "100%", // Fills available height
-        width: "100%", // Fills available width
-      }}
-      my={4}
-      p={2}
+    <Stack
+      spacing={1}
+      divider={<Divider flexItem sx={{ borderStyle: "dashed" }} />}
+      sx={{ order: { xs: 2, md: 1 } }}
     >
-      <Stack spacing={1}>
-        <Card sx={{ border: "1px solid silver" }}>
-          <CardHeader
-            title="Invoice Amount"
-            action={
-              <IconButton>
-                <Iconify icon="ph:contactless-payment" />
-              </IconButton>
-            }
-          />
-          <CardContent>
-            <Stack direction="row" justifyContent="space-between">
-              <Box
-                component="span"
-                sx={{ color: "text.secondary", width: 160, flexShrink: 1 }}
-              >
-                TOTAL DUE
-              </Box>
-              <Chip
-                variant="filled"
-                color="primary"
-                label={
-                  values.totalAmount > 0
-                    ? FnCurrency(values.totalAmount, currency)
-                    : FnCurrency(values.totalAmount, "0")
-                }
-              />
-            </Stack>
-            {/*
+      <Card>
+        <CardHeader
+          title={
+            <Typography
+              variant="h6" // Custom font size and variant
+              color="primary" // Custom color
+              sx={{ color: "text.disabled" }}
+            >
+              Invoice Amount
+            </Typography>
+          }
+          action={
+            <IconButton>
+              <Iconify icon="ph:contactless-payment" />
+            </IconButton>
+          }
+        />
+        <CardContent>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            my={2}
+            alignItems={{ xs: "stretch" }}
+          >
+            <Box
+              component="span"
+              sx={{ color: "text.secondary", width: 260, flexShrink: 1 }}
+            >
+              TOTAL DUE
+            </Box>
+            <Chip
+              variant="outlined"
+              color="primary"
+              label={
+                values.totalAmount > 0
+                  ? FnCurrency(values.totalAmount, currency)
+                  : FnCurrency(values.totalAmount, "0")
+              }
+            />
+          </Stack>
+          {/*
             <FormControl>
               <Typography variant="h6" color="text.primary" my={2}>
                 Select payment method
@@ -202,124 +219,142 @@ export default function PaymentNewEditForm({
               </RadioGroup>
             </FormControl>
                   */}
-            <Divider flexItem sx={{ borderStyle: "dashed" }} />
-            <Typography variant="h6" color="text.primary" my={2}>
-              Payment
-            </Typography>
-            <Stack
-              divider={<Divider flexItem sx={{ borderStyle: "dashed" }} />}
-              spacing={0.5}
-            >
-              {fields.map((item, index) => (
-                <Stack key={item.id} alignItems="flex-end" spacing={0.5}>
+          <Divider flexItem sx={{ borderStyle: "dashed" }} />
+          <Typography variant="h6" color="text.disabled" my={2}>
+            Payment
+          </Typography>
+
+          <Stack
+            divider={<Divider flexItem sx={{ borderStyle: "dashed" }} />}
+            spacing={0.5}
+          >
+            {fields.map((item, index) => (
+              <Stack key={item.id} alignItems="flex-end" spacing={0.5}>
+                <Stack
+                  direction={{ xs: "column", md: "row" }}
+                  spacing={1}
+                  sx={{ width: 1 }}
+                >
                   <Stack
                     direction={{ xs: "column", md: "row" }}
-                    spacing={1}
+                    spacing={3}
                     sx={{ width: 1 }}
+                    justifyContent="space-between"
+                    alignItems="center"
                   >
-                    <Stack
-                      direction={{ xs: "column", md: "row" }}
-                      spacing={3}
-                      sx={{ width: 1 }}
-                      justifyContent="space-between"
-                      alignItems="center"
-                    >
-                      <RHFSelect
-                        name={`Payment[${index}].payment_type`}
-                        size="small"
-                        label="Type"
-                        InputLabelProps={{ shrink: true }}
-                        sx={{
-                          maxWidth: { md: 400 },
-                        }}
-                      >
-                        <MenuItem
-                          value=""
-                          sx={{ fontStyle: "italic", color: "text.secondary" }}
-                        >
-                          None
-                        </MenuItem>
-
-                        <Divider sx={{ borderStyle: "dashed" }} />
-
-                        {paymenttypes
-                          ?.filter(
-                            (paymenttype) => paymenttype.name !== "SPLIT"
-                          ) // Correct filter logic
-                          .map((paymenttype) => (
-                            <MenuItem
-                              key={paymenttype.id}
-                              value={paymenttype.id}
-                              onClick={() =>
-                                handleSelectPayment(index, paymenttype)
-                              }
-                            >
-                              {paymenttype.name}
-                            </MenuItem>
-                          ))}
-                      </RHFSelect>
-
-                      <RHFTextField
-                        size="small"
-                        type="number"
-                        sx={{
-                          maxWidth: 100, // Set the maximum width here
-                          width: "100%", // Optional: make it responsive within its container
-                        }}
-                        name={`Payment[${index}].value`}
-                        label="Amount"
-                        placeholder="0"
-                        onChange={(event) => handleChangePrice(event, index)}
-                        InputLabelProps={{ shrink: true }}
-                      />
-                    </Stack>
-                    <IconButton
-                      aria-label="delete"
+                    <RHFSelect
+                      name={`Payment[${index}].payment_type`}
                       size="small"
-                      onClick={() => handleRemove(index)}
+                      label="Type"
+                      InputLabelProps={{ shrink: true }}
+                      sx={{
+                        maxWidth: { md: 400 },
+                      }}
                     >
-                      <HighlightOffIcon fontSize="small" />
-                    </IconButton>
+                      <MenuItem
+                        value=""
+                        sx={{ fontStyle: "italic", color: "text.secondary" }}
+                      >
+                        None
+                      </MenuItem>
+
+                      <Divider sx={{ borderStyle: "dashed" }} />
+
+                      {paymenttypes
+                        ?.filter((paymenttype) => paymenttype.name !== "SPLIT") // Correct filter logic
+                        .map((paymenttype) => (
+                          <MenuItem
+                            key={paymenttype.id}
+                            value={paymenttype.id}
+                            onClick={() =>
+                              handleSelectPayment(index, paymenttype)
+                            }
+                          >
+                            {paymenttype.name}
+                          </MenuItem>
+                        ))}
+                    </RHFSelect>
+
+                    <RHFTextField
+                      size="small"
+                      type="number"
+                      sx={{
+                        width: "100%", // Optional: make it responsive within its container
+                      }}
+                      name={`Payment[${index}].value`}
+                      label="Amount"
+                      placeholder="0"
+                      onChange={(event) => handleChangePrice(event, index)}
+                      InputLabelProps={{ shrink: true }}
+                    />
                   </Stack>
                 </Stack>
-              ))}
-            </Stack>
-            <Stack
-              spacing={1}
-              direction={{ xs: "column", md: "row" }}
-              alignItems={{ xs: "flex-end", md: "center" }}
+                <IconButton
+                  aria-label="delete"
+                  size="small"
+                  onClick={() => handleRemove(index)}
+                >
+                  <HighlightOffIcon fontSize="small" />
+                </IconButton>
+              </Stack>
+            ))}
+          </Stack>
+          <Stack
+            spacing={1}
+            direction={{ xs: "column", md: "row" }}
+            alignItems={{ xs: "flex-end", md: "center" }}
+          >
+            <IconButton
+              aria-label="add"
+              size="small"
+              color="primary"
+              onClick={handleAdd}
+              sx={{ flexShrink: 0 }}
             >
-              <IconButton
-                aria-label="add"
-                size="small"
-                color="primary"
-                onClick={handleAdd}
-                sx={{ flexShrink: 0 }}
-              >
-                <ControlPointIcon fontSize="small" />
-              </IconButton>
-            </Stack>
-            <Divider sx={{ my: 1, borderStyle: "dashed" }} />
-            <Stack
-              direction={{ xs: "column", md: "row" }}
-              spacing={3}
-              sx={{ width: "90%" }}
-              justifyContent="space-between"
-              alignItems="center"
-            >
+              <ControlPointIcon fontSize="small" />
+            </IconButton>
+          </Stack>
+          <Divider sx={{ my: 1, borderStyle: "dashed" }} />
+          <Stack
+            direction="row"
+            spacing={3}
+            justifyContent="space-between"
+            alignItems={{ xs: "flex-end", md: "center" }}
+          >
+            <Stack>
               <Box sx={{ color: "text.secondary" }}>Balance</Box>
+            </Stack>
+            <Stack>
               <Box
                 sx={{
                   typography: "subtitle2",
                   color: balance === 0 ? "primary" : "error",
                 }}
               >
-                {FnCurrency(String(balance), currency) || "-"}
+                {balance === 0 ? (
+                  <>
+                    <Stack direction="row" spacing={2}>
+                      <Typography>
+                        {FnCurrency(String(balance), currency) || "-"}
+                      </Typography>
+                      <ThumbUpIcon color="primary" />
+                    </Stack>
+                  </>
+                ) : (
+                  <>
+                    <Stack direction="row" spacing={2}>
+                      <Typography>
+                        {FnCurrency(String(balance), currency) || "-"}
+                      </Typography>
+                      <ThumbDownIcon color="error" />
+                    </Stack>
+                  </>
+                )}
               </Box>
             </Stack>
-          </CardContent>
-        </Card>
-      </Stack>
-    </Box>
+          </Stack>
+        </CardContent>
+      </Card>
+    </Stack>
   );
 }

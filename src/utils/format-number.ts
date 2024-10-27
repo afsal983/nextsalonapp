@@ -47,7 +47,7 @@ export function fCurrency(inputValue: InputValue) {
 
   // const currency = (user?.orgsettings.find((settings: AppSettings) => settings.name === "currency"))?.value
   const currency = "AED";
-  console.log(currency);
+
   if (!inputValue) return "";
 
   const number = Number(inputValue);

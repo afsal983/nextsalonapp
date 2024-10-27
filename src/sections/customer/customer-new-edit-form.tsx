@@ -61,7 +61,7 @@ export default function CustomerNewEditForm({
     ),
     email: Yup.string(),
     sex: Yup.number(),
-    dob: Yup.string(),
+    dob: Yup.mixed<any>().required("Date is required"),
     category_id: Yup.number().required(
       t("salonapp.customer.category_fvalid_error")
     ),
@@ -81,7 +81,8 @@ export default function CustomerNewEditForm({
       telephone: currentCustomer?.telephone || "",
       email: currentCustomer?.email || "",
       sex: currentCustomer?.sex || 0,
-      dob: currentCustomer?.dob || "",
+      dob:
+        (currentCustomer?.dob && new Date(currentCustomer?.dob)) || new Date(),
       category_id: currentCustomer?.category_id || 0,
       taxid: currentCustomer?.taxid || "",
       cardno: currentCustomer?.cardno || "",

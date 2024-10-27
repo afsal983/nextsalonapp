@@ -1,8 +1,6 @@
 "use client";
-
-// Import the library
 import { useMemo, useEffect, useReducer, useCallback } from "react";
-
+import Cookies from "js-cookie";
 import axios, { endpoints } from "src/utils/axios";
 
 import { setSession } from "./utils";
@@ -93,14 +91,10 @@ export function AuthProvider({ children }: Props) {
     try {
       // Use the existing credentials to renew your identity
       // It calls refresh token
-      const res = await fetch(endpoints.auth.me, {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-      });
 
-      const logindata = await res.json();
+      const res = await axios.post(endpoints.auth.me);
+
+      const logindata = res.data;
 
       const {
         firstname,
@@ -149,16 +143,22 @@ export function AuthProvider({ children }: Props) {
   // LOGIN
   const login = useCallback(async (username: string, password: string) => {
     setSession("");
-    // const res = await axios.post(endpoints.auth.login, data)
-    const res = await fetch(endpoints.auth.login, {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({ email: username, password }),
-    });
 
-    const logindata = await res.json();
+    // const res = await axios.post(endpoints.auth.login, data)
+    // const res = await fetch(endpoints.auth.login, {
+    // method: "POST",
+    // headers: {
+    //   "Content-type": "application/json",
+    // },
+    // body: JSON.stringify({ email: username, password }),
+    // });
+    const data = {
+      email: username,
+      password,
+    };
+    const res = await axios.post(endpoints.auth.login, data);
+
+    const logindata = res.data;
 
     const {
       firstname,
@@ -172,8 +172,6 @@ export function AuthProvider({ children }: Props) {
       branch_id,
       orgsettings,
     } = logindata;
-
-    // setSession(token)
 
     dispatch({
       type: Types.LOGIN,
@@ -230,7 +228,18 @@ export function AuthProvider({ children }: Props) {
 
   // LOGOUT
   const logout = useCallback(async () => {
-    setSession(null);
+    try {
+      const response = await fetch("/api/logout", {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        console.log("Session cookie deleted");
+      }
+    } catch (error) {
+      console.error("Error deleting session cookie:", error);
+    }
+
     dispatch({
       type: Types.LOGOUT,
     });

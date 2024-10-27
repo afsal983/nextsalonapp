@@ -10,7 +10,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import InputAdornment from "@mui/material/InputAdornment";
 import { inputBaseClasses } from "@mui/material/InputBase";
-
+import { useResponsive } from "src/hooks/use-responsive";
 import { FnCurrency } from "src/utils/format-number";
 
 import Iconify from "src/components/iconify";
@@ -21,6 +21,8 @@ import { ServiceItem } from "src/types/service";
 import { AppSettings } from "src/types/settings";
 import { EmployeeItem } from "src/types/employee";
 import { IInvoice, IInvoiceItem, Invoice_line } from "src/types/invoice";
+import { IPaymenttypes } from "src/types/payment";
+import PaymentNewEditForm from "./payment-new-edit-form";
 
 // ----------------------------------------------------------------------
 
@@ -28,6 +30,7 @@ type Props = {
   services?: ServiceItem[];
   employees: EmployeeItem[];
   appsettings: AppSettings[];
+  paymenttypes?: IPaymenttypes[];
   currentInvoice?: IInvoice;
   branches: BranchItem[];
   // paymentypes: IPaymenttypes[]
@@ -37,10 +40,13 @@ export default function InvoiceNewEditDetails({
   services,
   employees,
   appsettings,
+  paymenttypes,
   currentInvoice,
   branches,
 }: Props) {
   const { control, setValue, getValues, watch, resetField } = useFormContext();
+
+  const mdUp = useResponsive("up", "md");
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -88,6 +94,7 @@ export default function InvoiceNewEditDetails({
 
   const handleAdd = () => {
     append({
+      id: 0,
       employee: 0,
       service: 0,
       quantity: 1,
@@ -101,6 +108,7 @@ export default function InvoiceNewEditDetails({
 
   const handleRemove = (index: number) => {
     const id = getValues(`Invoice_line[${index}].id`);
+    console.log(id);
     // Dont Actually delete the item. Just set deleted = 1 nad list deleted = 0 for existing items
     if (id !== 0) {
       setValue(`Invoice_line[${index}].deleted`, 1);
@@ -201,7 +209,13 @@ export default function InvoiceNewEditDetails({
     <Stack
       spacing={2}
       alignItems="flex-end"
-      sx={{ mt: 3, textAlign: "right", typography: "body2" }}
+      p={3}
+      sx={{
+        mt: 3,
+        textAlign: "right",
+        typography: "body2",
+        order: { xs: 1, md: 3 },
+      }}
     >
       <Stack direction="row">
         <Box sx={{ color: "text.secondary" }}>Subtotal</Box>
@@ -260,8 +274,8 @@ export default function InvoiceNewEditDetails({
   );
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h6" sx={{ color: "text.disabled", mb: 3 }}>
+    <Box sx={{ p: 2 }}>
+      <Typography variant="h6" sx={{ color: "text.disabled" }} gutterBottom>
         Details:
       </Typography>
 
@@ -462,7 +476,7 @@ export default function InvoiceNewEditDetails({
       <Divider sx={{ my: 3, borderStyle: "dashed" }} />
 
       <Stack
-        spacing={3}
+        spacing={1}
         direction={{ xs: "column", md: "row" }}
         alignItems={{ xs: "flex-end", md: "center" }}
       >
@@ -499,8 +513,25 @@ export default function InvoiceNewEditDetails({
           />
         </Stack>
       </Stack>
+      <Stack
+        direction={{ xs: "column", md: "row" }} // Vertical on xs, horizontal on md
+        justifyContent="space-between" // Items at two ends when in row
+        alignItems={{ xs: "stretch" }} // Aligns stretch in column, center in row
+        spacing={2}
+        my={4}
+      >
+        <PaymentNewEditForm
+          paymenttypes={paymenttypes}
+          appsettings={appsettings}
+        />
+        <Divider
+          flexItem
+          orientation={mdUp ? "vertical" : "horizontal"}
+          sx={{ borderStyle: "dashed", order: { xs: 1, md: 3 } }}
+        />
 
-      {renderTotal}
+        {renderTotal}
+      </Stack>
     </Box>
   );
 }

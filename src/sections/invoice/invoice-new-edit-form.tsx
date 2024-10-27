@@ -39,7 +39,6 @@ import {
   Payments,
 } from "src/types/invoice";
 
-import PaymentNewEditForm from "./payment-new-edit-form";
 import InvoiceNewEditDetails from "./invoice-new-edit-details";
 import InvoiceNewEditAddress from "./invoice-new-edit-address";
 import InvoiceNewEditStatusDate from "./invoice-new-edit-status-date";
@@ -83,49 +82,63 @@ export default function InvoiceNewEditForm({
     discount: Yup.number(),
     tax_rate: Yup.number(),
     tip: Yup.number(),
-    customer_id: Yup.number().required("Customer required"),
+    customer_id: Yup.number()
+      .required("Customer required")
+      .positive("Customer required"),
     Customer: Yup.mixed<any>(),
     event_id: Yup.number(),
     Event: Yup.mixed<any>(),
     Invoice_line: Yup.lazy(() =>
-      Yup.array().of(
-        Yup.object({
-          id: Yup.number(),
-          quantity: Yup.number()
-            .required("Quantity is required")
-            .min(1, "Quantity must be more than 0"),
-          price: Yup.number()
-            .positive("Discount must be a positive value")
-            .required("Price is required"),
-          discount: Yup.number().min(0, "Discount cannot be negative"),
-          invoice_id: Yup.number(),
-          product_id: Yup.number().required("Product is required"),
-          Product: Yup.mixed<any>(),
-          employee_id: Yup.number().required("Employee is required"),
-          Employee: Yup.mixed<any>(),
-          branch_id: Yup.number(),
-          Branches_organization: Yup.mixed<any>(),
-          deleted: Yup.number(),
+      Yup.array()
+        .of(
+          Yup.object({
+            id: Yup.number(),
+            quantity: Yup.number()
+              .required("Quantity is required")
+              .min(1, "Quantity must be more than 0"),
+            price: Yup.number()
+              .positive("Discount must be a positive value")
+              .required("Price is required"),
+            discount: Yup.number().min(0, "Discount cannot be negative"),
+            invoice_id: Yup.number(),
+            product_id: Yup.number().required("Product is required"),
+            Product: Yup.mixed<any>(),
+            employee_id: Yup.number().required("Employee is required"),
+            Employee: Yup.mixed<any>(),
+            branch_id: Yup.number(),
+            Branches_organization: Yup.mixed<any>(),
+            deleted: Yup.number(),
+          })
+        )
+        .test({
+          message: "Atleast One item Required",
+          test: (arr) => arr && arr.length > 0,
         })
-      )
     ),
-    branch_id: Yup.number().required("Branch required"),
+    branch_id: Yup.number()
+      .required("Branch required")
+      .positive("Brach required"),
     Branches_organization: Yup.mixed<any>(),
     status: Yup.number().required("Status required"),
     Invstatus: Yup.mixed<any>(),
     deleted: Yup.number(),
     Payment: Yup.lazy(() =>
-      Yup.array().of(
-        Yup.object({
-          id: Yup.number(),
-          invoice_id: Yup.number(),
-          value: Yup.number()
-            .required("Payment amount is required")
-            .positive("Payment value must be a positive value"),
-          payment_type: Yup.number().required("Payment amount is required"),
-          auth_code: Yup.string(),
+      Yup.array()
+        .of(
+          Yup.object({
+            id: Yup.number(),
+            invoice_id: Yup.number(),
+            value: Yup.number()
+              .required("Payment amount is required")
+              .positive("Payment value must be a positive value"),
+            payment_type: Yup.number().required("Payment amount is required"),
+            auth_code: Yup.string(),
+          })
+        )
+        .test({
+          message: "Atleast One Payment Required",
+          test: (arr) => arr && arr.length > 0,
         })
-      )
     ),
   });
 
@@ -304,22 +317,16 @@ export default function InvoiceNewEditForm({
         <InvoiceNewEditStatusDate />
 
         <Grid container spacing={2}>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={12}>
             <InvoiceNewEditDetails
               services={services}
               employees={employees}
               appsettings={appsettings}
               currentInvoice={currentInvoice}
+              paymenttypes={paymenttypes}
               branches={branches}
             />
           </Grid>
-          <Grid item xs={12} md={4}>
-            <PaymentNewEditForm
-              paymenttypes={paymenttypes}
-              appsettings={appsettings}
-            />
-          </Grid>
-          {/* <PaymentNewEditForm paymenttypes={paymenttypes} /> */}
         </Grid>
       </Card>
 

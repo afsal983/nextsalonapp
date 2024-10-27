@@ -15,7 +15,7 @@ import { useSettingsContext } from "src/components/settings";
 import LatestTransactions from "../latest-transactions";
 import SalonBestCustomer from "../salon-best-customer";
 import SalonBestEmployee from "../salon-best-employee";
-import EcommerceWidgetSummary from "../ecommerce-widget-summary";
+import SalonDashBoardWidgetSummary from "../salondashboard-widget-summary";
 import EcommerceLatestProducts from "../ecommerce-latest-products";
 
 // ----------------------------------------------------------------------
@@ -63,14 +63,16 @@ export default function OverviewSalonView() {
   if (errorA || errorL || errorR || errorB || errorE)
     return <div>Error Loading...</div>;
 
+  console.log(revenuebycriteria);
+
   return (
     <Container maxWidth={settings.themeStretch ? false : "xl"}>
       <Grid container spacing={3}>
         <Grid xs={12} md={3}>
-          <EcommerceWidgetSummary
+          <SalonDashBoardWidgetSummary
             title="Today's Sales"
-            percent={2.6}
-            total={revenuebycriteria.salestoday}
+            count={revenuebycriteria.data.salescounttoday}
+            total={revenuebycriteria.data.salestoday}
             chart={{
               series: [22, 8, 35, 50, 82, 84, 77, 12, 87, 43],
             }}
@@ -78,10 +80,10 @@ export default function OverviewSalonView() {
         </Grid>
 
         <Grid xs={12} md={3}>
-          <EcommerceWidgetSummary
+          <SalonDashBoardWidgetSummary
             title="Yesterday's sales"
-            percent={-0.1}
-            total={revenuebycriteria.salesyesterday}
+            count={revenuebycriteria.data.salescountyesterday}
+            total={revenuebycriteria.data.salesyesterday}
             chart={{
               colors: [theme.palette.info.light, theme.palette.info.main],
               series: [56, 47, 40, 62, 73, 30, 23, 54, 67, 68],
@@ -90,10 +92,10 @@ export default function OverviewSalonView() {
         </Grid>
 
         <Grid xs={12} md={3}>
-          <EcommerceWidgetSummary
+          <SalonDashBoardWidgetSummary
             title="This week sales"
-            percent={0.6}
-            total={revenuebycriteria.salesthisweek}
+            count={revenuebycriteria.data.salescountthisweek}
+            total={revenuebycriteria.data.salesthisweek}
             chart={{
               colors: [theme.palette.warning.light, theme.palette.warning.main],
               series: [40, 70, 75, 70, 50, 28, 7, 64, 38, 27],
@@ -101,10 +103,10 @@ export default function OverviewSalonView() {
           />
         </Grid>
         <Grid xs={12} md={3}>
-          <EcommerceWidgetSummary
+          <SalonDashBoardWidgetSummary
             title="This month sales"
-            percent={0.6}
-            total={revenuebycriteria.salesthismonth}
+            count={revenuebycriteria.data.salescountthismonth}
+            total={revenuebycriteria.data.salesthismonth}
             chart={{
               colors: [theme.palette.warning.light, theme.palette.warning.main],
               series: [40, 70, 75, 70, 50, 28, 7, 64, 38, 27],
@@ -133,10 +135,10 @@ export default function OverviewSalonView() {
             title="Best Customers"
             tableData={bestcustomer.data}
             tableLabels={[
-              { id: "customername", label: "Customer Name" },
-              { id: "customerphone", label: "Customer Phone" },
+              { id: "customername", label: "Customer" },
               { id: "revenue", label: "Revenue", align: "center" },
-              { id: "amount", label: "Amount", align: "right" },
+              { id: "amount", label: "#Sales", align: "center" },
+              { id: "rank", label: "#Rank", align: "right" },
             ]}
           />
         </Grid>
@@ -153,7 +155,8 @@ export default function OverviewSalonView() {
             tableLabels={[
               { id: "customername", label: "Employee Name" },
               { id: "revenue", label: "Revenue", align: "center" },
-              { id: "amount", label: "Amount", align: "right" },
+              { id: "amount", label: "#Sales", align: "center" },
+              { id: "rank", label: "Rank", align: "right" },
             ]}
           />
         </Grid>

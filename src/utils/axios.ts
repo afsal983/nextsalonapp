@@ -1,53 +1,55 @@
-import axios, { type AxiosRequestConfig } from 'axios'
-
+import axios, { type AxiosRequestConfig } from "axios";
 
 // ----------------------------------------------------------------------
 
-const axiosInstance = axios.create({ baseURL: "http://localhost:8083" })
+const axiosInstance = axios.create({ baseURL: "http://localhost:8083" });
 
 axiosInstance.interceptors.response.use(
+  // (res) => res,
+  // async (error) => Promise.reject(error || "Something went wrong")
   (res) => res,
-  async (error) =>
+  (error) =>
     Promise.reject(
-      (error) || 'Something went wrong'
+      (error.response && error.response.data) || "Something went wrong"
     )
-)
+);
 
-export default axiosInstance
+export default axiosInstance;
 
 // ----------------------------------------------------------------------
 
 export const fetcher = async (args: string | [string, AxiosRequestConfig]) => {
-  const [url, config] = Array.isArray(args) ? args : [args]
-    const res = await axiosInstance.get(url, { ...config })
-    return res.data
-}
+  const [url, config] = Array.isArray(args) ? args : [args];
+  const res = await axiosInstance.get(url, { ...config });
+  return res.data;
+};
 
 // ----------------------------------------------------------------------
 
 export const endpoints = {
-  chat: '/api/chat',
-  kanban: '/api/kanban',
-  calendar: '/api/calendar',
+  chat: "/api/chat",
+  kanban: "/api/kanban",
+  calendar: "/api/calendar",
   auth: {
-    me: '/api/login/refreshtoken',
-    login: '/api/login',
-    register: '/api/auth/register'
+    me: "/api/login/refreshtoken",
+    login: "/api/login",
+    register: "/api/auth/register",
+    logout: "/api/logout",
   },
   mail: {
-    list: '/api/mail/list',
-    details: '/api/mail/details',
-    labels: '/api/mail/labels'
+    list: "/api/mail/list",
+    details: "/api/mail/details",
+    labels: "/api/mail/labels",
   },
   post: {
-    list: '/api/post/list',
-    details: '/api/post/details',
-    latest: '/api/post/latest',
-    search: '/api/post/search'
+    list: "/api/post/list",
+    details: "/api/post/details",
+    latest: "/api/post/latest",
+    search: "/api/post/search",
   },
   product: {
-    list: '/api/product/list',
-    details: '/api/product/details',
-    search: '/api/product/search'
-  }
-}
+    list: "/api/product/list",
+    details: "/api/product/details",
+    search: "/api/product/search",
+  },
+};
