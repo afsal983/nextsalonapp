@@ -23,10 +23,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      username: "admin@test.com",
-      password: "Fashion@1234",
-    }),
+    body: JSON.stringify(logincred),
   });
 
   // Get the data in JSON format
