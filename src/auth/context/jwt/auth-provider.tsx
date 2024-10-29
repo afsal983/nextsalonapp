@@ -153,7 +153,7 @@ export function AuthProvider({ children }: Props) {
     // body: JSON.stringify({ email: username, password }),
     // });
     const data = {
-      email: username,
+      username,
       password,
     };
     const res = await axios.post(endpoints.auth.login, data);

@@ -8,11 +8,11 @@ const baseUSRL = process.env.NEXT_PUBLIC_HOST_API;
 export async function POST(request: NextRequest, response: NextResponse) {
   // Get the credetials
   const body = await request.json();
-  const { email, password } = body;
+  const { username, password } = body;
 
   // POST data preparation
   const logincred = {
-    username: email,
+    username,
     password,
   };
 
