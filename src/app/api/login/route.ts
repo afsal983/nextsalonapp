@@ -29,6 +29,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
   // Get the data in JSON format
   const responseData = await data.json();
 
+  console.log(responseData);
   if (responseData?.status !== 200) {
     const res = {
       Title: "NOK",
