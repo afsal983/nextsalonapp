@@ -16,6 +16,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
     password,
   };
 
+  console.log(logincred);
   // Send the API request to backend
   const data = await fetch(`${baseUSRL}/secretkeeper/signin`, {
     method: "POST",
