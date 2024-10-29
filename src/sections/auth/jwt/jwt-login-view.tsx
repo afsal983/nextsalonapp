@@ -47,9 +47,16 @@ export default function JwtLoginView() {
     password: Yup.string().required("Password is required"),
   });
 
+  /*
   const defaultValues = {
     email: "admin@test.com",
     password: "Fashion@1234",
+  };
+  */
+
+  const defaultValues = {
+    email: "",
+    password: "",
   };
 
   const methods = useForm({
