@@ -160,21 +160,6 @@ export default function OverviewSalonView() {
 
         <Grid xs={12} md={8}>
           <Stack spacing={3}>
-            <LatestTransactions
-              title="Latest Transactions"
-              tableData={latestsales.data}
-              tableLabels={[
-                { id: "orderid", label: "Order ID" },
-                { id: "billingname", label: "Billing Name" },
-                { id: "employeename", label: "Employee Name" },
-                { id: "date", label: "Date" },
-                { id: "total", label: "Total" },
-                { id: "paymentstatus", label: "Payment Status" },
-                { id: "paymentmethod", label: "Payment Method" },
-                { id: "" },
-              ]}
-            />
-
             <SalonYearlySales
               title="Yearly Sales"
               subheader="(+43%) than last year"
