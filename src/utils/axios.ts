@@ -1,9 +1,9 @@
 import axios, { type AxiosRequestConfig } from "axios";
 
-import { HOST_API } from "src/config-global";
+// import { HOST_API } from "src/config-global";
 // ----------------------------------------------------------------------
 
-const axiosInstance = axios.create({ baseURL: HOST_API });
+const axiosInstance = axios.create({ baseURL: "http://localhost:8083" });
 axiosInstance.interceptors.response.use(
   // (res) => res,
   // async (error) => Promise.reject(error || "Something went wrong")
