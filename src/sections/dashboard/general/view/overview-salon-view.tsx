@@ -175,7 +175,7 @@ export default function OverviewSalonView() {
               ]}
             />
 
-            {appointment?.data?.upcomingevents.len != 0 && (
+            {appointment?.data?.upcomingevents.len !== 0 && (
               <AppointmentEvents
                 title="Upcoming appointments"
                 tableData={appointment?.data?.upcomingevents}
