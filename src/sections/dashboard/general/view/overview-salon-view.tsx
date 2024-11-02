@@ -160,33 +160,6 @@ export default function OverviewSalonView() {
 
         <Grid xs={12} md={8}>
           <Stack spacing={3}>
-            <LatestTransactions
-              title="Latest Transactions"
-              tableData={latestsales.data}
-              tableLabels={[
-                { id: "orderid", label: "Order ID" },
-                { id: "billingname", label: "Billing Name" },
-                { id: "employeename", label: "Employee Name" },
-                { id: "date", label: "Date" },
-                { id: "total", label: "Total" },
-                { id: "paymentstatus", label: "Payment Status" },
-                { id: "paymentmethod", label: "Payment Method" },
-                { id: "" },
-              ]}
-            />
-
-            <AppointmentEvents
-              title="Upcoming appointments"
-              tableData={appointment?.data?.upcomingevents}
-              tableLabels={[
-                { id: "customer", label: "Customer" },
-                { id: "date", label: "Date" },
-                { id: "product", label: "Product" },
-                { id: "employee", label: "Employee", align: "right" },
-                { id: "" },
-              ]}
-            />
-
             <SalonYearlySales
               title="Yearly Sales"
               subheader="(+43%) than last year"
@@ -262,6 +235,30 @@ export default function OverviewSalonView() {
                 { id: "amount", label: "#Sales", align: "center" },
                 { id: "rank", label: "Rank", align: "right" },
               ]}
+            />
+          </Stack>
+        </Grid>
+
+        <Grid xs={12} md={4}>
+          <Stack spacing={3}>
+            <BestProducts
+              title="Top Selling Products"
+              subheader="Last two months"
+              list={bestproducts?.data}
+            />
+
+            <CustomerByGender
+              title="Customer By Gender"
+              total={customerbygender?.total}
+              chart={{
+                series: customerbygender?.data,
+              }}
+            />
+            <AppointmentSource
+              title="Appointment Sources"
+              chart={{
+                series: appointmentsources?.data,
+              }}
             />
           </Stack>
         </Grid>
