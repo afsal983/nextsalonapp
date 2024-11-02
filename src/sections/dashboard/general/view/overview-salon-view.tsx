@@ -115,8 +115,8 @@ export default function OverviewSalonView() {
         <Grid xs={12} md={3}>
           <SalonDashBoardWidgetSummary
             title="Today's Sales"
-            count={revenuebycriteria.data.salescounttoday}
-            total={revenuebycriteria.data.salestoday}
+            count={revenuebycriteria.data?.salescounttoday}
+            total={revenuebycriteria.data?.salestoday}
             chart={{
               series: [22, 8, 35, 50, 82, 84, 77, 12, 87, 43],
             }}
@@ -126,8 +126,8 @@ export default function OverviewSalonView() {
         <Grid xs={12} md={3}>
           <SalonDashBoardWidgetSummary
             title="Yesterday's sales"
-            count={revenuebycriteria.data.salescountyesterday}
-            total={revenuebycriteria.data.salesyesterday}
+            count={revenuebycriteria.data?.salescountyesterday}
+            total={revenuebycriteria.data?.salesyesterday}
             chart={{
               colors: [theme.palette.info.light, theme.palette.info.main],
               series: [56, 47, 40, 62, 73, 30, 23, 54, 67, 68],
@@ -138,8 +138,8 @@ export default function OverviewSalonView() {
         <Grid xs={12} md={3}>
           <SalonDashBoardWidgetSummary
             title="This week sales"
-            count={revenuebycriteria.data.salescountthisweek}
-            total={revenuebycriteria.data.salesthisweek}
+            count={revenuebycriteria.data?.salescountthisweek}
+            total={revenuebycriteria.data?.salesthisweek}
             chart={{
               colors: [theme.palette.warning.light, theme.palette.warning.main],
               series: [40, 70, 75, 70, 50, 28, 7, 64, 38, 27],
@@ -149,8 +149,8 @@ export default function OverviewSalonView() {
         <Grid xs={12} md={3}>
           <SalonDashBoardWidgetSummary
             title="This month sales"
-            count={revenuebycriteria.data.salescountthismonth}
-            total={revenuebycriteria.data.salesthismonth}
+            count={revenuebycriteria.data?.salescountthismonth}
+            total={revenuebycriteria.data?.salesthismonth}
             chart={{
               colors: [theme.palette.warning.light, theme.palette.warning.main],
               series: [40, 70, 75, 70, 50, 28, 7, 64, 38, 27],
