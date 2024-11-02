@@ -175,20 +175,6 @@ export default function OverviewSalonView() {
               ]}
             />
 
-            {appointment?.data?.upcomingevents.len !== 0 && (
-              <AppointmentEvents
-                title="Upcoming appointments"
-                tableData={appointment?.data?.upcomingevents}
-                tableLabels={[
-                  { id: "customer", label: "Customer" },
-                  { id: "date", label: "Date" },
-                  { id: "product", label: "Product" },
-                  { id: "employee", label: "Employee", align: "right" },
-                  { id: "" },
-                ]}
-              />
-            )}
-
             <SalonYearlySales
               title="Yearly Sales"
               subheader="(+43%) than last year"
