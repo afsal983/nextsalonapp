@@ -1,11 +1,12 @@
-import { type ApexOptions } from "apexcharts";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { ApexOptions } from "apexcharts";
 import { useState, useCallback } from "react";
 
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import ButtonBase from "@mui/material/ButtonBase";
 import CardHeader from "@mui/material/CardHeader";
-import Card, { type CardProps } from "@mui/material/Card";
+import Card, { CardProps } from "@mui/material/Card";
 
 import Iconify from "src/components/iconify";
 import Chart, { useChart } from "src/components/chart";
@@ -19,13 +20,13 @@ interface Props extends CardProps {
   chart: {
     categories?: string[];
     colors?: string[];
-    series: Array<{
+    series: {
       year: string;
-      data: Array<{
+      data: {
         name: string;
         data: number[];
-      }>;
-    }>;
+      }[];
+    }[];
     options?: ApexOptions;
   };
 }
@@ -40,7 +41,7 @@ export default function EcommerceYearlySales({
 
   const popover = usePopover();
 
-  const [seriesData, setSeriesData] = useState("2019");
+  const [seriesData, setSeriesData] = useState("2024");
 
   const chartOptions = useChart({
     colors,
@@ -120,9 +121,7 @@ export default function EcommerceYearlySales({
           <MenuItem
             key={option.year}
             selected={option.year === seriesData}
-            onClick={() => {
-              handleChangeSeries(option.year);
-            }}
+            onClick={() => handleChangeSeries(option.year)}
           >
             {option.year}
           </MenuItem>

@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import Button from "@mui/material/Button";
+import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
 import MenuItem from "@mui/material/MenuItem";
 import TableRow from "@mui/material/TableRow";
@@ -11,38 +12,39 @@ import IconButton from "@mui/material/IconButton";
 import CardHeader from "@mui/material/CardHeader";
 import Card, { CardProps } from "@mui/material/Card";
 import ListItemText from "@mui/material/ListItemText";
+import Badge, { badgeClasses } from "@mui/material/Badge";
 import TableContainer from "@mui/material/TableContainer";
+
 import { fCurrency } from "src/utils/format-number";
+import { fDate, fTime } from "src/utils/format-time";
+
 import Label from "src/components/label";
 import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
 import { TableHeadCustom } from "src/components/table";
 import CustomPopover, { usePopover } from "src/components/custom-popover";
-import { Typography } from "@mui/material";
-import { fDate, fTime } from "src/utils/format-time";
 
 // ----------------------------------------------------------------------
 
 type RowProps = {
   id: string;
-  invoicenumber: string;
-  billingname: string;
+  start: string;
+  end: string;
+  name: number;
+  type: string;
   telephone: string;
-  employeename: string;
-  total: string;
-  date: string;
-  paymentstatus: string;
-  paymentmethod: string;
+  product: string;
+  employee: string | null;
 };
 
 interface Props extends CardProps {
   title?: string;
   subheader?: string;
-  tableLabels: any;
   tableData: RowProps[];
+  tableLabels: any;
 }
 
-export default function LatestTransactions({
+export default function AppointmentEvents({
   title,
   subheader,
   tableLabels,
@@ -55,12 +57,12 @@ export default function LatestTransactions({
 
       <TableContainer sx={{ overflow: "unset" }}>
         <Scrollbar>
-          <Table sx={{ minWidth: 960 }}>
+          <Table sx={{ minWidth: 720 }}>
             <TableHeadCustom headLabel={tableLabels} />
 
             <TableBody>
               {tableData?.map((row) => (
-                <LatestTransactionsRow key={row.id} row={row} />
+                <BankingRecentTransitionsRow key={row.id} row={row} />
               ))}
             </TableBody>
           </Table>
@@ -90,11 +92,13 @@ export default function LatestTransactions({
 
 // ----------------------------------------------------------------------
 
-type LatestTransactionsRowProps = {
+type BankingRecentTransitionsRowProps = {
   row: RowProps;
 };
 
-function LatestTransactionsRow({ row }: LatestTransactionsRowProps) {
+function BankingRecentTransitionsRow({
+  row,
+}: BankingRecentTransitionsRowProps) {
   const theme = useTheme();
 
   const lightMode = theme.palette.mode === "light";
@@ -121,16 +125,64 @@ function LatestTransactionsRow({ row }: LatestTransactionsRowProps) {
     console.info("DELETE", row.id);
   };
 
+  const renderAvatar = (
+    <Box sx={{ position: "relative", mr: 2 }}>
+      <Badge
+        overlap="circular"
+        color={row.type === "Income" ? "success" : "error"}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        badgeContent={
+          <Iconify
+            icon={
+              row.type === "Income"
+                ? "eva:diagonal-arrow-left-down-fill"
+                : "eva:diagonal-arrow-right-up-fill"
+            }
+            width={16}
+          />
+        }
+        sx={{
+          [`& .${badgeClasses.badge}`]: {
+            p: 0,
+            width: 20,
+          },
+        }}
+      >
+        {/*
+        <Avatar
+          src={row?.avatarUrl || ""}
+          sx={{
+            width: 48,
+            height: 48,
+            color: "text.secondary",
+            bgcolor: "background.neutral",
+          }}
+        >
+          {row.product === "Books" && (
+            <Iconify icon="eva:book-fill" width={24} />
+          )}
+          {row.product === "Beauty & Health" && (
+            <Iconify icon="solar:heart-bold" width={24} />
+          )}
+        </Avatar>
+          */}
+      </Badge>
+    </Box>
+  );
+
   return (
     <>
       <TableRow>
-        <TableCell>{row.invoicenumber}</TableCell>
+        <TableCell sx={{ display: "flex", alignItems: "center" }}>
+          {renderAvatar}
+          <ListItemText primary={row.name} secondary={row.telephone} />
+        </TableCell>
 
         <TableCell>
           <ListItemText
-            primary={row.billingname}
-            secondary={row.telephone}
-            primaryTypographyProps={{ typography: "body2", noWrap: true }}
+            primary={fDate(new Date(row.start))}
+            secondary={fTime(new Date(row.start))}
+            primaryTypographyProps={{ typography: "body2" }}
             secondaryTypographyProps={{
               mt: 0.5,
               component: "span",
@@ -139,48 +191,8 @@ function LatestTransactionsRow({ row }: LatestTransactionsRowProps) {
           />
         </TableCell>
 
-        <TableCell>
-          {row.employeename.length > 1 ? (
-            <>
-              {row.employeename[0]}
-              <Typography variant="body2" color="textSecondary">
-                and more
-              </Typography>
-            </>
-          ) : (
-            row.employeename[0]
-          )}
-        </TableCell>
-
-        <TableCell>
-          <ListItemText
-            primary={fDate(row.date)}
-            secondary={fTime(row.date)}
-            primaryTypographyProps={{ typography: "body2", noWrap: true }}
-            secondaryTypographyProps={{
-              mt: 0.5,
-              component: "span",
-              typography: "caption",
-            }}
-          />
-        </TableCell>
-
-        <TableCell>{fCurrency(row.total)}</TableCell>
-
-        <TableCell>
-          <Label
-            variant={lightMode ? "soft" : "filled"}
-            color={
-              (row.paymentstatus === "Paid" && "success") ||
-              (row.paymentstatus === "Pending" && "warning") ||
-              "error"
-            }
-          >
-            {row.paymentstatus}
-          </Label>
-        </TableCell>
-
-        <TableCell>{row.paymentmethod}</TableCell>
+        <TableCell>{row.product}</TableCell>
+        <TableCell align="right">{row.employee}</TableCell>
 
         <TableCell align="right" sx={{ pr: 1 }}>
           <IconButton

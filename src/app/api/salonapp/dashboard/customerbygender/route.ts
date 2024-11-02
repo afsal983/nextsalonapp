@@ -30,14 +30,11 @@ export async function GET(request: NextRequest) {
 
   const { token } = cookiedata;
   // Make an HTTP request to your API route with the token in the headers
-  const data = await fetch(
-    `${baseUSRL}/storyteller/reports/bestcustomer?periodfilter=lasttwomonths`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const data = await fetch(`${baseUSRL}/storyteller/reports/customerbygender`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   // Get the data in JSON format
   const response = await data.json();

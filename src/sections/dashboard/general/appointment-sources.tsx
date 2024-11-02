@@ -1,8 +1,9 @@
-import { type ApexOptions } from "apexcharts";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { ApexOptions } from "apexcharts";
 
 import CardHeader from "@mui/material/CardHeader";
+import Card, { CardProps } from "@mui/material/Card";
 import { styled, useTheme } from "@mui/material/styles";
-import Card, { type CardProps } from "@mui/material/Card";
 
 import { fNumber } from "src/utils/format-number";
 
@@ -17,7 +18,7 @@ const LEGEND_HEIGHT = 72;
 const StyledChart = styled(Chart)(({ theme }) => ({
   height: CHART_HEIGHT,
   "& .apexcharts-canvas, .apexcharts-inner, svg, foreignObject": {
-    height: "100% !important",
+    height: `100% !important`,
   },
   "& .apexcharts-legend": {
     height: LEGEND_HEIGHT,
@@ -31,66 +32,64 @@ const StyledChart = styled(Chart)(({ theme }) => ({
 interface Props extends CardProps {
   title?: string;
   subheader?: string;
-  total: number;
   chart: {
-    colors?: string[][];
-    series: Array<{
+    colors?: string[];
+    series: {
       label: string;
       value: number;
-    }>;
+    }[];
     options?: ApexOptions;
   };
 }
 
-export default function EcommerceSaleByGender({
+export default function AppointmentSource({
   title,
   subheader,
-  total,
   chart,
   ...other
 }: Props) {
   const theme = useTheme();
 
-  const {
-    colors = [
-      [theme.palette.primary.light, theme.palette.primary.main],
-      [theme.palette.warning.light, theme.palette.warning.main],
-    ],
-    series,
-    options,
-  } = chart;
+  const { colors, series, options } = chart;
 
   const chartSeries = series.map((i) => i.value);
 
   const chartOptions = useChart({
-    colors: colors.map((colr) => colr[1]),
     chart: {
       sparkline: {
         enabled: true,
       },
     },
+    colors,
     labels: series.map((i) => i.label),
+    stroke: {
+      colors: [theme.palette.background.paper],
+    },
     legend: {
       floating: true,
       position: "bottom",
       horizontalAlign: "center",
     },
-    fill: {
-      type: "gradient",
-      gradient: {
-        colorStops: colors.map((colr) => [
-          { offset: 0, color: colr[0], opacity: 1 },
-          { offset: 100, color: colr[1], opacity: 1 },
-        ]),
+    dataLabels: {
+      enabled: true,
+      dropShadow: {
+        enabled: false,
+      },
+    },
+    tooltip: {
+      fillSeriesColor: false,
+      y: {
+        formatter: (value: number) => fNumber(value),
+        title: {
+          formatter: (seriesName: string) => `${seriesName}`,
+        },
       },
     },
     plotOptions: {
-      radialBar: {
-        hollow: { size: "68%" },
-        dataLabels: {
-          value: { offsetY: 16 },
-          total: {
-            formatter: () => fNumber(total),
+      pie: {
+        donut: {
+          labels: {
+            show: false,
           },
         },
       },
@@ -104,11 +103,11 @@ export default function EcommerceSaleByGender({
 
       <StyledChart
         dir="ltr"
-        type="radialBar"
+        type="pie"
         series={chartSeries}
         options={chartOptions}
         width="100%"
-        height={300}
+        height={280}
       />
     </Card>
   );

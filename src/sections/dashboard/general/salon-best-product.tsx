@@ -5,9 +5,9 @@ import Avatar from "@mui/material/Avatar";
 import CardHeader from "@mui/material/CardHeader";
 import ListItemText from "@mui/material/ListItemText";
 import Card, { type CardProps } from "@mui/material/Card";
-
+import Chip from "@mui/material/Chip";
 import { fCurrency } from "src/utils/format-number";
-
+import FilterNoneIcon from "@mui/icons-material/FilterNone";
 import Scrollbar from "src/components/scrollbar";
 import { ColorPreview } from "src/components/color-utils";
 
@@ -16,10 +16,8 @@ import { ColorPreview } from "src/components/color-utils";
 interface ItemProps {
   id: string;
   name: string;
-  coverUrl: string;
-  price: number;
-  priceSale: number;
-  colors: string[];
+  numbersold: string;
+  totalprice: string;
 }
 
 interface Props extends CardProps {
@@ -28,7 +26,7 @@ interface Props extends CardProps {
   list: ItemProps[];
 }
 
-export default function EcommerceLatestProducts({
+export default function BestProduct({
   title,
   subheader,
   list,
@@ -56,16 +54,19 @@ interface ProductItemProps {
 }
 
 function ProductItem({ product }: ProductItemProps) {
-  const { name, coverUrl, price, priceSale } = product;
+  const { name, numbersold, totalprice } = product;
 
   return (
     <Stack direction="row" spacing={2}>
+      <Avatar>{name.charAt(0)} </Avatar>
+      {/*
       <Avatar
         variant="rounded"
         alt={name}
         src={coverUrl}
         sx={{ width: 48, height: 48, flexShrink: 0 }}
       />
+    */}
 
       <ListItemText
         primary={
@@ -75,20 +76,11 @@ function ProductItem({ product }: ProductItemProps) {
         }
         secondary={
           <>
-            {!!priceSale && (
-              <Box
-                component="span"
-                sx={{ textDecoration: "line-through", mr: 0.5 }}
-              >
-                {fCurrency(priceSale)}
-              </Box>
-            )}
-
             <Box
               component="span"
-              sx={{ color: priceSale ? "error.main" : "text.secondary" }}
+              sx={{ color: totalprice ? "error.main" : "text.secondary" }}
             >
-              {fCurrency(price)}
+              {fCurrency(totalprice)}
             </Box>
           </>
         }
@@ -100,7 +92,13 @@ function ProductItem({ product }: ProductItemProps) {
         }}
       />
 
-      <ColorPreview limit={3} colors={product.colors} />
+      {/* <ColorPreview limit={3} colors={product.colors} /> */}
+      <Chip
+        icon={<FilterNoneIcon />}
+        label={`${numbersold} times`}
+        variant="outlined"
+        color="primary"
+      />
     </Stack>
   );
 }

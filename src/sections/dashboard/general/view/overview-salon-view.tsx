@@ -5,7 +5,7 @@ import useSWR from "swr";
 import { useTheme } from "@mui/material/styles";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
-
+import { Stack } from "@mui/material";
 import { fetcher } from "src/utils/axios";
 
 import { _ecommerceLatestProducts } from "src/_mock";
@@ -16,8 +16,11 @@ import LatestTransactions from "../latest-transactions";
 import SalonBestCustomer from "../salon-best-customer";
 import SalonBestEmployee from "../salon-best-employee";
 import SalonDashBoardWidgetSummary from "../salondashboard-widget-summary";
-import EcommerceLatestProducts from "../ecommerce-latest-products";
-
+import AppointmentEvents from "../appointment-events";
+import SalonYearlySales from "../salon-yearly-sales";
+import BestProducts from "../salon-best-product";
+import CustomerByGender from "../customer-by-gender";
+import AppointmentSource from "../appointment-sources";
 // ----------------------------------------------------------------------
 
 export default function OverviewSalonView() {
@@ -52,18 +55,59 @@ export default function OverviewSalonView() {
     error: errorE,
   } = useSWR("/api/salonapp/dashboard/bestemployee", fetcher);
 
+  const {
+    data: appointment,
+    isLoading: isappoitnment,
+    error: errorAP,
+  } = useSWR("/api/salonapp/dashboard/appointmentdashboard", fetcher);
+
+  const {
+    data: yearlysales,
+    isLoading: isyearlysales,
+    error: errorS,
+  } = useSWR(
+    "/api/salonapp/dashboard/yearlysales?periodfilter=thisyear",
+    fetcher
+  );
+
+  const {
+    data: bestproducts,
+    isLoading: isbestproducts,
+    error: errorBe,
+  } = useSWR(
+    "/api/salonapp/dashboard/bestproducts?periodfilter=lasttwomonths",
+    fetcher
+  );
+
+  const {
+    data: customerbygender,
+    isLoading: iscustomerbygender,
+    error: errorCG,
+  } = useSWR("/api/salonapp/dashboard/customerbygender", fetcher);
+
+  const {
+    data: appointmentsources,
+    isLoading: isappointmentsources,
+    error: errorAs,
+  } = useSWR("/api/salonapp/dashboard/appointmentsource", fetcher);
+
   if (
     isappointmentsummaryLoading ||
     islatestsalesLoading ||
     isrevenuebycriteriaLoading ||
     isbestcustomerLoading ||
-    isbestemployee
+    isbestemployee ||
+    isappoitnment ||
+    isyearlysales ||
+    isbestproducts ||
+    iscustomerbygender ||
+    isappointmentsources
   )
     return <div>Loading...</div>;
   if (errorA || errorL || errorR || errorB || errorE)
     return <div>Error Loading...</div>;
 
-  console.log(revenuebycriteria);
+  console.log(customerbygender.data);
 
   return (
     <Container maxWidth={settings.themeStretch ? false : "xl"}>
@@ -113,52 +157,137 @@ export default function OverviewSalonView() {
             }}
           />
         </Grid>
-        <Grid xs={12}>
-          <LatestTransactions
-            title="Latest Transactions"
-            tableData={latestsales.data}
-            tableLabels={[
-              { id: "orderid", label: "Order ID" },
-              { id: "billingname", label: "Billing Name" },
-              { id: "employeename", label: "Employee Name" },
-              { id: "date", label: "Date" },
-              { id: "total", label: "Total" },
-              { id: "paymentstatus", label: "Payment Status" },
-              { id: "paymentmethod", label: "Payment Method" },
-              { id: "" },
-            ]}
-          />
+
+        <Grid xs={12} md={8}>
+          <Stack spacing={3}>
+            <LatestTransactions
+              title="Latest Transactions"
+              tableData={latestsales.data}
+              tableLabels={[
+                { id: "orderid", label: "Order ID" },
+                { id: "billingname", label: "Billing Name" },
+                { id: "employeename", label: "Employee Name" },
+                { id: "date", label: "Date" },
+                { id: "total", label: "Total" },
+                { id: "paymentstatus", label: "Payment Status" },
+                { id: "paymentmethod", label: "Payment Method" },
+                { id: "" },
+              ]}
+            />
+
+            <AppointmentEvents
+              title="Upcoming appointments"
+              tableData={appointment?.data?.upcomingevents}
+              tableLabels={[
+                { id: "customer", label: "Customer" },
+                { id: "date", label: "Date" },
+                { id: "product", label: "Product" },
+                { id: "employee", label: "Employee", align: "right" },
+                { id: "" },
+              ]}
+            />
+
+            <SalonYearlySales
+              title="Yearly Sales"
+              subheader="(+43%) than last year"
+              chart={{
+                categories: [
+                  "Jan",
+                  "Feb",
+                  "Mar",
+                  "Apr",
+                  "May",
+                  "Jun",
+                  "Jul",
+                  "Aug",
+                  "Sep",
+                  "Oct",
+                  "Nov",
+                  "Dec",
+                ],
+                series: [
+                  {
+                    year: yearlysales?.thisyearname,
+                    data: [
+                      {
+                        name: "Total Sales",
+                        data: yearlysales?.thisyear,
+                      },
+                      /*
+                      {
+                        name: "Total Expenses",
+                        data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 13, 56, 77],
+                      },
+                      */
+                    ],
+                  },
+                  {
+                    year: yearlysales?.lastyearname,
+                    data: [
+                      {
+                        name: "Total Sales",
+                        data: yearlysales?.lastyear,
+                      },
+                      /*
+                      {
+                        name: "Total Expenses",
+                        data: [56, 13, 34, 10, 77, 99, 88, 45, 77, 99, 88, 77],
+                      },
+                      */
+                    ],
+                  },
+                ],
+              }}
+            />
+
+            <SalonBestCustomer
+              title="Best Customers"
+              subheader="In this month"
+              tableData={bestcustomer.data}
+              tableLabels={[
+                { id: "customername", label: "Customer" },
+                { id: "revenue", label: "Revenue", align: "center" },
+                { id: "amount", label: "#Sales", align: "center" },
+                { id: "rank", label: "#Rank", align: "right" },
+              ]}
+            />
+
+            <SalonBestEmployee
+              title="Best Employee"
+              subheader="Last two months"
+              tableData={bestemployee.data}
+              tableLabels={[
+                { id: "customername", label: "Employee Name" },
+                { id: "revenue", label: "Revenue", align: "center" },
+                { id: "amount", label: "#Sales", align: "center" },
+                { id: "rank", label: "Rank", align: "right" },
+              ]}
+            />
+          </Stack>
         </Grid>
 
-        <Grid xs={12} md={6} lg={8}>
-          <SalonBestCustomer
-            title="Best Customers"
-            tableData={bestcustomer.data}
-            tableLabels={[
-              { id: "customername", label: "Customer" },
-              { id: "revenue", label: "Revenue", align: "center" },
-              { id: "amount", label: "#Sales", align: "center" },
-              { id: "rank", label: "#Rank", align: "right" },
-            ]}
-          />
-        </Grid>
-        <Grid xs={12} md={6} lg={4}>
-          <EcommerceLatestProducts
-            title="Latest Products"
-            list={_ecommerceLatestProducts}
-          />
-        </Grid>
-        <Grid xs={12} md={6} lg={8}>
-          <SalonBestEmployee
-            title="Best Employee"
-            tableData={bestemployee.data}
-            tableLabels={[
-              { id: "customername", label: "Employee Name" },
-              { id: "revenue", label: "Revenue", align: "center" },
-              { id: "amount", label: "#Sales", align: "center" },
-              { id: "rank", label: "Rank", align: "right" },
-            ]}
-          />
+        <Grid xs={12} md={4}>
+          <Stack spacing={3}>
+            <BestProducts
+              title="Top Selling Products"
+              subheader="Last two months"
+              list={bestproducts?.data}
+            />
+
+            <CustomerByGender
+              title="Customer By Gender"
+              total={customerbygender?.total}
+              chart={{
+                series: customerbygender?.data,
+              }}
+            />
+            <AppointmentSource
+              title="Appointment Sources"
+              chart={{
+                series: appointmentsources?.data,
+              }}
+            />
+          </Stack>
         </Grid>
       </Grid>
     </Container>

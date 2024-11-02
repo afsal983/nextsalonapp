@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
   const { token } = cookiedata;
   // Make an HTTP request to your API route with the token in the headers
   const data = await fetch(
-    `${baseUSRL}/storyteller/reports/bestcustomer?periodfilter=lasttwomonths`,
+    `${baseUSRL}/storyteller/reports/appointmentsource`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
