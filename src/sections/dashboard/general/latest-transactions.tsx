@@ -154,8 +154,8 @@ function LatestTransactionsRow({ row }: LatestTransactionsRowProps) {
 
         <TableCell>
           <ListItemText
-            primary={fDate(row.date)}
-            secondary={fTime(row.date)}
+            primary={row.date}
+            // secondary={fTime(row.date)}
             primaryTypographyProps={{ typography: "body2", noWrap: true }}
             secondaryTypographyProps={{
               mt: 0.5,
