@@ -107,7 +107,7 @@ export default function OverviewSalonView() {
   if (errorA || errorL || errorR || errorB || errorE)
     return <div>Error Loading...</div>;
 
-  console.log(customerbygender.data);
+  console.log(appointment?.data?.upcomingevents);
 
   return (
     <Container maxWidth={settings.themeStretch ? false : "xl"}>
@@ -174,6 +174,20 @@ export default function OverviewSalonView() {
                 { id: "" },
               ]}
             />
+
+            {appointment?.data?.upcomingevents.len != 0 && (
+              <AppointmentEvents
+                title="Upcoming appointments"
+                tableData={appointment?.data?.upcomingevents}
+                tableLabels={[
+                  { id: "customer", label: "Customer" },
+                  { id: "date", label: "Date" },
+                  { id: "product", label: "Product" },
+                  { id: "employee", label: "Employee", align: "right" },
+                  { id: "" },
+                ]}
+              />
+            )}
 
             <SalonYearlySales
               title="Yearly Sales"
