@@ -265,30 +265,6 @@ export default function OverviewSalonView() {
             />
           </Stack>
         </Grid>
-
-        <Grid xs={12} md={4}>
-          <Stack spacing={3}>
-            <BestProducts
-              title="Top Selling Products"
-              subheader="Last two months"
-              list={bestproducts?.data}
-            />
-
-            <CustomerByGender
-              title="Customer By Gender"
-              total={customerbygender?.total}
-              chart={{
-                series: customerbygender?.data,
-              }}
-            />
-            <AppointmentSource
-              title="Appointment Sources"
-              chart={{
-                series: appointmentsources?.data,
-              }}
-            />
-          </Stack>
-        </Grid>
       </Grid>
     </Container>
   );
