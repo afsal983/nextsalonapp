@@ -10,6 +10,8 @@ import MenuItem from "@mui/material/MenuItem";
 import { useBoolean } from "src/hooks/use-boolean";
 import { useResponsive } from "src/hooks/use-responsive";
 import { RHFSelect, RHFTextField } from "src/components/hook-form";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
 import Iconify from "src/components/iconify";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
@@ -22,8 +24,10 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import { BranchItem } from "src/types/branch";
 import { Customer } from "src/types/customer";
 import { LiveCustomerSearch } from "src/components/livecustomersearch";
-import { BranchAddressListDialog } from "../branchaddress";
-import { CustomerAddressListDialog } from "../customeraddress";
+import AddressNewForm from "../customeraddress/address-new-form";
+import { from } from "stylis";
+import { boolean } from "yup";
+import { useSnackbar } from "src/components/snackbar";
 
 // ----------------------------------------------------------------------
 type Props = {
@@ -39,13 +43,15 @@ export default function InvoiceNewEditAddress({ branches }: Props) {
 
   const mdUp = useResponsive("up", "md");
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const values = watch();
+
+  const to = useBoolean();
 
   const Customerdata = values?.Customer;
 
-  const from = useBoolean();
-
-  const to = useBoolean();
+  const [opencustomerform, setIsopencustomerform] = useState(false);
 
   // handle customer
   const handleSelectCustomer = useCallback(
@@ -65,6 +71,34 @@ export default function InvoiceNewEditAddress({ branches }: Props) {
     },
     [setValue]
   );
+  const handleCreateCustomer = useCallback(async (customerInfo: Customer) => {
+    console.log(customerInfo);
+
+    try {
+      // Post the data
+      const response = await fetch(`/api/salonapp/customer`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(customerInfo),
+      });
+
+      const responseData = await response.json();
+
+      if (responseData?.status > 401) {
+        enqueueSnackbar("Create Failed", { variant: "error" });
+      } else {
+        // Keep 500ms delay
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        // reset();
+        enqueueSnackbar("Create Suucess", { variant: "success" });
+        to.onFalse;
+      }
+    } catch (error) {
+      enqueueSnackbar(error, { variant: "error" });
+    }
+  }, []);
 
   return (
     <>
@@ -155,7 +189,7 @@ export default function InvoiceNewEditAddress({ branches }: Props) {
         </Stack>
 
         <Stack sx={{ width: 1 }}>
-          <Stack direction="row" alignItems="center" sx={{ mb: 1 }}>
+          <Stack direction="row" alignItems="center" sx={{ mb: 1 }} spacing={1}>
             <Typography
               variant="h6"
               sx={{ color: "text.disabled", flexGrow: 1 }}
@@ -164,13 +198,10 @@ export default function InvoiceNewEditAddress({ branches }: Props) {
             </Typography>
 
             <LiveCustomerSearch handleSelectedCustomer={handleSelectCustomer} />
-            {/*
-            <IconButton onClick={to.onTrue}>
-              <Iconify
-                icon={invoiceTo ? "solar:pen-bold" : "mingcute:add-line"}
-              />
+
+            <IconButton aria-label="delete" onClick={to.onTrue}>
+              <AddIcon />
             </IconButton>
-            */}
           </Stack>
 
           {Customerdata ? (
@@ -191,44 +222,11 @@ export default function InvoiceNewEditAddress({ branches }: Props) {
           )}
         </Stack>
       </Stack>
-
-      {/*
-      <BranchAddressListDialog
-        title="Branches"
-        open={from.value}
-        onClose={from.onFalse}
-        selected={(selectedId: string) => invoiceFrom?.id === selectedId}
-        onSelect={(address) => setValue("invoiceFrom", address)}
-        list={branches}
-        action={
-          <Button
-            size="small"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-            sx={{ alignSelf: "flex-end" }}
-          >
-            New
-          </Button>
-        }
-      />
-
-      <CustomerAddressListDialog
-        title="Customers"
+      <AddressNewForm
         open={to.value}
         onClose={to.onFalse}
-        selected={(selectedId: string) => invoiceTo?.id === selectedId}
-        onSelect={(address) => setValue("invoiceTo", address)}
-        list={[]}
-        action={
-          <Button
-            size="small"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-            sx={{ alignSelf: "flex-end" }}
-          >
-            New
-          </Button>
-        }
-      /> 
-      */}
+        onCreate={handleCreateCustomer}
+      />
     </>
   );
 }

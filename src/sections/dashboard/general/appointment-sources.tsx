@@ -52,7 +52,7 @@ export default function AppointmentSource({
 
   const { colors, series, options } = chart;
 
-  const chartSeries = series.map((i) => i.value);
+  const chartSeries = series?.map((i) => i.value);
 
   const chartOptions = useChart({
     chart: {

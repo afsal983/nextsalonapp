@@ -47,7 +47,7 @@ export default function AddressNewForm({ open, onClose, onCreate }: Props) {
     comments: Yup.string(),
     dob: Yup.mixed<any>().nullable(),
     sex: Yup.number().required("Sex is required"),
-    category: Yup.number().required("Categoryis required"),
+    category_id: Yup.number().required("Categoryis required"),
     // not required
     promonotify: Yup.boolean(),
     eventnotify: Yup.boolean(),
@@ -69,9 +69,9 @@ export default function AddressNewForm({ open, onClose, onCreate }: Props) {
     taxid: "",
     address: "",
     comments: "",
-    dob: "",
+    dob: null,
     sex: 0,
-    category: 0,
+    category_id: 0,
     // not required
     promonotify: false,
     eventnotify: false,
@@ -88,6 +88,15 @@ export default function AddressNewForm({ open, onClose, onCreate }: Props) {
   } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
+    let isoDateString;
+
+    // Create a new Date object from the string
+    if (!data?.dob) {
+      const dateObj = new Date("1970-01-01");
+      // Convert to ISO string with UTC time
+      isoDateString = dateObj.toLocaleDateString("en-CA");
+    }
+
     try {
       onCreate({
         id: "",
@@ -106,8 +115,8 @@ export default function AddressNewForm({ open, onClose, onCreate }: Props) {
         taxid: data.taxid || "",
         address: data.address || "",
         sex: data.sex,
-        dob: data.dob,
-        category_id: data.category,
+        dob: isoDateString || null,
+        category_id: Number(data.category_id),
         CustomerPreference: {
           customer_id: 0,
           promonotify: data.promonotify || false,
@@ -116,7 +125,6 @@ export default function AddressNewForm({ open, onClose, onCreate }: Props) {
         },
         deleted: 0,
       });
-      onClose();
     } catch (error) {
       console.error(error);
     }

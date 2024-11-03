@@ -12,6 +12,7 @@ import CardHeader from "@mui/material/CardHeader";
 import Card, { CardProps } from "@mui/material/Card";
 import ListItemText from "@mui/material/ListItemText";
 import TableContainer from "@mui/material/TableContainer";
+import Chip from "@mui/material/Chip";
 import { fCurrency } from "src/utils/format-number";
 import Label from "src/components/label";
 import Iconify from "src/components/iconify";
@@ -124,7 +125,16 @@ function LatestTransactionsRow({ row }: LatestTransactionsRowProps) {
   return (
     <>
       <TableRow>
-        <TableCell>{row.invoicenumber}</TableCell>
+        <TableCell>
+          <Chip
+            label={row.invoicenumber}
+            color="success"
+            component="a"
+            href={`/dashboard/invoice/${row.id}/`}
+            clickable
+            icon={<Iconify icon="uil:invoice" width={18} sx={{ ml: -0.5 }} />}
+          />
+        </TableCell>
 
         <TableCell>
           <ListItemText
@@ -154,8 +164,8 @@ function LatestTransactionsRow({ row }: LatestTransactionsRowProps) {
 
         <TableCell>
           <ListItemText
-            primary={row.date}
-            // secondary={fTime(row.date)}
+            primary={row.date.split(" ")[0]}
+            secondary={row.date.split(" ")[1]}
             primaryTypographyProps={{ typography: "body2", noWrap: true }}
             secondaryTypographyProps={{
               mt: 0.5,
