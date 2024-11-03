@@ -21,13 +21,11 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
+import { useSnackbar } from "src/components/snackbar";
 import { BranchItem } from "src/types/branch";
 import { Customer } from "src/types/customer";
 import { LiveCustomerSearch } from "src/components/livecustomersearch";
 import AddressNewForm from "../customeraddress/address-new-form";
-import { from } from "stylis";
-import { boolean } from "yup";
-import { useSnackbar } from "src/components/snackbar";
 
 // ----------------------------------------------------------------------
 type Props = {
@@ -71,34 +69,37 @@ export default function InvoiceNewEditAddress({ branches }: Props) {
     },
     [setValue]
   );
-  const handleCreateCustomer = useCallback(async (customerInfo: Customer) => {
-    console.log(customerInfo);
+  const handleCreateCustomer = useCallback(
+    async (customerInfo: Customer) => {
+      console.log(customerInfo);
 
-    try {
-      // Post the data
-      const response = await fetch(`/api/salonapp/customer`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(customerInfo),
-      });
+      try {
+        // Post the data
+        const response = await fetch(`/api/salonapp/customer`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(customerInfo),
+        });
 
-      const responseData = await response.json();
+        const responseData = await response.json();
 
-      if (responseData?.status > 401) {
-        enqueueSnackbar("Create Failed", { variant: "error" });
-      } else {
-        // Keep 500ms delay
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        // reset();
-        enqueueSnackbar("Create Suucess", { variant: "success" });
-        to.onFalse;
+        if (responseData?.status > 401) {
+          enqueueSnackbar("Create Failed", { variant: "error" });
+        } else {
+          // Keep 500ms delay
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          // reset();
+          enqueueSnackbar("Create Suucess", { variant: "success" });
+          to.onFalse();
+        }
+      } catch (error) {
+        enqueueSnackbar(error, { variant: "error" });
       }
-    } catch (error) {
-      enqueueSnackbar(error, { variant: "error" });
-    }
-  }, []);
+    },
+    [to, enqueueSnackbar]
+  );
 
   return (
     <>
