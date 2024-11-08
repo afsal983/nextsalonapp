@@ -8,21 +8,12 @@ export type SalesReportTableFilterValue =
   | undefined;
 
 export interface SalesReportTableFilters {
+  name: string | null;
   startDate: Date | null;
   endDate: Date | null;
   filtername: string;
-  filterid: number;
-}
-
-export type DetailedSalesReportTableFilterValue =
-  | string
-  | string[]
-  | Date
-  | null;
-
-export interface DetailedSalesReportTableFilters {
-  startDate: Date | null;
-  endDate: Date | null;
+  filterid: string;
+  status: string;
 }
 
 export interface IReportItem {
@@ -40,20 +31,28 @@ export interface ReportFilters {
   name: string[];
 }
 
-export interface ISalesTableFilters {
+// DetailedSales Report
+
+export interface DetailedSalesReportTableFilters {
   branch: string[];
   status: string[];
   paymenttype: string[];
 }
 
-export type ISalesTableFilterValue = string[];
+export type DetailedSalesReportTableFilterValue =
+  | string
+  | string[]
+  | Date
+  | null;
 
-export type IPeriodFilterValue = string[] | Date | null;
-
-export interface IPeriodFilters {
+export interface DetailedSalesReportPeriodFilters {
   startDate: Date | null;
   endDate: Date | null;
 }
+
+export type DetailedSalesReportPeriodFilterValue = string[] | Date | null;
+
+// export type DetailedSalesReportTableFilterValue = string[];
 
 export interface DetailedInvoice {
   id: string;

@@ -2,9 +2,6 @@
 
 import isEqual from "lodash/isEqual";
 import { useState, useEffect, useCallback } from "react";
-import { useTheme } from "@mui/material/styles";
-import Scrollbar from "src/components/scrollbar";
-import FilterListIcon from "@mui/icons-material/FilterList";
 
 import {
   Divider,
@@ -14,7 +11,9 @@ import {
   Card,
   IconButton,
   Badge,
+  useTheme,
 } from "@mui/material";
+
 import {
   DataGrid,
   GridColDef,
@@ -28,30 +27,35 @@ import {
   GridColumnVisibilityModel,
 } from "@mui/x-data-grid";
 
-import { paths } from "src/routes/paths";
-import { useRouter } from "src/routes/hooks";
-import { RouterLink } from "src/routes/components";
-import { useBoolean } from "src/hooks/use-boolean";
-
-import Iconify from "src/components/iconify";
+import Scrollbar from "src/components/scrollbar";
 import { useSnackbar } from "src/components/snackbar";
 import EmptyContent from "src/components/empty-content";
 import { useSettingsContext } from "src/components/settings";
 import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+import Iconify from "src/components/iconify";
+
+import FilterListIcon from "@mui/icons-material/FilterList";
+
+import { paths } from "src/routes/paths";
+import { useRouter } from "src/routes/hooks";
+import { useBoolean } from "src/hooks/use-boolean";
 
 import { BranchItem } from "src/types/branch";
-import { DetailedInvoice } from "src/types/report";
+import { isAfter } from "src/utils/format-time";
+import { PaymentTypeItem } from "src/types/payment";
+
+import {
+  DetailedSalesReportTableFilterValue,
+  DetailedSalesReportPeriodFilters,
+  DetailedSalesReportPeriodFilterValue,
+  DetailedSalesReportTableFilters,
+  DetailedInvoice,
+} from "src/types/report";
 
 import PeriodFilters from "../period-filters";
 import DeatailedSalesTableToolbar from "../detailedsales-table-toolbar";
 import DeatailedSalesTableFiltersResult from "../detailedsales-table-filters-result";
 import DetailedSalesAnalytic from "../detailedsales-analytic";
-
-import {
-  DetailedSalesReportTableFilters,
-  DetailedSalesReportTableFilterValue,
-} from "src/types/report";
-
 import {
   RenderCellStock,
   RenderCellPrice,
@@ -61,18 +65,6 @@ import {
   RenderCellDiscount,
   RenderCellUnitPrice,
 } from "../detailedsales-table-row";
-
-import { isAfter } from "src/utils/format-time";
-import { ISalesTableFilters } from "src/types/report";
-import { PaymentTypeItem } from "src/types/payment";
-
-const FILTER_OPTIONS = [
-  { id: "detailedsales", name: "Detailed Sales", value: "detailedsales" },
-  { id: "all", name: "All Sales", value: "all" },
-  { id: "branch", name: "Sales By Branch", value: "branch" },
-  { id: "customer", name: "Sales By Customer", value: "customer" },
-  { id: "employee", name: "Sales By Employee", value: "employee" },
-];
 
 // ----------------------------------------------------------------------
 
@@ -87,14 +79,14 @@ const HIDE_COLUMNS = {
 
 const HIDE_COLUMNS_TOGGLABLE = ["category", "actions"];
 
-// This is for date filter
-const defaultperiodFilters: DetailedSalesReportTableFilters = {
+// This is for date filter to conditionaly fetch data from remote API
+const defaultperiodFilters: DetailedSalesReportPeriodFilters = {
   startDate: null,
   endDate: null,
 };
 
-// This for filtering items
-const defaultitemFilters: ISalesTableFilters = {
+// This for filtering tables
+const defaultitemFilters: DetailedSalesReportTableFilters = {
   branch: [],
   status: [],
   paymenttype: [],
@@ -111,6 +103,7 @@ export default function DetailedSalesListView() {
 
   const router = useRouter();
 
+  console.log("dsesssss");
   const settings = useSettingsContext();
 
   const [isLoading, setisLoading] = useState(false);
@@ -122,10 +115,10 @@ export default function DetailedSalesListView() {
   const [branchData, setbranchData] = useState<BranchItem[]>([]);
   const [paymenttypeData, setpaymenttypeData] = useState<PaymentTypeItem[]>([]);
 
-  const [filters, setFilters] = useState(defaultperiodFilters);
+  const [periodfilters, setFilters] = useState(defaultperiodFilters);
   const [itemfilters, setitemFilters] = useState(defaultitemFilters);
 
-  const dateError = isAfter(filters.startDate, filters.endDate);
+  const dateError = isAfter(periodfilters.startDate, periodfilters.endDate);
 
   const [selectedRowIds, setSelectedRowIds] = useState<GridRowSelectionModel>(
     []
@@ -151,7 +144,7 @@ export default function DetailedSalesListView() {
     filters: itemfilters,
   });
 
-  const canReset = !isEqual(defaultperiodFilters, PeriodFilters);
+  const canReset = !isEqual(defaultitemFilters, itemfilters);
 
   const handleitemFilters = useCallback(
     (name: string, value: DetailedSalesReportTableFilterValue) => {
@@ -165,7 +158,6 @@ export default function DetailedSalesListView() {
 
   const handlePeriodFilters = useCallback(
     (name: string, value: DetailedSalesReportTableFilterValue) => {
-      console.log(name);
       setFilters((prevState) => ({
         ...prevState,
         [name]: value,
@@ -190,18 +182,17 @@ export default function DetailedSalesListView() {
   );
 
   const handleSearch = async () => {
-    let filterid;
     setisLoading(true);
 
     // prepare query based on filter data
     const data = {
-      start: filters.startDate,
-      end: filters.endDate,
+      start: periodfilters.startDate,
+      end: periodfilters.endDate,
       filtername: "detailedsales",
       filterid: 1,
     };
 
-    if (!filters.startDate || !filters.endDate) {
+    if (!periodfilters.startDate || !periodfilters.endDate) {
       enqueueSnackbar("Missing Filter", { variant: "error" });
       setisLoading(false);
       return;
@@ -228,9 +219,17 @@ export default function DetailedSalesListView() {
 
   const columns: GridColDef[] = [
     {
+      field: "id",
+      headerName: "Sn",
+      filterable: true,
+      width: 40,
+      hideable: false,
+    },
+    {
       field: "invoicenumber",
       headerName: "Bill No",
-      filterable: false,
+      filterable: true,
+      hideable: false,
     },
     {
       field: "date",
@@ -256,13 +255,13 @@ export default function DetailedSalesListView() {
       field: "billingname",
       headerName: "Billing Name",
       width: 180,
-      filterable: false,
+      filterable: true,
     },
     {
       field: "employee",
       headerName: "Employee",
       width: 180,
-      filterable: false,
+      filterable: true,
     },
     {
       field: "tip",
@@ -273,7 +272,7 @@ export default function DetailedSalesListView() {
       field: "paymentmode",
       width: 180,
       headerName: "Payment Mode",
-      filterable: false,
+      filterable: true,
     },
     {
       field: "CASH",
@@ -604,7 +603,7 @@ export default function DetailedSalesListView() {
         onClose={openFilters.onFalse}
         handleSearch={handleSearch}
         //
-        filters={filters}
+        filters={periodfilters}
         onFilters={handlePeriodFilters}
         //
         canReset={canReset}
@@ -628,7 +627,7 @@ function applyFilter({
   filters,
 }: {
   inputData: DetailedInvoice[];
-  filters: ISalesTableFilters;
+  filters: DetailedSalesReportTableFilters;
 }) {
   const { status, branch, paymenttype } = filters;
 

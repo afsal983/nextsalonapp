@@ -21,14 +21,20 @@ import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
 import { ColorPicker } from "src/components/color-utils";
 
-import { IPeriodFilters, IPeriodFilterValue } from "src/types/report";
+import {
+  DetailedSalesReportPeriodFilters,
+  DetailedSalesReportPeriodFilterValue,
+} from "src/types/report";
 
 // ----------------------------------------------------------------------
 
 type Props = {
   //
-  filters: IPeriodFilters;
-  onFilters: (name: string, value: IPeriodFilterValue) => void;
+  filters: DetailedSalesReportPeriodFilters;
+  onFilters: (
+    name: string,
+    value: DetailedSalesReportPeriodFilterValue
+  ) => void;
   handleSearch: () => void;
   //
   canReset: boolean;
@@ -146,71 +152,6 @@ export default function PeriodFilters({
     </Stack>
   );
 
-  {
-    /*
-  const renderEvents = (
-    <>
-      <Typography variant="subtitle2" sx={{ px: 2.5, mb: 1 }}>
-        Events ({events.length})
-      </Typography>
-
-      <Scrollbar sx={{ height: 1 }}>
-        {orderBy(events, ["end"], ["desc"]).map((event) => (
-          <ListItemButton
-            key={event.id}
-            onClick={() => onClickEvent(`${event.id}`)}
-            sx={{
-              py: 1.5,
-              borderBottom: (theme) => `dashed 1px ${theme.palette.divider}`,
-            }}
-          >
-            <Box
-              sx={{
-                top: 16,
-                left: 0,
-                width: 0,
-                height: 0,
-                position: "absolute",
-                borderRight: "10px solid transparent",
-                borderTop: `10px solid ${event.color}`,
-              }}
-            />
-
-            <ListItemText
-              disableTypography
-              primary={
-                <Typography variant="subtitle2" sx={{ fontSize: 13, mt: 0.5 }}>
-                  {event.id}
-                </Typography>
-              }
-              secondary={
-                <Typography
-                  variant="caption"
-                  component="div"
-                  sx={{ fontSize: 11, color: "text.disabled" }}
-                >
-                  {event.allDay ? (
-                    fDateTime(event.start, "dd MMM yy")
-                  ) : (
-                    <>
-                      {`${fDateTime(event.start, "dd MMM yy p")} - ${fDateTime(
-                        event.end,
-                        "dd MMM yy p"
-                      )}`}
-                    </>
-                  )}
-                </Typography>
-              }
-              sx={{ display: "flex", flexDirection: "column-reverse" }}
-            />
-          </ListItemButton>
-        ))}
-      </Scrollbar>
-    </>
-  );
-            */
-  }
-
   return (
     <Drawer
       anchor="right"
@@ -228,8 +169,6 @@ export default function PeriodFilters({
       <Divider sx={{ borderStyle: "dashed" }} />
 
       {renderDateRange}
-
-      {/*{renderEvents} */}
     </Drawer>
   );
 }

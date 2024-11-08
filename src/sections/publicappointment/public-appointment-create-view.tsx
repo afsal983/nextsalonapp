@@ -25,22 +25,19 @@ import FormProvider, {
 
 import { EmployeeItem } from "src/types/employee";
 
-import {
-  type ServiceItem,
-  type RetailBrandItem,
-  type ServiceCategoryItem,
-} from "src/types/service";
+import { type ServiceCategoryItem } from "src/types/service";
 
 // ----------------------------------------------------------------------
 
 interface Props {
-  serviceCategory?: ServiceItem;
+  serviceCategory?: ServiceCategoryItem[];
   employees: EmployeeItem[];
 }
 
-export default function PublicAppointmentCreateView({
+export default function ServiceNewEditForm({
   serviceCategory,
   employees,
 }: Props) {
-  const router = useRouter();
+  // const router = useRouter();
+  return <></>;
 }

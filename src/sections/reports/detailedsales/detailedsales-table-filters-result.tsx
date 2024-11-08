@@ -8,13 +8,16 @@ import Stack, { StackProps } from "@mui/material/Stack";
 
 import Iconify from "src/components/iconify";
 
-import { ISalesTableFilters, ISalesTableFilterValue } from "src/types/report";
+import {
+  DetailedSalesReportTableFilters,
+  DetailedSalesReportTableFilterValue,
+} from "src/types/report";
 
 // ----------------------------------------------------------------------
 
 type Props = StackProps & {
-  filters: ISalesTableFilters;
-  onFilters: (name: string, value: ISalesTableFilterValue) => void;
+  filters: DetailedSalesReportTableFilters;
+  onFilters: (name: string, value: DetailedSalesReportTableFilterValue) => void;
   //
   onResetFilters: VoidFunction;
   //
@@ -30,7 +33,6 @@ export default function DeatailedSalesTableFiltersResult({
   results,
   ...other
 }: Props) {
-  console.log(filters);
   const handleRemoveBranch = useCallback(
     (inputValue: string) => {
       const newValue = filters.branch.filter((item) => item !== inputValue);

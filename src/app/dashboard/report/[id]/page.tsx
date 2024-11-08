@@ -1,6 +1,6 @@
 import { _jobs } from "src/_mock/_job";
 
-import SalesReportDetailsView from "src/sections/reports/sales/salesreport-details-view";
+// import SalesReportDetailsView from "src/sections/reports/sales/salesreport-details-view";
 import { DetailedSalesListView } from "src/sections/reports/detailedsales/view";
 
 // ----------------------------------------------------------------------
@@ -20,22 +20,12 @@ export default function ReportDetailsPage({ params }: Props) {
 
   switch (id) {
     case "e99f09a7-dd88-49d5-b1c8-1daf80c2d7b3":
-      return <SalesReportDetailsView reportid={id} />;
+      return <DetailedSalesListView />;
 
     case "e99f09a7-dd88-49d5-b1c8-1daf80c2d7b4":
-      return <DetailedSalesListView reportid={id} />;
-
-    case "e99f09a7-dd88-49d5-b1c8-1daf80c2d7b5":
-      return <SalesReportDetailsView reportid={id} />;
-
-    case "e99f09a7-dd88-49d5-b1c8-1daf80c2d7b6":
-      return <SalesReportDetailsView reportid={id} />;
-
-    case "e99f09a7-dd88-49d5-b1c8-1daf80c2d7b7":
-      return <SalesReportDetailsView reportid={id} />;
-
+      return <DetailedSalesListView />;
     default:
-      return <SalesReportDetailsView reportid={id} />;
+      return <DetailedSalesListView />;
   }
 }
 

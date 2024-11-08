@@ -10,13 +10,16 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Iconify from "src/components/iconify";
 import CustomPopover, { usePopover } from "src/components/custom-popover";
 
-import { ISalesTableFilters, ISalesTableFilterValue } from "src/types/report";
+import {
+  DetailedSalesReportTableFilters,
+  DetailedSalesReportTableFilterValue,
+} from "src/types/report";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  filters: ISalesTableFilters;
-  onFilters: (name: string, value: ISalesTableFilterValue) => void;
+  filters: DetailedSalesReportTableFilters;
+  onFilters: (name: string, value: DetailedSalesReportTableFilterValue) => void;
   //
   branchOptions: {
     value: string;

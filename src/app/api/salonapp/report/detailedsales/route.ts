@@ -11,8 +11,6 @@ export async function POST(request: NextRequest) {
 
   const filterData = await request.json();
 
-  console.log(filterData);
-
   if (sessionCookie === undefined) {
     const res = {
       Title: "NOK",
