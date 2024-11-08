@@ -49,6 +49,15 @@ export default function DeatailedSalesTableFiltersResult({
     [filters.status, onFilters]
   );
 
+  const handleRemovepaymenttype = useCallback(
+    (inputValue: string) => {
+      const newValue = filters.status.filter((item) => item !== inputValue);
+
+      onFilters("paymenttype", newValue);
+    },
+    [filters.status, onFilters]
+  );
+
   return (
     <Stack spacing={1.5} {...other}>
       <Box sx={{ typography: "body2" }}>
@@ -86,6 +95,19 @@ export default function DeatailedSalesTableFiltersResult({
                 label={item}
                 size="small"
                 onDelete={() => handleRemoveStatus(item)}
+              />
+            ))}
+          </Block>
+        )}
+
+        {!!filters.paymenttype.length && (
+          <Block label="Payment Type:">
+            {filters.paymenttype.map((item) => (
+              <Chip
+                key={item}
+                label={item}
+                size="small"
+                onDelete={() => handleRemovepaymenttype(item)}
               />
             ))}
           </Block>

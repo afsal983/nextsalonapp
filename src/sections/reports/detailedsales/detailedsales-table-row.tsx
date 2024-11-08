@@ -95,10 +95,10 @@ export function RenderCellProduct({ params }: ParamsProps) {
             noWrap
             color="inherit"
             variant="subtitle2"
-            onClick={params.row.item.onViewRow}
+            // onClick={params.row.item.onViewRow}
             sx={{ cursor: "pointer" }}
           >
-            {params.row.name}
+            {params.row.item.name}
           </Link>
         }
         secondary={

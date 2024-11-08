@@ -3,12 +3,18 @@
 import isEqual from "lodash/isEqual";
 import { useState, useEffect, useCallback } from "react";
 import { useTheme } from "@mui/material/styles";
-import Card from "@mui/material/Card";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
 import Scrollbar from "src/components/scrollbar";
-import { Divider } from "@mui/material";
+import FilterListIcon from "@mui/icons-material/FilterList";
+
+import {
+  Divider,
+  Container,
+  Stack,
+  Button,
+  Card,
+  IconButton,
+  Badge,
+} from "@mui/material";
 import {
   DataGrid,
   GridColDef,
@@ -25,7 +31,6 @@ import {
 import { paths } from "src/routes/paths";
 import { useRouter } from "src/routes/hooks";
 import { RouterLink } from "src/routes/components";
-
 import { useBoolean } from "src/hooks/use-boolean";
 
 import Iconify from "src/components/iconify";
@@ -35,14 +40,13 @@ import { useSettingsContext } from "src/components/settings";
 import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
 import { BranchItem } from "src/types/branch";
-import { EmployeeItem } from "src/types/employee";
 import { DetailedInvoice } from "src/types/report";
 
 import PeriodFilters from "../period-filters";
-
 import DeatailedSalesTableToolbar from "../detailedsales-table-toolbar";
 import DeatailedSalesTableFiltersResult from "../detailedsales-table-filters-result";
 import DetailedSalesAnalytic from "../detailedsales-analytic";
+
 import {
   DetailedSalesReportTableFilters,
   DetailedSalesReportTableFilterValue,
@@ -54,7 +58,6 @@ import {
   RenderCellPublish,
   RenderCellProduct,
   RenderCellCreatedAt,
-  RenderBillingName,
   RenderCellDiscount,
   RenderCellUnitPrice,
 } from "../detailedsales-table-row";
@@ -116,7 +119,6 @@ export default function DetailedSalesListView() {
 
   const [summaryData, setsummaryData] = useState<any>([]);
   const [tableData, setTableData] = useState<DetailedInvoice[]>([]);
-  const [employeeData, setemployeeData] = useState<EmployeeItem[]>([]);
   const [branchData, setbranchData] = useState<BranchItem[]>([]);
   const [paymenttypeData, setpaymenttypeData] = useState<PaymentTypeItem[]>([]);
 
@@ -133,11 +135,6 @@ export default function DetailedSalesListView() {
     useState<GridColumnVisibilityModel>(HIDE_COLUMNS);
 
   useEffect(() => {
-    fetch(`/api/salonapp/employee?branch_id=1`)
-      .then((response) => response.json())
-      // 4. Setting *dogImage* to the image url that we received from the response above
-      .then((data) => setemployeeData(data.data));
-
     fetch(`/api/salonapp/branches`)
       .then((response) => response.json())
       // 4. Setting *dogImage* to the image url that we received from the response above
@@ -147,7 +144,7 @@ export default function DetailedSalesListView() {
       .then((response) => response.json())
       // 4. Setting *dogImage* to the image url that we received from the response above
       .then((data) => setpaymenttypeData(data.data));
-  }, [setbranchData, setemployeeData, setpaymenttypeData]);
+  }, [setbranchData, setpaymenttypeData]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -155,11 +152,9 @@ export default function DetailedSalesListView() {
   });
 
   const canReset = !isEqual(defaultperiodFilters, PeriodFilters);
-  console.log(canReset);
 
   const handleitemFilters = useCallback(
     (name: string, value: DetailedSalesReportTableFilterValue) => {
-      console.log(name);
       setitemFilters((prevState) => ({
         ...prevState,
         [name]: value,
@@ -226,10 +221,8 @@ export default function DetailedSalesListView() {
       enqueueSnackbar("Fetching report data failed", { variant: "error" });
       return;
     }
-    console.log(responseData.data);
     setTableData(responseData.data);
     setsummaryData(responseData.summary);
-
     setisLoading(false);
   };
 
@@ -253,8 +246,8 @@ export default function DetailedSalesListView() {
       renderCell: (params) => <RenderCellPrice params={params} />,
     },
     {
-      field: "Discount",
-      headerName: "discount",
+      field: "discount",
+      headerName: "Discount",
       width: 140,
       editable: true,
       renderCell: (params) => <RenderCellDiscount params={params} />,
@@ -278,6 +271,7 @@ export default function DetailedSalesListView() {
     },
     {
       field: "paymentmode",
+      width: 180,
       headerName: "Payment Mode",
       filterable: false,
     },
@@ -432,19 +426,17 @@ export default function DetailedSalesListView() {
           links={[
             { name: "Dashboard", href: paths.dashboard.root },
             {
-              name: "Product",
-              href: paths.dashboard.product.root,
+              name: "Reports",
+              href: paths.dashboard.report.list,
             },
-            { name: "List" },
+            { name: "Detailed Sales Report" },
           ]}
           action={
-            <Button
-              variant="contained"
-              startIcon={<Iconify icon="material-symbols:search" />}
-              onClick={() => openFilters.onTrue()}
-            >
-              Search
-            </Button>
+            <IconButton onClick={() => openFilters.onTrue()} size="large">
+              <Badge variant="dot" color="primary">
+                <FilterListIcon />
+              </Badge>
+            </IconButton>
           }
           sx={{
             mb: {
@@ -620,9 +612,10 @@ export default function DetailedSalesListView() {
         //
         dateError={dateError}
         //
-        events={[]}
+        // events={[]}
         colorOptions={[]}
         // onClickEvent={onClickEventInFilters}
+        isLoading={isLoading}
       />
     </>
   );

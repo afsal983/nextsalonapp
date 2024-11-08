@@ -87,8 +87,8 @@ export default function DetailedSalesTableToolbar({
   }, [onFilters, status]);
 
   const handleClosePaymenttype = useCallback(() => {
-    onFilters("paymenttype", status);
-  }, [onFilters, status]);
+    onFilters("paymenttype", paymenttype);
+  }, [onFilters, paymenttype]);
 
   return (
     <>
@@ -166,7 +166,7 @@ export default function DetailedSalesTableToolbar({
           onChange={handleChangePaymenttype}
           input={<OutlinedInput label="Payment Type" />}
           renderValue={(selected) => selected.map((value) => value).join(", ")}
-          onClose={handleCloseStatus}
+          onClose={handleClosePaymenttype}
           sx={{ textTransform: "capitalize" }}
         >
           {paymentOptions?.map((option) => (

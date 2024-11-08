@@ -7,7 +7,7 @@ import Badge from "@mui/material/Badge";
 import Drawer from "@mui/material/Drawer";
 import Divider from "@mui/material/Divider";
 import Tooltip from "@mui/material/Tooltip";
-import { Button } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import SearchIcon from "@mui/icons-material/Search";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -41,7 +41,8 @@ type Props = {
   //
   // events: ICalendarEvent[];
   colorOptions: string[];
-  onClickEvent: (eventId: string) => void;
+  // onClickEvent: (eventId: string) => void;
+  isLoading: boolean;
 };
 
 export default function PeriodFilters({
@@ -58,8 +59,8 @@ export default function PeriodFilters({
   dateError,
   //
   // events,
-  colorOptions,
-  onClickEvent,
+  colorOptions, // onClickEvent,
+  isLoading,
 }: Props) {
   const handleFilterColors = useCallback(
     (newValue: string | string[]) => {
@@ -130,8 +131,9 @@ export default function PeriodFilters({
           }}
         />
 
-        <Button
+        <LoadingButton
           variant="contained"
+          loading={isLoading}
           size="large"
           startIcon={<SearchIcon />}
           onClick={() => {
@@ -139,7 +141,7 @@ export default function PeriodFilters({
           }}
         >
           Search
-        </Button>
+        </LoadingButton>
       </Stack>
     </Stack>
   );
