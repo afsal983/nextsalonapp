@@ -6,15 +6,14 @@ import React from "react";
 import Container from "@mui/material/Container";
 
 import { paths } from "src/routes/paths";
-
+import { usePathname } from "next/navigation";
 import { fetcher } from "src/utils/axios";
 
 import { useTranslate } from "src/locales";
 
 import { useSettingsContext } from "src/components/settings";
 import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
-
-import ServiceCategoryNewEditForm from "../servicecategory-new-edit-form";
+import PublicAppointmentCreateView from "../public-appointment-create-view";
 
 // ----------------------------------------------------------------------
 
@@ -22,23 +21,37 @@ interface Props {
   id: string;
 }
 
-export default function ServiceCategoryEditView({ id }: Props) {
+export default function TimeSlotEditView() {
   const { t } = useTranslate();
+
+  const pathname = usePathname();
+  const parts = pathname.split("/");
 
   const settings = useSettingsContext();
 
+  const { data, isLoading, error } = useSWR(
+    `/api/public?name=${parts[2]}`,
+    fetcher
+  );
+
+  const {
+    data: employeeData,
+    isLoading: isemployeeLoading,
+    error: ErrorE,
+  } = useSWR(`/api/salonapp/publicappointment/getemployeesforpublic`, fetcher);
+
   const {
     data: servicecategoryData,
-    isLoading,
-    error: categoryError,
-  } = useSWR(`/api/salonapp/servicecategory/${id}`, fetcher, {
-    revalidateOnFocus: true,
-    revalidateOnMount: true,
-    revalidateIfStale: true,
-  });
+    isLoading: iscatLoading,
+    error: ErrorC,
+  } = useSWR(
+    `/api/salonapp/publicappointment/categorizedproductlistforpublic`,
+    fetcher
+  );
 
-  if (categoryError) return <div>Failed to load</div>;
-  if (isLoading || !servicecategoryData) return <div>Loading...</div>;
+  if (error || ErrorE || ErrorC) return <div>Failed to load</div>;
+  if (isLoading || iscatLoading || isemployeeLoading)
+    return <div>Loading...</div>;
 
   return (
     <Container maxWidth={settings.themeStretch ? false : "lg"}>
@@ -51,7 +64,7 @@ export default function ServiceCategoryEditView({ id }: Props) {
           },
           {
             name: t("salonapp.services"),
-            href: paths.dashboard.services.root,
+            href: paths.dashboard.employees.timeslots.root,
           },
           { name: servicecategoryData?.data[0].name },
         ]}
@@ -59,9 +72,9 @@ export default function ServiceCategoryEditView({ id }: Props) {
           mb: { xs: 3, md: 5 },
         }}
       />
-
-      <ServiceCategoryNewEditForm
-        currentServiceCategory={servicecategoryData?.data[0]}
+      <PublicAppointmentCreateView
+        serviceCategory={servicecategoryData?.data}
+        employees={employeeData?.data}
       />
     </Container>
   );

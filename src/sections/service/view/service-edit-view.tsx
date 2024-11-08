@@ -37,7 +37,7 @@ export default function ServiceEditView({ id }: Props) {
     fetcher
   );
   const { data: retailbrands, error: retailbrandError } = useSWR(
-    "/api/salonapp/retailbrands",
+    "/api/salonapp/retailbrand",
     fetcher
   );
 

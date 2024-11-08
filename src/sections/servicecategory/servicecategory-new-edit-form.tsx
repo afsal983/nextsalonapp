@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 import { useMemo } from "react";
+import { mutate } from "swr";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -34,6 +35,7 @@ export default function ServiceCategoryNewEditForm({
 
   const { t } = useTranslate();
 
+  console.log(currentServiceCategory);
   const NewProductSchema = Yup.object().shape({
     id: Yup.string(),
     name: Yup.string().required(
@@ -96,6 +98,7 @@ export default function ServiceCategoryNewEditForm({
           { variant: "success" }
         );
 
+        mutate(`/api/salonapp/servicecategory/${currentServiceCategory?.id}`);
         // Service listing again
         router.push(paths.dashboard.services.servicecategory.list);
       }

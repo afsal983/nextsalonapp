@@ -40,6 +40,9 @@ export default function WorkScheduleNewEditDetails({
     name: "employeeschedule",
   });
 
+  console.log(currentWorkSchedule);
+  console.log(fields);
+
   const { t } = useTranslate();
 
   const handleAdd = () => {
@@ -68,9 +71,17 @@ export default function WorkScheduleNewEditDetails({
         "/api/salonapp/workschedule/downloadschedule"
       );
 
-      // Set the response data (assuming it's JSON) to state
-      const blob = await response.arrayBuffer();
-      console.log(blob);
+      // Convert the response into an ArrayBuffer
+      const arrayBuffer = await response.arrayBuffer();
+
+      // Create a Blob from the ArrayBuffer
+      const pdfBlob = new Blob([arrayBuffer], { type: "application/pdf" });
+
+      // Create a URL for the Blob
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+
+      // Open the PDF in a new tab or download it
+      window.open(pdfUrl); // Opens in a new tab
     } catch (error: any) {
       // Handle errors by setting the error message in state
     }

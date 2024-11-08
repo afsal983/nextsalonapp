@@ -1,6 +1,7 @@
 import { _jobs } from "src/_mock/_job";
 
 import SalesReportDetailsView from "src/sections/reports/sales/salesreport-details-view";
+import { DetailedSalesListView } from "src/sections/reports/detailedsales/view";
 
 // ----------------------------------------------------------------------
 
@@ -22,7 +23,7 @@ export default function ReportDetailsPage({ params }: Props) {
       return <SalesReportDetailsView reportid={id} />;
 
     case "e99f09a7-dd88-49d5-b1c8-1daf80c2d7b4":
-      return <SalesReportDetailsView reportid={id} />;
+      return <DetailedSalesListView reportid={id} />;
 
     case "e99f09a7-dd88-49d5-b1c8-1daf80c2d7b5":
       return <SalesReportDetailsView reportid={id} />;

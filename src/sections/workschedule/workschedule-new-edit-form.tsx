@@ -1,5 +1,6 @@
 import * as Yup from "yup";
-import { useMemo } from "react";
+import useSWR, { mutate } from "swr";
+import { useMemo, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -133,13 +134,22 @@ export default function WorkScheduleNewEditForm({
           { variant: "success" }
         );
 
-        // Service listing again
+        mutate("/api/salonapp/workschedule");
         router.push(paths.dashboard.employees.workschedule.root);
       }
     } catch (error) {
       enqueueSnackbar(error, { variant: "error" });
     }
   });
+
+  // Update the form fields when new workscheduleData arrives
+  useEffect(() => {
+    if (currentWorkSchedule) {
+      reset({
+        employeeschedule: currentWorkSchedule, // Assuming this is the data structure
+      });
+    }
+  }, [currentWorkSchedule, reset]);
 
   return (
     <FormProvider methods={methods}>

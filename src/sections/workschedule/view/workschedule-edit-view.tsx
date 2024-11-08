@@ -1,6 +1,6 @@
 "use client";
 
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import React from "react";
 
 import Container from "@mui/material/Container";
@@ -23,10 +23,13 @@ export default function WorkScheduleEditView() {
 
   const settings = useSettingsContext();
 
+  mutate(`/api/salonapp/workschedule`);
   const { data: workscheduleData, error: wError } = useSWR(
     `/api/salonapp/workschedule`,
-    fetcher
+    fetcher,
+    { revalidateOnFocus: true, revalidateOnMount: true }
   );
+
   const { data: timeslotData, error: tError } = useSWR(
     `/api/salonapp/timeslot`,
     fetcher
@@ -39,6 +42,10 @@ export default function WorkScheduleEditView() {
   if (wError || tError || eError) return <div>Failed to load</div>;
   if (!workscheduleData || !timeslotData || !employeeData)
     return <div>Loading...</div>;
+
+  if (workscheduleData) {
+    console.log(workscheduleData);
+  }
 
   return (
     <Container maxWidth={settings.themeStretch ? false : "lg"}>

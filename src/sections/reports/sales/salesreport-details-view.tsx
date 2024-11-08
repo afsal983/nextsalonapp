@@ -271,163 +271,163 @@ export default function SalesReportDetailsView({ reportid }: Props) {
 
   return (
     <Container maxWidth={settings.themeStretch ? false : "lg"}>
-        <CustomBreadcrumbs
-          heading="List"
-          links={[
-            {
-              name: t("salonapp.dashboard"),
-              href: paths.dashboard.root,
-            },
-            {
-              name: t("salonapp.invoice.invoice"),
-              href: paths.dashboard.invoice.root,
-            },
-            {
-              name: t("general.report"),
-            },
-          ]}
-          sx={{
-            mb: { xs: 3, md: 5 },
-          }}
+      <CustomBreadcrumbs
+        heading="List"
+        links={[
+          {
+            name: t("salonapp.dashboard"),
+            href: paths.dashboard.root,
+          },
+          {
+            name: t("salonapp.invoice.invoice"),
+            href: paths.dashboard.invoice.root,
+          },
+          {
+            name: t("general.report"),
+          },
+        ]}
+        sx={{
+          mb: { xs: 3, md: 5 },
+        }}
+      />
+      <Card
+        sx={{
+          mb: { xs: 3, md: 5 },
+        }}
+      >
+        <Scrollbar>
+          <Stack
+            direction="row"
+            divider={
+              <Divider
+                orientation="vertical"
+                flexItem
+                sx={{ borderStyle: "dashed" }}
+              />
+            }
+            sx={{ py: 2 }}
+          >
+            <SalesReportAnalytic
+              title="Total"
+              total={tableData.length}
+              percent={100}
+              price={summaryData.totalCash}
+              icon="solar:bill-list-bold-duotone"
+              color={theme.palette.info.main}
+            />
+
+            <SalesReportAnalytic
+              title="Sservice Sale"
+              total={summaryData.serviceSale}
+              percent={10}
+              price={summaryData.serviceSale}
+              icon="solar:file-check-bold-duotone"
+              color={theme.palette.success.main}
+            />
+
+            <SalesReportAnalytic
+              title="Retail Sale"
+              total={summaryData.retailSale}
+              percent={10}
+              price={summaryData.retailSale}
+              icon="solar:sort-by-time-bold-duotone"
+              color={theme.palette.warning.main}
+            />
+
+            <SalesReportAnalytic
+              title="Package Sale"
+              total={summaryData.packageSale}
+              percent={10}
+              price={summaryData.packageSale}
+              icon="solar:sort-by-time-bold-duotone"
+              color={theme.palette.text.secondary}
+            />
+          </Stack>
+        </Scrollbar>
+      </Card>
+      <Card>
+        <SalesReportTableToolbar
+          filters={filters}
+          onFilters={handleFilters}
+          handleSearch={handleSearch}
+          //
+          dateError={dateError}
+          serviceOptions={FILTER_OPTIONS.map((option) => option.name)}
+          getcsvData={getcsvData}
+          employees={employeeData}
+          branches={branchData}
+          isLoading={isLoading}
         />
-        <Card
-          sx={{
-            mb: { xs: 3, md: 5 },
-          }}
-        >
-          <Scrollbar>
-            <Stack
-              direction="row"
-              divider={
-                <Divider
-                  orientation="vertical"
-                  flexItem
-                  sx={{ borderStyle: "dashed" }}
-                />
-              }
-              sx={{ py: 2 }}
-            >
-              <SalesReportAnalytic
-                title="Total"
-                total={tableData.length}
-                percent={100}
-                price={summaryData.totalCash}
-                icon="solar:bill-list-bold-duotone"
-                color={theme.palette.info.main}
-              />
 
-              <SalesReportAnalytic
-                title="Sservice Sale"
-                total={summaryData.serviceSale}
-                percent={10}
-                price={summaryData.serviceSale}
-                icon="solar:file-check-bold-duotone"
-                color={theme.palette.success.main}
-              />
-
-              <SalesReportAnalytic
-                title="Retail Sale"
-                total={summaryData.retailSale}
-                percent={10}
-                price={summaryData.retailSale}
-                icon="solar:sort-by-time-bold-duotone"
-                color={theme.palette.warning.main}
-              />
-
-              <SalesReportAnalytic
-                title="Package Sale"
-                total={summaryData.packageSale}
-                percent={10}
-                price={summaryData.packageSale}
-                icon="solar:sort-by-time-bold-duotone"
-                color={theme.palette.text.secondary}
-              />
-            </Stack>
-          </Scrollbar>
-        </Card>
-        <Card>
-          <SalesReportTableToolbar
+        {canReset && (
+          <SalesReportTableFiltersResult
             filters={filters}
             onFilters={handleFilters}
-            handleSearch={handleSearch}
             //
-            dateError={dateError}
-            serviceOptions={FILTER_OPTIONS.map((option) => option.name)}
-            getcsvData={getcsvData}
-            employees={employeeData}
-            branches={branchData}
-            isLoading={isLoading}
+            onResetFilters={handleResetFilters}
+            //
+            results={dataFiltered.length}
+            sx={{ p: 2.5, pt: 0 }}
           />
+        )}
 
-          {canReset && (
-            <SalesReportTableFiltersResult
-              filters={filters}
-              onFilters={handleFilters}
-              //
-              onResetFilters={handleResetFilters}
-              //
-              results={dataFiltered.length}
-              sx={{ p: 2.5, pt: 0 }}
-            />
-          )}
+        <TableContainer sx={{ position: "relative", overflow: "unset" }}>
+          <Scrollbar>
+            <Table
+              size={table.dense ? "small" : "medium"}
+              sx={{ minWidth: 800 }}
+            >
+              <TableHeadCustom
+                order={table.order}
+                orderBy={table.orderBy}
+                headLabel={TABLE_HEAD}
+                rowCount={dataFiltered.length}
+                numSelected={table.selected.length}
+                onSort={table.onSort}
+                onSelectAllRows={(checked) =>
+                  table.onSelectAllRows(
+                    checked,
+                    dataFiltered.map((row) => row.id)
+                  )
+                }
+              />
 
-          <TableContainer sx={{ position: "relative", overflow: "unset" }}>
-            <Scrollbar>
-              <Table
-                size={table.dense ? "small" : "medium"}
-                sx={{ minWidth: 800 }}
-              >
-                <TableHeadCustom
-                  order={table.order}
-                  orderBy={table.orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={dataFiltered.length}
-                  numSelected={table.selected.length}
-                  onSort={table.onSort}
-                  onSelectAllRows={(checked) =>
-                    table.onSelectAllRows(
-                      checked,
-                      dataFiltered.map((row) => row.id)
-                    )
-                  }
+              <TableBody>
+                {dataFiltered
+                  .slice(
+                    table.page * table.rowsPerPage,
+                    table.page * table.rowsPerPage + table.rowsPerPage
+                  )
+                  .map((row) => (
+                    <SalesReportTableRow key={row.index} row={row} />
+                  ))}
+
+                <TableEmptyRows
+                  height={denseHeight}
+                  emptyRows={emptyRows(
+                    table.page,
+                    table.rowsPerPage,
+                    dataFiltered.length
+                  )}
                 />
 
-                <TableBody>
-                  {dataFiltered
-                    .slice(
-                      table.page * table.rowsPerPage,
-                      table.page * table.rowsPerPage + table.rowsPerPage
-                    )
-                    .map((row) => (
-                      <SalesReportTableRow key={row.index} row={row} />
-                    ))}
+                <TableNoData notFound={notFound} />
+              </TableBody>
+            </Table>
+          </Scrollbar>
+        </TableContainer>
 
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(
-                      table.page,
-                      table.rowsPerPage,
-                      dataFiltered.length
-                    )}
-                  />
-
-                  <TableNoData notFound={notFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
-
-          <TablePaginationCustom
-            count={dataFiltered.length}
-            page={table.page}
-            rowsPerPage={table.rowsPerPage}
-            onPageChange={table.onChangePage}
-            onRowsPerPageChange={table.onChangeRowsPerPage}
-            //
-            dense={table.dense}
-            onChangeDense={table.onChangeDense}
-          />
-        </Card>
-      </Container>
+        <TablePaginationCustom
+          count={dataFiltered.length}
+          page={table.page}
+          rowsPerPage={table.rowsPerPage}
+          onPageChange={table.onChangePage}
+          onRowsPerPageChange={table.onChangeRowsPerPage}
+          //
+          dense={table.dense}
+          onChangeDense={table.onChangeDense}
+        />
+      </Card>
+    </Container>
   );
 }

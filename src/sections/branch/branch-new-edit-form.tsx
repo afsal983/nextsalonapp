@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 import { useMemo } from "react";
+import { mutate } from "swr";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -122,6 +123,7 @@ export default function BranchNewEditForm({
           { variant: "success" }
         );
 
+        mutate(`/api/salonapp/branches/${currentBranch?.branch_id}`);
         // Service listing again
         router.push(paths.dashboard.branches.list);
       }

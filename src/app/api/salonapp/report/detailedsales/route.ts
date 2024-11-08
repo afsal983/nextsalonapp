@@ -4,10 +4,14 @@ import { decrypt } from "src/utils/encrypt";
 
 const baseUSRL = process.env.NEXT_PUBLIC_HOST_API;
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   // Get the cookies
   const cookieStore = request.cookies;
   const sessionCookie = cookieStore.get("session")?.value;
+
+  const filterData = await request.json();
+
+  console.log(filterData);
 
   if (sessionCookie === undefined) {
     const res = {
@@ -29,25 +33,31 @@ export async function GET(request: NextRequest) {
   }
 
   const { token } = cookiedata;
+
   // Make an HTTP request to your API route with the token in the headers
-  const data = await fetch(`${baseUSRL}/apiserver/schedules`, {
-    method: "DOWNLOAD",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const data = await fetch(
+    `${baseUSRL}/storyteller/reports/detailedsalesreport`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(filterData),
+    }
+  );
 
   // Get the data in JSON format
+  const response = await data.json();
 
-  const response = await data.arrayBuffer();
+  if (response?.status === 401) {
+    const res = {
+      Title: "NOK",
+      status: 401,
+      message: response?.message,
+    };
+    return NextResponse.json(res, { status: 401 });
+  }
 
   // Send the sucessful response back
-  return new NextResponse(response, {
-    status: 200,
-    headers: {
-      "Content-Type": "application/pdf", // Set the appropriate MIME type
-      "Content-Disposition": "inline", // Or use 'attachment' for downloads
-    },
-  });
+  return NextResponse.json(response, { status: 201 });
 }

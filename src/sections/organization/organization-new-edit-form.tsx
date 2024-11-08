@@ -18,6 +18,7 @@ import { useSnackbar } from "src/components/snackbar";
 import FormProvider, { RHFTextField } from "src/components/hook-form";
 
 import { type OrganizationItem } from "src/types/organization";
+import { mutate } from "swr";
 
 // ----------------------------------------------------------------------
 
@@ -132,6 +133,7 @@ export default function OrganizationNewEditForm({
           { variant: "success" }
         );
 
+        mutate(`/api/salonapp/organization/${currentOrganization?.org_id}`);
         // Service listing again
         router.push(paths.dashboard.organization.list);
       }

@@ -55,6 +55,7 @@
     "lodash": "^4.17.21",
     "mui-color-input": "^2.0.3",
     "mui-one-time-password-input": "^2.0.2",
+    "mysql2": "^3.11.3",
     "next": "^14.0.4",
     "nookies": "^2.5.2",
     "notistack": "^3.0.1",

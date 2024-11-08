@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 import { useMemo } from "react";
+import { mutate } from "swr";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
@@ -301,6 +302,7 @@ export default function InvoiceNewEditForm({
           { variant: "success" }
         );
 
+        mutate(`/api/salonapp/invoice/${currentInvoice?.id}`);
         // Invoice data after creation
         router.push(paths.dashboard.invoice.details(responseData.data[0].id));
       }

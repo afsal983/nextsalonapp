@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import { mutate } from "swr";
 import { useForm } from "react-hook-form";
 import { useMemo, useState } from "react";
 import { MuiColorInput } from "mui-color-input";
@@ -156,6 +157,7 @@ export default function ServiceNewEditForm({
           { variant: "success" }
         );
 
+        mutate(`/api/salonapp/services/${currentService?.id}`);
         // Service listing again
         router.push(paths.dashboard.services.list);
       }

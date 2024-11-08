@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 import { useMemo } from "react";
+import { mutate } from "swr";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -130,6 +131,8 @@ export default function EmployeeNewEditForm({
             : t("general.create_success"),
           { variant: "success" }
         );
+
+        mutate(`/api/salonapp/employee/${currentEmployee?.id}`);
 
         // Employee listing again
         router.push(paths.dashboard.employees.list);

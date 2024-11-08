@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 import { useMemo } from "react";
+import { mutate } from "swr";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
 
@@ -165,6 +166,7 @@ export default function CustomerNewEditForm({
           { variant: "success" }
         );
 
+        mutate(`/api/salonapp/customer/${currentCustomer?.id}`);
         // Customer listing again
         router.push(paths.dashboard.customers.list);
       }

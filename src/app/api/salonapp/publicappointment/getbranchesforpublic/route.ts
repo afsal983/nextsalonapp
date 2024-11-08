@@ -30,24 +30,26 @@ export async function GET(request: NextRequest) {
 
   const { token } = cookiedata;
   // Make an HTTP request to your API route with the token in the headers
-  const data = await fetch(`${baseUSRL}/apiserver/schedules`, {
-    method: "DOWNLOAD",
+  const data = await fetch(`${baseUSRL}/imekeeper/getbranchesforpublic`, {
     headers: {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   });
 
   // Get the data in JSON format
+  const response = await data.json();
 
-  const response = await data.arrayBuffer();
+  console.log(response);
+
+  if (response?.status === 401) {
+    const res = {
+      Title: "NOK",
+      status: 401,
+      message: response?.message,
+    };
+    return NextResponse.json(res, { status: 401 });
+  }
 
   // Send the sucessful response back
-  return new NextResponse(response, {
-    status: 200,
-    headers: {
-      "Content-Type": "application/pdf", // Set the appropriate MIME type
-      "Content-Disposition": "inline", // Or use 'attachment' for downloads
-    },
-  });
+  return NextResponse.json(response, { status: 201 });
 }
