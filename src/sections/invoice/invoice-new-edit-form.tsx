@@ -1,20 +1,12 @@
 import * as Yup from "yup";
-import { useMemo } from "react";
 import { mutate } from "swr";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  CardActions,
-  CardContent,
-  CardHeader,
-  Grid,
-  Box,
-  FormLabel,
-  Typography,
-} from "@mui/material";
 
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
+import { Grid } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import { paths } from "src/routes/paths";
@@ -180,6 +172,7 @@ export default function InvoiceNewEditForm({
     formState: { isSubmitting },
   } = methods;
 
+  /*
   const handleSaveAsDraft = handleSubmit(async (data) => {
     loadingSave.onTrue();
 
@@ -194,6 +187,7 @@ export default function InvoiceNewEditForm({
       loadingSave.onFalse();
     }
   });
+  */
 
   const handleCreateAndSend = handleSubmit(async (data) => {
     loadingSend.onTrue();

@@ -11,7 +11,7 @@ import { paths } from "src/routes/paths";
 
 import { fetcher } from "src/utils/axios";
 
-import { _orders, ORDER_STATUS_OPTIONS } from "src/_mock";
+import { ORDER_STATUS_OPTIONS } from "src/_mock";
 
 import { useSettingsContext } from "src/components/settings";
 

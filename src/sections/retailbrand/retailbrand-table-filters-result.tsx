@@ -37,10 +37,6 @@ export default function RetailTableFiltersResult({
     onFilters("name", "");
   }, [onFilters]);
 
-  const handleRemoveStatus = useCallback(() => {
-    onFilters("status", "all");
-  }, [onFilters]);
-
   return (
     <Stack spacing={1.5} {...other}>
       <Box sx={{ typography: "body2" }}>

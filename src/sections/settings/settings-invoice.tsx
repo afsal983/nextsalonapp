@@ -32,20 +32,6 @@ import { type AppSettings } from "src/types/settings";
 
 // ----------------------------------------------------------------------
 
-type UserType = {
-  displayName: string;
-  email: string;
-  photoURL: any;
-  phoneNumber: string;
-  country: string;
-  address: string;
-  state: string;
-  city: string;
-  zipCode: string;
-  about: string;
-  isPublic: boolean;
-};
-
 interface Props {
   currentSettings: AppSettings[];
 }

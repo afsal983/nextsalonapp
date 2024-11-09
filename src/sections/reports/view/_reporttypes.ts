@@ -5,28 +5,13 @@ export const report_types = [
     category: "Sales",
     items: [
       {
-        id: "e99f09a7-dd88-49d5-b1c8-1daf80c2d7b3",
-        name: "All Sales",
+        id: "e99f09a7-dd88-49d5-b1c8-1daf80c2d7a1",
+        name: "General Sales Report",
         url: "test",
       },
       {
-        id: "e99f09a7-dd88-49d5-b1c8-1daf80c2d7b4",
+        id: "e99f09a7-dd88-49d5-b1c8-1daf80c2d7a2",
         name: "Detailed Sales",
-        url: "test",
-      },
-      {
-        id: "e99f09a7-dd88-49d5-b1c8-1daf80c2d7b5",
-        name: "Sales by branch",
-        url: "test",
-      },
-      {
-        id: "e99f09a7-dd88-49d5-b1c8-1daf80c2d7b6",
-        name: "Sales by all Employees",
-        url: "test",
-      },
-      {
-        id: "e99f09a7-dd88-49d5-b1c8-1daf80c2d7b7",
-        name: "Sales by products",
         url: "test",
       },
     ],
@@ -35,9 +20,39 @@ export const report_types = [
     category: "Appointments",
     items: [
       {
-        id: "e99f09a7-dd88-49d5-b1c8-1daf80c2d7b2",
+        id: "e99f09a7-dd88-49d5-b1c8-1daf80c2d7b1",
         name: "All Appointments",
         url: "test",
+      },
+    ],
+  },
+  {
+    category: "Products",
+    items: [
+      {
+        id: "e99f09a7-dd88-49d5-b1c8-1daf80c2d7c1",
+        name: "Product Report",
+        url: "Product Report",
+      },
+    ],
+  },
+  {
+    category: "Customers",
+    items: [
+      {
+        id: "e99f09a7-dd88-49d5-b1c8-1daf80c2d7ed1",
+        name: "Customer Report",
+        url: "Customer Report",
+      },
+    ],
+  },
+  {
+    category: "Expenses",
+    items: [
+      {
+        id: "e99f09a7-dd88-49d5-b1c8-1daf80c2d7e1",
+        name: "Expense Report",
+        url: "Expense Report",
       },
     ],
   },

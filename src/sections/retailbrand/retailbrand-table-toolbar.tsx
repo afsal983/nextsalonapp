@@ -5,7 +5,6 @@ import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
 import InputAdornment from "@mui/material/InputAdornment";
-import { type SelectChangeEvent } from "@mui/material/Select";
 
 import Iconify from "src/components/iconify";
 import CustomPopover, { usePopover } from "src/components/custom-popover";
@@ -24,26 +23,13 @@ interface Props {
 
 export default function RetailBrandTableToolbar({
   filters,
-  onFilters,
-} //
-: Props) {
+  onFilters, //
+}: Props) {
   const popover = usePopover();
 
   const handleFilterName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       onFilters("name", event.target.value);
-    },
-    [onFilters]
-  );
-
-  const handleFilterRole = useCallback(
-    (event: SelectChangeEvent<string[]>) => {
-      onFilters(
-        "productcategory",
-        typeof event.target.value === "string"
-          ? event.target.value.split(",")
-          : event.target.value
-      );
     },
     [onFilters]
   );

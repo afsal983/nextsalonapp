@@ -1,6 +1,6 @@
 import * as Yup from "yup";
-import { useMemo } from "react";
 import { mutate } from "swr";
+import { useMemo } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
 
@@ -100,8 +100,6 @@ export default function CustomerNewEditForm({
 
   const {
     reset,
-    setValue,
-    watch,
     control,
     handleSubmit,
     formState: { isSubmitting },

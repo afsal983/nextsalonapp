@@ -13,8 +13,6 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { paths } from "src/routes/paths";
 import { useRouter } from "src/routes/hooks";
 
-import { useMockedUser } from "src/hooks/use-mocked-user";
-
 import { fData } from "src/utils/format-number";
 import { base64ToBlob, blobToBase64 } from "src/utils/base64convert";
 
@@ -41,7 +39,6 @@ export default function SettingsGeneral({ currentSettings }: Props) {
 
   const router = useRouter();
   const { t } = useTranslate();
-  const { user } = useMockedUser();
 
   const UpdateUserSchema = Yup.object().shape({
     logocontent: Yup.mixed<any>().nullable().required("Logo is required"),
@@ -177,8 +174,6 @@ export default function SettingsGeneral({ currentSettings }: Props) {
     // Example base64 string (omit data URL prefix)
     const logoBase64 =
       currentSettings.find((item) => item.name === "logocontent")?.value || "";
-    const logofilename =
-      currentSettings.find((item) => item.name === "logofile")?.value || "";
 
     let blobUrl = "";
     if (logoBase64) {

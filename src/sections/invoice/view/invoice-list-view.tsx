@@ -1,41 +1,41 @@
-'use client';
+"use client";
 
-import useSWR from 'swr';
-import sumBy from 'lodash/sumBy';
-import { useState, useEffect, useCallback } from 'react';
+import useSWR from "swr";
+import sumBy from "lodash/sumBy";
+import { useState, useEffect, useCallback } from "react";
 
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
-import Card from '@mui/material/Card';
-import Table from '@mui/material/Table';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import Tooltip from '@mui/material/Tooltip';
-import Container from '@mui/material/Container';
-import TableBody from '@mui/material/TableBody';
-import IconButton from '@mui/material/IconButton';
-import { alpha, useTheme } from '@mui/material/styles';
-import TableContainer from '@mui/material/TableContainer';
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import Card from "@mui/material/Card";
+import Table from "@mui/material/Table";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import Tooltip from "@mui/material/Tooltip";
+import Container from "@mui/material/Container";
+import TableBody from "@mui/material/TableBody";
+import IconButton from "@mui/material/IconButton";
+import { alpha, useTheme } from "@mui/material/styles";
+import TableContainer from "@mui/material/TableContainer";
 
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { useRouter } from "src/routes/hooks";
+import { RouterLink } from "src/routes/components";
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from "src/hooks/use-boolean";
 
-import { fetcher } from 'src/utils/axios';
-import { isAfter } from 'src/utils/format-time';
+import { fetcher } from "src/utils/axios";
+import { isAfter } from "src/utils/format-time";
 
-import { useTranslate } from 'src/locales';
+import { useTranslate } from "src/locales";
 
-import Label from 'src/components/label';
-import Iconify from 'src/components/iconify';
-import Scrollbar from 'src/components/scrollbar';
-import { useSnackbar } from 'src/components/snackbar';
-import { ConfirmDialog } from 'src/components/custom-dialog';
-import { useSettingsContext } from 'src/components/settings';
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
+import Label from "src/components/label";
+import Iconify from "src/components/iconify";
+import Scrollbar from "src/components/scrollbar";
+import { useSnackbar } from "src/components/snackbar";
+import { ConfirmDialog } from "src/components/custom-dialog";
+import { useSettingsContext } from "src/components/settings";
+import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 import {
   useTable,
   emptyRows,
@@ -45,26 +45,30 @@ import {
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
-} from 'src/components/table';
+} from "src/components/table";
 
-import { ServiceItem } from 'src/types/service';
-import { IInvoice, IInvoiceTableFilters, IInvoiceTableFilterValue } from 'src/types/invoice';
+import { ServiceItem } from "src/types/service";
+import {
+  IInvoice,
+  IInvoiceTableFilters,
+  IInvoiceTableFilterValue,
+} from "src/types/invoice";
 
-import InvoiceAnalytic from '../invoice-analytic';
-import InvoiceTableRow from '../invoice-table-row';
-import InvoiceTableToolbar from '../invoice-table-toolbar';
-import InvoiceTableFiltersResult from '../invoice-table-filters-result';
+import InvoiceAnalytic from "../invoice-analytic";
+import InvoiceTableRow from "../invoice-table-row";
+import InvoiceTableToolbar from "../invoice-table-toolbar";
+import InvoiceTableFiltersResult from "../invoice-table-filters-result";
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'customer', label: 'Customer' },
-  { id: 'createDate', label: 'Create' },
-  { id: 'dueDate', label: 'Due' },
-  { id: 'total', label: 'Amount' },
-  { id: 'tip', label: 'Tip' },
-  { id: 'status', label: 'Status' },
-  { id: '' },
+  { id: "customer", label: "Customer" },
+  { id: "createDate", label: "Create" },
+  { id: "dueDate", label: "Due" },
+  { id: "total", label: "Amount" },
+  { id: "tip", label: "Tip" },
+  { id: "status", label: "Status" },
+  { id: "" },
 ];
 
 const start = new Date();
@@ -74,10 +78,10 @@ const end = new Date();
 end.setDate(end.getDate() + 7);
 
 const defaultFilters: IInvoiceTableFilters = {
-  name: '',
+  name: "",
   service: [],
   filtervalue: 0,
-  status: 'all',
+  status: "all",
   startDate: start,
   endDate: end,
 };
@@ -85,7 +89,6 @@ const defaultFilters: IInvoiceTableFilters = {
 // ----------------------------------------------------------------------
 
 export default function InvoiceListView() {
-
   const { t } = useTranslate();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -96,7 +99,7 @@ export default function InvoiceListView() {
 
   const router = useRouter();
 
-  const table = useTable({ defaultOrderBy: 'createDate' });
+  const table = useTable({ defaultOrderBy: "createDate" });
 
   const confirm = useBoolean();
 
@@ -106,9 +109,12 @@ export default function InvoiceListView() {
 
   const dateError = isAfter(filters.startDate, filters.endDate);
 
-   // Get All invoices and services
-   const { data: invoice,isLoading: isinvoiceLoading,  error: errorI } = useSWR('/api/salonapp/invoice', fetcher);
-   const { data: services,isLoading: isserviceLoading,  error: errorS } = useSWR('/api/salonapp/services', fetcher);
+  // Get All invoices and services
+  const {
+    data: services,
+    isLoading: isserviceLoading,
+    error: errorS,
+  } = useSWR("/api/salonapp/services", fetcher);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -127,7 +133,7 @@ export default function InvoiceListView() {
   const canReset =
     !!filters.name ||
     !!filters.service.length ||
-    filters.status !== 'all' ||
+    filters.status !== "all" ||
     (!!filters.startDate && !!filters.endDate);
 
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
@@ -138,41 +144,42 @@ export default function InvoiceListView() {
   const getTotalAmount = (status: string) =>
     sumBy(
       tableData.filter((item) => item?.Invstatus.name === status),
-      'totalAmount'
+      "totalAmount"
     );
 
   const getPercentByStatus = (status: string) =>
     (getInvoiceLength(status) / tableData.length) * 100;
 
   const TABS = [
-    { 
-      value: 'all', 
-      label: 'All', 
-      color: 'default', 
-      count: tableData.length },
     {
-      value: 'paid',
-      label: 'Paid',
-      color: 'success',
-      count: getInvoiceLength('paid'),
+      value: "all",
+      label: "All",
+      color: "default",
+      count: tableData.length,
     },
     {
-      value: 'pending',
-      label: 'Pending',
-      color: 'warning',
-      count: getInvoiceLength('pending'),
+      value: "paid",
+      label: "Paid",
+      color: "success",
+      count: getInvoiceLength("paid"),
     },
     {
-      value: 'overdue',
-      label: 'Overdue',
-      color: 'error',
-      count: getInvoiceLength('overdue'),
+      value: "pending",
+      label: "Pending",
+      color: "warning",
+      count: getInvoiceLength("pending"),
     },
     {
-      value: 'draft',
-      label: 'Draft',
-      color: 'default',
-      count: getInvoiceLength('draft'),
+      value: "overdue",
+      label: "Overdue",
+      color: "error",
+      count: getInvoiceLength("overdue"),
+    },
+    {
+      value: "draft",
+      label: "Draft",
+      color: "default",
+      count: getInvoiceLength("draft"),
     },
   ] as const;
 
@@ -195,7 +202,7 @@ export default function InvoiceListView() {
     (id: string) => {
       const deleteRow = tableData.filter((row) => row.id !== id);
 
-      enqueueSnackbar('Delete success!');
+      enqueueSnackbar("Delete success!");
 
       setTableData(deleteRow);
 
@@ -205,9 +212,11 @@ export default function InvoiceListView() {
   );
 
   const handleDeleteRows = useCallback(() => {
-    const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
+    const deleteRows = tableData.filter(
+      (row) => !table.selected.includes(row.id)
+    );
 
-    enqueueSnackbar('Delete success!');
+    enqueueSnackbar("Delete success!");
 
     setTableData(deleteRows);
 
@@ -215,7 +224,13 @@ export default function InvoiceListView() {
       totalRowsInPage: dataInPage.length,
       totalRowsFiltered: dataFiltered.length,
     });
-  }, [dataFiltered.length, dataInPage.length, enqueueSnackbar, table, tableData]);
+  }, [
+    dataFiltered.length,
+    dataInPage.length,
+    enqueueSnackbar,
+    table,
+    tableData,
+  ]);
 
   const handleEditRow = useCallback(
     (id: string) => {
@@ -233,41 +248,41 @@ export default function InvoiceListView() {
 
   const handleFilterStatus = useCallback(
     (event: React.SyntheticEvent, newValue: string) => {
-      handleFilters('status', newValue);
+      handleFilters("status", newValue);
     },
     [handleFilters]
   );
 
   useEffect(() => {
-    if(filters.startDate && filters.endDate) {
-      const datefilter = `startdate=${filters.startDate.toISOString()}&enddate=${filters.endDate.toISOString()}`
+    if (filters.startDate && filters.endDate) {
+      const datefilter = `startdate=${filters.startDate.toISOString()}&enddate=${filters.endDate.toISOString()}`;
       fetch(`/api/salonapp/invoice?${datefilter}`)
-      .then(response => response.json())
-          // 4. Setting *dogImage* to the image url that we received from the response above
-      .then(data => setTableData(data.data))
+        .then((response) => response.json())
+        // 4. Setting *dogImage* to the image url that we received from the response above
+        .then((data) => setTableData(data.data));
     }
-    },[filters.startDate, filters.endDate]) 
+  }, [filters.startDate, filters.endDate]);
 
-  // Display loading page 
-  if ( isinvoiceLoading || isserviceLoading) return <div>Loading...</div>;
-  if ( errorI || errorS) return <div>Error Loading...</div>;
+  // Display loading page
+  if (isserviceLoading) return <div>Loading...</div>;
+  if (errorS) return <div>Error Loading...</div>;
 
   return (
     <>
-      <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+      <Container maxWidth={settings.themeStretch ? false : "lg"}>
         <CustomBreadcrumbs
           heading="List"
           links={[
             {
-              name: t('salonapp.dashboard'),
+              name: t("salonapp.dashboard"),
               href: paths.dashboard.root,
             },
             {
-              name: t('salonapp.invoice.invoice'),
+              name: t("salonapp.invoice.invoice"),
               href: paths.dashboard.invoice.root,
             },
             {
-              name: t('general.list'),
+              name: t("general.list"),
             },
           ]}
           action={
@@ -293,50 +308,56 @@ export default function InvoiceListView() {
           <Scrollbar>
             <Stack
               direction="row"
-              divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
+              divider={
+                <Divider
+                  orientation="vertical"
+                  flexItem
+                  sx={{ borderStyle: "dashed" }}
+                />
+              }
               sx={{ py: 2 }}
             >
               <InvoiceAnalytic
                 title="Total"
                 total={tableData.length}
                 percent={100}
-                price={sumBy(tableData, 'totalAmount')}
+                price={sumBy(tableData, "totalAmount")}
                 icon="solar:bill-list-bold-duotone"
                 color={theme.palette.info.main}
               />
 
               <InvoiceAnalytic
                 title="Paid"
-                total={getInvoiceLength('paid')}
-                percent={getPercentByStatus('paid')}
-                price={getTotalAmount('paid')}
+                total={getInvoiceLength("paid")}
+                percent={getPercentByStatus("paid")}
+                price={getTotalAmount("paid")}
                 icon="solar:file-check-bold-duotone"
                 color={theme.palette.success.main}
               />
 
               <InvoiceAnalytic
                 title="Pending"
-                total={getInvoiceLength('pending')}
-                percent={getPercentByStatus('pending')}
-                price={getTotalAmount('pending')}
+                total={getInvoiceLength("pending")}
+                percent={getPercentByStatus("pending")}
+                price={getTotalAmount("pending")}
                 icon="solar:sort-by-time-bold-duotone"
                 color={theme.palette.warning.main}
               />
 
               <InvoiceAnalytic
                 title="Overdue"
-                total={getInvoiceLength('overdue')}
-                percent={getPercentByStatus('overdue')}
-                price={getTotalAmount('overdue')}
+                total={getInvoiceLength("overdue")}
+                percent={getPercentByStatus("overdue")}
+                price={getTotalAmount("overdue")}
                 icon="solar:bell-bing-bold-duotone"
                 color={theme.palette.error.main}
               />
 
               <InvoiceAnalytic
                 title="Draft"
-                total={getInvoiceLength('draft')}
-                percent={getPercentByStatus('draft')}
-                price={getTotalAmount('draft')}
+                total={getInvoiceLength("draft")}
+                percent={getPercentByStatus("draft")}
+                price={getTotalAmount("draft")}
                 icon="solar:file-corrupted-bold-duotone"
                 color={theme.palette.text.secondary}
               />
@@ -350,7 +371,10 @@ export default function InvoiceListView() {
             onChange={handleFilterStatus}
             sx={{
               px: 2.5,
-              boxShadow: `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
+              boxShadow: `inset 0 -2px 0 0 ${alpha(
+                theme.palette.grey[500],
+                0.08
+              )}`,
             }}
           >
             {TABS.map((tab) => (
@@ -362,7 +386,9 @@ export default function InvoiceListView() {
                 icon={
                   <Label
                     variant={
-                      ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
+                      ((tab.value === "all" || tab.value === filters.status) &&
+                        "filled") ||
+                      "soft"
                     }
                     color={tab.color}
                   >
@@ -378,7 +404,9 @@ export default function InvoiceListView() {
             onFilters={handleFilters}
             //
             dateError={dateError}
-            serviceOptions={services.data.map((option : ServiceItem) => option.name)}
+            serviceOptions={services.data.map(
+              (option: ServiceItem) => option.name
+            )}
           />
 
           {canReset && (
@@ -393,7 +421,7 @@ export default function InvoiceListView() {
             />
           )}
 
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          <TableContainer sx={{ position: "relative", overflow: "unset" }}>
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
@@ -434,7 +462,10 @@ export default function InvoiceListView() {
             />
 
             <Scrollbar>
-              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+              <Table
+                size={table.dense ? "small" : "medium"}
+                sx={{ minWidth: 800 }}
+              >
                 <TableHeadCustom
                   order={table.order}
                   orderBy={table.orderBy}
@@ -470,7 +501,11 @@ export default function InvoiceListView() {
 
                   <TableEmptyRows
                     height={denseHeight}
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
+                    emptyRows={emptyRows(
+                      table.page,
+                      table.rowsPerPage,
+                      dataFiltered.length
+                    )}
                   />
 
                   <TableNoData notFound={notFound} />
@@ -498,7 +533,8 @@ export default function InvoiceListView() {
         title="Delete"
         content={
           <>
-            Are you sure want to delete <strong> {table.selected.length} </strong> items?
+            Are you sure want to delete{" "}
+            <strong> {table.selected.length} </strong> items?
           </>
         }
         action={
@@ -546,18 +582,24 @@ function applyFilter({
   if (name) {
     inputData = inputData.filter(
       (invoice) =>
-        invoice.invoicenumber.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-        invoice.Customer.firstname.toLowerCase().indexOf(name.toLowerCase()) !== -1
+        invoice.invoicenumber.toLowerCase().indexOf(name.toLowerCase()) !==
+          -1 ||
+        invoice.Customer.firstname.toLowerCase().indexOf(name.toLowerCase()) !==
+          -1
     );
   }
 
-  if (status !== 'all') {
-    inputData = inputData.filter((invoice) => invoice.Invstatus?.name === status);
+  if (status !== "all") {
+    inputData = inputData.filter(
+      (invoice) => invoice.Invstatus?.name === status
+    );
   }
 
   if (service.length) {
     inputData = inputData.filter((invoice) =>
-      invoice.Invoice_line.some((filterItem) => service.includes(filterItem.Product.name))
+      invoice.Invoice_line.some((filterItem) =>
+        service.includes(filterItem.Product.name)
+      )
     );
   }
   /*

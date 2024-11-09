@@ -1,30 +1,29 @@
+import { useState, useCallback } from "react";
 import { useFormContext } from "react-hook-form";
-import { useRef, useState, useCallback } from "react";
 
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import MenuItem from "@mui/material/MenuItem";
-import { useBoolean } from "src/hooks/use-boolean";
-import { useResponsive } from "src/hooks/use-responsive";
-import { RHFSelect, RHFTextField } from "src/components/hook-form";
-import Fab from "@mui/material/Fab";
-import AddIcon from "@mui/icons-material/Add";
-import Iconify from "src/components/iconify";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
+import Stack from "@mui/material/Stack";
 import Avatar from "@mui/material/Avatar";
+import Divider from "@mui/material/Divider";
+import AddIcon from "@mui/icons-material/Add";
 import ListItem from "@mui/material/ListItem";
 import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
 import Autocomplete from "@mui/material/Autocomplete";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
+
+import { useBoolean } from "src/hooks/use-boolean";
+import { useResponsive } from "src/hooks/use-responsive";
+
 import { useSnackbar } from "src/components/snackbar";
+import { LiveCustomerSearch } from "src/components/livecustomersearch";
+
 import { BranchItem } from "src/types/branch";
 import { Customer } from "src/types/customer";
-import { LiveCustomerSearch } from "src/components/livecustomersearch";
+
 import AddressNewForm from "../customeraddress/address-new-form";
 
 // ----------------------------------------------------------------------
@@ -48,8 +47,6 @@ export default function InvoiceNewEditAddress({ branches }: Props) {
   const to = useBoolean();
 
   const Customerdata = values?.Customer;
-
-  const [opencustomerform, setIsopencustomerform] = useState(false);
 
   // handle customer
   const handleSelectCustomer = useCallback(

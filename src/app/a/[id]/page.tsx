@@ -1,15 +1,9 @@
+
+
+
+
 import { PublicAppointmentView } from "src/sections/publicappointment/view";
-import { cookies } from "next/headers";
 
-import axios from "axios";
-import { endpoints } from "src/utils/axios";
-import { useEffect } from "react";
-import { NextResponse } from "next/server";
-import { useRouter } from "src/routes/hooks";
-
-import { PATH_AFTER_LOGIN } from "src/config-global";
-
-import pool from "../../../utils/mysql";
 
 // ----------------------------------------------------------------------
 /*

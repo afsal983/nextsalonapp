@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import Button from "@mui/material/Button";
-import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
 import MenuItem from "@mui/material/MenuItem";
 import TableRow from "@mui/material/TableRow";
@@ -15,10 +14,8 @@ import ListItemText from "@mui/material/ListItemText";
 import Badge, { badgeClasses } from "@mui/material/Badge";
 import TableContainer from "@mui/material/TableContainer";
 
-import { fCurrency } from "src/utils/format-number";
 import { fDate, fTime } from "src/utils/format-time";
 
-import Label from "src/components/label";
 import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
 import { TableHeadCustom } from "src/components/table";
@@ -101,7 +98,7 @@ function BankingRecentTransitionsRow({
 }: BankingRecentTransitionsRowProps) {
   const theme = useTheme();
 
-  const lightMode = theme.palette.mode === "light";
+  // const lightMode = theme.palette.mode === "light";
 
   const popover = usePopover();
 

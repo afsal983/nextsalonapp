@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import { mutate } from "swr";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -18,7 +19,6 @@ import { useSnackbar } from "src/components/snackbar";
 import FormProvider, { RHFTextField } from "src/components/hook-form";
 
 import { type OrganizationItem } from "src/types/organization";
-import { mutate } from "swr";
 
 // ----------------------------------------------------------------------
 
@@ -31,30 +31,6 @@ export default function OrganizationNewEditForm({
 }: Props) {
   const router = useRouter();
 
-  const timeStringToDate = (timeString: string) => {
-    const [hours, minutes, seconds] = timeString.split(":").map(Number);
-    const date = new Date();
-    date.setHours(hours);
-    date.setMinutes(minutes);
-    date.setSeconds(seconds);
-    date.setMilliseconds(0);
-    return date;
-  };
-
-  const DatetoStimeString = (date: Date) => {
-    // Extract hours and minutes
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-
-    // Format to HH:MM
-    const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes
-      .toString()
-      .padStart(2, "0")}`;
-
-    return date;
-  };
-
-  console.log(currentOrganization);
   const { enqueueSnackbar } = useSnackbar();
 
   const { t } = useTranslate();

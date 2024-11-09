@@ -1,8 +1,9 @@
 import * as Yup from "yup";
+import { mutate } from "swr";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { mutate } from "swr";
+
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
@@ -88,8 +89,6 @@ export default function UserNewEditForm({
 
   const {
     reset,
-    setValue,
-    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;

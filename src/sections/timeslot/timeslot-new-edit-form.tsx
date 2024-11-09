@@ -1,8 +1,9 @@
 import * as Yup from "yup";
+import { mutate } from "swr";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { mutate } from "swr";
+
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
@@ -39,20 +40,6 @@ export default function TimeSlotNewEditForm({ currentTimeSlot }: Props) {
     return date;
   };
 
-  const DatetoStimeString = (date: Date) => {
-    // Extract hours and minutes
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-
-    // Format to HH:MM
-    const formattedTime = `${hours.toString().padStart(2, "0")}:${minutes
-      .toString()
-      .padStart(2, "0")}`;
-
-    return date;
-  };
-
-  console.log(currentTimeSlot);
   const { enqueueSnackbar } = useSnackbar();
 
   const { t } = useTranslate();

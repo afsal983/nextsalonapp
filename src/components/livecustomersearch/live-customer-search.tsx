@@ -22,16 +22,13 @@ type props = {
 export default function LiveCustomerSearch({ handleSelectedCustomer }: props) {
   const [customerData, setCustomerData] = useState<Customer[]>([]);
   const [inputValue, setInputValue] = useState<string>(""); // The current input value in the search field
-  const [loading, setLoading] = useState<boolean>(false); // Loading state
+
   // Fetch customer data from API when the input value changes
   useEffect(() => {
     if (inputValue === "") {
       setCustomerData([]);
       return;
     }
-
-    // Set loading to true before fetching data
-    setLoading(true);
 
     const fetchCustomers = async () => {
       try {
@@ -42,15 +39,8 @@ export default function LiveCustomerSearch({ handleSelectedCustomer }: props) {
         setCustomerData(responseData?.data); // Update state with fetched data
       } catch (error) {
         console.error("Error fetching customer data:", error);
-      } finally {
-        setLoading(false); // Set loading to false once the data is fetched
       }
     };
-
-    // Fetch customers after a slight delay (debouncing effect)
-    const delayDebounceFn = setTimeout(() => {
-      fetchCustomers();
-    }, 100); // Adjust debounce delay if needed
 
     // return () => {
     // clearTimeout(delayDebounceFn); // Cleanup, no return value expected

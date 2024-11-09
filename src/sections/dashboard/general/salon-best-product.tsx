@@ -1,15 +1,16 @@
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
+import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import Avatar from "@mui/material/Avatar";
 import CardHeader from "@mui/material/CardHeader";
 import ListItemText from "@mui/material/ListItemText";
 import Card, { type CardProps } from "@mui/material/Card";
-import Chip from "@mui/material/Chip";
-import { fCurrency } from "src/utils/format-number";
 import FilterNoneIcon from "@mui/icons-material/FilterNone";
+
+import { fCurrency } from "src/utils/format-number";
+
 import Scrollbar from "src/components/scrollbar";
-import { ColorPreview } from "src/components/color-utils";
 
 // ----------------------------------------------------------------------
 
@@ -75,14 +76,12 @@ function ProductItem({ product }: ProductItemProps) {
           </Link>
         }
         secondary={
-          <>
-            <Box
+          <Box
               component="span"
               sx={{ color: totalprice ? "error.main" : "text.secondary" }}
             >
               {fCurrency(totalprice)}
             </Box>
-          </>
         }
         primaryTypographyProps={{
           noWrap: true,

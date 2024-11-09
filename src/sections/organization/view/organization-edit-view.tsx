@@ -28,11 +28,10 @@ export default function OrganizationEditView({ id }: Props) {
   const settings = useSettingsContext();
 
   // Pre data fetching via API calls
-  const {
-    data: organization,
-    isLoading: isorganizationLoading,
-    error: organizationError,
-  } = useSWR("/api/salonapp/organization", fetcher);
+  const { data: organization, error: organizationError } = useSWR(
+    "/api/salonapp/organization",
+    fetcher
+  );
 
   if (organizationError) return <div>Failed to load</div>;
   if (!organization) return <div>Loading...</div>;

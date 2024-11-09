@@ -2,13 +2,13 @@ import Table from "@mui/material/Table";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
-import Label from "src/components/label";
 import CardHeader from "@mui/material/CardHeader";
 import Card, { type CardProps } from "@mui/material/Card";
 import TableContainer from "@mui/material/TableContainer";
 
 import { fCurrency } from "src/utils/format-number";
 
+import Label from "src/components/label";
 import Scrollbar from "src/components/scrollbar";
 import { TableHeadCustom } from "src/components/table";
 

@@ -1,34 +1,25 @@
+import sum from "lodash/sum";
 import { useEffect, useCallback } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import sum from "lodash/sum";
-import Box from "@mui/material/Box";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  Chip,
-  Divider,
-  Icon,
-} from "@mui/material";
 
-import ControlPointIcon from "@mui/icons-material/ControlPoint";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import { RHFSelect, RHFTextField } from "src/components/hook-form";
+import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { AppSettings } from "src/types/settings";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import Radio from "@mui/material/Radio";
-import { useBoolean } from "src/hooks/use-boolean";
-import Iconify from "src/components/iconify";
-import MenuItem from "@mui/material/MenuItem";
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import ControlPointIcon from "@mui/icons-material/ControlPoint";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import { Card, Chip, Divider, CardHeader, CardContent } from "@mui/material";
+
 import { FnCurrency } from "src/utils/format-number";
+
+import Iconify from "src/components/iconify";
+import { RHFSelect, RHFTextField } from "src/components/hook-form";
+
 import { Payment } from "src/types/invoice";
+import { AppSettings } from "src/types/settings";
 import { IPaymenttypes } from "src/types/payment";
 
 // ----------------------------------------------------------------------
@@ -67,35 +58,9 @@ export default function PaymentNewEditForm({
     appsettings.find((appsetting) => appsetting.name === "currency")?.value ||
     "INR";
 
-  const paymentview = useBoolean();
-
   useEffect(() => {
     setValue("balance", balance);
   }, [setValue, balance]);
-
-  const handlePaymentMehtod = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value !== "SPLIT") {
-      const id = paymenttypes?.find(
-        (paymenttype) => paymenttype.name === event.target.value
-      )?.id;
-
-      remove();
-
-      append({
-        payment_type: id,
-        value: values.totalAmount,
-      });
-
-      // setValue(`payments[${0}].payment_type`, id);
-    } else {
-      /*
-      append({
-        payment_type: 1,
-        value: 0,
-      });
-      */
-    }
-  };
 
   const handleAdd = () => {
     const defaultpaymenttype = paymenttypes?.find(
@@ -332,23 +297,19 @@ export default function PaymentNewEditForm({
                 }}
               >
                 {balance === 0 ? (
-                  <>
-                    <Stack direction="row" spacing={2}>
-                      <Typography>
-                        {FnCurrency(String(balance), currency) || "-"}
-                      </Typography>
-                      <ThumbUpIcon color="primary" />
-                    </Stack>
-                  </>
+                  <Stack direction="row" spacing={2}>
+                    <Typography>
+                      {FnCurrency(String(balance), currency) || "-"}
+                    </Typography>
+                    <ThumbUpIcon color="primary" />
+                  </Stack>
                 ) : (
-                  <>
-                    <Stack direction="row" spacing={2}>
-                      <Typography>
-                        {FnCurrency(String(balance), currency) || "-"}
-                      </Typography>
-                      <ThumbDownIcon color="error" />
-                    </Stack>
-                  </>
+                  <Stack direction="row" spacing={2}>
+                    <Typography>
+                      {FnCurrency(String(balance), currency) || "-"}
+                    </Typography>
+                    <ThumbDownIcon color="error" />
+                  </Stack>
                 )}
               </Box>
             </Stack>

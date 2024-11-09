@@ -27,7 +27,6 @@ import {
 } from "@mui/x-data-grid";
 
 import { paths } from "src/routes/paths";
-import { useRouter } from "src/routes/hooks";
 
 import { useBoolean } from "src/hooks/use-boolean";
 
@@ -44,22 +43,22 @@ import { BranchItem } from "src/types/branch";
 import { PaymentTypeItem } from "src/types/payment";
 import {
   DetailedInvoice,
-  DetailedSalesReportTableFilters,
-  DetailedSalesReportPeriodFilters,
-  DetailedSalesReportTableFilterValue,
+  SalesReportTableFilters,
+  SalesReportPeriodFilters,
+  SalesReportTableFilterValue,
 } from "src/types/report";
 
 import PeriodFilters from "../period-filters";
-import DetailedSalesAnalytic from "../detailedsales-analytic";
-import DeatailedSalesTableToolbar from "../detailedsales-table-toolbar";
-import DeatailedSalesTableFiltersResult from "../detailedsales-table-filters-result";
+import SalesReportAnalytic from "../salesreport-analytic";
+import DeatailedSalesTableToolbar from "../salesreport-table-toolbar";
+import DeatailedSalesTableFiltersResult from "../salesreport-table-filters-result";
 import {
+  RenderCellTax,
   RenderCellPrice,
-  RenderCellProduct,
-  RenderCellDiscount,
+  RenderCellTaxby2,
+  RenderCellCustomer,
   RenderCellCreatedAt,
-  RenderCellUnitPrice,
-} from "../detailedsales-table-row";
+} from "../salesreport-table-row";
 
 // ----------------------------------------------------------------------
 
@@ -75,13 +74,13 @@ const HIDE_COLUMNS = {
 const HIDE_COLUMNS_TOGGLABLE = ["category", "actions"];
 
 // This is for date filter to conditionaly fetch data from remote API
-const defaultperiodFilters: DetailedSalesReportPeriodFilters = {
+const defaultperiodFilters: SalesReportPeriodFilters = {
   startDate: null,
   endDate: null,
 };
 
 // This for filtering tables
-const defaultitemFilters: DetailedSalesReportTableFilters = {
+const defaultitemFilters: SalesReportTableFilters = {
   branch: [],
   status: [],
   paymenttype: [],
@@ -89,14 +88,12 @@ const defaultitemFilters: DetailedSalesReportTableFilters = {
 
 // ----------------------------------------------------------------------
 
-export default function DetailedSalesListView() {
+export default function SalesReportListView() {
   const { enqueueSnackbar } = useSnackbar();
 
   const confirmRows = useBoolean();
 
   const theme = useTheme();
-
-  const router = useRouter();
 
   const settings = useSettingsContext();
 
@@ -141,7 +138,7 @@ export default function DetailedSalesListView() {
   const canReset = !isEqual(defaultitemFilters, itemfilters);
 
   const handleitemFilters = useCallback(
-    (name: string, value: DetailedSalesReportTableFilterValue) => {
+    (name: string, value: SalesReportTableFilterValue) => {
       setitemFilters((prevState) => ({
         ...prevState,
         [name]: value,
@@ -151,7 +148,7 @@ export default function DetailedSalesListView() {
   );
 
   const handlePeriodFilters = useCallback(
-    (name: string, value: DetailedSalesReportTableFilterValue) => {
+    (name: string, value: SalesReportTableFilterValue) => {
       setFilters((prevState) => ({
         ...prevState,
         [name]: value,
@@ -164,17 +161,6 @@ export default function DetailedSalesListView() {
     setitemFilters(defaultitemFilters);
   }, []);
 
-  const handleDeleteRow = useCallback(
-    (id: string) => {
-      const deleteRow = tableData.filter((row) => row.id !== id);
-
-      enqueueSnackbar("Delete success!");
-
-      setTableData(deleteRow);
-    },
-    [enqueueSnackbar, tableData]
-  );
-
   const handleSearch = async () => {
     setisLoading(true);
 
@@ -182,7 +168,7 @@ export default function DetailedSalesListView() {
     const data = {
       start: periodfilters.startDate,
       end: periodfilters.endDate,
-      filtername: "detailedsales",
+      filtername: "all",
       filterid: 1,
     };
 
@@ -192,7 +178,7 @@ export default function DetailedSalesListView() {
       return;
     }
 
-    const response = await fetch("/api/salonapp/report/detailedsales", {
+    const response = await fetch("/api/salonapp/report/salesreport", {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       headers: {
         "Content-Type": "application/json",
@@ -241,73 +227,34 @@ export default function DetailedSalesListView() {
       renderCell: (params) => <RenderCellPrice params={params} />,
     },
     {
-      field: "discount",
-      headerName: "Discount",
+      field: "tax",
+      headerName: "Tax",
       width: 100,
       editable: true,
-      renderCell: (params) => <RenderCellDiscount params={params} />,
+      hideable: false,
+      renderCell: (params) => <RenderCellTax params={params} />,
     },
     {
-      field: "billingname",
+      field: "taxby2",
+      headerName: "Tax/2",
+      width: 100,
+      editable: true,
+      hideable: false,
+      renderCell: (params) => <RenderCellTaxby2 params={params} />,
+    },
+    {
+      field: "billinginfo",
       headerName: "Billing Name",
       width: 180,
       filterable: true,
       hideable: false,
-    },
-    {
-      field: "employee",
-      headerName: "Employee",
-      width: 180,
-      filterable: true,
+      valueGetter: (params) => `${params.row.billinginfo.name}`,
+      renderCell: (params) => <RenderCellCustomer params={params} />,
     },
     {
       field: "tip",
       headerName: "Tip",
       filterable: false,
-    },
-    {
-      field: "paymentmode",
-      width: 100,
-      headerName: "Payment Mode",
-      filterable: true,
-    },
-    {
-      field: "CASH",
-      headerName: "Cash",
-      filterable: false,
-    },
-    {
-      field: "CARD",
-      headerName: "Card",
-      filterable: false,
-    },
-    {
-      field: "authcode",
-      headerName: "Auth Code",
-      filterable: false,
-    },
-
-    {
-      field: "item",
-      headerName: "Product",
-      flex: 1,
-      minWidth: 260,
-      hideable: false,
-      valueGetter: (params) => `${params.row.item.name}`,
-      renderCell: (params) => <RenderCellProduct params={params} />,
-    },
-    {
-      field: "itemquantity",
-      headerName: "Quantity",
-      filterable: false,
-    },
-
-    {
-      field: "unitprice",
-      headerName: "unit Price",
-      width: 140,
-      editable: true,
-      renderCell: (params) => <RenderCellUnitPrice params={params} />,
     },
     {
       field: "branch",
@@ -316,7 +263,7 @@ export default function DetailedSalesListView() {
       filterable: false,
     },
     {
-      field: "invstatus",
+      field: "status",
       headerName: "Status",
       filterable: false,
     },
@@ -427,7 +374,7 @@ export default function DetailedSalesListView() {
               name: "Reports",
               href: paths.dashboard.report.list,
             },
-            { name: "Detailed Sales Report" },
+            { name: "Sales Report" },
           ]}
           action={
             <IconButton onClick={() => openFilters.onTrue()} size="large">
@@ -461,7 +408,7 @@ export default function DetailedSalesListView() {
               }
               sx={{ py: 2 }}
             >
-              <DetailedSalesAnalytic
+              <SalesReportAnalytic
                 title="Total"
                 total={summaryData.totalSaleCount}
                 percent={100}
@@ -470,7 +417,7 @@ export default function DetailedSalesListView() {
                 color={theme.palette.info.main}
               />
 
-              <DetailedSalesAnalytic
+              <SalesReportAnalytic
                 title="Service Sale"
                 total={summaryData.serviceSaleCount}
                 percent={10}
@@ -479,7 +426,7 @@ export default function DetailedSalesListView() {
                 color={theme.palette.success.main}
               />
 
-              <DetailedSalesAnalytic
+              <SalesReportAnalytic
                 title="Retail Sale"
                 total={summaryData.retailSaleCount}
                 percent={10}
@@ -488,7 +435,7 @@ export default function DetailedSalesListView() {
                 color={theme.palette.warning.main}
               />
 
-              <DetailedSalesAnalytic
+              <SalesReportAnalytic
                 title="Package Sale"
                 total={summaryData.packageSaleCount}
                 percent={10}
@@ -626,7 +573,7 @@ function applyFilter({
   filters,
 }: {
   inputData: DetailedInvoice[];
-  filters: DetailedSalesReportTableFilters;
+  filters: SalesReportTableFilters;
 }) {
   const { status, branch, paymenttype } = filters;
 

@@ -31,11 +31,10 @@ export default function EmployeeCreateView() {
     "/api/salonapp/user",
     fetcher
   );
-  const {
-    data: service,
-    isLoading: isserviceLoading,
-    error: errorS,
-  } = useSWR("/api/salonapp/services", fetcher);
+  const { data: service, isLoading: isserviceLoading } = useSWR(
+    "/api/salonapp/services",
+    fetcher
+  );
 
   // Wait for data loading
   if (isbranchesLoading || isusersLoading || isserviceLoading)

@@ -19,7 +19,7 @@ type Props = {
   color?: string;
 };
 
-export default function InvoiceAnalytic({
+export default function SalesReportAnalytic({
   title,
   total,
   icon,
@@ -72,7 +72,7 @@ export default function InvoiceAnalytic({
           component="span"
           sx={{ color: "text.disabled", typography: "body2" }}
         >
-          {fShortenNumber(total)} invoices
+          {fShortenNumber(total)} Invoice Line
         </Box>
 
         <Typography variant="subtitle2">{fCurrency(price)}</Typography>

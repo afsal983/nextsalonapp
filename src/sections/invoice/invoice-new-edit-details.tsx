@@ -10,7 +10,9 @@ import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import InputAdornment from "@mui/material/InputAdornment";
 import { inputBaseClasses } from "@mui/material/InputBase";
+
 import { useResponsive } from "src/hooks/use-responsive";
+
 import { FnCurrency } from "src/utils/format-number";
 
 import Iconify from "src/components/iconify";
@@ -20,8 +22,9 @@ import { BranchItem } from "src/types/branch";
 import { ServiceItem } from "src/types/service";
 import { AppSettings } from "src/types/settings";
 import { EmployeeItem } from "src/types/employee";
-import { IInvoice, IInvoiceItem, Invoice_line } from "src/types/invoice";
 import { IPaymenttypes } from "src/types/payment";
+import { IInvoice, IInvoiceItem, Invoice_line } from "src/types/invoice";
+
 import PaymentNewEditForm from "./payment-new-edit-form";
 
 // ----------------------------------------------------------------------

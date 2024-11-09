@@ -2,18 +2,15 @@ import { type ApexOptions } from "apexcharts";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { alpha, useTheme } from "@mui/material/styles";
 import Card, { type CardProps } from "@mui/material/Card";
 
 import {
-  fCurrency,
-  FnCurrency,
   fNumber,
-  fPercent,
+  fCurrency,
 } from "src/utils/format-number";
 
-import Iconify from "src/components/iconify";
 import Chart, { useChart } from "src/components/chart";
 
 // ----------------------------------------------------------------------

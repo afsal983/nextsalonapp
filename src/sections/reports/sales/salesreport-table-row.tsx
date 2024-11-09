@@ -18,6 +18,12 @@ type ParamsProps = {
 export function RenderCellPrice({ params }: ParamsProps) {
   return <>{fCurrency(params.row.total)}</>;
 }
+export function RenderCellTax({ params }: ParamsProps) {
+  return <>{fCurrency(params.row.tax)}</>;
+}
+export function RenderCellTaxby2({ params }: ParamsProps) {
+  return <>{fCurrency(params.row.taxby2)}</>;
+}
 
 export function RenderCellUnitPrice({ params }: ParamsProps) {
   return <>{fCurrency(params.row.unitprice)}</>;
@@ -76,7 +82,7 @@ export function RenderCellStock({ params }: ParamsProps) {
   );
 }
 
-export function RenderCellProduct({ params }: ParamsProps) {
+export function RenderCellCustomer({ params }: ParamsProps) {
   return (
     <Stack direction="row" alignItems="center" sx={{ py: 2, width: 1 }}>
       <ListItemText
@@ -89,7 +95,7 @@ export function RenderCellProduct({ params }: ParamsProps) {
             // onClick={params.row.item.onViewRow}
             sx={{ cursor: "pointer" }}
           >
-            {params.row.item.name}
+            {params.row.billinginfo.name}
           </Link>
         }
         secondary={
@@ -97,7 +103,7 @@ export function RenderCellProduct({ params }: ParamsProps) {
             component="div"
             sx={{ typography: "body2", color: "text.disabled" }}
           >
-            {params.row.item.category}
+            {params.row.billinginfo.category}
           </Box>
         }
         sx={{ display: "flex", flexDirection: "column" }}

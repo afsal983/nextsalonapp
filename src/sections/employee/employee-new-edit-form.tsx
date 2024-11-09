@@ -1,6 +1,6 @@
 import * as Yup from "yup";
-import { useMemo } from "react";
 import { mutate } from "swr";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -83,8 +83,6 @@ export default function EmployeeNewEditForm({
 
   const {
     reset,
-    setValue,
-    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;

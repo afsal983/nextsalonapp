@@ -2,17 +2,19 @@
 
 import useSWR from "swr";
 import React from "react";
+import { usePathname } from "next/navigation";
 
 import Container from "@mui/material/Container";
 
 import { paths } from "src/routes/paths";
-import { usePathname } from "next/navigation";
+
 import { fetcher } from "src/utils/axios";
 
 import { useTranslate } from "src/locales";
 
 import { useSettingsContext } from "src/components/settings";
 import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+
 import PublicAppointmentCreateView from "../public-appointment-create-view";
 
 // ----------------------------------------------------------------------

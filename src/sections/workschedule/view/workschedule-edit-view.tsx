@@ -1,7 +1,7 @@
 "use client";
 
-import useSWR, { mutate } from "swr";
 import React from "react";
+import useSWR, { mutate } from "swr";
 
 import Container from "@mui/material/Container";
 

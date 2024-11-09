@@ -13,7 +13,7 @@ export default function InvoiceNewEditStatusDate() {
 
   const values = watch();
 
-  const { invoicenumber, date } = values;
+  const { invoicenumber } = values;
 
   return (
     <Stack

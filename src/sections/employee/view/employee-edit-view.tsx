@@ -40,11 +40,10 @@ export default function EmployeeEditView({ id }: Props) {
     "/api/salonapp/user",
     fetcher
   );
-  const {
-    data: service,
-    isLoading: isserviceLoading,
-    error: errorS,
-  } = useSWR("/api/salonapp/services", fetcher);
+  const { data: service, isLoading: isserviceLoading } = useSWR(
+    "/api/salonapp/services",
+    fetcher
+  );
 
   if (
     isemployeeDataLoading ||

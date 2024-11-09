@@ -31,7 +31,7 @@ export default function EmployeeTableRow({
   onSelectRow,
   onDeleteRow,
 }: Props) {
-  const { name, address, telephone, email, Branches_organization, user } = row;
+  const { name, address, telephone, email, Branches_organization } = row;
 
   const confirm = useBoolean();
 

@@ -14,19 +14,16 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Iconify from "src/components/iconify";
 
 import {
-  DetailedSalesReportPeriodFilters,
-  DetailedSalesReportPeriodFilterValue,
+  SalesReportPeriodFilters,
+  SalesReportPeriodFilterValue,
 } from "src/types/report";
 
 // ----------------------------------------------------------------------
 
 type Props = {
   //
-  filters: DetailedSalesReportPeriodFilters;
-  onFilters: (
-    name: string,
-    value: DetailedSalesReportPeriodFilterValue
-  ) => void;
+  filters: SalesReportPeriodFilters;
+  onFilters: (name: string, value: SalesReportPeriodFilterValue) => void;
   handleSearch: () => void;
   //
   canReset: boolean;
@@ -60,13 +57,6 @@ export default function PeriodFilters({
   colorOptions, // onClickEvent,
   isLoading,
 }: Props) {
-  const handleFilterColors = useCallback(
-    (newValue: string | string[]) => {
-      onFilters("colors", newValue as string[]);
-    },
-    [onFilters]
-  );
-
   const handleFilterStartDate = useCallback(
     (newValue: Date | null) => {
       onFilters("startDate", newValue);

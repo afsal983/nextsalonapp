@@ -1,5 +1,5 @@
 import { m } from "framer-motion";
-import Cookies from "js-cookie";
+
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Avatar from "@mui/material/Avatar";

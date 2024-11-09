@@ -2,25 +2,24 @@
 
 import useSWR from "swr";
 
+import { Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
-import { Stack } from "@mui/material";
-import { fetcher } from "src/utils/axios";
 
-import { _ecommerceLatestProducts } from "src/_mock";
+import { fetcher } from "src/utils/axios";
 
 import { useSettingsContext } from "src/components/settings";
 
-import LatestTransactions from "../latest-transactions";
+import BestProducts from "../salon-best-product";
+import SalonYearlySales from "../salon-yearly-sales";
+import CustomerByGender from "../customer-by-gender";
+import AppointmentEvents from "../appointment-events";
 import SalonBestCustomer from "../salon-best-customer";
 import SalonBestEmployee from "../salon-best-employee";
-import SalonDashBoardWidgetSummary from "../salondashboard-widget-summary";
-import AppointmentEvents from "../appointment-events";
-import SalonYearlySales from "../salon-yearly-sales";
-import BestProducts from "../salon-best-product";
-import CustomerByGender from "../customer-by-gender";
 import AppointmentSource from "../appointment-sources";
+import LatestTransactions from "../latest-transactions";
+import SalonDashBoardWidgetSummary from "../salondashboard-widget-summary";
 // ----------------------------------------------------------------------
 
 export default function OverviewSalonView() {
@@ -49,47 +48,35 @@ export default function OverviewSalonView() {
     isLoading: isbestcustomerLoading,
     error: errorB,
   } = useSWR("/api/salonapp/dashboard/bestcustomer", fetcher);
-  const {
-    data: bestemployee,
-    isLoading: isbestemployee,
-    error: errorE,
-  } = useSWR("/api/salonapp/dashboard/bestemployee", fetcher);
+  const { data: bestemployee, isLoading: isbestemployee } = useSWR(
+    "/api/salonapp/dashboard/bestemployee",
+    fetcher
+  );
 
-  const {
-    data: appointment,
-    isLoading: isappoitnment,
-    error: errorAP,
-  } = useSWR("/api/salonapp/dashboard/appointmentdashboard", fetcher);
+  const { data: appointment, isLoading: isappoitnment } = useSWR(
+    "/api/salonapp/dashboard/appointmentdashboard",
+    fetcher
+  );
 
-  const {
-    data: yearlysales,
-    isLoading: isyearlysales,
-    error: errorS,
-  } = useSWR(
+  const { data: yearlysales, isLoading: isyearlysales } = useSWR(
     "/api/salonapp/dashboard/yearlysales?periodfilter=thisyear",
     fetcher
   );
 
-  const {
-    data: bestproducts,
-    isLoading: isbestproducts,
-    error: errorBe,
-  } = useSWR(
+  const { data: bestproducts, isLoading: isbestproducts } = useSWR(
     "/api/salonapp/dashboard/bestproducts?periodfilter=lasttwomonths",
     fetcher
   );
 
-  const {
-    data: customerbygender,
-    isLoading: iscustomerbygender,
-    error: errorCG,
-  } = useSWR("/api/salonapp/dashboard/customerbygender", fetcher);
+  const { data: customerbygender, isLoading: iscustomerbygender } = useSWR(
+    "/api/salonapp/dashboard/customerbygender",
+    fetcher
+  );
 
-  const {
-    data: appointmentsources,
-    isLoading: isappointmentsources,
-    error: errorAs,
-  } = useSWR("/api/salonapp/dashboard/appointmentsource", fetcher);
+  const { data: appointmentsources, isLoading: isappointmentsources } = useSWR(
+    "/api/salonapp/dashboard/appointmentsource",
+    fetcher
+  );
 
   if (
     isappointmentsummaryLoading ||
@@ -104,8 +91,7 @@ export default function OverviewSalonView() {
     isappointmentsources
   )
     return <div>Loading...</div>;
-  if (errorA || errorL || errorR || errorB || errorE)
-    return <div>Error Loading...</div>;
+  if (errorA || errorL || errorR || errorB) return <div>Error Loading...</div>;
 
   console.log(appointment?.data?.upcomingevents);
 

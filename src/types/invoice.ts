@@ -1,6 +1,6 @@
 import { Customer } from "./customer";
-import { ServiceItem } from "./service";
 import { BranchItem } from "./branch";
+import { ServiceItem } from "./service";
 import { EmployeeItem } from "./employee";
 import { AppointmentItem } from "./appointment";
 // ----------------------------------------------------------------------

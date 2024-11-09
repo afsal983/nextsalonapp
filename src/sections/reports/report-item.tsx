@@ -29,7 +29,7 @@ export default function ReportItem({
 }: Props) {
   const popover = usePopover();
 
-  const { id, name, url } = report;
+  const { id, name } = report;
 
   return (
     <>
