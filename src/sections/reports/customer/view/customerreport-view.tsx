@@ -38,57 +38,53 @@ import { useSnackbar } from "src/components/snackbar";
 import EmptyContent from "src/components/empty-content";
 import { useSettingsContext } from "src/components/settings";
 import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
-
-import { BranchItem } from "src/types/branch";
-import { PaymentTypeItem } from "src/types/payment";
+import { CustomerCategory } from "src/types/customer";
 import {
-  DetailedInvoice,
-  SalesReportTableFilters,
-  SalesReportPeriodFilters,
-  SalesReportTableFilterValue,
+  CustomerReport,
+  CustomerReportTableFilters,
+  CustomerReportPeriodFilters,
+  CustomerReportTableFilterValue,
 } from "src/types/report";
 
 import PeriodFilters from "../period-filters";
-import SalesReportAnalytic from "../salesreport-analytic";
-import DeatailedSalesTableToolbar from "../salesreport-table-toolbar";
-import DeatailedSalesTableFiltersResult from "../salesreport-table-filters-result";
+import CustomerReportAnalytic from "../customerreport-analytic";
+import DeatailedSalesTableToolbar from "../customerreport-table-toolbar";
+import DeatailedSalesTableFiltersResult from "../customerreport-table-filters-result";
 import {
-  RenderCellTax,
-  RenderCellPrice,
-  RenderCellTaxby2,
   RenderCellCustomer,
-  RenderCellCreatedAt,
-} from "../salesreport-table-row";
+  RenderCellSex,
+  RenderCellEventNotify,
+  RenderCellPromoNotify,
+} from "../customerreport-table-row";
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [
-  { value: "paid", label: "Paid" },
-  { value: "draft", label: "Draft" },
+const SEX_OPTIONS = [
+  { value: "female", label: "Female" },
+  { value: "male", label: "Male" },
 ];
 
 const HIDE_COLUMNS = {
-  category: false,
+  category1: false,
 };
 
-const HIDE_COLUMNS_TOGGLABLE = ["category", "actions"];
+const HIDE_COLUMNS_TOGGLABLE = ["category1", "actions"];
 
 // This is for date filter to conditionaly fetch data from remote API
-const defaultperiodFilters: SalesReportPeriodFilters = {
+const defaultperiodFilters: CustomerReportPeriodFilters = {
   startDate: null,
   endDate: null,
 };
 
 // This for filtering tables
-const defaultitemFilters: SalesReportTableFilters = {
-  branch: [],
-  status: [],
-  paymenttype: [],
+const defaultitemFilters: CustomerReportTableFilters = {
+  category: [],
+  sex: [],
 };
 
 // ----------------------------------------------------------------------
 
-export default function SalesReportListView() {
+export default function CustomerReportListView() {
   const { enqueueSnackbar } = useSnackbar();
 
   const confirmRows = useBoolean();
@@ -102,9 +98,8 @@ export default function SalesReportListView() {
   const openFilters = useBoolean();
 
   const [summaryData, setsummaryData] = useState<any>([]);
-  const [tableData, setTableData] = useState<DetailedInvoice[]>([]);
-  const [branchData, setbranchData] = useState<BranchItem[]>([]);
-  const [paymenttypeData, setpaymenttypeData] = useState<PaymentTypeItem[]>([]);
+  const [tableData, setTableData] = useState<CustomerReport[]>([]);
+  const [categoryData, setcategoryData] = useState<CustomerCategory[]>([]);
 
   const [periodfilters, setFilters] = useState(defaultperiodFilters);
   const [itemfilters, setitemFilters] = useState(defaultitemFilters);
@@ -119,16 +114,11 @@ export default function SalesReportListView() {
     useState<GridColumnVisibilityModel>(HIDE_COLUMNS);
 
   useEffect(() => {
-    fetch(`/api/salonapp/branches`)
+    fetch(`/api/salonapp/customercategory`)
       .then((response) => response.json())
       // 4. Setting *dogImage* to the image url that we received from the response above
-      .then((data) => setbranchData(data.data));
-
-    fetch(`/api/salonapp/paymenttype`)
-      .then((response) => response.json())
-      // 4. Setting *dogImage* to the image url that we received from the response above
-      .then((data) => setpaymenttypeData(data.data));
-  }, [setbranchData, setpaymenttypeData]);
+      .then((data) => setcategoryData(data.data));
+  }, [setcategoryData]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -138,7 +128,7 @@ export default function SalesReportListView() {
   const canReset = !isEqual(defaultitemFilters, itemfilters);
 
   const handleitemFilters = useCallback(
-    (name: string, value: SalesReportTableFilterValue) => {
+    (name: string, value: CustomerReportTableFilterValue) => {
       setitemFilters((prevState) => ({
         ...prevState,
         [name]: value,
@@ -148,7 +138,7 @@ export default function SalesReportListView() {
   );
 
   const handlePeriodFilters = useCallback(
-    (name: string, value: SalesReportTableFilterValue) => {
+    (name: string, value: CustomerReportTableFilterValue) => {
       setFilters((prevState) => ({
         ...prevState,
         [name]: value,
@@ -172,13 +162,7 @@ export default function SalesReportListView() {
       filterid: 1,
     };
 
-    if (!periodfilters.startDate || !periodfilters.endDate) {
-      enqueueSnackbar("Missing Filter", { variant: "error" });
-      setisLoading(false);
-      return;
-    }
-
-    const response = await fetch("/api/salonapp/report/salesreport", {
+    const response = await fetch("/api/salonapp/report/customerreport", {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       headers: {
         "Content-Type": "application/json",
@@ -186,7 +170,7 @@ export default function SalesReportListView() {
       body: JSON.stringify(data), // body data type must match "Content-Type" header
     });
     const responseData = await response.json();
-
+    console.log(responseData);
     if (responseData.status > 300) {
       setisLoading(false);
       enqueueSnackbar("Fetching report data failed", { variant: "error" });
@@ -207,67 +191,61 @@ export default function SalesReportListView() {
       hideable: false,
     },
     {
-      field: "invoicenumber",
-      headerName: "Bill No",
+      field: "customerinfo",
+      headerName: "Customer Name",
       filterable: true,
       hideable: false,
-    },
-    {
-      field: "createdat",
-      headerName: "Date",
-      width: 100,
-      renderCell: (params) => <RenderCellCreatedAt params={params} />,
-    },
-    {
-      field: "total",
-      headerName: "Total",
-      width: 100,
-      editable: true,
-      hideable: false,
-      renderCell: (params) => <RenderCellPrice params={params} />,
-    },
-    {
-      field: "tax",
-      headerName: "Tax",
-      width: 100,
-      editable: true,
-      hideable: false,
-      renderCell: (params) => <RenderCellTax params={params} />,
-    },
-    {
-      field: "taxby2",
-      headerName: "Tax/2",
-      width: 100,
-      editable: true,
-      hideable: false,
-      renderCell: (params) => <RenderCellTaxby2 params={params} />,
-    },
-    {
-      field: "billinginfo",
-      headerName: "Billing Name",
-      width: 180,
-      filterable: true,
-      hideable: false,
-      valueGetter: (params) => `${params.row.billinginfo.name}`,
+      width: 280,
       renderCell: (params) => <RenderCellCustomer params={params} />,
     },
     {
-      field: "tip",
-      headerName: "Tip",
-      filterable: false,
+      field: "email",
+      headerName: "Email",
+      width: 180,
     },
     {
-      field: "branch",
-      width: 240,
-      headerName: "Branch",
-      filterable: false,
+      field: "sex",
+      headerName: "sex",
+      width: 100,
+      renderCell: (params) => <RenderCellSex params={params} />,
     },
     {
-      field: "status",
-      headerName: "Status",
-      filterable: false,
+      field: "category",
+      headerName: "Category",
+      width: 180,
     },
-
+    {
+      field: "dob",
+      headerName: "dob",
+      width: 100,
+    },
+    {
+      field: "taxid",
+      headerName: "TID",
+      width: 100,
+    },
+    {
+      field: "cardno",
+      headerName: "Loyalty card",
+      width: 100,
+    },
+    {
+      field: "cardno",
+      headerName: "Loyalty card",
+      width: 100,
+    },
+    {
+      field: "eventnotify",
+      headerName: "Event Notification",
+      width: 100,
+      renderCell: (params) => <RenderCellEventNotify params={params} />,
+    },
+    {
+      field: "promonotify",
+      headerName: "Promotion Notification",
+      width: 100,
+      renderCell: (params) => <RenderCellPromoNotify params={params} />,
+    },
     /*
     {
       field: "name",
@@ -311,7 +289,7 @@ export default function SalesReportListView() {
       width: 110,
       type: "singleSelect",
       editable: true,
-      valueOptions: branchData,
+      valueOptions: categoryData,
       renderCell: (params) => <RenderCellPublish params={params} />,
     },
     {
@@ -374,7 +352,7 @@ export default function SalesReportListView() {
               name: "Reports",
               href: paths.dashboard.report.root,
             },
-            { name: "Sales Report" },
+            { name: "Customer Report" },
           ]}
           action={
             <IconButton onClick={() => openFilters.onTrue()} size="large">
@@ -408,39 +386,39 @@ export default function SalesReportListView() {
               }
               sx={{ py: 2 }}
             >
-              <SalesReportAnalytic
+              <CustomerReportAnalytic
                 title="Total"
-                total={summaryData.totalSaleCount}
+                total={summaryData.totalCustomers}
                 percent={100}
                 price={summaryData.totalCash}
-                icon="solar:bill-list-bold-duotone"
+                icon="mdi:human-male-male-child"
                 color={theme.palette.info.main}
               />
 
-              <SalesReportAnalytic
-                title="Service Sale"
-                total={summaryData.serviceSaleCount}
-                percent={10}
+              <CustomerReportAnalytic
+                title="Female"
+                total={summaryData.female}
+                percent={summaryData.femalepercent}
                 price={summaryData.serviceSale}
-                icon="solar:file-check-bold-duotone"
+                icon="fa:female"
                 color={theme.palette.success.main}
               />
 
-              <SalesReportAnalytic
-                title="Retail Sale"
-                total={summaryData.retailSaleCount}
-                percent={10}
+              <CustomerReportAnalytic
+                title="Male"
+                total={summaryData.male}
+                percent={summaryData.malepercent}
                 price={summaryData.retailSale}
-                icon="solar:sort-by-time-bold-duotone"
+                icon="fa:male"
                 color={theme.palette.warning.main}
               />
 
-              <SalesReportAnalytic
-                title="Package Sale"
-                total={summaryData.packageSaleCount}
-                percent={10}
+              <CustomerReportAnalytic
+                title="Other"
+                total={summaryData.other}
+                percent={summaryData.otherpercent}
                 price={summaryData.packageSale}
-                icon="solar:sort-by-time-bold-duotone"
+                icon="ic:baseline-transgender"
                 color={theme.palette.text.secondary}
               />
             </Stack>
@@ -482,15 +460,11 @@ export default function SalesReportListView() {
                     <DeatailedSalesTableToolbar
                       filters={itemfilters}
                       onFilters={handleitemFilters}
-                      branchOptions={branchData.map((branch) => ({
-                        value: branch.name,
-                        label: branch.name,
+                      categoryOptions={categoryData.map((category) => ({
+                        value: category.name,
+                        label: category.name,
                       }))}
-                      statusOptions={STATUS_OPTIONS}
-                      paymentOptions={paymenttypeData.map((branch) => ({
-                        value: branch.name,
-                        label: branch.name,
-                      }))}
+                      sexOptions={SEX_OPTIONS}
                     />
 
                     <GridToolbarQuickFilter />
@@ -572,25 +546,19 @@ function applyFilter({
   inputData,
   filters,
 }: {
-  inputData: DetailedInvoice[];
-  filters: SalesReportTableFilters;
+  inputData: CustomerReport[];
+  filters: CustomerReportTableFilters;
 }) {
-  const { status, branch, paymenttype } = filters;
+  const { sex, category } = filters;
 
-  if (branch?.length) {
-    inputData = inputData.filter((invoice) => branch.includes(invoice?.branch));
-  }
-
-  if (status?.length) {
-    inputData = inputData.filter((invoice) =>
-      status.includes(invoice?.invstatus)
+  if (category?.length) {
+    inputData = inputData.filter((customer) =>
+      category.includes(customer?.category)
     );
   }
 
-  if (paymenttype?.length) {
-    inputData = inputData.filter((invoice) =>
-      status.includes(invoice?.paymentmode)
-    );
+  if (sex?.length) {
+    inputData = inputData.filter((customer) => sex.includes(customer?.sex));
   }
 
   return inputData;

@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-const baseUSRL = process.env.NEXT_PUBLIC_HOST_API;
+// const baseUSRL = process.env.NEXT_PUBLIC_HOST_API;
 
 export async function DELETE(request: NextRequest, response: NextResponse) {
   const cookieStore = cookies();

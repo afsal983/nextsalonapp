@@ -96,8 +96,6 @@ export default function DetailedSalesListView() {
 
   const theme = useTheme();
 
-  const router = useRouter();
-
   const settings = useSettingsContext();
 
   const [isLoading, setisLoading] = useState(false);
@@ -425,7 +423,7 @@ export default function DetailedSalesListView() {
             { name: "Dashboard", href: paths.dashboard.root },
             {
               name: "Reports",
-              href: paths.dashboard.report.list,
+              href: paths.dashboard.report.root,
             },
             { name: "Detailed Sales Report" },
           ]}
