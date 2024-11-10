@@ -38,54 +38,66 @@ import { useSnackbar } from "src/components/snackbar";
 import EmptyContent from "src/components/empty-content";
 import { useSettingsContext } from "src/components/settings";
 import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
-import { ServiceCategoryItem } from "src/types/service";
 
+import { BranchItem } from "src/types/branch";
+import { PaymentTypeItem } from "src/types/payment";
 import {
-  ProductReport,
-  ProductReportTableFilters,
-  ProductReportPeriodFilters,
-  ProductReportTableFilterValue,
+  AppointmentReport,
+  AppointmentReportTableFilters,
+  AppointmentReportPeriodFilters,
+  AppointmentReportTableFilterValue,
 } from "src/types/report";
 
 import PeriodFilters from "../period-filters";
-import ProductReportAnalytic from "../productreport-analytic";
-import DeatailedSalesTableToolbar from "../productreport-table-toolbar";
-import DeatailedSalesTableFiltersResult from "../productreport-table-filters-result";
+import AppointmentReportAnalytic from "../appointmentreport-analytic";
+import DeatailedAppointmentTableToolbar from "../appointmentreport-table-toolbar";
+import DeatailedAppointmentTableFiltersResult from "../appointmentreport-table-filters-result";
 import {
-  RenderCellSex,
-  RenderCellProduct,
-  RenderCellPrice,
-} from "../productreport-table-row";
+  RenderCellCustomer,
+  RenderCellStartAt,
+  RenderCellEndAt,
+} from "../appointmentreport-table-row";
 
 // ----------------------------------------------------------------------
 
-const TYPE_OPTIONS = [
-  { value: "Service", label: "Service" },
-  { value: "Retail", label: "Retails" },
-  { value: "Package", label: "Package" },
+const STATUS_OPTIONS = [
+  { value: "Invoiced", label: "Invoiced" },
+  { value: "Pending", label: "Pending Invoice" },
+];
+
+const BOOKINGSOUCE_OPTIONS = [
+  { value: "Admin", label: "Admin" },
+  { value: "Google Business", label: "Google Business" },
+  { value: "FaceBook", label: "FaceBook" },
+  { value: "Instagram", label: "Instagram" },
+  { value: "Website", label: "Website" },
+  { value: "Mobile Apps", label: "Mobile Apps" },
+  { value: "Whatsapp", label: "Whatsapp" },
+  { value: "Unknown", label: "Unknown" },
 ];
 
 const HIDE_COLUMNS = {
-  category1: false,
+  category: false,
 };
 
-const HIDE_COLUMNS_TOGGLABLE = ["category1", "actions"];
+const HIDE_COLUMNS_TOGGLABLE = ["category", "actions"];
 
 // This is for date filter to conditionaly fetch data from remote API
-const defaultperiodFilters: ProductReportPeriodFilters = {
+const defaultperiodFilters: AppointmentReportPeriodFilters = {
   startDate: null,
   endDate: null,
 };
 
 // This for filtering tables
-const defaultitemFilters: ProductReportTableFilters = {
-  category: [],
-  type: [],
+const defaultitemFilters: AppointmentReportTableFilters = {
+  branch: [],
+  status: [],
+  sourcetype: [],
 };
 
 // ----------------------------------------------------------------------
 
-export default function ProductReportListView() {
+export default function AppointmentReportListView() {
   const { enqueueSnackbar } = useSnackbar();
 
   const confirmRows = useBoolean();
@@ -99,8 +111,9 @@ export default function ProductReportListView() {
   const openFilters = useBoolean();
 
   const [summaryData, setsummaryData] = useState<any>([]);
-  const [tableData, setTableData] = useState<ProductReport[]>([]);
-  const [categoryData, setcategoryData] = useState<ServiceCategoryItem[]>([]);
+  const [tableData, setTableData] = useState<AppointmentReport[]>([]);
+  const [branchData, setbranchData] = useState<BranchItem[]>([]);
+  const [paymenttypeData, setpaymenttypeData] = useState<PaymentTypeItem[]>([]);
 
   const [periodfilters, setFilters] = useState(defaultperiodFilters);
   const [itemfilters, setitemFilters] = useState(defaultitemFilters);
@@ -115,11 +128,16 @@ export default function ProductReportListView() {
     useState<GridColumnVisibilityModel>(HIDE_COLUMNS);
 
   useEffect(() => {
-    fetch(`/api/salonapp/servicecategory`)
+    fetch(`/api/salonapp/branches`)
       .then((response) => response.json())
       // 4. Setting *dogImage* to the image url that we received from the response above
-      .then((data) => setcategoryData(data.data));
-  }, [setcategoryData]);
+      .then((data) => setbranchData(data.data));
+
+    fetch(`/api/salonapp/paymenttype`)
+      .then((response) => response.json())
+      // 4. Setting *dogImage* to the image url that we received from the response above
+      .then((data) => setpaymenttypeData(data.data));
+  }, [setbranchData, setpaymenttypeData]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -129,7 +147,7 @@ export default function ProductReportListView() {
   const canReset = !isEqual(defaultitemFilters, itemfilters);
 
   const handleitemFilters = useCallback(
-    (name: string, value: ProductReportTableFilterValue) => {
+    (name: string, value: AppointmentReportTableFilterValue) => {
       setitemFilters((prevState) => ({
         ...prevState,
         [name]: value,
@@ -139,7 +157,7 @@ export default function ProductReportListView() {
   );
 
   const handlePeriodFilters = useCallback(
-    (name: string, value: ProductReportTableFilterValue) => {
+    (name: string, value: AppointmentReportTableFilterValue) => {
       setFilters((prevState) => ({
         ...prevState,
         [name]: value,
@@ -163,7 +181,13 @@ export default function ProductReportListView() {
       filterid: 1,
     };
 
-    const response = await fetch("/api/salonapp/report/productreport", {
+    if (!periodfilters.startDate || !periodfilters.endDate) {
+      enqueueSnackbar("Missing Filter", { variant: "error" });
+      setisLoading(false);
+      return;
+    }
+
+    const response = await fetch("/api/salonapp/report/appointmentreport", {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       headers: {
         "Content-Type": "application/json",
@@ -192,47 +216,66 @@ export default function ProductReportListView() {
       hideable: false,
     },
     {
-      field: "productinfo",
-      headerName: "Product Name",
+      field: "customerinfo",
+      headerName: "Customer",
+      width: 180,
       filterable: true,
       hideable: false,
-      width: 280,
-      renderCell: (params) => <RenderCellProduct params={params} />,
-      valueGetter: (params) => params.row.productinfo.name,
+      valueGetter: (params) => `${params.row.customerinfo.name}`,
+      renderCell: (params) => <RenderCellCustomer params={params} />,
     },
     {
-      field: "price",
-      headerName: "Price",
+      field: "telephone",
+      headerName: "Telephone",
+      width: 130,
+    },
+    {
+      field: "start",
+      headerName: "Start Date",
       width: 100,
-      editable: true,
-      hideable: false,
-      renderCell: (params) => <RenderCellPrice params={params} />,
+      renderCell: (params) => <RenderCellStartAt params={params} />,
+    },
+    {
+      field: "end",
+      headerName: "End Date",
+      width: 100,
+      renderCell: (params) => <RenderCellEndAt params={params} />,
     },
 
     {
-      field: "category",
-      headerName: "Category",
+      field: "employee",
+      headerName: "Employee",
+      width: 180,
+      filterable: true,
+      hideable: false,
+    },
+    {
+      field: "product",
+      headerName: "Product",
+      filterable: true,
+      hideable: false,
       width: 180,
     },
     {
-      field: "type",
-      headerName: "Type",
-      width: 180,
+      field: "invoiced",
+      headerName: "Is invoced",
+      filterable: true,
+      hideable: false,
     },
+
     {
-      field: "duration",
-      headerName: "Duration",
-      width: 180,
+      field: "bookingsource",
+      headerName: "Booking Source",
+      filterable: true,
+      hideable: false,
     },
+
     {
-      field: "stock",
-      headerName: "Stock",
+      field: "branch",
+      headerName: "branch",
       width: 180,
-    },
-    {
-      field: "brand",
-      headerName: "Brand",
-      width: 100,
+      filterable: true,
+      hideable: false,
     },
 
     /*
@@ -278,7 +321,7 @@ export default function ProductReportListView() {
       width: 110,
       type: "singleSelect",
       editable: true,
-      valueOptions: categoryData,
+      valueOptions: branchData,
       renderCell: (params) => <RenderCellPublish params={params} />,
     },
     {
@@ -341,7 +384,7 @@ export default function ProductReportListView() {
               name: "Reports",
               href: paths.dashboard.report.root,
             },
-            { name: "Product Report" },
+            { name: "Appointment Report" },
           ]}
           action={
             <IconButton onClick={() => openFilters.onTrue()} size="large">
@@ -375,40 +418,31 @@ export default function ProductReportListView() {
               }
               sx={{ py: 2 }}
             >
-              <ProductReportAnalytic
+              <AppointmentReportAnalytic
                 title="Total"
-                total={summaryData.totalProduct}
+                total={summaryData.totalAppoinment}
                 percent={100}
                 price={summaryData.totalCash}
-                icon="arcticons:lifetotal"
+                icon="solar:bill-list-bold-duotone"
                 color={theme.palette.info.main}
               />
 
-              <ProductReportAnalytic
-                title="Service"
-                total={summaryData.serviceCount}
-                percent={summaryData.servicepercent}
+              <AppointmentReportAnalytic
+                title="Invoiced"
+                total={summaryData.serviceSaleCount}
+                percent={summaryData.invoiceAppointmentCountpercent}
                 price={summaryData.serviceSale}
-                icon="map:beauty-salon"
+                icon="solar:file-check-bold-duotone"
                 color={theme.palette.success.main}
               />
 
-              <ProductReportAnalytic
-                title="Retail"
-                total={summaryData.retailCount}
-                percent={summaryData.retailpercent}
+              <AppointmentReportAnalytic
+                title="Pending"
+                total={summaryData.uninvoiceAppointmentCount}
+                percent={summaryData.uninvoiceAppointmentCountpercent}
                 price={summaryData.retailSale}
-                icon="solar:cosmetic-bold"
+                icon="solar:sort-by-time-bold-duotone"
                 color={theme.palette.warning.main}
-              />
-
-              <ProductReportAnalytic
-                title="Other"
-                total={summaryData.packageCount}
-                percent={summaryData.packagepercent}
-                price={summaryData.packageSale}
-                icon="oui:package"
-                color={theme.palette.text.secondary}
               />
             </Stack>
           </Scrollbar>
@@ -446,14 +480,15 @@ export default function ProductReportListView() {
               toolbar: () => (
                 <>
                   <GridToolbarContainer>
-                    <DeatailedSalesTableToolbar
+                    <DeatailedAppointmentTableToolbar
                       filters={itemfilters}
                       onFilters={handleitemFilters}
-                      categoryOptions={categoryData.map((category) => ({
-                        value: category.name,
-                        label: category.name,
+                      branchOptions={branchData.map((branch) => ({
+                        value: branch.name,
+                        label: branch.name,
                       }))}
-                      typeOptions={TYPE_OPTIONS}
+                      statusOptions={STATUS_OPTIONS}
+                      sourceOptions={BOOKINGSOUCE_OPTIONS}
                     />
 
                     <GridToolbarQuickFilter />
@@ -485,7 +520,7 @@ export default function ProductReportListView() {
                   </GridToolbarContainer>
 
                   {canReset && (
-                    <DeatailedSalesTableFiltersResult
+                    <DeatailedAppointmentTableFiltersResult
                       filters={itemfilters}
                       onFilters={handleitemFilters}
                       onResetFilters={handleResetFilters}
@@ -535,19 +570,27 @@ function applyFilter({
   inputData,
   filters,
 }: {
-  inputData: ProductReport[];
-  filters: ProductReportTableFilters;
+  inputData: AppointmentReport[];
+  filters: AppointmentReportTableFilters;
 }) {
-  const { type, category } = filters;
+  const { status, branch, sourcetype } = filters;
 
-  if (category?.length) {
-    inputData = inputData.filter((invoice) =>
-      category.includes(invoice?.category)
+  if (branch?.length) {
+    inputData = inputData.filter((appointment) =>
+      branch.includes(appointment?.branch)
     );
   }
 
-  if (type?.length) {
-    inputData = inputData.filter((invoice) => type.includes(invoice?.type));
+  if (status?.length) {
+    inputData = inputData.filter((appointment) =>
+      status.includes(appointment?.invoiced)
+    );
+  }
+
+  if (sourcetype?.length) {
+    inputData = inputData.filter((appointment) =>
+      status.includes(appointment?.bookingsource)
+    );
   }
 
   return inputData;

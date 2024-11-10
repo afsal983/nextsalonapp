@@ -38,54 +38,57 @@ import { useSnackbar } from "src/components/snackbar";
 import EmptyContent from "src/components/empty-content";
 import { useSettingsContext } from "src/components/settings";
 import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
-import { ServiceCategoryItem } from "src/types/service";
 
+import { BranchItem } from "src/types/branch";
+import { PaymentTypeItem } from "src/types/payment";
 import {
-  ProductReport,
-  ProductReportTableFilters,
-  ProductReportPeriodFilters,
-  ProductReportTableFilterValue,
+  DetailedInvoice,
+  ExpenseReportTableFilters,
+  ExpenseReportPeriodFilters,
+  ExpenseReportTableFilterValue,
 } from "src/types/report";
 
 import PeriodFilters from "../period-filters";
-import ProductReportAnalytic from "../productreport-analytic";
-import DeatailedSalesTableToolbar from "../productreport-table-toolbar";
-import DeatailedSalesTableFiltersResult from "../productreport-table-filters-result";
+import ExpenseReportAnalytic from "../expensereport-analytic";
+import DeatailedExpenseTableToolbar from "../expensereport-table-toolbar";
+import DeatailedExpenseTableFiltersResult from "../expensereport-table-filters-result";
 import {
-  RenderCellSex,
-  RenderCellProduct,
+  RenderCellTax,
   RenderCellPrice,
-} from "../productreport-table-row";
+  RenderCellTaxby2,
+  RenderCellCustomer,
+  RenderCellCreatedAt,
+} from "../expensereport-table-row";
 
 // ----------------------------------------------------------------------
 
-const TYPE_OPTIONS = [
-  { value: "Service", label: "Service" },
-  { value: "Retail", label: "Retails" },
-  { value: "Package", label: "Package" },
+const STATUS_OPTIONS = [
+  { value: "paid", label: "Paid" },
+  { value: "draft", label: "Draft" },
 ];
 
 const HIDE_COLUMNS = {
-  category1: false,
+  category: false,
 };
 
-const HIDE_COLUMNS_TOGGLABLE = ["category1", "actions"];
+const HIDE_COLUMNS_TOGGLABLE = ["category", "actions"];
 
 // This is for date filter to conditionaly fetch data from remote API
-const defaultperiodFilters: ProductReportPeriodFilters = {
+const defaultperiodFilters: ExpenseReportPeriodFilters = {
   startDate: null,
   endDate: null,
 };
 
 // This for filtering tables
-const defaultitemFilters: ProductReportTableFilters = {
-  category: [],
-  type: [],
+const defaultitemFilters: ExpenseReportTableFilters = {
+  branch: [],
+  status: [],
+  paymenttype: [],
 };
 
 // ----------------------------------------------------------------------
 
-export default function ProductReportListView() {
+export default function ExpenseReportListView() {
   const { enqueueSnackbar } = useSnackbar();
 
   const confirmRows = useBoolean();
@@ -99,8 +102,9 @@ export default function ProductReportListView() {
   const openFilters = useBoolean();
 
   const [summaryData, setsummaryData] = useState<any>([]);
-  const [tableData, setTableData] = useState<ProductReport[]>([]);
-  const [categoryData, setcategoryData] = useState<ServiceCategoryItem[]>([]);
+  const [tableData, setTableData] = useState<DetailedInvoice[]>([]);
+  const [branchData, setbranchData] = useState<BranchItem[]>([]);
+  const [paymenttypeData, setpaymenttypeData] = useState<PaymentTypeItem[]>([]);
 
   const [periodfilters, setFilters] = useState(defaultperiodFilters);
   const [itemfilters, setitemFilters] = useState(defaultitemFilters);
@@ -115,11 +119,16 @@ export default function ProductReportListView() {
     useState<GridColumnVisibilityModel>(HIDE_COLUMNS);
 
   useEffect(() => {
-    fetch(`/api/salonapp/servicecategory`)
+    fetch(`/api/salonapp/branches`)
       .then((response) => response.json())
       // 4. Setting *dogImage* to the image url that we received from the response above
-      .then((data) => setcategoryData(data.data));
-  }, [setcategoryData]);
+      .then((data) => setbranchData(data.data));
+
+    fetch(`/api/salonapp/paymenttype`)
+      .then((response) => response.json())
+      // 4. Setting *dogImage* to the image url that we received from the response above
+      .then((data) => setpaymenttypeData(data.data));
+  }, [setbranchData, setpaymenttypeData]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -129,7 +138,7 @@ export default function ProductReportListView() {
   const canReset = !isEqual(defaultitemFilters, itemfilters);
 
   const handleitemFilters = useCallback(
-    (name: string, value: ProductReportTableFilterValue) => {
+    (name: string, value: ExpenseReportTableFilterValue) => {
       setitemFilters((prevState) => ({
         ...prevState,
         [name]: value,
@@ -139,7 +148,7 @@ export default function ProductReportListView() {
   );
 
   const handlePeriodFilters = useCallback(
-    (name: string, value: ProductReportTableFilterValue) => {
+    (name: string, value: ExpenseReportTableFilterValue) => {
       setFilters((prevState) => ({
         ...prevState,
         [name]: value,
@@ -163,7 +172,13 @@ export default function ProductReportListView() {
       filterid: 1,
     };
 
-    const response = await fetch("/api/salonapp/report/productreport", {
+    if (!periodfilters.startDate || !periodfilters.endDate) {
+      enqueueSnackbar("Missing Filter", { variant: "error" });
+      setisLoading(false);
+      return;
+    }
+
+    const response = await fetch("/api/salonapp/report/expensereport", {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       headers: {
         "Content-Type": "application/json",
@@ -192,47 +207,65 @@ export default function ProductReportListView() {
       hideable: false,
     },
     {
-      field: "productinfo",
-      headerName: "Product Name",
+      field: "invoicenumber",
+      headerName: "Bill No",
       filterable: true,
       hideable: false,
-      width: 280,
-      renderCell: (params) => <RenderCellProduct params={params} />,
-      valueGetter: (params) => params.row.productinfo.name,
     },
     {
-      field: "price",
-      headerName: "Price",
+      field: "createdat",
+      headerName: "Date",
+      width: 100,
+      renderCell: (params) => <RenderCellCreatedAt params={params} />,
+    },
+    {
+      field: "total",
+      headerName: "Total",
       width: 100,
       editable: true,
       hideable: false,
       renderCell: (params) => <RenderCellPrice params={params} />,
     },
-
     {
-      field: "category",
-      headerName: "Category",
-      width: 180,
-    },
-    {
-      field: "type",
-      headerName: "Type",
-      width: 180,
-    },
-    {
-      field: "duration",
-      headerName: "Duration",
-      width: 180,
-    },
-    {
-      field: "stock",
-      headerName: "Stock",
-      width: 180,
-    },
-    {
-      field: "brand",
-      headerName: "Brand",
+      field: "tax",
+      headerName: "Tax",
       width: 100,
+      editable: true,
+      hideable: false,
+      renderCell: (params) => <RenderCellTax params={params} />,
+    },
+    {
+      field: "taxby2",
+      headerName: "Tax/2",
+      width: 100,
+      editable: true,
+      hideable: false,
+      renderCell: (params) => <RenderCellTaxby2 params={params} />,
+    },
+    {
+      field: "billinginfo",
+      headerName: "Billing Name",
+      width: 180,
+      filterable: true,
+      hideable: false,
+      valueGetter: (params) => `${params.row.billinginfo.name}`,
+      renderCell: (params) => <RenderCellCustomer params={params} />,
+    },
+    {
+      field: "tip",
+      headerName: "Tip",
+      filterable: false,
+    },
+    {
+      field: "branch",
+      width: 240,
+      headerName: "Branch",
+      filterable: false,
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      filterable: false,
     },
 
     /*
@@ -278,7 +311,7 @@ export default function ProductReportListView() {
       width: 110,
       type: "singleSelect",
       editable: true,
-      valueOptions: categoryData,
+      valueOptions: branchData,
       renderCell: (params) => <RenderCellPublish params={params} />,
     },
     {
@@ -341,7 +374,7 @@ export default function ProductReportListView() {
               name: "Reports",
               href: paths.dashboard.report.root,
             },
-            { name: "Product Report" },
+            { name: "Expense Report" },
           ]}
           action={
             <IconButton onClick={() => openFilters.onTrue()} size="large">
@@ -375,39 +408,39 @@ export default function ProductReportListView() {
               }
               sx={{ py: 2 }}
             >
-              <ProductReportAnalytic
+              <ExpenseReportAnalytic
                 title="Total"
-                total={summaryData.totalProduct}
+                total={summaryData.totalSaleCount}
                 percent={100}
                 price={summaryData.totalCash}
-                icon="arcticons:lifetotal"
+                icon="solar:bill-list-bold-duotone"
                 color={theme.palette.info.main}
               />
 
-              <ProductReportAnalytic
-                title="Service"
-                total={summaryData.serviceCount}
-                percent={summaryData.servicepercent}
+              <ExpenseReportAnalytic
+                title="Service Sale"
+                total={summaryData.serviceSaleCount}
+                percent={10}
                 price={summaryData.serviceSale}
-                icon="map:beauty-salon"
+                icon="solar:file-check-bold-duotone"
                 color={theme.palette.success.main}
               />
 
-              <ProductReportAnalytic
-                title="Retail"
-                total={summaryData.retailCount}
-                percent={summaryData.retailpercent}
+              <ExpenseReportAnalytic
+                title="Retail Sale"
+                total={summaryData.retailSaleCount}
+                percent={10}
                 price={summaryData.retailSale}
-                icon="solar:cosmetic-bold"
+                icon="solar:sort-by-time-bold-duotone"
                 color={theme.palette.warning.main}
               />
 
-              <ProductReportAnalytic
-                title="Other"
-                total={summaryData.packageCount}
-                percent={summaryData.packagepercent}
+              <ExpenseReportAnalytic
+                title="Package Sale"
+                total={summaryData.packageSaleCount}
+                percent={10}
                 price={summaryData.packageSale}
-                icon="oui:package"
+                icon="solar:sort-by-time-bold-duotone"
                 color={theme.palette.text.secondary}
               />
             </Stack>
@@ -446,14 +479,18 @@ export default function ProductReportListView() {
               toolbar: () => (
                 <>
                   <GridToolbarContainer>
-                    <DeatailedSalesTableToolbar
+                    <DeatailedExpenseTableToolbar
                       filters={itemfilters}
                       onFilters={handleitemFilters}
-                      categoryOptions={categoryData.map((category) => ({
-                        value: category.name,
-                        label: category.name,
+                      branchOptions={branchData.map((branch) => ({
+                        value: branch.name,
+                        label: branch.name,
                       }))}
-                      typeOptions={TYPE_OPTIONS}
+                      statusOptions={STATUS_OPTIONS}
+                      paymentOptions={paymenttypeData.map((branch) => ({
+                        value: branch.name,
+                        label: branch.name,
+                      }))}
                     />
 
                     <GridToolbarQuickFilter />
@@ -485,7 +522,7 @@ export default function ProductReportListView() {
                   </GridToolbarContainer>
 
                   {canReset && (
-                    <DeatailedSalesTableFiltersResult
+                    <DeatailedExpenseTableFiltersResult
                       filters={itemfilters}
                       onFilters={handleitemFilters}
                       onResetFilters={handleResetFilters}
@@ -535,19 +572,25 @@ function applyFilter({
   inputData,
   filters,
 }: {
-  inputData: ProductReport[];
-  filters: ProductReportTableFilters;
+  inputData: DetailedInvoice[];
+  filters: ExpenseReportTableFilters;
 }) {
-  const { type, category } = filters;
+  const { status, branch, paymenttype } = filters;
 
-  if (category?.length) {
+  if (branch?.length) {
+    inputData = inputData.filter((invoice) => branch.includes(invoice?.branch));
+  }
+
+  if (status?.length) {
     inputData = inputData.filter((invoice) =>
-      category.includes(invoice?.category)
+      status.includes(invoice?.invstatus)
     );
   }
 
-  if (type?.length) {
-    inputData = inputData.filter((invoice) => type.includes(invoice?.type));
+  if (paymenttype?.length) {
+    inputData = inputData.filter((invoice) =>
+      status.includes(invoice?.paymentmode)
+    );
   }
 
   return inputData;

@@ -32,8 +32,6 @@ export interface SalesReportPeriodFilters {
 
 export type SalesReportPeriodFilterValue = string[] | Date | null;
 
-// export type DetailedSalesReportTableFilterValue = string[];
-
 // DetailedSales Report
 
 export interface DetailedSalesReportTableFilters {
@@ -137,4 +135,68 @@ export interface ProductReport {
   duration: string;
   stock: string;
   brand: string;
+}
+
+// Appointment Report
+export interface AppointmentReportTableFilters {
+  branch: string[];
+  status: string[];
+  sourcetype: string[];
+}
+
+export type AppointmentReportTableFilterValue = string | string[] | Date | null;
+
+export interface AppointmentReportPeriodFilters {
+  startDate: Date | null;
+  endDate: Date | null;
+}
+
+export type AppointmentReportPeriodFilterValue = string[] | Date | null;
+
+export interface AppointmentReport {
+  id: string;
+  start: {
+    date: string;
+    time: string;
+  };
+  end: {
+    date: string;
+    time: string;
+  };
+  customerinfo: {
+    name: string;
+    telephone: string;
+    email: string;
+  };
+  employee: string;
+  product: string;
+  invoiced: string;
+  bookingsource: string;
+  branch: string;
+}
+
+// Expense Report
+export interface ExpenseReportTableFilters {
+  branch: string[];
+  status: string[];
+  paymenttype: string[];
+}
+
+export type ExpenseReportTableFilterValue = string | string[] | Date | null;
+
+export interface ExpenseReportPeriodFilters {
+  startDate: Date | null;
+  endDate: Date | null;
+}
+
+export type ExpenseReportPeriodFilterValue = string[] | Date | null;
+
+export interface ExpenseReport {
+  id: string;
+  name: string;
+  date: string;
+  category: string;
+  payment: string;
+  employee: string;
+  notes: string;
 }

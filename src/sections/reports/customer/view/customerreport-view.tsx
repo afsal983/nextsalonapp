@@ -60,8 +60,9 @@ import {
 // ----------------------------------------------------------------------
 
 const SEX_OPTIONS = [
-  { value: "female", label: "Female" },
-  { value: "male", label: "Male" },
+  { value: "Female", label: "Female" },
+  { value: "Male", label: "Male" },
+  { value: "Other", label: "Other" },
 ];
 
 const HIDE_COLUMNS = {
@@ -197,6 +198,7 @@ export default function CustomerReportListView() {
       hideable: false,
       width: 280,
       renderCell: (params) => <RenderCellCustomer params={params} />,
+      valueGetter: (params) => params.row.customerinfo.name,
     },
     {
       field: "email",

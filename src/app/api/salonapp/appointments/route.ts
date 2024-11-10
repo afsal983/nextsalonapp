@@ -142,8 +142,6 @@ export async function PUT(request: NextRequest, response: NextResponse) {
     return NextResponse.json(res, { status: 401 });
   }
 
-  console.log(body.id);
-  console.log(body);
   const { token } = cookiedata;
 
   const data = await fetch(
