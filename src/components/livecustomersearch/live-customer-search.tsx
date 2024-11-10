@@ -11,6 +11,7 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
+import debounce from "lodash.debounce";
 
 import { Customer } from "src/types/customer";
 
@@ -22,15 +23,12 @@ type props = {
 export default function LiveCustomerSearch({ handleSelectedCustomer }: props) {
   const [customerData, setCustomerData] = useState<Customer[]>([]);
   const [inputValue, setInputValue] = useState<string>(""); // The current input value in the search field
+  const [loading, setLoading] = useState(false);
 
-  // Fetch customer data from API when the input value changes
-  useEffect(() => {
-    if (inputValue === "") {
-      setCustomerData([]);
-      return;
-    }
-
-    const fetchCustomers = async () => {
+  // Debounced function to fetch search results
+  const fetchCustomers = debounce(async (searchText: string) => {
+    if (searchText) {
+      setLoading(true);
       try {
         const response = await fetch(
           `/api/salonapp/customer?search=${inputValue}`
@@ -38,13 +36,18 @@ export default function LiveCustomerSearch({ handleSelectedCustomer }: props) {
         const responseData = await response.json();
         setCustomerData(responseData?.data); // Update state with fetched data
       } catch (error) {
-        console.error("Error fetching customer data:", error);
+        setLoading(false);
       }
-    };
+    } else {
+      setCustomerData([]);
+    }
+  }, 500); // 500ms debounce delay
 
-    // return () => {
-    // clearTimeout(delayDebounceFn); // Cleanup, no return value expected
-    // };
+  // Fetch customer data from API when the input value changes
+  useEffect(() => {
+    if (inputValue === "") {
+      setCustomerData([]);
+    }
   }, [inputValue]); // The effect runs whenever the input value changes
 
   return (
@@ -83,6 +86,7 @@ export default function LiveCustomerSearch({ handleSelectedCustomer }: props) {
         )}
         onInputChange={(event, newInputValue) => {
           setInputValue(newInputValue); // Update inputValue state
+          fetchCustomers(newInputValue);
         }}
         onChange={(event: any, newValue: Customer | null) => {
           handleSelectedCustomer(newValue);

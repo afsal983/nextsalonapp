@@ -56,6 +56,7 @@ import {
   RenderCellCustomer,
   RenderCellStartAt,
   RenderCellEndAt,
+  RenderCellBookingSource,
 } from "../appointmentreport-table-row";
 
 // ----------------------------------------------------------------------
@@ -268,6 +269,9 @@ export default function AppointmentReportListView() {
       headerName: "Booking Source",
       filterable: true,
       hideable: false,
+      width: 120,
+      valueGetter: (params) => `${params.row.bookingsource}`,
+      renderCell: (params) => <RenderCellBookingSource params={params} />,
     },
 
     {

@@ -5,7 +5,6 @@ import { decrypt } from "src/utils/encrypt";
 const baseUSRL = process.env.NEXT_PUBLIC_HOST_API;
 
 export async function GET(request: NextRequest, response: NextResponse) {
-  console.log("ABCDDDD");
   const { pathname } = new URL(request.url);
   const invoiceId = pathname.split("/")[4];
 
@@ -84,8 +83,6 @@ export async function DELETE(request: NextRequest, response: NextResponse) {
   }
 
   const { token } = cookiedata;
-
-  console.log(eventId);
 
   // Make an HTTP request to your API route with the token in the headers
   const data = await fetch(

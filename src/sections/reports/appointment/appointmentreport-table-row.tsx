@@ -2,11 +2,20 @@ import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import { GridCellParams } from "@mui/x-data-grid";
-import ListItemText from "@mui/material/ListItemText";
+import { ListItem } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
-
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 import { fCurrency } from "src/utils/format-number";
-
+import InboxIcon from "@mui/icons-material/Inbox";
+import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
+import GoogleIcon from "@mui/icons-material/Google";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import WebAssetIcon from "@mui/icons-material/WebAsset";
+import MobileFriendlyIcon from "@mui/icons-material/MobileFriendly";
 import Label from "src/components/label";
 
 // ----------------------------------------------------------------------
@@ -53,6 +62,38 @@ export function RenderCellEndAt({ params }: ParamsProps) {
         typography: "caption",
       }}
     />
+  );
+}
+
+export function RenderCellBookingSource({ params }: ParamsProps) {
+  return (
+    <Stack sx={{ typography: "caption", color: "text.secondary" }}>
+      <ListItem key={params.row.bookingsource} disablePadding>
+        <ListItemButton>
+          <ListItemIcon>
+            {(params.row.inventoryType === "admin" && (
+              <SupervisorAccountIcon color="error" />
+            )) ||
+              (params.row.inventoryType === "Whatsapp" && (
+                <SupervisorAccountIcon />
+              )) ||
+              (params.row.inventoryType === "Google Business" && (
+                <GoogleIcon />
+              )) ||
+              (params.row.inventoryType === "FaceBook" && <FacebookIcon />) ||
+              (params.row.inventoryType === "Instagram" && <InstagramIcon />) ||
+              (params.row.inventoryType === "Website" && <WebAssetIcon />) ||
+              (params.row.inventoryType === "Mobile Apps" && (
+                <MobileFriendlyIcon />
+              )) || <SupervisorAccountIcon />}
+          </ListItemIcon>
+          <ListItemText
+            id={params.row.bookingsource}
+            primary={params.row.bookingsource}
+          />
+        </ListItemButton>
+      </ListItem>
+    </Stack>
   );
 }
 

@@ -72,10 +72,10 @@ const TABLE_HEAD = [
 ];
 
 const start = new Date();
-start.setDate(start.getDate() - 120);
+start.setDate(start.getDate() - 10);
 
 const end = new Date();
-end.setDate(end.getDate() + 7);
+end.setDate(end.getDate() + 1);
 
 const defaultFilters: IInvoiceTableFilters = {
   name: "",

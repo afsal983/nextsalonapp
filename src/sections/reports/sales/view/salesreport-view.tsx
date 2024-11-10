@@ -63,8 +63,8 @@ import {
 // ----------------------------------------------------------------------
 
 const STATUS_OPTIONS = [
-  { value: "paid", label: "Paid" },
-  { value: "draft", label: "Draft" },
+  { value: "PAID", label: "Paid" },
+  { value: "DRAFT", label: "Draft" },
 ];
 
 const HIDE_COLUMNS = {
@@ -254,6 +254,11 @@ export default function SalesReportListView() {
     {
       field: "tip",
       headerName: "Tip",
+      filterable: false,
+    },
+    {
+      field: "paymentmode",
+      headerName: "Payment Method",
       filterable: false,
     },
     {
@@ -589,7 +594,7 @@ function applyFilter({
 
   if (paymenttype?.length) {
     inputData = inputData.filter((invoice) =>
-      status.includes(invoice?.paymentmode)
+      paymenttype.includes(invoice?.paymentmode)
     );
   }
 

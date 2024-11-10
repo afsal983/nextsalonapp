@@ -71,12 +71,14 @@ export default function PaymentNewEditForm({
       append({
         payment_type: defaultpaymenttype?.id,
         value: values.totalAmount,
+        authcode: "",
       });
       setValue("balance", balance - values.totalAmount);
     } else {
       append({
         payment_type: 0,
         value: 0,
+        authcode: "",
       });
     }
   };
@@ -104,11 +106,21 @@ export default function PaymentNewEditForm({
     [setValue]
   );
 
+  const handleChangeAuthcode = useCallback(
+    (
+      event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+      index: number
+    ) => {
+      setValue(`Payment[${index}].authcode`, event.target.value);
+    },
+    [setValue]
+  );
+
   return (
     <Stack
       spacing={1}
       divider={<Divider flexItem sx={{ borderStyle: "dashed" }} />}
-      sx={{ order: { xs: 2, md: 1 } }}
+      sx={{ order: { xs: 2, md: 1 }, width: "40%" }}
     >
       <Card>
         <CardHeader
@@ -135,8 +147,8 @@ export default function PaymentNewEditForm({
             alignItems={{ xs: "stretch" }}
           >
             <Box
-              component="span"
-              sx={{ color: "text.secondary", width: 260, flexShrink: 1 }}
+              component="div"
+              sx={{ color: "text.secondary", flexShrink: 1 }}
             >
               TOTAL DUE
             </Box>
@@ -150,40 +162,7 @@ export default function PaymentNewEditForm({
               }
             />
           </Stack>
-          {/*
-            <FormControl>
-              <Typography variant="h6" color="text.primary" my={2}>
-                Select payment method
-              </Typography>
-              {/*
-              <FormLabel id="demo-radio-buttons-group-label">
-                Select payment method
-              </FormLabel>
-       
-              <RadioGroup
-                row
-                key="rad"
-                aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue={
-                  paymenttypes?.find(
-                    (pmtypes) => pmtypes.default_paymenttype === true
-                  )?.name
-                }
-                name="radio-buttons-group"
-                onChange={handlePaymentMehtod}
-              >
-                {paymenttypes
-                  ?.filter((paymenttype) => paymenttype.name !== "SPLIT")
-                  .map((item, index) => (
-                    <FormControlLabel
-                      value={item.name}
-                      control={<Radio />}
-                      label={item.name}
-                    />
-                  ))}
-              </RadioGroup>
-            </FormControl>
-                  */}
+
           <Divider flexItem sx={{ borderStyle: "dashed" }} />
           <Typography variant="h6" color="text.disabled" my={2}>
             Payment
@@ -250,6 +229,19 @@ export default function PaymentNewEditForm({
                       label="Amount"
                       placeholder="0"
                       onChange={(event) => handleChangePrice(event, index)}
+                      InputLabelProps={{ shrink: true }}
+                    />
+
+                    <RHFTextField
+                      size="small"
+                      type="input"
+                      sx={{
+                        width: "100%", // Optional: make it responsive within its container
+                      }}
+                      name={`Payment[${index}].authcode`}
+                      label="Authcode"
+                      placeholder=""
+                      onChange={(event) => handleChangeAuthcode(event, index)}
                       InputLabelProps={{ shrink: true }}
                     />
                   </Stack>
