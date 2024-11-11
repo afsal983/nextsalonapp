@@ -9,7 +9,6 @@ import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import SearchIcon from "@mui/icons-material/Search";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 import Iconify from "src/components/iconify";
 

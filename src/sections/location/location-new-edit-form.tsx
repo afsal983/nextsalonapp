@@ -29,6 +29,7 @@ interface Props {
 export default function LocationNewEditForm({ currentLocation }: Props) {
   const router = useRouter();
 
+  /* 
   const timeStringToDate = (timeString: string) => {
     const [hours, minutes, seconds] = timeString.split(":").map(Number);
     const date = new Date();
@@ -38,6 +39,7 @@ export default function LocationNewEditForm({ currentLocation }: Props) {
     date.setMilliseconds(0);
     return date;
   };
+
 
   const DatetoStimeString = (date: Date) => {
     // Extract hours and minutes
@@ -51,6 +53,7 @@ export default function LocationNewEditForm({ currentLocation }: Props) {
 
     return date;
   };
+  */
 
   console.log(currentLocation);
   const { enqueueSnackbar } = useSnackbar();

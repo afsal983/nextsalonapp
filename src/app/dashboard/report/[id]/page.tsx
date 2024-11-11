@@ -1,13 +1,11 @@
 import { _jobs } from "src/_mock/_job";
 
 import { SalesReportListView } from "src/sections/reports/sales/view";
-// import SalesReportDetailsView from "src/sections/reports/sales/salesreport-details-view";
-import { DetailedSalesListView } from "src/sections/reports/detailedsales/view";
-import { CustomerReportListView } from "src/sections/reports/customer/view";
 import { ProductReportListView } from "src/sections/reports/product/view";
-import { AppointmentReportListView } from "src/sections/reports/appointment/view";
 import { ExpenseReportListView } from "src/sections/reports/expense/view";
-import { C } from "@fullcalendar/core/internal-common";
+import { CustomerReportListView } from "src/sections/reports/customer/view";
+import { DetailedSalesListView } from "src/sections/reports/detailedsales/view";
+import { AppointmentReportListView } from "src/sections/reports/appointment/view";
 
 // ----------------------------------------------------------------------
 

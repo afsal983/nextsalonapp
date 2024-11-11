@@ -38,6 +38,7 @@ import { useSnackbar } from "src/components/snackbar";
 import EmptyContent from "src/components/empty-content";
 import { useSettingsContext } from "src/components/settings";
 import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+
 import { CustomerCategory } from "src/types/customer";
 import {
   CustomerReport,
@@ -51,8 +52,8 @@ import CustomerReportAnalytic from "../customerreport-analytic";
 import DeatailedSalesTableToolbar from "../customerreport-table-toolbar";
 import DeatailedSalesTableFiltersResult from "../customerreport-table-filters-result";
 import {
-  RenderCellCustomer,
   RenderCellSex,
+  RenderCellCustomer,
   RenderCellEventNotify,
   RenderCellPromoNotify,
 } from "../customerreport-table-row";

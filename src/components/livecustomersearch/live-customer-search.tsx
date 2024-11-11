@@ -1,5 +1,6 @@
 "use client";
 
+import debounce from "lodash.debounce";
 import { useState, useEffect } from "react";
 
 import Box from "@mui/material/Box";
@@ -11,7 +12,6 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
-import debounce from "lodash.debounce";
 
 import { Customer } from "src/types/customer";
 
@@ -23,12 +23,10 @@ type props = {
 export default function LiveCustomerSearch({ handleSelectedCustomer }: props) {
   const [customerData, setCustomerData] = useState<Customer[]>([]);
   const [inputValue, setInputValue] = useState<string>(""); // The current input value in the search field
-  const [loading, setLoading] = useState(false);
 
   // Debounced function to fetch search results
   const fetchCustomers = debounce(async (searchText: string) => {
     if (searchText) {
-      setLoading(true);
       try {
         const response = await fetch(
           `/api/salonapp/customer?search=${inputValue}`
@@ -36,7 +34,7 @@ export default function LiveCustomerSearch({ handleSelectedCustomer }: props) {
         const responseData = await response.json();
         setCustomerData(responseData?.data); // Update state with fetched data
       } catch (error) {
-        setLoading(false);
+        console.log(error);
       }
     } else {
       setCustomerData([]);

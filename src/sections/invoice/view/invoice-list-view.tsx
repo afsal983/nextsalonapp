@@ -567,7 +567,7 @@ function applyFilter({
   filters: IInvoiceTableFilters;
   dateError: boolean;
 }) {
-  const { name, status, service, startDate, endDate } = filters;
+  const { name, status, service } = filters;
 
   const stabilizedThis = inputData.map((el, index) => [el, index] as const);
 

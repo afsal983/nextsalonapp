@@ -1,13 +1,10 @@
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
+import { Chip, Avatar } from "@mui/material";
 import { GridCellParams } from "@mui/x-data-grid";
 import ListItemText from "@mui/material/ListItemText";
-import LinearProgress from "@mui/material/LinearProgress";
-import { Chip, Avatar } from "@mui/material";
-import { fCurrency } from "src/utils/format-number";
 
-import Label from "src/components/label";
 import Iconify from "src/components/iconify";
 
 // ----------------------------------------------------------------------

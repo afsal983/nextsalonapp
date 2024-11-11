@@ -1,9 +1,4 @@
-
-
-
-
 import { PublicAppointmentView } from "src/sections/publicappointment/view";
-
 
 // ----------------------------------------------------------------------
 /*
@@ -21,10 +16,11 @@ export const metadata = {
   title: "SMEEYE",
 };
 
+/*
 interface Params {
   id: string; // Define other parameters as needed
 }
-/*
+
 
 export default async function PublicAppointment({
   params,

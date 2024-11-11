@@ -9,7 +9,6 @@ import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import SearchIcon from "@mui/icons-material/Search";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 import Iconify from "src/components/iconify";
 
@@ -57,20 +56,6 @@ export default function PeriodFilters({
   colorOptions, // onClickEvent,
   isLoading,
 }: Props) {
-  const handleFilterStartDate = useCallback(
-    (newValue: Date | null) => {
-      onFilters("startDate", newValue);
-    },
-    [onFilters]
-  );
-
-  const handleFilterEndDate = useCallback(
-    (newValue: Date | null) => {
-      onFilters("endDate", newValue);
-    },
-    [onFilters]
-  );
-
   const renderHead = (
     <Stack
       direction="row"
@@ -101,26 +86,6 @@ export default function PeriodFilters({
       <Typography variant="subtitle2">Range</Typography>
 
       <Stack spacing={2}>
-        {/*
-        <DatePicker
-          label="Start date"
-          value={filters.startDate}
-          onChange={handleFilterStartDate}
-        />
-
-        <DatePicker
-          label="End date"
-          value={filters.endDate}
-          onChange={handleFilterEndDate}
-          slotProps={{
-            textField: {
-              error: dateError,
-              helperText: dateError && "End date must be later than start date",
-            },
-          }}
-        />
-        */}
-
         <LoadingButton
           variant="contained"
           loading={isLoading}

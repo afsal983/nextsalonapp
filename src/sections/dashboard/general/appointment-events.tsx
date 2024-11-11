@@ -4,7 +4,6 @@ import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import MenuItem from "@mui/material/MenuItem";
 import TableRow from "@mui/material/TableRow";
-import { useTheme } from "@mui/material/styles";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import IconButton from "@mui/material/IconButton";
@@ -96,8 +95,6 @@ type BankingRecentTransitionsRowProps = {
 function BankingRecentTransitionsRow({
   row,
 }: BankingRecentTransitionsRowProps) {
-  const theme = useTheme();
-
   // const lightMode = theme.palette.mode === "light";
 
   const popover = usePopover();

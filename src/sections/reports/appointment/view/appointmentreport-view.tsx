@@ -53,9 +53,9 @@ import AppointmentReportAnalytic from "../appointmentreport-analytic";
 import DeatailedAppointmentTableToolbar from "../appointmentreport-table-toolbar";
 import DeatailedAppointmentTableFiltersResult from "../appointmentreport-table-filters-result";
 import {
-  RenderCellCustomer,
-  RenderCellStartAt,
   RenderCellEndAt,
+  RenderCellStartAt,
+  RenderCellCustomer,
   RenderCellBookingSource,
 } from "../appointmentreport-table-row";
 
@@ -114,7 +114,6 @@ export default function AppointmentReportListView() {
   const [summaryData, setsummaryData] = useState<any>([]);
   const [tableData, setTableData] = useState<AppointmentReport[]>([]);
   const [branchData, setbranchData] = useState<BranchItem[]>([]);
-  const [paymenttypeData, setpaymenttypeData] = useState<PaymentTypeItem[]>([]);
 
   const [periodfilters, setFilters] = useState(defaultperiodFilters);
   const [itemfilters, setitemFilters] = useState(defaultitemFilters);

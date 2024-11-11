@@ -38,8 +38,8 @@ import { useSnackbar } from "src/components/snackbar";
 import EmptyContent from "src/components/empty-content";
 import { useSettingsContext } from "src/components/settings";
 import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
-import { ServiceCategoryItem } from "src/types/service";
 
+import { ServiceCategoryItem } from "src/types/service";
 import {
   ProductReport,
   ProductReportTableFilters,
@@ -52,9 +52,8 @@ import ProductReportAnalytic from "../productreport-analytic";
 import DeatailedSalesTableToolbar from "../productreport-table-toolbar";
 import DeatailedSalesTableFiltersResult from "../productreport-table-filters-result";
 import {
-  RenderCellSex,
-  RenderCellProduct,
   RenderCellPrice,
+  RenderCellProduct,
 } from "../productreport-table-row";
 
 // ----------------------------------------------------------------------

@@ -8,7 +8,6 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
 import DialogActions from "@mui/material/DialogActions";
 import { MobileDateTimePicker } from "@mui/x-date-pickers/MobileDateTimePicker";
@@ -28,6 +27,7 @@ import {
 import Iconify from "src/components/iconify";
 import { useSnackbar } from "src/components/snackbar";
 import { ColorPicker } from "src/components/color-utils";
+import { LiveCustomerSearch } from "src/components/livecustomersearch";
 import FormProvider, {
   RHFSelect,
   RHFSwitch,
@@ -39,9 +39,7 @@ import { ServiceItem } from "src/types/service";
 import { EmployeeItem } from "src/types/employee";
 import { ICalendarDate, ICalendarEvent } from "src/types/calendar";
 
-// import { CustomerAddressListDialog } from "../../customeraddress";
-import { LiveCustomerSearch } from "src/components/livecustomersearch";
-
+import AddressNewForm from "../../customeraddress/address-new-form";
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -189,6 +187,38 @@ export default function CalendarForm({
     }
   }, [currentEvent?.id, enqueueSnackbar, onClose, t]);
 
+  const handleCreateCustomer = useCallback(
+    async (customerInfo: Customer) => {
+      console.log(customerInfo);
+
+      try {
+        // Post the data
+        const response = await fetch(`/api/salonapp/customer`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(customerInfo),
+        });
+
+        const responseData = await response.json();
+
+        if (responseData?.status > 401) {
+          enqueueSnackbar("Create Failed", { variant: "error" });
+        } else {
+          // Keep 500ms delay
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          // reset();
+          enqueueSnackbar("Create Suucess", { variant: "success" });
+          to.onFalse();
+        }
+      } catch (error) {
+        enqueueSnackbar(error, { variant: "error" });
+      }
+    },
+    [to, enqueueSnackbar]
+  );
+
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Stack spacing={3} sx={{ px: 3, my: 3 }}>
@@ -204,6 +234,7 @@ export default function CalendarForm({
           >
             <Iconify
               icon={customer_id ? "solar:pen-bold" : "mingcute:add-line"}
+              onClick={to.onTrue}
             />
           </IconButton>
           <LiveCustomerSearch handleSelectedCustomer={handleSelectCustomer} />
@@ -327,6 +358,11 @@ export default function CalendarForm({
           Save Changes
         </LoadingButton>
       </DialogActions>
+      <AddressNewForm
+        open={to.value}
+        onClose={to.onFalse}
+        onCreate={handleCreateCustomer}
+      />
     </FormProvider>
   );
 }

@@ -60,13 +60,6 @@ export default function PeriodFilters({
   colorOptions, // onClickEvent,
   isLoading,
 }: Props) {
-  const handleFilterColors = useCallback(
-    (newValue: string | string[]) => {
-      onFilters("colors", newValue as string[]);
-    },
-    [onFilters]
-  );
-
   const handleFilterStartDate = useCallback(
     (newValue: Date | null) => {
       onFilters("startDate", newValue);
