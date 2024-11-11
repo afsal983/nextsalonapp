@@ -132,12 +132,7 @@ export default function AppointmentReportListView() {
       .then((response) => response.json())
       // 4. Setting *dogImage* to the image url that we received from the response above
       .then((data) => setbranchData(data.data));
-
-    fetch(`/api/salonapp/paymenttype`)
-      .then((response) => response.json())
-      // 4. Setting *dogImage* to the image url that we received from the response above
-      .then((data) => setpaymenttypeData(data.data));
-  }, [setbranchData, setpaymenttypeData]);
+  }, [setbranchData]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
