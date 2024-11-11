@@ -57,7 +57,7 @@ export default function LiveCustomerSearch({ handleSelectedCustomer }: props) {
         getOptionLabel={(customer: Customer) =>
           `${customer.firstname} ${customer.lastname}`
         }
-        sx={{ width: "100%", minWidth: 360, maxWidth: 360 }}
+        sx={{ width: "100%", minWidth: 360 }}
         options={customerData} // Assuming this is an array of Customer objects
         isOptionEqualToValue={(option, value) => option.id === value.id} // Compare by unique ID or another unique property
         noOptionsText="Search Customer"

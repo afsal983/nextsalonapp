@@ -39,7 +39,8 @@ import { ServiceItem } from "src/types/service";
 import { EmployeeItem } from "src/types/employee";
 import { ICalendarDate, ICalendarEvent } from "src/types/calendar";
 
-import { CustomerAddressListDialog } from "../../customeraddress";
+// import { CustomerAddressListDialog } from "../../customeraddress";
+import { LiveCustomerSearch } from "src/components/livecustomersearch";
 
 // ----------------------------------------------------------------------
 
@@ -99,6 +100,7 @@ export default function CalendarForm({
     reset,
     watch,
     control,
+    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -106,6 +108,16 @@ export default function CalendarForm({
   const values = watch();
 
   const dateError = isAfter(values.start, values.end);
+
+  // handle customer
+  const handleSelectCustomer = useCallback(
+    (value: Customer | null) => {
+      // onFilters("filtervalue", typeof value === undefined ? "" : value);
+      setValue("customer_id", Number(value?.id));
+      // setValue("Customer", value);
+    },
+    [setValue]
+  );
 
   const onSubmit = handleSubmit(async (data) => {
     // Convert the data into appoitment format
@@ -179,49 +191,23 @@ export default function CalendarForm({
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
-      <Stack spacing={3} sx={{ px: 3 }}>
-        <CustomerAddressListDialog
-          title="Customers"
-          open={to.value}
-          onClose={to.onFalse}
-          selected={(selectedId: string) => String(customer_id) === selectedId}
-          onSelect={(customerinfo) => setCustomer(customerinfo)}
-          list={[]}
-          action={
-            <Button
-              size="small"
-              startIcon={<Iconify icon="mingcute:add-line" />}
-              sx={{ alignSelf: "flex-end" }}
-            >
-              New
-            </Button>
-          }
-        />
-
-        <Stack direction="row" alignItems="center" sx={{ mb: 1 }}>
-          <Typography
-            variant="subtitle2"
-            sx={{ color: "text.disabled", flexGrow: 1 }}
+      <Stack spacing={3} sx={{ px: 3, my: 3 }}>
+        <Box sx={{ position: "relative", display: "inline-block" }}>
+          <IconButton
+            onClick={to.onTrue}
+            edge="start"
+            sx={{
+              position: "absolute",
+              top: -40, // Adjust the top position as needed
+              right: 1, // Align to the right edge
+            }}
           >
-            Customer:
-          </Typography>
-
-          {customer ? (
-            <Stack spacing={1}>
-              <Typography variant="subtitle2">{`${customer?.firstname} ${customer?.lastname}`}</Typography>
-            </Stack>
-          ) : (
-            <Typography typography="caption" sx={{ color: "error.main" }}>
-              {(" " as any)?.message}
-            </Typography>
-          )}
-
-          <IconButton onClick={to.onTrue}>
             <Iconify
               icon={customer_id ? "solar:pen-bold" : "mingcute:add-line"}
             />
           </IconButton>
-        </Stack>
+          <LiveCustomerSearch handleSelectedCustomer={handleSelectCustomer} />
+        </Box>
 
         <RHFSelect
           native
