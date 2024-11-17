@@ -256,8 +256,8 @@ export default function InvoiceNewEditForm({
 
     const invoicedata = {
       id: currentInvoice?.id || 0,
-      customer: data.customer_id,
-      branch_id: data.branch_id,
+      customer: currentInvoice?.customer_id || data.customer_id,
+      branch_id: currentInvoice?.branch_id || data.branch_id,
       reminder_count: 0,
       products,
       retails,
@@ -267,14 +267,14 @@ export default function InvoiceNewEditForm({
       tip: data.tip,
       paymentmethod: 1,
       notify: 0,
-      createevent: 1,
-      event_id: 0,
+      createevent: 0,
+      event_id: currentInvoice?.event_id || 0,
     };
 
     try {
       // Post the data
       const response = await fetch(`/api/salonapp/invoice`, {
-        method: currentInvoice ? "PUT" : "POST",
+        method: currentInvoice?.id !== "0" ? "PUT" : "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -293,7 +293,7 @@ export default function InvoiceNewEditForm({
         await new Promise((resolve) => setTimeout(resolve, 500));
         reset();
         enqueueSnackbar(
-          currentInvoice
+          currentInvoice?.id !== "0"
             ? t("general.update_success")
             : t("general.create_success"),
           { variant: "success" }
@@ -353,7 +353,7 @@ export default function InvoiceNewEditForm({
           loading={loadingSend.value && isSubmitting}
           onClick={handleCreateAndSend}
         >
-          {currentInvoice ? "Update" : "Create"} & Send
+          {currentInvoice?.id !== "0" ? "Update" : "Create"} & Send
         </LoadingButton>
       </Stack>
     </FormProvider>
