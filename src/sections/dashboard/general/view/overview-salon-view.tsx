@@ -155,8 +155,8 @@ export default function OverviewSalonView() {
                 { id: "employeename", label: "Employee Name" },
                 { id: "date", label: "Date" },
                 { id: "total", label: "Total" },
-                { id: "paymentstatus", label: "Payment Status" },
-                { id: "paymentmethod", label: "Payment Method" },
+                { id: "paymentstatus", label: "Status" },
+                { id: "paymentmethod", label: "Mode" },
                 { id: "" },
               ]}
             />

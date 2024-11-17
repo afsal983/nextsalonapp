@@ -32,7 +32,6 @@ export default function OrderDetailsItems({
   subTotal,
   totalAmount,
 }: Props) {
-  console.log("ddd");
   const renderTotal = (
     <Stack
       spacing={2}

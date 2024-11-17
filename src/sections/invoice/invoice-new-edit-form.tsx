@@ -57,6 +57,8 @@ export default function InvoiceNewEditForm({
 }: Props) {
   const router = useRouter();
 
+  console.log(currentInvoice);
+
   const { enqueueSnackbar } = useSnackbar();
 
   const { t } = useTranslate();
@@ -151,14 +153,15 @@ export default function InvoiceNewEditForm({
       event_id: currentInvoice?.event_id || 0,
       Event: currentInvoice?.Event || {},
       Invoice_line: currentInvoice?.Invoice_line || [],
-      branch_id: currentInvoice?.branch_id || 0,
-      Branches_organization: currentInvoice?.Branches_organization || {},
+      branch_id: currentInvoice?.branch_id || Number(branches[0].branch_id),
+      Branches_organization:
+        currentInvoice?.Branches_organization || branches[0],
       status: currentInvoice?.status || 1,
       Invstatus: currentInvoice?.Invstatus || {},
       deleted: currentInvoice?.deleted || 0,
       Payment: currentInvoice?.Payment || [],
     }),
-    [currentInvoice]
+    [currentInvoice, branches]
   );
 
   const methods = useForm({

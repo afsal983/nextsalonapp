@@ -237,7 +237,16 @@ export default function CalendarForm({
               onClick={to.onTrue}
             />
           </IconButton>
-          <LiveCustomerSearch handleSelectedCustomer={handleSelectCustomer} />
+          <LiveCustomerSearch
+            name="customer_id"
+            type="customer"
+            label="Search Customer..."
+            placeholder="Choose a country"
+            handleSelectedCustomer={handleSelectCustomer}
+            fullWidth
+            options={[]}
+            getOptionLabel={(option) => option}
+          />
         </Box>
 
         <RHFSelect

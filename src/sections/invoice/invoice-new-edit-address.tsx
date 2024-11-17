@@ -122,7 +122,7 @@ export default function InvoiceNewEditAddress({ branches }: Props) {
             </Typography>
 
             <Autocomplete
-              id="customer-autocomplete"
+              id="branch_id"
               getOptionLabel={(branch: BranchItem) => `${branch.name}`}
               sx={{ width: "100%", minWidth: 360, maxWidth: 360 }}
               options={branches} // Assuming this is an array of Customer objects
@@ -195,7 +195,16 @@ export default function InvoiceNewEditAddress({ branches }: Props) {
               To:
             </Typography>
 
-            <LiveCustomerSearch handleSelectedCustomer={handleSelectCustomer} />
+            <LiveCustomerSearch
+              name="customer_id"
+              type="customer"
+              label="Search Customer..."
+              placeholder="Choose a country"
+              handleSelectedCustomer={handleSelectCustomer}
+              fullWidth
+              options={[]}
+              getOptionLabel={(option) => option}
+            />
 
             <IconButton aria-label="delete" onClick={to.onTrue}>
               <AddIcon />

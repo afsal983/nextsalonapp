@@ -297,6 +297,11 @@
       "mon": "Monday",
       "workschedules": "Work Schedules",
       "plus_timeslots" : "+ TimeSlots"
+    },
+    "appointment": {
+      "name": "Appointment",
+      "create_appointment": "Create Appointment",
+      "new_appointment": "New Appointment"
     }
   }
 }

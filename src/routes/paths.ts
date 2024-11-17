@@ -70,6 +70,8 @@ export const paths = {
       new: `${ROOTS.DASHBOARD}/appointment/new`,
       details: (id: string) => `${ROOTS.DASHBOARD}/appointment/${id}`,
       edit: (id: string) => `${ROOTS.DASHBOARD}/appointment/${id}/edit`,
+      appointmentinvoice: (id: string) =>
+        `${ROOTS.DASHBOARD}/appointment/${id}/appointmentinvoice`,
       calander: {
         root: `${ROOTS.DASHBOARD}/appointment/calander`,
       },

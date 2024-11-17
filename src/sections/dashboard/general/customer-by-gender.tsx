@@ -56,6 +56,7 @@ export default function CustomerByGender({
     colors = [
       [theme.palette.primary.light, theme.palette.primary.main],
       [theme.palette.warning.light, theme.palette.warning.main],
+      [theme.palette.error.light, theme.palette.error.main],
     ],
     series,
     options,

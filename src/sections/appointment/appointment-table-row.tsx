@@ -30,6 +30,8 @@ type Props = {
   onViewRow: VoidFunction;
   onSelectRow: VoidFunction;
   onDeleteRow: VoidFunction;
+  onEditRow: VoidFunction;
+  onCreateInvoiceRow: VoidFunction;
 };
 
 export default function AppointmentTableRow({
@@ -38,6 +40,8 @@ export default function AppointmentTableRow({
   onViewRow,
   onSelectRow,
   onDeleteRow,
+  onEditRow,
+  onCreateInvoiceRow,
 }: Props) {
   const {
     id,
@@ -128,7 +132,7 @@ export default function AppointmentTableRow({
             "default"
           }
         >
-          {is_invoiced ? "Invoiced" : "Not Invoiced"}
+          {is_invoiced ? "invoiced" : "pendinginvoice"}
         </Label>
       </TableCell>
 
@@ -223,6 +227,26 @@ export default function AppointmentTableRow({
         arrow="right-top"
         sx={{ width: 140 }}
       >
+        <MenuItem
+          onClick={() => {
+            onCreateInvoiceRow();
+            popover.onClose();
+          }}
+        >
+          <Iconify icon="stash:invoice" />
+          Create Invoice
+        </MenuItem>
+
+        <MenuItem
+          onClick={() => {
+            onEditRow();
+            popover.onClose();
+          }}
+        >
+          <Iconify icon="solar:eye-bold" />
+          Edit
+        </MenuItem>
+
         <MenuItem
           onClick={() => {
             confirm.onTrue();

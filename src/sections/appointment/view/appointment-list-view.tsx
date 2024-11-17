@@ -16,6 +16,7 @@ import TableContainer from "@mui/material/TableContainer";
 
 import { paths } from "src/routes/paths";
 import { useRouter } from "src/routes/hooks";
+import { RouterLink } from "src/routes/components";
 
 import { useBoolean } from "src/hooks/use-boolean";
 
@@ -108,8 +109,6 @@ export default function AppointmentListView() {
     dateError,
   });
 
-  dataFiltered.map((data) => console.log(data));
-
   const dataInPage = dataFiltered.slice(
     table.page * table.rowsPerPage,
     table.page * table.rowsPerPage + table.rowsPerPage
@@ -180,6 +179,20 @@ export default function AppointmentListView() {
     [router]
   );
 
+  const handleEditRow = useCallback(
+    (id: string) => {
+      router.push(paths.dashboard.appointments.edit(id));
+    },
+    [router]
+  );
+
+  const handleCreateInvoiceRow = useCallback(
+    (id: string) => {
+      router.push(paths.dashboard.appointments.appointmentinvoice(id));
+    },
+    [router]
+  );
+
   const handleFilterStatus = useCallback(
     (event: React.SyntheticEvent, newValue: string) => {
       handleFilters("status", newValue);
@@ -213,6 +226,16 @@ export default function AppointmentListView() {
             },
             { name: "List" },
           ]}
+          action={
+            <Button
+              component={RouterLink}
+              href={paths.dashboard.appointments.new}
+              variant="contained"
+              startIcon={<Iconify icon="mingcute:add-line" />}
+            >
+              New Appointment
+            </Button>
+          }
           sx={{
             mb: { xs: 3, md: 5 },
           }}
@@ -242,15 +265,12 @@ export default function AppointmentListView() {
                       "soft"
                     }
                     color={
-                      (tab.value === "completed" && "success") ||
-                      (tab.value === "pending" && "warning") ||
-                      (tab.value === "cancelled" && "error") ||
+                      (tab.value === "invoiced" && "success") ||
+                      (tab.value === "pendinginvoice" && "warning") ||
                       "default"
                     }
                   >
-                    {["completed", "pending", "cancelled", "refunded"].includes(
-                      tab.value
-                    )
+                    {["Invoiced", "Pendinginvoice"].includes(tab.value)
                       ? tableData.filter((user) => user.resource === tab.value)
                           .length
                       : tableData.length}
@@ -333,6 +353,10 @@ export default function AppointmentListView() {
                         onSelectRow={() => table.onSelectRow(row.id)}
                         onDeleteRow={() => handleDeleteRow(row.id)}
                         onViewRow={() => handleViewRow(row.id)}
+                        onEditRow={() => handleEditRow(row.id)}
+                        onCreateInvoiceRow={() =>
+                          handleCreateInvoiceRow(row.id)
+                        }
                       />
                     ))}
 

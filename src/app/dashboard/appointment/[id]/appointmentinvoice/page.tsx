@@ -1,11 +1,11 @@
 import { _userList } from "src/_mock/_user";
 
-import { AppointmentEditView } from "src/sections/appointment/view";
+import { AppointmentInvoiceView } from "src/sections/appointment/view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: "Dashboard: Branch Edit",
+  title: "Dashboard: Appointment Invoice",
 };
 
 interface Props {
@@ -14,9 +14,9 @@ interface Props {
   };
 }
 
-export default function BranchEditPage({ params }: Props) {
+export default function AppointmenInvoicePage({ params }: Props) {
   const { id } = params;
-  return <AppointmentEditView id={id} />;
+  return <AppointmentInvoiceView id={id} />;
 }
 
 export async function generateStaticParams() {

@@ -1,4 +1,4 @@
-import { BranchListView } from "src/sections/branch/view";
+import { AppointmentListView } from "src/sections/appointment/view";
 
 // ----------------------------------------------------------------------
 
@@ -7,5 +7,5 @@ export const metadata = {
 };
 
 export default function BranchListPage(context: any) {
-  return <BranchListView />;
+  return <AppointmentListView />;
 }
