@@ -71,14 +71,14 @@ export default function PaymentNewEditForm({
       append({
         payment_type: defaultpaymenttype?.id,
         value: values.totalAmount,
-        authcode: "",
+        auth_code: "",
       });
       setValue("balance", balance - values.totalAmount);
     } else {
       append({
         payment_type: 0,
         value: 0,
-        authcode: "",
+        auth_code: "",
       });
     }
   };
@@ -111,7 +111,8 @@ export default function PaymentNewEditForm({
       event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
       index: number
     ) => {
-      setValue(`Payment[${index}].authcode`, event.target.value);
+      console.log(event.target.value);
+      setValue(`Payment[${index}].auth_code`, event.target.value);
     },
     [setValue]
   );
@@ -120,9 +121,9 @@ export default function PaymentNewEditForm({
     <Stack
       spacing={1}
       divider={<Divider flexItem sx={{ borderStyle: "dashed" }} />}
-      sx={{ order: { xs: 2, md: 1 }, width: "40%" }}
+      sx={{ order: { xs: 2, md: 1 }, width: 1 }}
     >
-      <Card>
+      <Card sx={{ width: 1 }}>
         <CardHeader
           title={
             <Typography
@@ -130,7 +131,7 @@ export default function PaymentNewEditForm({
               color="primary" // Custom color
               sx={{ color: "text.disabled" }}
             >
-              Invoice Amount
+              Payment
             </Typography>
           }
           action={
@@ -141,9 +142,10 @@ export default function PaymentNewEditForm({
         />
         <CardContent>
           <Stack
-            direction="row"
+            direction={{ xs: "row" }}
             justifyContent="space-between"
             my={2}
+            sx={{ width: 1 }}
             alignItems={{ xs: "stretch" }}
           >
             <Box
@@ -238,7 +240,7 @@ export default function PaymentNewEditForm({
                       sx={{
                         width: "100%", // Optional: make it responsive within its container
                       }}
-                      name={`Payment[${index}].authcode`}
+                      name={`Payment[${index}].auth_code`}
                       label="Authcode"
                       placeholder=""
                       onChange={(event) => handleChangeAuthcode(event, index)}

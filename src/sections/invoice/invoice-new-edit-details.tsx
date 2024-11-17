@@ -218,6 +218,7 @@ export default function InvoiceNewEditDetails({
         textAlign: "right",
         typography: "body2",
         order: { xs: 1, md: 3 },
+        minWidth: 400,
       }}
     >
       <Stack direction="row">

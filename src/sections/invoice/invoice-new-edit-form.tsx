@@ -257,7 +257,7 @@ export default function InvoiceNewEditForm({
     const invoicedata = {
       id: currentInvoice?.id || 0,
       customer: currentInvoice?.customer_id || data.customer_id,
-      branch_id: currentInvoice?.branch_id || data.branch_id,
+      branch_id: Number(currentInvoice?.branch_id) || Number(data.branch_id),
       reminder_count: 0,
       products,
       retails,
@@ -274,7 +274,7 @@ export default function InvoiceNewEditForm({
     try {
       // Post the data
       const response = await fetch(`/api/salonapp/invoice`, {
-        method: currentInvoice?.id !== "0" ? "PUT" : "POST",
+        method: currentInvoice && currentInvoice.id !== "0" ? "PUT" : "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -285,7 +285,9 @@ export default function InvoiceNewEditForm({
 
       if (responseData?.status > 401) {
         enqueueSnackbar(
-          currentInvoice ? responseData?.message : responseData?.message,
+          currentInvoice && currentInvoice.id !== "0"
+            ? responseData?.message
+            : responseData?.message,
           { variant: "error" }
         );
       } else {
@@ -293,7 +295,7 @@ export default function InvoiceNewEditForm({
         await new Promise((resolve) => setTimeout(resolve, 500));
         reset();
         enqueueSnackbar(
-          currentInvoice?.id !== "0"
+          currentInvoice && currentInvoice.id !== "0"
             ? t("general.update_success")
             : t("general.create_success"),
           { variant: "success" }
@@ -353,7 +355,8 @@ export default function InvoiceNewEditForm({
           loading={loadingSend.value && isSubmitting}
           onClick={handleCreateAndSend}
         >
-          {currentInvoice?.id !== "0" ? "Update" : "Create"} & Send
+          {currentInvoice && currentInvoice.id !== "0" ? "Update" : "Create"} &
+          Send
         </LoadingButton>
       </Stack>
     </FormProvider>

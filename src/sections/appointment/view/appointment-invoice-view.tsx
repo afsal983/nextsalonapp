@@ -127,7 +127,7 @@ export default function OrganizationEditView({ id }: Props) {
     Customer: appdata.Customer,
     branch_id: appdata?.branch_id,
     Branches_organization: appdata?.Branches_organization,
-    event_id: appdata?.event_id,
+    event_id: appdata?.id,
     discount: 0,
     Invoice_line: Invoice_line1,
     Event: appdata,
@@ -135,8 +135,6 @@ export default function OrganizationEditView({ id }: Props) {
     deleted: 0,
     Payment: [],
   };
-
-  console.log(currentInvoice);
 
   return (
     <Container maxWidth={settings.themeStretch ? false : "lg"}>

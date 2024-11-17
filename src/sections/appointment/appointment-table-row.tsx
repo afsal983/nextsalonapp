@@ -227,16 +227,17 @@ export default function AppointmentTableRow({
         arrow="right-top"
         sx={{ width: 140 }}
       >
-        <MenuItem
-          onClick={() => {
-            onCreateInvoiceRow();
-            popover.onClose();
-          }}
-        >
-          <Iconify icon="stash:invoice" />
-          Create Invoice
-        </MenuItem>
-
+        {!row.is_invoiced && (
+          <MenuItem
+            onClick={() => {
+              onCreateInvoiceRow();
+              popover.onClose();
+            }}
+          >
+            <Iconify icon="stash:invoice" />
+            Invoice
+          </MenuItem>
+        )}
         <MenuItem
           onClick={() => {
             onEditRow();
