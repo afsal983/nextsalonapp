@@ -68,6 +68,18 @@ export async function POST(request: NextRequest, response: NextResponse) {
   const cookieStore = request.cookies;
   const sessionCookie = cookieStore?.get("session")?.value;
 
+  const { searchParams } = new URL(request.url);
+  const notify = searchParams.get("notify");
+
+  let sendnotification = "0";
+
+  console.log(sendnotification);
+  if (notify === "1") {
+    sendnotification = "1";
+  } else {
+    sendnotification = "0";
+  }
+
   if (sessionCookie === undefined) {
     const res = {
       Title: "NOK",
@@ -90,14 +102,17 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
   const { token } = cookiedata;
 
-  const data = await fetch(`${baseUSRL}/timekeeper/appointment?notify=0`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(body),
-  });
+  const data = await fetch(
+    `${baseUSRL}/timekeeper/appointment?notify=${sendnotification}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(body),
+    }
+  );
 
   // Get the data in JSON format
   const apiResponse = await data.json();

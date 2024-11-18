@@ -146,7 +146,7 @@ export default function OrganizationEditView({ id }: Props) {
             href: paths.dashboard.root,
           },
           {
-            name: t("salonapp.appointment.name"),
+            name: t("salonapp.appointment.appointmentinvoice"),
             href: paths.dashboard.appointments.root,
           },
           { name: currentappointment?.data[0].id },

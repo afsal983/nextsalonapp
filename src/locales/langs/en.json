@@ -301,7 +301,8 @@
     "appointment": {
       "name": "Appointment",
       "create_appointment": "Create Appointment",
-      "new_appointment": "New Appointment"
+      "new_appointment": "New Appointment",
+      "appointmentinvoice": "Appointment Invoice"
     }
   }
 }

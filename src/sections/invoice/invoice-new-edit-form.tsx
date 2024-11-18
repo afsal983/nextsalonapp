@@ -271,6 +271,8 @@ export default function InvoiceNewEditForm({
       event_id: currentInvoice?.event_id || 0,
     };
 
+    console.log(invoicedata);
+
     try {
       // Post the data
       const response = await fetch(`/api/salonapp/invoice`, {

@@ -27,6 +27,7 @@ import FormProvider, {
   RHFSelect,
   RHFTextField,
   RHFUploadAvatar,
+  RHFCheckbox,
 } from "src/components/hook-form";
 
 import { BranchItem } from "src/types/branch";
@@ -96,6 +97,7 @@ export default function AppointmentNewEditForm({
         })
       )
     ),
+    notify: Yup.boolean(),
   });
 
   const defaultValues = useMemo(
@@ -119,6 +121,7 @@ export default function AppointmentNewEditForm({
       is_invoiced: currentAppointment?.is_invoiced || false,
       notes: currentAppointment?.notes || "",
       type: currentAppointment?.type,
+      notify: true,
     }),
     [currentAppointment, branches]
   );
@@ -169,13 +172,16 @@ export default function AppointmentNewEditForm({
 
     try {
       // Post the data
-      const response = await fetch(`/api/salonapp/appointments`, {
-        method: currentAppointment ? "PUT" : "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(appointmentdata),
-      });
+      const response = await fetch(
+        `/api/salonapp/appointments?notify=${data.notify}`,
+        {
+          method: currentAppointment ? "PUT" : "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(appointmentdata),
+        }
+      );
 
       const responseData = await response.json();
 
@@ -230,9 +236,11 @@ export default function AppointmentNewEditForm({
       <Stack
         justifyContent="flex-end"
         direction="row"
+        alignItems="center"
         spacing={2}
         sx={{ mt: 3 }}
       >
+        <RHFCheckbox name="notify" label="Send Notification" />
         <LoadingButton
           size="large"
           variant="contained"

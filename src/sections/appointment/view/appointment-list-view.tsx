@@ -54,8 +54,8 @@ import AppointmentTableFiltersResult from "../appointment-table-filters-result";
 
 const STATUS_OPTIONS = [
   { value: "all", label: "All" },
-  { value: "invoiced", label: "Invoiced" },
-  { value: "pendinginvoice", label: "Pending Invoice" },
+  { value: "Invoiced", label: "Invoiced" },
+  { value: "Pendinginvoice", label: "Pendinginvoice" },
 ];
 
 const TABLE_HEAD = [
@@ -265,14 +265,18 @@ export default function AppointmentListView() {
                       "soft"
                     }
                     color={
-                      (tab.value === "invoiced" && "success") ||
-                      (tab.value === "pendinginvoice" && "warning") ||
+                      (tab.value === "Invoiced" && "success") ||
+                      (tab.value === "Pendinginvoice" && "warning") ||
                       "default"
                     }
                   >
                     {["Invoiced", "Pendinginvoice"].includes(tab.value)
-                      ? tableData.filter((user) => user.resource === tab.value)
-                          .length
+                      ? tableData.filter(
+                          (appointment) =>
+                            (appointment.is_invoiced
+                              ? "Invoiced"
+                              : "Pendinginvoice") === tab.value
+                        ).length
                       : tableData.length}
                   </Label>
                 }
