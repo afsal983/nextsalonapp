@@ -59,7 +59,6 @@ export default function BranchAddressListDialog({
   const handleSearchAddress = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setSearchAddress(event.target.value);
-      console.log(event.target.value);
     },
     []
   );

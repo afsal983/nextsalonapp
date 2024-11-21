@@ -57,7 +57,7 @@ export default function InvoiceNewEditForm({
 }: Props) {
   const router = useRouter();
 
-  console.log(currentInvoice);
+  const currency = localStorage.getItem("___currency");
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -126,7 +126,7 @@ export default function InvoiceNewEditForm({
             value: Yup.number()
               .required("Payment amount is required")
               .positive("Payment value must be a positive value"),
-            payment_type: Yup.number().required("Payment amount is required"),
+            payment_type: Yup.number().positive("Payment type required"),
             auth_code: Yup.string(),
           })
         )
@@ -194,7 +194,6 @@ export default function InvoiceNewEditForm({
 
   const handleCreateAndSend = handleSubmit(async (data) => {
     loadingSend.onTrue();
-    console.log(data);
 
     const products: Products[] = [];
     const retails: Retails[] = [];
@@ -328,6 +327,7 @@ export default function InvoiceNewEditForm({
               currentInvoice={currentInvoice}
               paymenttypes={paymenttypes}
               branches={branches}
+              currency={currency}
             />
           </Grid>
         </Grid>

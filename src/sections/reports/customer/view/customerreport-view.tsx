@@ -172,7 +172,7 @@ export default function CustomerReportListView() {
       body: JSON.stringify(data), // body data type must match "Content-Type" header
     });
     const responseData = await response.json();
-    console.log(responseData);
+
     if (responseData.status > 300) {
       setisLoading(false);
       enqueueSnackbar("Fetching report data failed", { variant: "error" });

@@ -84,7 +84,6 @@ export async function DELETE(request: NextRequest, response: NextResponse) {
 
   const { token } = cookiedata;
 
-  console.log("ddd");
   // Make an HTTP request to your API route with the token in the headers
   const data = await fetch(`${baseUSRL}/apiserver/customer/${customerId}`, {
     method: "DELETE",

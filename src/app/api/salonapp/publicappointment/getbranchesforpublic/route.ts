@@ -39,8 +39,6 @@ export async function GET(request: NextRequest) {
   // Get the data in JSON format
   const response = await data.json();
 
-  console.log(response);
-
   if (response?.status === 401) {
     const res = {
       Title: "NOK",

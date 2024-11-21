@@ -73,7 +73,6 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
   let sendnotification = "0";
 
-  console.log(sendnotification);
   if (notify === "1") {
     sendnotification = "1";
   } else {

@@ -35,7 +35,6 @@ export default function ServiceCategoryNewEditForm({
 
   const { t } = useTranslate();
 
-  console.log(currentServiceCategory);
   const NewProductSchema = Yup.object().shape({
     id: Yup.string(),
     name: Yup.string().required(

@@ -97,9 +97,6 @@ export default function EmployeeListView() {
     error: errorB,
   } = useSWR("/api/salonapp/branches", fetcher);
 
-  if (employee) {
-    console.log(employee);
-  }
   const { enqueueSnackbar } = useSnackbar();
 
   const table = useTable();

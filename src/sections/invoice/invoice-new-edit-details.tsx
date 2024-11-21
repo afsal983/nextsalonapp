@@ -13,7 +13,7 @@ import { inputBaseClasses } from "@mui/material/InputBase";
 
 import { useResponsive } from "src/hooks/use-responsive";
 
-import { FnCurrency } from "src/utils/format-number";
+import { fCurrency } from "src/utils/format-number";
 
 import Iconify from "src/components/iconify";
 import { RHFSelect, RHFTextField } from "src/components/hook-form";
@@ -36,7 +36,7 @@ type Props = {
   paymenttypes?: IPaymenttypes[];
   currentInvoice?: IInvoice;
   branches: BranchItem[];
-  // paymentypes: IPaymenttypes[]
+  currency: string | null;
 };
 
 export default function InvoiceNewEditDetails({
@@ -46,6 +46,7 @@ export default function InvoiceNewEditDetails({
   paymenttypes,
   currentInvoice,
   branches,
+  currency,
 }: Props) {
   const { control, setValue, getValues, watch, resetField } = useFormContext();
 
@@ -59,10 +60,6 @@ export default function InvoiceNewEditDetails({
   const taxValue = appsettings.find(
     (appsetting) => appsetting.name === "taxValue"
   )?.value;
-
-  const currency =
-    appsettings.find((appsetting) => appsetting.name === "currency")?.value ||
-    "INR";
 
   const tax = Number(taxValue) / 100;
 
@@ -224,21 +221,21 @@ export default function InvoiceNewEditDetails({
       <Stack direction="row">
         <Box sx={{ color: "text.secondary" }}>Subtotal</Box>
         <Box sx={{ width: 160, typography: "subtitle2" }}>
-          {FnCurrency(subTotal, currency)}
+          {fCurrency(subTotal)}
         </Box>
       </Stack>
 
       <Stack direction="row">
         <Box sx={{ color: "text.secondary" }}>Overerall Discount</Box>
         <Box sx={{ width: 160, typography: "subtitle2" }}>
-          {FnCurrency(discount, currency) || "-"}
+          {fCurrency(discount) || "-"}
         </Box>
       </Stack>
 
       <Stack direction="row">
         <Box sx={{ color: "text.secondary" }}>Tax Amount</Box>
         <Box sx={{ width: 160, typography: "subtitle2" }}>
-          {FnCurrency(taxTotal, currency) || "-"}
+          {fCurrency(taxTotal) || "-"}
         </Box>
       </Stack>
 
@@ -250,28 +247,26 @@ export default function InvoiceNewEditDetails({
             ...(values.tip && { color: "error.main" }),
           }}
         >
-          {values.tip ? `+ ${FnCurrency(values.tip, currency)}` : "+"}
+          {values.tip ? `+ ${fCurrency(values.tip)}` : "+"}
         </Box>
       </Stack>
 
       <Stack direction="row" sx={{ typography: "subtitle1" }}>
         <Box>Total</Box>
-        <Box sx={{ width: 160 }}>
-          {FnCurrency(totalAmount, currency) || "-"}
-        </Box>
+        <Box sx={{ width: 160 }}>{fCurrency(totalAmount) || "-"}</Box>
       </Stack>
 
       <Stack direction="row">
         <Box sx={{ color: "text.secondary" }}>Rounded Total</Box>
         <Box sx={{ width: 160, typography: "subtitle2" }}>
-          {FnCurrency(totalAmount, currency) || "-"}
+          {fCurrency(totalAmount) || "-"}
         </Box>
       </Stack>
 
       <Stack direction="row">
         <Box sx={{ color: "text.secondary" }}>Customer Savings</Box>
         <Box sx={{ width: 160, typography: "subtitle2" }}>
-          {FnCurrency(customerSavings, currency) || "-"}
+          {fCurrency(customerSavings) || "-"}
         </Box>
       </Stack>
     </Stack>

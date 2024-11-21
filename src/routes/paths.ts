@@ -139,6 +139,10 @@ export const paths = {
       new: `${ROOTS.DASHBOARD}/user/new`,
       details: (id: string) => `${ROOTS.DASHBOARD}/user/${id}`,
       edit: (id: string) => `${ROOTS.DASHBOARD}/user/${id}/edit`,
+      userrole: {
+        root: `${ROOTS.DASHBOARD}/userrole`,
+        edit: `${ROOTS.DASHBOARD}/userrole/edit`,
+      },
     },
     settings: {
       root: `${ROOTS.DASHBOARD}/settings`,

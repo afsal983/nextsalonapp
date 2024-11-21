@@ -44,7 +44,6 @@ export default function ServiceNewEditForm({
 }: Props) {
   const router = useRouter();
 
-  console.log(currentService);
   const [color, setColor] = useState(currentService?.color || "#FFFFFF");
 
   const { enqueueSnackbar } = useSnackbar();

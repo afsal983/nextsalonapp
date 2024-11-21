@@ -56,9 +56,6 @@ export default function InvoiceCreateView() {
   if (errorS || errorB || errorE || errorI || errorP)
     return <div>Error Loading...</div>;
 
-  if (appsettings) {
-    console.log(appsettings);
-  }
   return (
     <Container maxWidth={settings.themeStretch ? false : "lg"}>
       <CustomBreadcrumbs

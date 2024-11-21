@@ -23,7 +23,6 @@ export function useGetProducts() {
     [data?.products, error, isLoading, isValidating]
   );
 
-  console.log(isLoading);
   return memoizedValue;
 }
 

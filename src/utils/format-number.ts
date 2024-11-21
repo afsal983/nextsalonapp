@@ -46,7 +46,7 @@ export function fCurrency(inputValue: InputValue) {
   const { code } = getLocaleCode();
 
   // const currency = (user?.orgsettings.find((settings: AppSettings) => settings.name === "currency"))?.value
-  const currency = "AED";
+  const currency = localStorage.getItem("___currency") || "AED";
 
   if (!inputValue) return "";
 

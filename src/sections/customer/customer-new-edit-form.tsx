@@ -44,9 +44,6 @@ export default function CustomerNewEditForm({
 }: Props) {
   const router = useRouter();
 
-  console.log(currentCustomer);
-  // const [color, setColor] = useState(currentCustomer?.color||"#FFFFFF")
-
   const { enqueueSnackbar } = useSnackbar();
 
   const { t } = useTranslate();

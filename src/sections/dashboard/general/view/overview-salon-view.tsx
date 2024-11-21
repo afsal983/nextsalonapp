@@ -93,8 +93,6 @@ export default function OverviewSalonView() {
     return <div>Loading...</div>;
   if (errorA || errorL || errorR || errorB) return <div>Error Loading...</div>;
 
-  console.log(appointment?.data?.upcomingevents);
-
   return (
     <Container maxWidth={settings.themeStretch ? false : "xl"}>
       <Grid container spacing={3}>

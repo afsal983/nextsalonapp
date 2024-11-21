@@ -68,8 +68,6 @@ export default function InvoiceNewEditAddress({ branches }: Props) {
   );
   const handleCreateCustomer = useCallback(
     async (customerInfo: Customer) => {
-      console.log(customerInfo);
-
       try {
         // Post the data
         const response = await fetch(`/api/salonapp/customer`, {

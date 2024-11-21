@@ -93,6 +93,8 @@ export default function InvoiceListView() {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const currency = localStorage.getItem("___currency");
+
   const theme = useTheme();
 
   const settings = useSettingsContext();

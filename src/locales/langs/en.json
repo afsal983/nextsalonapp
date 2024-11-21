@@ -35,7 +35,8 @@
     "role_id": "Role ID",
     "branch": "Branch",
     "discount": "Discount",
-    "default_category": "Default Category"
+    "default_category": "Default Category",
+    "location": "Location"
   },
   "salonapp" : {
     "management": "management",
@@ -235,7 +236,7 @@
       "save_branch": "Save Branch"
     },
     "location": {
-
+      "name": "Location",
       "locations": "Locations",
       "new_location": "New Location",
       "name_fvalid_error": "Invalid Location Name",

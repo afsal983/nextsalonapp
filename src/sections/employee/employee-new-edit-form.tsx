@@ -70,7 +70,11 @@ export default function EmployeeNewEditForm({
       email: currentEmployee?.email || "",
       user_id: currentEmployee?.user_id || 0,
       branch_id: currentEmployee?.branch_id || 0,
-      employeeservice: currentEmployee?.employeeservice || [],
+      employeeservice:
+        currentEmployee?.employeeservice.map((service) => ({
+          service_id: service.service_id,
+          name: service.Product.name,
+        })) || [],
       avatarimagename: currentEmployee?.avatarimagename || "",
     }),
     [currentEmployee]

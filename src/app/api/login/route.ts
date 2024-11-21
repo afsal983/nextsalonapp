@@ -16,7 +16,6 @@ export async function POST(request: NextRequest, response: NextResponse) {
     password,
   };
 
-  console.log(logincred);
   // Send the API request to backend
   const data = await fetch(`${baseUSRL}/secretkeeper/signin`, {
     method: "POST",
@@ -29,7 +28,6 @@ export async function POST(request: NextRequest, response: NextResponse) {
   // Get the data in JSON format
   const responseData = await data.json();
 
-  console.log(responseData);
   if (responseData?.status !== 200) {
     const res = {
       Title: "NOK",
@@ -58,7 +56,6 @@ export async function POST(request: NextRequest, response: NextResponse) {
     sameSite: "lax",
     path: "/",
   });
-  console.log("ss");
 
   return NextResponse.json(responseData, { status: 200 });
 }

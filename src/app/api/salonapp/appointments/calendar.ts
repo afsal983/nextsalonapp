@@ -154,8 +154,6 @@ export async function updateEvent(eventData: Partial<ICalendarEvent>) {
   // Get the response
   const responseData = await response.json();
   if (responseData?.status !== 200) {
-    console.log("dddssd");
-    console.log(responseData);
     return responseData;
   }
 
@@ -194,7 +192,6 @@ export async function deleteEvent(eventId: string) {
   // Get the response
   const responseData = await response.json();
   if (responseData?.status !== 200) {
-    console.log(responseData);
     return responseData;
   }
 
@@ -205,7 +202,6 @@ export async function deleteEvent(eventId: string) {
         (event: AppointmentItem) => Number(event.id) !== Number(eventId)
       );
 
-      console.log(currentData);
       return {
         ...currentData.data,
         data,

@@ -44,8 +44,6 @@ export async function GET(request: NextRequest) {
     }
   );
 
-  console.log(searchString);
-
   // Get the data in JSON format
   const response = await data.json();
 

@@ -4,8 +4,10 @@ import { useMemo, useEffect, useReducer, useCallback } from "react";
 
 import axios, { endpoints } from "src/utils/axios";
 
+import { AppSettings } from "src/types/settings";
 import { setSession } from "./utils";
 import { AuthContext } from "./auth-context";
+
 import {
   type AuthUserType,
   type ActionMapType,
@@ -145,14 +147,6 @@ export function AuthProvider({ children }: Props) {
   const login = useCallback(async (username: string, password: string) => {
     setSession("");
 
-    // const res = await axios.post(endpoints.auth.login, data)
-    // const res = await fetch(endpoints.auth.login, {
-    // method: "POST",
-    // headers: {
-    //   "Content-type": "application/json",
-    // },
-    // body: JSON.stringify({ email: username, password }),
-    // });
     const data = {
       username,
       password,
@@ -191,6 +185,12 @@ export function AuthProvider({ children }: Props) {
         },
       },
     });
+
+    const currency = orgsettings.find(
+      (settings: AppSettings) => settings.name === "currency"
+    )?.value;
+
+    localStorage.setItem("___currency", currency);
   }, []);
 
   // REGISTER
@@ -241,6 +241,7 @@ export function AuthProvider({ children }: Props) {
       console.error("Error deleting session cookie:", error);
     }
 
+    localStorage.removeItem("___currency");
     dispatch({
       type: Types.LOGOUT,
     });

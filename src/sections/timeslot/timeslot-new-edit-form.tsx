@@ -68,7 +68,6 @@ export default function TimeSlotNewEditForm({ currentTimeSlot }: Props) {
     [currentTimeSlot]
   );
 
-  console.log(defaultValues);
   const methods = useForm({
     resolver: yupResolver(NewProductSchema),
     defaultValues,
@@ -88,7 +87,7 @@ export default function TimeSlotNewEditForm({ currentTimeSlot }: Props) {
       starttime: `${data.starttime?.getHours()}:${data.starttime?.getMinutes()}`,
       endtime: `${data.endtime?.getHours()}:${data.endtime?.getMinutes()}`,
     };
-    console.log(TimeSlotData);
+
     try {
       // Post the data
       const response = await fetch(`/api/salonapp/timeslot`, {

@@ -111,7 +111,6 @@ export default function PaymentNewEditForm({
       event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
       index: number
     ) => {
-      console.log(event.target.value);
       setValue(`Payment[${index}].auth_code`, event.target.value);
     },
     [setValue]
