@@ -68,6 +68,7 @@ export default function HomeView() {
       >
         <HomeMinimal />
 
+        {/*
         <HomeHugePackElements />
 
         <Box sx={{ position: "relative" }}>
@@ -87,6 +88,7 @@ export default function HomeView() {
         <HomeLookingFor />
 
         <HomeAdvertisement />
+      */}
       </Box>
     </MainLayout>
   );

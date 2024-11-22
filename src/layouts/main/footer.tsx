@@ -59,7 +59,10 @@ export default function Footer() {
       }}
     >
       <Container>
-        <Logo sx={{ mb: 1, mx: "auto" }} logourl="" />
+        <Logo
+          sx={{ mb: 1, mx: "auto" }}
+          logourl="smeeye/SMEEYE-logos_transparent.png"
+        />
 
         <Typography variant="caption" component="div">
           © All rights reserved

@@ -192,8 +192,8 @@ export default function HomeHero() {
             textAlign: "center",
           }}
         >
-          SMEEYE <br />
-          Go-to platform for Customer-Obsessed Businesses
+          Start a <br />
+          New Project with
         </Typography>
       </m.div>
 
@@ -207,14 +207,14 @@ export default function HomeHero() {
             repeat: Infinity,
           }}
         >
-          nextSalon
+          Minimal
         </StyledTextGradient>
       </m.div>
 
       <m.div variants={varFade().in}>
         <Typography variant="body2" sx={{ textAlign: "center" }}>
-          Revolutionizing the way salon operations are managed by integrating
-          the most advanced and innovative technology solutions available today.
+          The starting point for your next project is based on MUI.Easy
+          customization Helps you build apps faster and better.
         </Typography>
       </m.div>
 
@@ -245,17 +245,71 @@ export default function HomeHero() {
           <Stack alignItems="center" spacing={2}>
             <Button
               component={RouterLink}
-              href={paths.auth.jwt.login}
+              href={paths.dashboard.root}
               color="inherit"
               size="large"
               variant="contained"
               startIcon={<Iconify icon="eva:flash-fill" width={24} />}
             >
-              Login
+              Live Preview
             </Button>
+
+            <Link
+              color="inherit"
+              variant="caption"
+              target="_blank"
+              rel="noopener"
+              href={paths.SMEYE}
+              sx={{
+                textDecoration: "underline",
+                display: "inline-flex",
+                alignItems: "center",
+              }}
+            >
+              <Iconify
+                icon="eva:external-link-fill"
+                width={16}
+                sx={{ mr: 0.5 }}
+              />
+              Get Free Version
+            </Link>
           </Stack>
+
+          <Button
+            color="inherit"
+            size="large"
+            variant="outlined"
+            startIcon={<Iconify icon="eva:external-link-fill" width={24} />}
+            target="_blank"
+            rel="noopener"
+            href={paths.SMEYE}
+            sx={{ borderColor: "text.primary" }}
+          >
+            Design Preview
+          </Button>
         </Stack>
       </m.div>
+
+      <Stack spacing={3} sx={{ textAlign: "center" }}>
+        <m.div variants={varFade().in}>
+          <Typography variant="overline" sx={{ opacity: 0.48 }}>
+            Available For
+          </Typography>
+        </m.div>
+
+        <Stack spacing={2} direction="row" justifyContent="center">
+          {["js", "ts", "figma", "nextjs", "vite"].map((icon) => (
+            <m.div key={icon} variants={varFade().in}>
+              <Box
+                component="img"
+                alt={icon}
+                src={`/assets/icons/platforms/ic_${icon}.svg`}
+                sx={{ width: 24, height: 24 }}
+              />
+            </m.div>
+          ))}
+        </Stack>
+      </Stack>
     </Stack>
   );
 

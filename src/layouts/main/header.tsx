@@ -75,12 +75,12 @@ export default function Header() {
                   color="info"
                   sx={{ textTransform: "unset", height: 22, px: 0.5 }}
                 >
-                  v5.7.0
+                  A
                 </Label>
               </Link>
             }
           >
-            <Logo logourl="" />
+            <Logo logourl="smeeye/SMEEYE-logos_white.png" />
           </Badge>
 
           <Box sx={{ flexGrow: 1 }} />

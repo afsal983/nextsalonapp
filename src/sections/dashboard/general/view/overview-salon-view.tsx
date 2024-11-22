@@ -11,6 +11,8 @@ import { fetcher } from "src/utils/axios";
 
 import { useSettingsContext } from "src/components/settings";
 
+import Loading from "src/app/loading";
+
 import BestProducts from "../salon-best-product";
 import SalonYearlySales from "../salon-yearly-sales";
 import CustomerByGender from "../customer-by-gender";
@@ -20,6 +22,7 @@ import SalonBestEmployee from "../salon-best-employee";
 import AppointmentSource from "../appointment-sources";
 import LatestTransactions from "../latest-transactions";
 import SalonDashBoardWidgetSummary from "../salondashboard-widget-summary";
+
 // ----------------------------------------------------------------------
 
 export default function OverviewSalonView() {
@@ -90,7 +93,7 @@ export default function OverviewSalonView() {
     iscustomerbygender ||
     isappointmentsources
   )
-    return <div>Loading...</div>;
+    return <Loading />;
   if (errorA || errorL || errorR || errorB) return <div>Error Loading...</div>;
 
   return (
