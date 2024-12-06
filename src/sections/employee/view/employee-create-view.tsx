@@ -1,19 +1,21 @@
-"use client";
+'use client';
 
-import useSWR from "swr";
+import useSWR from 'swr';
 
-import Container from "@mui/material/Container";
+import Container from '@mui/material/Container';
 
-import { paths } from "src/routes/paths";
+import { paths } from 'src/routes/paths';
 
-import { fetcher } from "src/utils/axios";
+import { DashboardContent } from 'src/layouts/dashboard';
 
-import { useTranslate } from "src/locales";
+import { fetcher } from 'src/utils/axios';
 
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+import { useTranslate } from 'src/locales';
 
-import EmployeeNewEditForm from "../employee-new-edit-form";
+import { useSettingsContext } from 'src/components/settings';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
+
+import EmployeeNewEditForm from '../employee-new-edit-form';
 
 // ----------------------------------------------------------------------
 
@@ -24,48 +26,37 @@ export default function EmployeeCreateView() {
 
   // Pre data fetching via API calls
   const { data: branches, isLoading: isbranchesLoading } = useSWR(
-    "/api/salonapp/branches",
+    '/api/salonapp/branches',
     fetcher
   );
-  const { data: users, isLoading: isusersLoading } = useSWR(
-    "/api/salonapp/user",
-    fetcher
-  );
-  const { data: service, isLoading: isserviceLoading } = useSWR(
-    "/api/salonapp/services",
-    fetcher
-  );
+  const { data: users, isLoading: isusersLoading } = useSWR('/api/salonapp/user', fetcher);
+  const { data: service, isLoading: isserviceLoading } = useSWR('/api/salonapp/services', fetcher);
 
   // Wait for data loading
-  if (isbranchesLoading || isusersLoading || isserviceLoading)
-    return <div>Loading...</div>;
+  if (isbranchesLoading || isusersLoading || isserviceLoading) return <div>Loading...</div>;
   if (!branches || !users || !service) return <div>Loading...</div>;
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : "lg"}>
+    <DashboardContent>
       <CustomBreadcrumbs
-        heading={t("salonapp.employee.new_employee")}
+        heading={t('salonapp.employee.new_employee')}
         links={[
           {
-            name: t("salonapp.dashboard"),
+            name: t('salonapp.dashboard'),
             href: paths.dashboard.root,
           },
           {
-            name: t("salonapp.employee.employee"),
+            name: t('salonapp.employee.employee'),
             href: paths.dashboard.employees.root,
           },
-          { name: t("salonapp.employee.new_employee") },
+          { name: t('salonapp.employee.new_employee') },
         ]}
         sx={{
           mb: { xs: 3, md: 5 },
         }}
       />
 
-      <EmployeeNewEditForm
-        branches={branches.data}
-        users={users.data}
-        services={service.data}
-      />
-    </Container>
+      <EmployeeNewEditForm branches={branches.data} users={users.data} services={service.data} />
+    </DashboardContent>
   );
 }

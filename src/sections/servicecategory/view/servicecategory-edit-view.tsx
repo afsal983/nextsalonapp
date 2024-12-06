@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import useSWR from "swr";
-import React from "react";
+import useSWR from 'swr';
+import React from 'react';
 
-import Container from "@mui/material/Container";
+import Container from '@mui/material/Container';
 
-import { paths } from "src/routes/paths";
+import { paths } from 'src/routes/paths';
 
-import { fetcher } from "src/utils/axios";
+import { fetcher } from 'src/utils/axios';
 
-import { useTranslate } from "src/locales";
+import { useTranslate } from 'src/locales';
 
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+import { useSettingsContext } from 'src/components/settings';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import ServiceCategoryNewEditForm from "../servicecategory-new-edit-form";
+import ServiceCategoryNewEditForm from '../servicecategory-new-edit-form';
 
 // ----------------------------------------------------------------------
 
@@ -41,16 +41,16 @@ export default function ServiceCategoryEditView({ id }: Props) {
   if (isLoading || !servicecategoryData) return <div>Loading...</div>;
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : "lg"}>
+    <DashboardContent>
       <CustomBreadcrumbs
         heading="Edit"
         links={[
           {
-            name: t("salonapp.dashboard"),
+            name: t('salonapp.dashboard'),
             href: paths.dashboard.root,
           },
           {
-            name: t("salonapp.services"),
+            name: t('salonapp.services'),
             href: paths.dashboard.services.root,
           },
           { name: servicecategoryData?.data[0].name },
@@ -60,9 +60,7 @@ export default function ServiceCategoryEditView({ id }: Props) {
         }}
       />
 
-      <ServiceCategoryNewEditForm
-        currentServiceCategory={servicecategoryData?.data[0]}
-      />
+      <ServiceCategoryNewEditForm currentServiceCategory={servicecategoryData?.data[0]} />
     </Container>
   );
 }

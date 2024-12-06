@@ -1,19 +1,61 @@
 // ----------------------------------------------------------------------
 
 const ROOTS = {
-  AUTH: "/auth",
-  DASHBOARD: "/dashboard",
+  AUTH: '/auth',
+  DASHBOARD: '/dashboard',
+  AUTH_DEMO: '/auth-demo',
 };
 
 // ----------------------------------------------------------------------
 
 export const paths = {
-  SMEYE: "SMEEYE.COM",
+  SMEYE: 'SMEEYE.COM',
   // AUTH
   auth: {
+    amplify: {
+      signIn: `${ROOTS.AUTH}/amplify/sign-in`,
+      verify: `${ROOTS.AUTH}/amplify/verify`,
+      signUp: `${ROOTS.AUTH}/amplify/sign-up`,
+      updatePassword: `${ROOTS.AUTH}/amplify/update-password`,
+      resetPassword: `${ROOTS.AUTH}/amplify/reset-password`,
+    },
     jwt: {
       login: `${ROOTS.AUTH}/jwt/login`,
+      signIn: `${ROOTS.AUTH}/jwt/sign-in`,
+      signUp: `${ROOTS.AUTH}/jwt/sign-up`,
       register: `${ROOTS.AUTH}/jwt/register`,
+    },
+    firebase: {
+      signIn: `${ROOTS.AUTH}/firebase/sign-in`,
+      verify: `${ROOTS.AUTH}/firebase/verify`,
+      signUp: `${ROOTS.AUTH}/firebase/sign-up`,
+      resetPassword: `${ROOTS.AUTH}/firebase/reset-password`,
+    },
+    auth0: {
+      signIn: `${ROOTS.AUTH}/auth0/sign-in`,
+    },
+    supabase: {
+      signIn: `${ROOTS.AUTH}/supabase/sign-in`,
+      verify: `${ROOTS.AUTH}/supabase/verify`,
+      signUp: `${ROOTS.AUTH}/supabase/sign-up`,
+      updatePassword: `${ROOTS.AUTH}/supabase/update-password`,
+      resetPassword: `${ROOTS.AUTH}/supabase/reset-password`,
+    },
+  },
+  authDemo: {
+    split: {
+      signIn: `${ROOTS.AUTH_DEMO}/split/sign-in`,
+      signUp: `${ROOTS.AUTH_DEMO}/split/sign-up`,
+      resetPassword: `${ROOTS.AUTH_DEMO}/split/reset-password`,
+      updatePassword: `${ROOTS.AUTH_DEMO}/split/update-password`,
+      verify: `${ROOTS.AUTH_DEMO}/split/verify`,
+    },
+    centered: {
+      signIn: `${ROOTS.AUTH_DEMO}/centered/sign-in`,
+      signUp: `${ROOTS.AUTH_DEMO}/centered/sign-up`,
+      resetPassword: `${ROOTS.AUTH_DEMO}/centered/reset-password`,
+      updatePassword: `${ROOTS.AUTH_DEMO}/centered/update-password`,
+      verify: `${ROOTS.AUTH_DEMO}/centered/verify`,
     },
   },
   about: `${ROOTS.DASHBOARD}/about`,
@@ -70,8 +112,7 @@ export const paths = {
       new: `${ROOTS.DASHBOARD}/appointment/new`,
       details: (id: string) => `${ROOTS.DASHBOARD}/appointment/${id}`,
       edit: (id: string) => `${ROOTS.DASHBOARD}/appointment/${id}/edit`,
-      appointmentinvoice: (id: string) =>
-        `${ROOTS.DASHBOARD}/appointment/${id}/appointmentinvoice`,
+      appointmentinvoice: (id: string) => `${ROOTS.DASHBOARD}/appointment/${id}/appointmentinvoice`,
       calander: {
         root: `${ROOTS.DASHBOARD}/appointment/calander`,
       },

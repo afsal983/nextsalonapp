@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import isEqual from "lodash/isEqual";
-import { useState, useEffect, useCallback } from "react";
+import { isEqual } from 'src/utils/helper';
+import { useState, useEffect, useCallback } from 'react';
 
-import FilterListIcon from "@mui/icons-material/FilterList";
+import FilterListIcon from '@mui/icons-material/FilterList';
 import {
   Card,
   Stack,
@@ -13,7 +13,7 @@ import {
   useTheme,
   Container,
   IconButton,
-} from "@mui/material";
+} from '@mui/material';
 import {
   DataGrid,
   GridColDef,
@@ -24,51 +24,48 @@ import {
   GridToolbarFilterButton,
   GridToolbarColumnsButton,
   GridColumnVisibilityModel,
-} from "@mui/x-data-grid";
+} from '@mui/x-data-grid';
 
-import { paths } from "src/routes/paths";
+import { paths } from 'src/routes/paths';
 
-import { useBoolean } from "src/hooks/use-boolean";
+import { useBoolean } from 'src/hooks/use-boolean';
 
-import { isAfter } from "src/utils/format-time";
+import { fIsAfter } from 'src/utils/format-time';
 
-import Iconify from "src/components/iconify";
-import Scrollbar from "src/components/scrollbar";
-import { useSnackbar } from "src/components/snackbar";
-import EmptyContent from "src/components/empty-content";
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+import { toast } from 'src/components/snackbar';
+import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
+import { EmptyContent } from 'src/components/empty-content';
+import { useSettingsContext } from 'src/components/settings';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { ServiceCategoryItem } from "src/types/service";
+import { ServiceCategoryItem } from 'src/types/service';
 import {
   ProductReport,
   ProductReportTableFilters,
   ProductReportPeriodFilters,
   ProductReportTableFilterValue,
-} from "src/types/report";
+} from 'src/types/report';
 
-import PeriodFilters from "../period-filters";
-import ProductReportAnalytic from "../productreport-analytic";
-import DeatailedSalesTableToolbar from "../productreport-table-toolbar";
-import DeatailedSalesTableFiltersResult from "../productreport-table-filters-result";
-import {
-  RenderCellPrice,
-  RenderCellProduct,
-} from "../productreport-table-row";
+import PeriodFilters from '../period-filters';
+import ProductReportAnalytic from '../productreport-analytic';
+import DeatailedSalesTableToolbar from '../productreport-table-toolbar';
+import { RenderCellPrice, RenderCellProduct } from '../productreport-table-row';
+import DeatailedSalesTableFiltersResult from '../productreport-table-filters-result';
 
 // ----------------------------------------------------------------------
 
 const TYPE_OPTIONS = [
-  { value: "Service", label: "Service" },
-  { value: "Retail", label: "Retails" },
-  { value: "Package", label: "Package" },
+  { value: 'Service', label: 'Service' },
+  { value: 'Retail', label: 'Retails' },
+  { value: 'Package', label: 'Package' },
 ];
 
 const HIDE_COLUMNS = {
   category1: false,
 };
 
-const HIDE_COLUMNS_TOGGLABLE = ["category1", "actions"];
+const HIDE_COLUMNS_TOGGLABLE = ['category1', 'actions'];
 
 // This is for date filter to conditionaly fetch data from remote API
 const defaultperiodFilters: ProductReportPeriodFilters = {
@@ -85,8 +82,6 @@ const defaultitemFilters: ProductReportTableFilters = {
 // ----------------------------------------------------------------------
 
 export default function ProductReportListView() {
-  const { enqueueSnackbar } = useSnackbar();
-
   const confirmRows = useBoolean();
 
   const theme = useTheme();
@@ -104,11 +99,9 @@ export default function ProductReportListView() {
   const [periodfilters, setFilters] = useState(defaultperiodFilters);
   const [itemfilters, setitemFilters] = useState(defaultitemFilters);
 
-  const dateError = isAfter(periodfilters.startDate, periodfilters.endDate);
+  const dateError = fIsAfter(periodfilters.startDate, periodfilters.endDate);
 
-  const [selectedRowIds, setSelectedRowIds] = useState<GridRowSelectionModel>(
-    []
-  );
+  const [selectedRowIds, setSelectedRowIds] = useState<GridRowSelectionModel>([]);
 
   const [columnVisibilityModel, setColumnVisibilityModel] =
     useState<GridColumnVisibilityModel>(HIDE_COLUMNS);
@@ -127,25 +120,19 @@ export default function ProductReportListView() {
 
   const canReset = !isEqual(defaultitemFilters, itemfilters);
 
-  const handleitemFilters = useCallback(
-    (name: string, value: ProductReportTableFilterValue) => {
-      setitemFilters((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    },
-    []
-  );
+  const handleitemFilters = useCallback((name: string, value: ProductReportTableFilterValue) => {
+    setitemFilters((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  }, []);
 
-  const handlePeriodFilters = useCallback(
-    (name: string, value: ProductReportTableFilterValue) => {
-      setFilters((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    },
-    []
-  );
+  const handlePeriodFilters = useCallback((name: string, value: ProductReportTableFilterValue) => {
+    setFilters((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  }, []);
 
   const handleResetFilters = useCallback(() => {
     setitemFilters(defaultitemFilters);
@@ -158,14 +145,14 @@ export default function ProductReportListView() {
     const data = {
       start: periodfilters.startDate,
       end: periodfilters.endDate,
-      filtername: "all",
+      filtername: 'all',
       filterid: 1,
     };
 
-    const response = await fetch("/api/salonapp/report/productreport", {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
+    const response = await fetch('/api/salonapp/report/productreport', {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(data), // body data type must match "Content-Type" header
     });
@@ -173,7 +160,7 @@ export default function ProductReportListView() {
 
     if (responseData.status > 300) {
       setisLoading(false);
-      enqueueSnackbar("Fetching report data failed", { variant: "error" });
+      toast.error('Fetching report data failed');
       return;
     }
     setTableData(responseData.data);
@@ -184,15 +171,15 @@ export default function ProductReportListView() {
 
   const columns: GridColDef[] = [
     {
-      field: "id",
-      headerName: "Sn",
+      field: 'id',
+      headerName: 'Sn',
       filterable: true,
       width: 40,
       hideable: false,
     },
     {
-      field: "productinfo",
-      headerName: "Product Name",
+      field: 'productinfo',
+      headerName: 'Product Name',
       filterable: true,
       hideable: false,
       width: 280,
@@ -200,8 +187,8 @@ export default function ProductReportListView() {
       valueGetter: (params) => params.row.productinfo.name,
     },
     {
-      field: "price",
-      headerName: "Price",
+      field: 'price',
+      headerName: 'Price',
       width: 100,
       editable: true,
       hideable: false,
@@ -209,28 +196,28 @@ export default function ProductReportListView() {
     },
 
     {
-      field: "category",
-      headerName: "Category",
+      field: 'category',
+      headerName: 'Category',
       width: 180,
     },
     {
-      field: "type",
-      headerName: "Type",
+      field: 'type',
+      headerName: 'Type',
       width: 180,
     },
     {
-      field: "duration",
-      headerName: "Duration",
+      field: 'duration',
+      headerName: 'Duration',
       width: 180,
     },
     {
-      field: "stock",
-      headerName: "Stock",
+      field: 'stock',
+      headerName: 'Stock',
       width: 180,
     },
     {
-      field: "brand",
-      headerName: "Brand",
+      field: 'brand',
+      headerName: 'Brand',
       width: 100,
     },
 
@@ -325,22 +312,22 @@ export default function ProductReportListView() {
   return (
     <>
       <Container
-        maxWidth={settings.themeStretch ? false : "lg"}
+        maxWidth={settings.themeStretch ? false : 'lg'}
         sx={{
           flexGrow: 1,
-          display: "flex",
-          flexDirection: "column",
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
         <CustomBreadcrumbs
           heading="List"
           links={[
-            { name: "Dashboard", href: paths.dashboard.root },
+            { name: 'Dashboard', href: paths.dashboard.root },
             {
-              name: "Reports",
+              name: 'Reports',
               href: paths.dashboard.report.root,
             },
-            { name: "Product Report" },
+            { name: 'Product Report' },
           ]}
           action={
             <IconButton onClick={() => openFilters.onTrue()} size="large">
@@ -365,13 +352,7 @@ export default function ProductReportListView() {
           <Scrollbar>
             <Stack
               direction="row"
-              divider={
-                <Divider
-                  orientation="vertical"
-                  flexItem
-                  sx={{ borderStyle: "dashed" }}
-                />
-              }
+              divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
               sx={{ py: 2 }}
             >
               <ProductReportAnalytic
@@ -417,8 +398,8 @@ export default function ProductReportListView() {
           sx={{
             height: { xs: 800, md: 2 },
             flexGrow: { md: 1 },
-            display: { md: "flex" },
-            flexDirection: { md: "column" },
+            display: { md: 'flex' },
+            flexDirection: { md: 'column' },
           }}
         >
           <DataGrid
@@ -427,7 +408,7 @@ export default function ProductReportListView() {
             rows={dataFiltered}
             columns={columns}
             loading={isLoading}
-            getRowHeight={() => "auto"}
+            getRowHeight={() => 'auto'}
             pageSizeOptions={[5, 10, 25]}
             initialState={{
               pagination: {
@@ -438,9 +419,7 @@ export default function ProductReportListView() {
               setSelectedRowIds(newSelectionModel);
             }}
             columnVisibilityModel={columnVisibilityModel}
-            onColumnVisibilityModelChange={(newModel) =>
-              setColumnVisibilityModel(newModel)
-            }
+            onColumnVisibilityModelChange={(newModel) => setColumnVisibilityModel(newModel)}
             slots={{
               toolbar: () => (
                 <>
@@ -468,9 +447,7 @@ export default function ProductReportListView() {
                         <Button
                           size="small"
                           color="error"
-                          startIcon={
-                            <Iconify icon="solar:trash-bin-trash-bold" />
-                          }
+                          startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
                           onClick={confirmRows.onTrue}
                         >
                           Delete ({selectedRowIds.length})
@@ -540,9 +517,7 @@ function applyFilter({
   const { type, category } = filters;
 
   if (category?.length) {
-    inputData = inputData.filter((invoice) =>
-      category.includes(invoice?.category)
-    );
+    inputData = inputData.filter((invoice) => category.includes(invoice?.category));
   }
 
   if (type?.length) {

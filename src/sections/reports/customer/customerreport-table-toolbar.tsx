@@ -1,19 +1,16 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback } from 'react';
 
-import MenuItem from "@mui/material/MenuItem";
-import Checkbox from "@mui/material/Checkbox";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import MenuItem from '@mui/material/MenuItem';
+import Checkbox from '@mui/material/Checkbox';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
-import Iconify from "src/components/iconify";
-import CustomPopover, { usePopover } from "src/components/custom-popover";
+import { Iconify } from 'src/components/iconify';
+import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-import {
-  CustomerReportTableFilters,
-  CustomerReportTableFilterValue,
-} from "src/types/report";
+import { CustomerReportTableFilters, CustomerReportTableFilterValue } from 'src/types/report';
 
 // ----------------------------------------------------------------------
 
@@ -44,29 +41,26 @@ export default function CustomerReportTableToolbar({
 
   const [sex, setSex] = useState<string[]>(filters.sex);
 
-  const handleChangeCategory = useCallback(
-    (event: SelectChangeEvent<string[]>) => {
-      const {
-        target: { value },
-      } = event;
-      setCategory(typeof value === "string" ? value.split(",") : value);
-    },
-    []
-  );
+  const handleChangeCategory = useCallback((event: SelectChangeEvent<string[]>) => {
+    const {
+      target: { value },
+    } = event;
+    setCategory(typeof value === 'string' ? value.split(',') : value);
+  }, []);
 
   const handleChangeSex = useCallback((event: SelectChangeEvent<string[]>) => {
     const {
       target: { value },
     } = event;
-    setSex(typeof value === "string" ? value.split(",") : value);
+    setSex(typeof value === 'string' ? value.split(',') : value);
   }, []);
 
   const handleCloseCategory = useCallback(() => {
-    onFilters("category", category);
+    onFilters('category', category);
   }, [onFilters, category]);
 
   const handleCloseSex = useCallback(() => {
-    onFilters("sex", sex);
+    onFilters('sex', sex);
   }, [onFilters, sex]);
 
   return (
@@ -84,17 +78,13 @@ export default function CustomerReportTableToolbar({
           value={category}
           onChange={handleChangeCategory}
           input={<OutlinedInput label="Category" />}
-          renderValue={(selected) => selected.map((value) => value).join(", ")}
+          renderValue={(selected) => selected.map((value) => value).join(', ')}
           onClose={handleCloseCategory}
-          sx={{ textTransform: "capitalize" }}
+          sx={{ textTransform: 'capitalize' }}
         >
           {categoryOptions?.map((option) => (
             <MenuItem key={option.value} value={option.value}>
-              <Checkbox
-                disableRipple
-                size="small"
-                checked={category?.includes(option.value)}
-              />
+              <Checkbox disableRipple size="small" checked={category?.includes(option.value)} />
               {option.label}
             </MenuItem>
           ))}
@@ -114,17 +104,13 @@ export default function CustomerReportTableToolbar({
           value={sex}
           onChange={handleChangeSex}
           input={<OutlinedInput label="Sex" />}
-          renderValue={(selected) => selected.map((value) => value).join(", ")}
+          renderValue={(selected) => selected.map((value) => value).join(', ')}
           onClose={handleCloseSex}
-          sx={{ textTransform: "capitalize" }}
+          sx={{ textTransform: 'capitalize' }}
         >
           {sexOptions?.map((option) => (
             <MenuItem key={option.value} value={option.value}>
-              <Checkbox
-                disableRipple
-                size="small"
-                checked={sex?.includes(option.value)}
-              />
+              <Checkbox disableRipple size="small" checked={sex?.includes(option.value)} />
               {option.label}
             </MenuItem>
           ))}

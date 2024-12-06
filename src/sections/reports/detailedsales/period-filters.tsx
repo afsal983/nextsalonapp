@@ -1,32 +1,29 @@
-import { useCallback } from "react";
+import { useCallback } from 'react';
 
-import Stack from "@mui/material/Stack";
-import Badge from "@mui/material/Badge";
-import { LoadingButton } from "@mui/lab";
-import Drawer from "@mui/material/Drawer";
-import Divider from "@mui/material/Divider";
-import Tooltip from "@mui/material/Tooltip";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import SearchIcon from "@mui/icons-material/Search";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import Stack from '@mui/material/Stack';
+import Badge from '@mui/material/Badge';
+import { LoadingButton } from '@mui/lab';
+import Drawer from '@mui/material/Drawer';
+import Divider from '@mui/material/Divider';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import SearchIcon from '@mui/icons-material/Search';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-import Iconify from "src/components/iconify";
+import { Iconify } from 'src/components/iconify';
 
 import {
   DetailedSalesReportPeriodFilters,
   DetailedSalesReportPeriodFilterValue,
-} from "src/types/report";
+} from 'src/types/report';
 
 // ----------------------------------------------------------------------
 
 type Props = {
   //
   filters: DetailedSalesReportPeriodFilters;
-  onFilters: (
-    name: string,
-    value: DetailedSalesReportPeriodFilterValue
-  ) => void;
+  onFilters: (name: string, value: DetailedSalesReportPeriodFilterValue) => void;
   handleSearch: () => void;
   //
   canReset: boolean;
@@ -62,14 +59,14 @@ export default function PeriodFilters({
 }: Props) {
   const handleFilterStartDate = useCallback(
     (newValue: Date | null) => {
-      onFilters("startDate", newValue);
+      onFilters('startDate', newValue);
     },
     [onFilters]
   );
 
   const handleFilterEndDate = useCallback(
     (newValue: Date | null) => {
-      onFilters("endDate", newValue);
+      onFilters('endDate', newValue);
     },
     [onFilters]
   );
@@ -104,11 +101,7 @@ export default function PeriodFilters({
       <Typography variant="subtitle2">Range</Typography>
 
       <Stack spacing={2}>
-        <DatePicker
-          label="Start date"
-          value={filters.startDate}
-          onChange={handleFilterStartDate}
-        />
+        <DatePicker label="Start date" value={filters.startDate} onChange={handleFilterStartDate} />
 
         <DatePicker
           label="End date"
@@ -117,7 +110,7 @@ export default function PeriodFilters({
           slotProps={{
             textField: {
               error: dateError,
-              helperText: dateError && "End date must be later than start date",
+              helperText: dateError && 'End date must be later than start date',
             },
           }}
         />
@@ -151,7 +144,7 @@ export default function PeriodFilters({
     >
       {renderHead}
 
-      <Divider sx={{ borderStyle: "dashed" }} />
+      <Divider sx={{ borderStyle: 'dashed' }} />
 
       {renderDateRange}
     </Drawer>

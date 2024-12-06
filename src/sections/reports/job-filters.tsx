@@ -1,18 +1,18 @@
-import { useCallback } from "react";
+import { useCallback } from 'react';
 
-import Stack from "@mui/material/Stack";
-import Badge from "@mui/material/Badge";
-import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
-import Tooltip from "@mui/material/Tooltip";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
+import Stack from '@mui/material/Stack';
+import Badge from '@mui/material/Badge';
+import Drawer from '@mui/material/Drawer';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 
-import Iconify from "src/components/iconify";
-import Scrollbar from "src/components/scrollbar";
+import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
 
-import { ReportFilters, ReportFilterValue } from "src/types/report";
+import { ReportFilters, ReportFilterValue } from 'src/types/report';
 
 // ----------------------------------------------------------------------
 
@@ -56,7 +56,7 @@ export default function JobFilters({
       const checked = filters.name.includes(newValue)
         ? filters.name.filter((value) => value !== newValue)
         : [...filters.name, newValue];
-      onFilters("employmentTypes", checked);
+      onFilters('employmentTypes', checked);
     },
     [filters.name, onFilters]
   );

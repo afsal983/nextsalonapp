@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import useSWR from "swr";
-import { useState, useCallback } from "react";
+import useSWR from 'swr';
+import { useState, useCallback } from 'react';
 
-import Stack from "@mui/material/Stack";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Unstable_Grid2";
+import Stack from '@mui/material/Stack';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Unstable_Grid2';
 
-import { paths } from "src/routes/paths";
+import { paths } from 'src/routes/paths';
 
-import { fetcher } from "src/utils/axios";
+import { fetcher } from 'src/utils/axios';
 
-import { ORDER_STATUS_OPTIONS } from "src/_mock";
+import { ORDER_STATUS_OPTIONS } from 'src/_data';
 
-import { useSettingsContext } from "src/components/settings";
+import { useSettingsContext } from 'src/components/settings';
 
-import AppointmentDetailsInfo from "../appointment-details-info";
-import AppointmentDetailsItems from "../appointment-details-item";
-import AppointmentDetailsToolbar from "../appointment-details-toolbar";
-import AppointmentDetailsHistory from "../appointment-details-history";
+import AppointmentDetailsInfo from '../appointment-details-info';
+import AppointmentDetailsItems from '../appointment-details-item';
+import AppointmentDetailsToolbar from '../appointment-details-toolbar';
+import AppointmentDetailsHistory from '../appointment-details-history';
 
 // ----------------------------------------------------------------------
 
@@ -29,7 +29,7 @@ type Props = {
 export default function AppointmentDetailsView({ id }: Props) {
   const settings = useSettingsContext();
 
-  const [status, setStatus] = useState("pending");
+  const [status, setStatus] = useState('pending');
 
   const { data: appointment, isLoading: appointmentLoading } = useSWR(
     `/api/salonapp/appointments/${id}`,
@@ -43,7 +43,7 @@ export default function AppointmentDetailsView({ id }: Props) {
   if (appointmentLoading) return <div>Loading...</div>;
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : "lg"}>
+    <DashboardContent>
       <AppointmentDetailsToolbar
         backLink={paths.dashboard.appointments.root}
         orderNumber={appointment.id}
@@ -55,7 +55,7 @@ export default function AppointmentDetailsView({ id }: Props) {
 
       <Grid container spacing={3}>
         <Grid xs={12} md={8}>
-          <Stack spacing={3} direction={{ xs: "column-reverse", md: "column" }}>
+          <Stack spacing={3} direction={{ xs: 'column-reverse', md: 'column' }}>
             <AppointmentDetailsItems
               items={appointment.items}
               taxes={appointment.taxes}

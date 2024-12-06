@@ -1,49 +1,43 @@
-import { useCallback } from "react";
+import { useCallback } from 'react';
+import type { UseSetStateReturn } from 'src/hooks/use-set-state';
+import Stack from '@mui/material/Stack';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
+import InputAdornment from '@mui/material/InputAdornment';
 
-import Stack from "@mui/material/Stack";
-import MenuItem from "@mui/material/MenuItem";
-import TextField from "@mui/material/TextField";
-import FormControl from "@mui/material/FormControl";
-import InputAdornment from "@mui/material/InputAdornment";
+import { Iconify } from 'src/components/iconify';
+import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-import Iconify from "src/components/iconify";
-import CustomPopover, { usePopover } from "src/components/custom-popover";
-
-import {
-  LocationTableFilters,
-  type LocationTableFilterValue,
-} from "src/types/location";
+import { LocationTableFilters } from 'src/types/location';
 
 // ----------------------------------------------------------------------
 
 interface Props {
-  filters: LocationTableFilters;
-  onFilters: (name: string, value: LocationTableFilterValue) => void;
+  onResetPage: () => void;
+  filters: UseSetStateReturn<LocationTableFilters>;
   //
 }
 
-export default function LocationTableToolbar({
-  filters,
-  onFilters,
-} //
-: Props) {
+export default function LocationTableToolbar({ filters, onResetPage }: Props) {
   const popover = usePopover();
 
   const handleFilterName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      onFilters("name", event.target.value);
+      onResetPage();
+      filters.setState({ name: event.target.value });
     },
-    [onFilters]
+    [filters, onResetPage]
   );
 
   return (
     <>
       <Stack
         spacing={2}
-        alignItems={{ xs: "flex-end", md: "center" }}
+        alignItems={{ xs: 'flex-end', md: 'center' }}
         direction={{
-          xs: "column",
-          md: "row",
+          xs: 'column',
+          md: 'row',
         }}
         sx={{
           p: 2.5,
@@ -57,13 +51,7 @@ export default function LocationTableToolbar({
           }}
         />
 
-        <Stack
-          direction="row"
-          alignItems="center"
-          spacing={2}
-          flexGrow={1}
-          sx={{ width: 1 }}
-        >
+        <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
           <TextField
             fullWidth
             value={filters.name}
@@ -72,10 +60,7 @@ export default function LocationTableToolbar({
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Iconify
-                    icon="eva:search-fill"
-                    sx={{ color: "text.disabled" }}
-                  />
+                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
                 </InputAdornment>
               ),
             }}
@@ -90,9 +75,9 @@ export default function LocationTableToolbar({
 
       <CustomPopover
         open={popover.open}
+        anchorEl={popover.anchorEl}
         onClose={popover.onClose}
-        arrow="right-top"
-        sx={{ width: 140 }}
+        slotProps={{ arrow: { placement: 'right-top' } }}
       >
         <MenuItem
           onClick={() => {

@@ -1,55 +1,91 @@
-/* eslint-disable perfectionist/sort-imports */
-import 'src/utils/highlight'
+import { useMemo } from 'react';
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
+import type { Options } from 'react-markdown';
+import rehypeHighlight from 'rehype-highlight';
 
-// markdown plugins
-import rehypeRaw from 'rehype-raw'
-import remarkGfm from 'remark-gfm'
-import ReactMarkdown from 'react-markdown'
-import rehypeHighlight from 'rehype-highlight'
+import Link from '@mui/material/Link';
 
-import Link from '@mui/material/Link'
+import { isExternalLink } from 'src/routes/utils';
+import { RouterLink } from 'src/routes/components';
 
-import { RouterLink } from 'src/routes/components'
-
-import Image from '../image'
-import StyledMarkdown from './styles'
-import { type MarkdownProps } from './types'
+import { Image } from '../image';
+import './code-highlight-block.css';
+import { StyledRoot } from './styles';
+import { markdownClasses } from './classes';
+import type { MarkdownProps } from './types';
+import { htmlToMarkdown, isMarkdownContent } from './html-to-markdown';
 
 // ----------------------------------------------------------------------
 
-export default function Markdown ({ sx, ...other }: MarkdownProps) {
+export function Markdown({ children, sx, ...other }: MarkdownProps) {
+  const content = useMemo(() => {
+    if (isMarkdownContent(`${children}`)) {
+      return children;
+    }
+    return htmlToMarkdown(`${children}`.trim());
+  }, [children]);
+
   return (
-    <StyledMarkdown sx={sx}>
-      <ReactMarkdown
-        rehypePlugins={[
-          rehypeRaw,
-          rehypeHighlight,
-          [remarkGfm, { singleTilde: false }]
-        ]}
-        components={components}
-        {...other}
-      />
-    </StyledMarkdown>
-  )
+    <StyledRoot
+      children={content}
+      components={components as Options['components']}
+      rehypePlugins={rehypePlugins as Options['rehypePlugins']}
+      /* base64-encoded images
+       * https://github.com/remarkjs/react-markdown/issues/774
+       * urlTransform={(value: string) => value}
+       */
+      className={markdownClasses.root}
+      sx={sx}
+      {...other}
+    />
+  );
 }
 
 // ----------------------------------------------------------------------
+
+type ComponentTag = {
+  [key: string]: any;
+};
+
+const rehypePlugins = [rehypeRaw, rehypeHighlight, [remarkGfm, { singleTilde: false }]];
 
 const components = {
-  img: ({ ...props }) => (
-    <Image alt={props.alt} ratio="16/9" sx={{ borderRadius: 2 }} {...props} />
+  img: ({ ...other }: ComponentTag) => (
+    <Image
+      ratio="16/9"
+      className={markdownClasses.content.image}
+      sx={{ borderRadius: 2 }}
+      {...other}
+    />
   ),
-  a: ({ ...props }) => {
-    const isHttp = props.href.includes('http')
+  a: ({ href, children, ...other }: ComponentTag) => {
+    const linkProps = isExternalLink(href)
+      ? { target: '_blank', rel: 'noopener' }
+      : { component: RouterLink };
 
-    return isHttp
-      ? (
-      <Link target="_blank" rel="noopener" {...props} />
-        )
-      : (
-      <Link component={RouterLink} href={props.href} {...props}>
-        {props.children}
+    return (
+      <Link {...linkProps} href={href} className={markdownClasses.content.link} {...other}>
+        {children}
       </Link>
-        )
-  }
-}
+    );
+  },
+  pre: ({ children }: ComponentTag) => (
+    <div className={markdownClasses.content.codeBlock}>
+      <pre>{children}</pre>
+    </div>
+  ),
+  code({ className, children, ...other }: ComponentTag) {
+    const language = /language-(\w+)/.exec(className || '');
+
+    return language ? (
+      <code {...other} className={className}>
+        {children}
+      </code>
+    ) : (
+      <code {...other} className={markdownClasses.content.codeInline}>
+        {children}
+      </code>
+    );
+  },
+};

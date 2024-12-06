@@ -1,19 +1,19 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback } from 'react';
 
-import MenuItem from "@mui/material/MenuItem";
-import Checkbox from "@mui/material/Checkbox";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import MenuItem from '@mui/material/MenuItem';
+import Checkbox from '@mui/material/Checkbox';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
-import Iconify from "src/components/iconify";
-import CustomPopover, { usePopover } from "src/components/custom-popover";
+import { Iconify } from 'src/components/iconify';
+import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 import {
   DetailedSalesReportTableFilters,
   DetailedSalesReportTableFilterValue,
-} from "src/types/report";
+} from 'src/types/report';
 
 // ----------------------------------------------------------------------
 
@@ -51,46 +51,37 @@ export default function DetailedSalesTableToolbar({
 
   const [paymenttype, setPaymenttype] = useState<string[]>(filters.paymenttype);
 
-  const handleChangeBranch = useCallback(
-    (event: SelectChangeEvent<string[]>) => {
-      const {
-        target: { value },
-      } = event;
-      setBranch(typeof value === "string" ? value.split(",") : value);
-    },
-    []
-  );
+  const handleChangeBranch = useCallback((event: SelectChangeEvent<string[]>) => {
+    const {
+      target: { value },
+    } = event;
+    setBranch(typeof value === 'string' ? value.split(',') : value);
+  }, []);
 
-  const handleChangeStatus = useCallback(
-    (event: SelectChangeEvent<string[]>) => {
-      const {
-        target: { value },
-      } = event;
-      setStatus(typeof value === "string" ? value.split(",") : value);
-    },
-    []
-  );
+  const handleChangeStatus = useCallback((event: SelectChangeEvent<string[]>) => {
+    const {
+      target: { value },
+    } = event;
+    setStatus(typeof value === 'string' ? value.split(',') : value);
+  }, []);
 
-  const handleChangePaymenttype = useCallback(
-    (event: SelectChangeEvent<string[]>) => {
-      const {
-        target: { value },
-      } = event;
-      setPaymenttype(typeof value === "string" ? value.split(",") : value);
-    },
-    []
-  );
+  const handleChangePaymenttype = useCallback((event: SelectChangeEvent<string[]>) => {
+    const {
+      target: { value },
+    } = event;
+    setPaymenttype(typeof value === 'string' ? value.split(',') : value);
+  }, []);
 
   const handleCloseBranch = useCallback(() => {
-    onFilters("branch", branch);
+    onFilters('branch', branch);
   }, [onFilters, branch]);
 
   const handleCloseStatus = useCallback(() => {
-    onFilters("status", status);
+    onFilters('status', status);
   }, [onFilters, status]);
 
   const handleClosePaymenttype = useCallback(() => {
-    onFilters("paymenttype", paymenttype);
+    onFilters('paymenttype', paymenttype);
   }, [onFilters, paymenttype]);
 
   return (
@@ -108,17 +99,13 @@ export default function DetailedSalesTableToolbar({
           value={branch}
           onChange={handleChangeBranch}
           input={<OutlinedInput label="Branch" />}
-          renderValue={(selected) => selected.map((value) => value).join(", ")}
+          renderValue={(selected) => selected.map((value) => value).join(', ')}
           onClose={handleCloseBranch}
-          sx={{ textTransform: "capitalize" }}
+          sx={{ textTransform: 'capitalize' }}
         >
           {branchOptions?.map((option) => (
             <MenuItem key={option.value} value={option.value}>
-              <Checkbox
-                disableRipple
-                size="small"
-                checked={branch?.includes(option.value)}
-              />
+              <Checkbox disableRipple size="small" checked={branch?.includes(option.value)} />
               {option.label}
             </MenuItem>
           ))}
@@ -138,17 +125,13 @@ export default function DetailedSalesTableToolbar({
           value={status}
           onChange={handleChangeStatus}
           input={<OutlinedInput label="Status" />}
-          renderValue={(selected) => selected.map((value) => value).join(", ")}
+          renderValue={(selected) => selected.map((value) => value).join(', ')}
           onClose={handleCloseStatus}
-          sx={{ textTransform: "capitalize" }}
+          sx={{ textTransform: 'capitalize' }}
         >
           {statusOptions?.map((option) => (
             <MenuItem key={option.value} value={option.value}>
-              <Checkbox
-                disableRipple
-                size="small"
-                checked={status?.includes(option.value)}
-              />
+              <Checkbox disableRipple size="small" checked={status?.includes(option.value)} />
               {option.label}
             </MenuItem>
           ))}
@@ -168,17 +151,13 @@ export default function DetailedSalesTableToolbar({
           value={paymenttype}
           onChange={handleChangePaymenttype}
           input={<OutlinedInput label="Payment Type" />}
-          renderValue={(selected) => selected.map((value) => value).join(", ")}
+          renderValue={(selected) => selected.map((value) => value).join(', ')}
           onClose={handleClosePaymenttype}
-          sx={{ textTransform: "capitalize" }}
+          sx={{ textTransform: 'capitalize' }}
         >
           {paymentOptions?.map((option) => (
             <MenuItem key={option.value} value={option.value}>
-              <Checkbox
-                disableRipple
-                size="small"
-                checked={paymenttype?.includes(option.value)}
-              />
+              <Checkbox disableRipple size="small" checked={paymenttype?.includes(option.value)} />
               {option.label}
             </MenuItem>
           ))}

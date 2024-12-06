@@ -1,33 +1,28 @@
-import * as Yup from "yup";
-import { mutate } from "swr";
-import { useForm } from "react-hook-form";
-import { useMemo, useState } from "react";
-import { MuiColorInput } from "mui-color-input";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { mutate } from 'swr';
+import { z as zod } from 'zod';
+import { useForm } from 'react-hook-form';
+import { useMemo, useState } from 'react';
+import { MuiColorInput } from 'mui-color-input';
+import { zodResolver } from '@hookform/resolvers/zod';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import Stack from '@mui/material/Stack';
+import Grid from '@mui/material/Unstable_Grid2';
+import LoadingButton from '@mui/lab/LoadingButton';
 
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import Stack from "@mui/material/Stack";
-import Grid from "@mui/material/Unstable_Grid2";
-import LoadingButton from "@mui/lab/LoadingButton";
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 
-import { paths } from "src/routes/paths";
-import { useRouter } from "src/routes/hooks";
+import { useTranslate } from 'src/locales';
 
-import { useTranslate } from "src/locales";
-
-import { useSnackbar } from "src/components/snackbar";
-import FormProvider, {
-  RHFSwitch,
-  RHFSelect,
-  RHFTextField,
-} from "src/components/hook-form";
+import { toast } from 'src/components/snackbar';
+import { Form, RHFSwitch, RHFSelect, RHFTextField } from 'src/components/hook-form';
 
 import {
   type ServiceItem,
   type RetailBrandItem,
   type ServiceCategoryItem,
-} from "src/types/service";
+} from 'src/types/service';
 
 // ----------------------------------------------------------------------
 
@@ -36,6 +31,32 @@ interface Props {
   servicecategory: ServiceCategoryItem[];
   retailbrands: RetailBrandItem[];
 }
+export type NewProductSchemaType = zod.infer<typeof NewProductSchema>;
+
+const NewProductSchema = zod.object({
+  id: zod.string().optional(),
+  name: zod.string().min(1, { message: 'salonapp.service.name_fvalid_error' }),
+  duration: zod
+    .number()
+    .positive({ message: 'general.must_be_non_zero' })
+    .refine((val) => val !== undefined, { message: 'salonapp.service.duration_fvalid_error' }),
+  tax: zod.number().refine((val) => val !== undefined, { message: 'general.tax_fvalid_error' }),
+  color: zod.string().min(1, { message: 'general.color_fvalid_error' }),
+  price: zod
+    .number()
+    .positive({ message: 'general.must_be_non_zero' })
+    .refine((val) => val !== undefined, { message: 'general.price_fvalid_error' }),
+  category_id: zod
+    .number()
+    .positive({ message: 'general.must_be_non_zero' })
+    .refine((val) => val !== undefined, { message: 'general.category_fvalid_error' }),
+  brand_id: zod.number().optional(),
+  sku: zod.string().optional(),
+  stock: zod.number().optional(),
+  commission: zod.number().optional(),
+  type: zod.number().optional(),
+  on_top: zod.boolean().optional(),
+});
 
 export default function ServiceNewEditForm({
   currentService,
@@ -44,45 +65,21 @@ export default function ServiceNewEditForm({
 }: Props) {
   const router = useRouter();
 
-  const [color, setColor] = useState(currentService?.color || "#FFFFFF");
-
-  const { enqueueSnackbar } = useSnackbar();
+  const [color, setColor] = useState(currentService?.color || '#FFFFFF');
 
   const { t } = useTranslate();
 
-  const NewProductSchema = Yup.object().shape({
-    id: Yup.string(),
-    name: Yup.string().required(t("salonapp.service.name_fvalid_error")),
-    duration: Yup.number()
-      .positive(t("general.must_be_non_zero"))
-      .required(t("salonapp.service.duration_fvalid_error")),
-    tax: Yup.number().required(t("general.tax_fvalid_error")),
-    color: Yup.string().required(t("general.color_fvalid_error")),
-    price: Yup.number()
-      .positive(t("general.must_be_non_zero"))
-      .required(t("general.price_fvalid_error")),
-    category_id: Yup.number()
-      .positive(t("general.must_be_non_zero"))
-      .required(t("general.category_fvalid_error")),
-    brand_id: Yup.number(),
-    sku: Yup.string(),
-    stock: Yup.number(),
-    commission: Yup.number(),
-    type: Yup.number(),
-    on_top: Yup.boolean(),
-  });
-
   const defaultValues = useMemo(
     () => ({
-      id: currentService?.id || "0",
-      name: currentService?.name || "",
+      id: currentService?.id || '0',
+      name: currentService?.name || '',
       duration: currentService?.duration || 30,
       tax: currentService?.tax || 0,
-      color: currentService?.color || "#ffffff",
+      color: currentService?.color || '#ffffff',
       price: currentService?.price || 0.0,
       category_id: currentService?.category_id || 0,
       brand_id: currentService?.brand_id || 0,
-      sku: currentService?.sku || "",
+      sku: currentService?.sku || '',
       stock: currentService?.stock || 0,
       commission: currentService?.commission,
       type: currentService?.type || 1,
@@ -91,8 +88,9 @@ export default function ServiceNewEditForm({
     [currentService]
   );
 
-  const methods = useForm({
-    resolver: yupResolver(NewProductSchema),
+  const methods = useForm<NewProductSchemaType>({
+    mode: 'all',
+    resolver: zodResolver(NewProductSchema),
     defaultValues,
   });
 
@@ -105,9 +103,9 @@ export default function ServiceNewEditForm({
   } = methods;
 
   const handleChange = (newcolor: string) => {
-    setValue("color", newcolor);
+    setValue('color', newcolor);
   };
-  const type = watch("type");
+  const type = watch('type');
   const onSubmit = handleSubmit(async (data) => {
     const productData = {
       id: Number(data.id),
@@ -129,9 +127,9 @@ export default function ServiceNewEditForm({
     try {
       // Post the data
       const response = await fetch(`/api/salonapp/services`, {
-        method: currentService ? "PUT" : "POST",
+        method: currentService ? 'PUT' : 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(productData),
       });
@@ -139,34 +137,28 @@ export default function ServiceNewEditForm({
       const responseData = await response.json();
 
       if (responseData?.status > 401) {
-        enqueueSnackbar(
+        toast.error(
           currentService
-            ? `${t("general.update_failed")}:${responseData.message}`
-            : `${t("general.create_failed")}:${responseData.message}`,
-          { variant: "error" }
+            ? `${t('general.update_failed')}:${responseData.message}`
+            : `${t('general.create_failed')}:${responseData.message}`
         );
       } else {
         // Keep 500ms delay
         await new Promise((resolve) => setTimeout(resolve, 500));
         reset();
-        enqueueSnackbar(
-          currentService
-            ? t("general.update_success")
-            : t("general.create_success"),
-          { variant: "success" }
-        );
+        toast.success(currentService ? t('general.update_success') : t('general.create_success'));
 
         mutate(`/api/salonapp/services/${currentService?.id}`);
         // Service listing again
         router.push(paths.dashboard.services.list);
       }
     } catch (error) {
-      enqueueSnackbar(error, { variant: "error" });
+      toast.error(error);
     }
   });
 
   return (
-    <FormProvider methods={methods} onSubmit={onSubmit}>
+    <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
         <Grid xs={12} md={12}>
           <Card sx={{ p: 3 }}>
@@ -175,17 +167,17 @@ export default function ServiceNewEditForm({
               columnGap={2}
               display="grid"
               gridTemplateColumns={{
-                xs: "repeat(1, 1fr)",
-                sm: "repeat(2, 1fr)",
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
               }}
             >
               <RHFSelect
                 native
                 name="type"
-                label={t("general.product_type")}
+                label={t('general.product_type')}
                 InputLabelProps={{ shrink: true }}
               >
-                <option key={0}>{t("general.dropdown_select")}</option>
+                <option key={0}>{t('general.dropdown_select')}</option>
                 <option key={1} value={1}>
                   Services
                 </option>
@@ -196,17 +188,17 @@ export default function ServiceNewEditForm({
 
               <RHFTextField
                 name="name"
-                label={t("salonapp.service.name")}
-                helperText={t("salonapp.service.sn_helper")}
+                label={t('salonapp.service.name')}
+                helperText={t('salonapp.service.sn_helper')}
               />
 
               <RHFSelect
                 native
                 name="category_id"
-                label={t("general.category")}
+                label={t('general.category')}
                 InputLabelProps={{ shrink: true }}
               >
-                <option key={0}>{t("general.dropdown_select")}</option>
+                <option key={0}>{t('general.dropdown_select')}</option>
                 {servicecategory.map((item) => (
                   <option key={item.id} value={item.id}>
                     {item.name}
@@ -215,27 +207,20 @@ export default function ServiceNewEditForm({
               </RHFSelect>
               <RHFTextField
                 name="duration"
-                label={t("salonapp.service.duration_in_min")}
-                helperText={t("salonapp.service.dim_helper")}
+                label={t('salonapp.service.duration_in_min')}
+                helperText={t('salonapp.service.dim_helper')}
               />
               <RHFTextField
                 name="type"
-                label={t("general.product_type")}
-                style={{ display: "none" }}
+                label={t('general.product_type')}
+                style={{ display: 'none' }}
               />
-              <RHFTextField
-                name="price"
-                label={t("salonapp.price_exclusive_tax")}
-              />
-              <RHFTextField
-                name="tax"
-                label={t("tax")}
-                helperText={t("salonapp.tax_helper")}
-              />
+              <RHFTextField name="price" label={t('salonapp.price_exclusive_tax')} />
+              <RHFTextField name="tax" label={t('tax')} helperText={t('salonapp.tax_helper')} />
               <RHFTextField
                 name="commission"
-                label={t("commission")}
-                helperText={t("salonapp.service.commission_helper")}
+                label={t('commission')}
+                helperText={t('salonapp.service.commission_helper')}
               />
               <MuiColorInput
                 name="color"
@@ -243,7 +228,7 @@ export default function ServiceNewEditForm({
                 format="hex"
                 value={color}
                 onChange={handleChange}
-                helperText={t("salonapp.service.color_helper")}
+                helperText={t('salonapp.service.color_helper')}
               />
 
               {Number(type) === 2 && (
@@ -251,10 +236,10 @@ export default function ServiceNewEditForm({
                   <RHFSelect
                     native
                     name="brand_id"
-                    label={t("general.retail_brand")}
+                    label={t('general.retail_brand')}
                     InputLabelProps={{ shrink: true }}
                   >
-                    <option key={0}>{t("general.dropdown_select")}</option>
+                    <option key={0}>{t('general.dropdown_select')}</option>
                     {retailbrands.map((item) => (
                       <option key={item.id} value={item.id}>
                         {item.name}
@@ -263,13 +248,13 @@ export default function ServiceNewEditForm({
                   </RHFSelect>
                   <RHFTextField
                     name="sku"
-                    label={t("sku")}
-                    helperText={t("salonapp.service.sku_helper")}
+                    label={t('sku')}
+                    helperText={t('salonapp.service.sku_helper')}
                   />
                   <RHFTextField
                     name="stock"
-                    label={t("stock")}
-                    helperText={t("salonapp.service.stock_helper")}
+                    label={t('stock')}
+                    helperText={t('salonapp.service.stock_helper')}
                   />
                 </>
               )}
@@ -277,26 +262,22 @@ export default function ServiceNewEditForm({
               {Number(type) !== 2 && (
                 <RHFSwitch
                   name="on_top"
-                  label={t("salonapp.service.on_the_top")}
-                  helperText={t("salonapp.service.onthetop_helper")}
+                  label={t('salonapp.service.on_the_top')}
+                  helperText={t('salonapp.service.onthetop_helper')}
                 />
               )}
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton
-                type="submit"
-                variant="contained"
-                loading={isSubmitting}
-              >
+              <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
                 {!currentService
-                  ? t("salonapp.service.create_service")
-                  : t("salonapp.service.save_service")}
+                  ? t('salonapp.service.create_service')
+                  : t('salonapp.service.save_service')}
               </LoadingButton>
             </Stack>
           </Card>
         </Grid>
       </Grid>
-    </FormProvider>
+    </Form>
   );
 }

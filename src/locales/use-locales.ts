@@ -1,47 +1,58 @@
-'use client'
+'use client';
 
-import { useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
+import dayjs from 'dayjs';
+import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import { localStorageGetItem } from 'src/utils/storage-available'
+import { useRouter } from 'src/routes/hooks';
 
-import { useSettingsContext } from 'src/components/settings'
+import { toast } from 'src/components/snackbar';
 
-import { allLangs, defaultLang } from './config-lang'
+import { allLangs } from './all-langs';
+import { fallbackLng, changeLangMessages as messages } from './config-locales';
 
-// ----------------------------------------------------------------------
-
-export function useLocales () {
-  const langStorage = localStorageGetItem('i18nextLng')
-
-  const currentLang =
-    allLangs.find((lang) => lang.value === langStorage) || defaultLang
-
-  return {
-    allLangs,
-    currentLang
-  }
-}
+import type { LanguageValue } from './config-locales';
 
 // ----------------------------------------------------------------------
 
-export function useTranslate () {
-  const { t, i18n, ready } = useTranslation()
+export function useTranslate(ns?: string) {
+  const router = useRouter();
 
-  const settings = useSettingsContext()
+  const { t, i18n } = useTranslation(ns);
+
+  const fallback = allLangs.filter((lang) => lang.value === fallbackLng)[0];
+
+  const currentLang = allLangs.find((lang) => lang.value === i18n.resolvedLanguage);
 
   const onChangeLang = useCallback(
-    (newlang: string) => {
-      i18n.changeLanguage(newlang)
-      settings.onChangeDirectionByLang(newlang)
+    async (newLang: LanguageValue) => {
+      try {
+        const langChangePromise = i18n.changeLanguage(newLang);
+
+        const currentMessages = messages[newLang] || messages.en;
+
+        toast.promise(langChangePromise, {
+          loading: currentMessages.loading,
+          success: () => currentMessages.success,
+          error: currentMessages.error,
+        });
+
+        if (currentLang) {
+          dayjs.locale(currentLang.adapterLocale);
+        }
+
+        router.refresh();
+      } catch (error) {
+        console.error(error);
+      }
     },
-    [i18n, settings]
-  )
+    [currentLang, i18n, router]
+  );
 
   return {
     t,
     i18n,
-    ready,
-    onChangeLang
-  }
+    onChangeLang,
+    currentLang: currentLang ?? fallback,
+  };
 }

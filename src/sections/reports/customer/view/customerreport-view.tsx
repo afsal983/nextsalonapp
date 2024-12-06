@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import isEqual from "lodash/isEqual";
-import { useState, useEffect, useCallback } from "react";
+import { isEqual } from 'src/utils/helper';
+import { useState, useEffect, useCallback } from 'react';
 
-import FilterListIcon from "@mui/icons-material/FilterList";
+import FilterListIcon from '@mui/icons-material/FilterList';
 import {
   Card,
   Stack,
@@ -13,7 +13,7 @@ import {
   useTheme,
   Container,
   IconButton,
-} from "@mui/material";
+} from '@mui/material';
 import {
   DataGrid,
   GridColDef,
@@ -24,53 +24,53 @@ import {
   GridToolbarFilterButton,
   GridToolbarColumnsButton,
   GridColumnVisibilityModel,
-} from "@mui/x-data-grid";
+} from '@mui/x-data-grid';
 
-import { paths } from "src/routes/paths";
+import { paths } from 'src/routes/paths';
 
-import { useBoolean } from "src/hooks/use-boolean";
+import { useBoolean } from 'src/hooks/use-boolean';
 
-import { isAfter } from "src/utils/format-time";
+import { fIsAfter } from 'src/utils/format-time';
 
-import Iconify from "src/components/iconify";
-import Scrollbar from "src/components/scrollbar";
-import { useSnackbar } from "src/components/snackbar";
-import EmptyContent from "src/components/empty-content";
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+import { toast } from 'src/components/snackbar';
+import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
+import { EmptyContent } from 'src/components/empty-content';
+import { useSettingsContext } from 'src/components/settings';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { CustomerCategory } from "src/types/customer";
+import { CustomerCategory } from 'src/types/customer';
 import {
   CustomerReport,
   CustomerReportTableFilters,
   CustomerReportPeriodFilters,
   CustomerReportTableFilterValue,
-} from "src/types/report";
+} from 'src/types/report';
 
-import PeriodFilters from "../period-filters";
-import CustomerReportAnalytic from "../customerreport-analytic";
-import DeatailedSalesTableToolbar from "../customerreport-table-toolbar";
-import DeatailedSalesTableFiltersResult from "../customerreport-table-filters-result";
+import PeriodFilters from '../period-filters';
+import CustomerReportAnalytic from '../customerreport-analytic';
+import DeatailedSalesTableToolbar from '../customerreport-table-toolbar';
+import DeatailedSalesTableFiltersResult from '../customerreport-table-filters-result';
 import {
   RenderCellSex,
   RenderCellCustomer,
   RenderCellEventNotify,
   RenderCellPromoNotify,
-} from "../customerreport-table-row";
+} from '../customerreport-table-row';
 
 // ----------------------------------------------------------------------
 
 const SEX_OPTIONS = [
-  { value: "Female", label: "Female" },
-  { value: "Male", label: "Male" },
-  { value: "Other", label: "Other" },
+  { value: 'Female', label: 'Female' },
+  { value: 'Male', label: 'Male' },
+  { value: 'Other', label: 'Other' },
 ];
 
 const HIDE_COLUMNS = {
   category1: false,
 };
 
-const HIDE_COLUMNS_TOGGLABLE = ["category1", "actions"];
+const HIDE_COLUMNS_TOGGLABLE = ['category1', 'actions'];
 
 // This is for date filter to conditionaly fetch data from remote API
 const defaultperiodFilters: CustomerReportPeriodFilters = {
@@ -87,8 +87,6 @@ const defaultitemFilters: CustomerReportTableFilters = {
 // ----------------------------------------------------------------------
 
 export default function CustomerReportListView() {
-  const { enqueueSnackbar } = useSnackbar();
-
   const confirmRows = useBoolean();
 
   const theme = useTheme();
@@ -106,11 +104,9 @@ export default function CustomerReportListView() {
   const [periodfilters, setFilters] = useState(defaultperiodFilters);
   const [itemfilters, setitemFilters] = useState(defaultitemFilters);
 
-  const dateError = isAfter(periodfilters.startDate, periodfilters.endDate);
+  const dateError = fIsAfter(periodfilters.startDate, periodfilters.endDate);
 
-  const [selectedRowIds, setSelectedRowIds] = useState<GridRowSelectionModel>(
-    []
-  );
+  const [selectedRowIds, setSelectedRowIds] = useState<GridRowSelectionModel>([]);
 
   const [columnVisibilityModel, setColumnVisibilityModel] =
     useState<GridColumnVisibilityModel>(HIDE_COLUMNS);
@@ -129,25 +125,19 @@ export default function CustomerReportListView() {
 
   const canReset = !isEqual(defaultitemFilters, itemfilters);
 
-  const handleitemFilters = useCallback(
-    (name: string, value: CustomerReportTableFilterValue) => {
-      setitemFilters((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    },
-    []
-  );
+  const handleitemFilters = useCallback((name: string, value: CustomerReportTableFilterValue) => {
+    setitemFilters((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  }, []);
 
-  const handlePeriodFilters = useCallback(
-    (name: string, value: CustomerReportTableFilterValue) => {
-      setFilters((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    },
-    []
-  );
+  const handlePeriodFilters = useCallback((name: string, value: CustomerReportTableFilterValue) => {
+    setFilters((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  }, []);
 
   const handleResetFilters = useCallback(() => {
     setitemFilters(defaultitemFilters);
@@ -160,14 +150,14 @@ export default function CustomerReportListView() {
     const data = {
       start: periodfilters.startDate,
       end: periodfilters.endDate,
-      filtername: "all",
+      filtername: 'all',
       filterid: 1,
     };
 
-    const response = await fetch("/api/salonapp/report/customerreport", {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
+    const response = await fetch('/api/salonapp/report/customerreport', {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(data), // body data type must match "Content-Type" header
     });
@@ -175,7 +165,8 @@ export default function CustomerReportListView() {
 
     if (responseData.status > 300) {
       setisLoading(false);
-      enqueueSnackbar("Fetching report data failed", { variant: "error" });
+      toast.error('Fetching report data failed');
+
       return;
     }
     setTableData(responseData.data);
@@ -186,15 +177,15 @@ export default function CustomerReportListView() {
 
   const columns: GridColDef[] = [
     {
-      field: "id",
-      headerName: "Sn",
+      field: 'id',
+      headerName: 'Sn',
       filterable: true,
       width: 40,
       hideable: false,
     },
     {
-      field: "customerinfo",
-      headerName: "Customer Name",
+      field: 'customerinfo',
+      headerName: 'Customer Name',
       filterable: true,
       hideable: false,
       width: 280,
@@ -202,50 +193,50 @@ export default function CustomerReportListView() {
       valueGetter: (params) => params.row.customerinfo.name,
     },
     {
-      field: "email",
-      headerName: "Email",
+      field: 'email',
+      headerName: 'Email',
       width: 180,
     },
     {
-      field: "sex",
-      headerName: "sex",
+      field: 'sex',
+      headerName: 'sex',
       width: 100,
       renderCell: (params) => <RenderCellSex params={params} />,
     },
     {
-      field: "category",
-      headerName: "Category",
+      field: 'category',
+      headerName: 'Category',
       width: 180,
     },
     {
-      field: "dob",
-      headerName: "dob",
+      field: 'dob',
+      headerName: 'dob',
       width: 100,
     },
     {
-      field: "taxid",
-      headerName: "TID",
+      field: 'taxid',
+      headerName: 'TID',
       width: 100,
     },
     {
-      field: "cardno",
-      headerName: "Loyalty card",
+      field: 'cardno',
+      headerName: 'Loyalty card',
       width: 100,
     },
     {
-      field: "cardno",
-      headerName: "Loyalty card",
+      field: 'cardno',
+      headerName: 'Loyalty card',
       width: 100,
     },
     {
-      field: "eventnotify",
-      headerName: "Event Notification",
+      field: 'eventnotify',
+      headerName: 'Event Notification',
       width: 100,
       renderCell: (params) => <RenderCellEventNotify params={params} />,
     },
     {
-      field: "promonotify",
-      headerName: "Promotion Notification",
+      field: 'promonotify',
+      headerName: 'Promotion Notification',
       width: 100,
       renderCell: (params) => <RenderCellPromoNotify params={params} />,
     },
@@ -340,22 +331,22 @@ export default function CustomerReportListView() {
   return (
     <>
       <Container
-        maxWidth={settings.themeStretch ? false : "lg"}
+        maxWidth={settings.themeStretch ? false : 'lg'}
         sx={{
           flexGrow: 1,
-          display: "flex",
-          flexDirection: "column",
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
         <CustomBreadcrumbs
           heading="List"
           links={[
-            { name: "Dashboard", href: paths.dashboard.root },
+            { name: 'Dashboard', href: paths.dashboard.root },
             {
-              name: "Reports",
+              name: 'Reports',
               href: paths.dashboard.report.root,
             },
-            { name: "Customer Report" },
+            { name: 'Customer Report' },
           ]}
           action={
             <IconButton onClick={() => openFilters.onTrue()} size="large">
@@ -380,13 +371,7 @@ export default function CustomerReportListView() {
           <Scrollbar>
             <Stack
               direction="row"
-              divider={
-                <Divider
-                  orientation="vertical"
-                  flexItem
-                  sx={{ borderStyle: "dashed" }}
-                />
-              }
+              divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
               sx={{ py: 2 }}
             >
               <CustomerReportAnalytic
@@ -432,8 +417,8 @@ export default function CustomerReportListView() {
           sx={{
             height: { xs: 800, md: 2 },
             flexGrow: { md: 1 },
-            display: { md: "flex" },
-            flexDirection: { md: "column" },
+            display: { md: 'flex' },
+            flexDirection: { md: 'column' },
           }}
         >
           <DataGrid
@@ -442,7 +427,7 @@ export default function CustomerReportListView() {
             rows={dataFiltered}
             columns={columns}
             loading={isLoading}
-            getRowHeight={() => "auto"}
+            getRowHeight={() => 'auto'}
             pageSizeOptions={[5, 10, 25]}
             initialState={{
               pagination: {
@@ -453,9 +438,7 @@ export default function CustomerReportListView() {
               setSelectedRowIds(newSelectionModel);
             }}
             columnVisibilityModel={columnVisibilityModel}
-            onColumnVisibilityModelChange={(newModel) =>
-              setColumnVisibilityModel(newModel)
-            }
+            onColumnVisibilityModelChange={(newModel) => setColumnVisibilityModel(newModel)}
             slots={{
               toolbar: () => (
                 <>
@@ -483,9 +466,7 @@ export default function CustomerReportListView() {
                         <Button
                           size="small"
                           color="error"
-                          startIcon={
-                            <Iconify icon="solar:trash-bin-trash-bold" />
-                          }
+                          startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
                           onClick={confirmRows.onTrue}
                         >
                           Delete ({selectedRowIds.length})
@@ -555,9 +536,7 @@ function applyFilter({
   const { sex, category } = filters;
 
   if (category?.length) {
-    inputData = inputData.filter((customer) =>
-      category.includes(customer?.category)
-    );
+    inputData = inputData.filter((customer) => category.includes(customer?.category));
   }
 
   if (sex?.length) {

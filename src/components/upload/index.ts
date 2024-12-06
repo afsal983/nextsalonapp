@@ -1,19 +1,13 @@
-import dynamic from 'next/dynamic'
+export * from './upload';
 
-export * from './types'
+export type * from './types';
 
-export { default as MultiFilePreview } from './preview-multi-file'
-export { default as RejectionFiles } from './errors-rejection-files'
-export { default as SingleFilePreview } from './preview-single-file'
+export * from './upload-box';
 
-export const Upload = dynamic(async () => import('./upload'), {
-  ssr: false
-})
+export * from './upload-avatar';
 
-export const UploadBox = dynamic(async () => import('./upload-box'), {
-  ssr: false
-})
+export * from './components/rejection-files';
 
-export const UploadAvatar = dynamic(async () => import('./upload-avatar'), {
-  ssr: false
-})
+export * from './components/preview-multi-file';
+
+export * from './components/preview-single-file';

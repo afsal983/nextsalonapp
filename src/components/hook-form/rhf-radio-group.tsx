@@ -1,85 +1,84 @@
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form';
 
-import Radio from '@mui/material/Radio'
-import FormLabel from '@mui/material/FormLabel'
-import FormControl from '@mui/material/FormControl'
-import FormHelperText from '@mui/material/FormHelperText'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import RadioGroup, { type RadioGroupProps } from '@mui/material/RadioGroup'
+import Radio from '@mui/material/Radio';
+import FormLabel from '@mui/material/FormLabel';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControl from '@mui/material/FormControl';
+import type { RadioProps } from '@mui/material/Radio';
+import FormHelperText from '@mui/material/FormHelperText';
+import type { Theme, SxProps } from '@mui/material/styles';
+import type { FormLabelProps } from '@mui/material/FormLabel';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import type { RadioGroupProps } from '@mui/material/RadioGroup';
+import type { FormHelperTextProps } from '@mui/material/FormHelperText';
 
 // ----------------------------------------------------------------------
 
 type Props = RadioGroupProps & {
-  name: string
-  options: Array<{ label: string, value: any }>
-  label?: string
-  spacing?: number
-  helperText?: React.ReactNode
-}
+  name: string;
+  label?: string;
+  helperText?: React.ReactNode;
+  slotProps?: {
+    wrap?: SxProps<Theme>;
+    radio: RadioProps;
+    formLabel: FormLabelProps;
+    formHelperText: FormHelperTextProps;
+  };
+  options: {
+    label: string;
+    value: string;
+  }[];
+};
 
-export default function RHFRadioGroup ({
-  row,
-  name,
-  label,
-  options,
-  spacing,
-  helperText,
-  ...other
-}: Props) {
-  const { control } = useFormContext()
+export function RHFRadioGroup({ name, label, options, helperText, slotProps, ...other }: Props) {
+  const { control } = useFormContext();
 
-  const labelledby = label ? `${name}-${label}` : ''
+  const labelledby = `${name}-radio-buttons-group-label`;
+  const ariaLabel = (val: string) => `Radio ${val}`;
 
   return (
     <Controller
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => (
-        <FormControl component="fieldset">
+        <FormControl component="fieldset" sx={slotProps?.wrap}>
           {label && (
             <FormLabel
-              component="legend"
               id={labelledby}
-              sx={{ typography: 'body2' }}
+              component="legend"
+              {...slotProps?.formLabel}
+              sx={{ mb: 1, typography: 'body2', ...slotProps?.formLabel.sx }}
             >
               {label}
             </FormLabel>
           )}
 
-          <RadioGroup
-            {...field}
-            aria-labelledby={labelledby}
-            row={row}
-            {...other}
-          >
+          <RadioGroup {...field} aria-labelledby={labelledby} {...other}>
             {options.map((option) => (
               <FormControlLabel
                 key={option.value}
                 value={option.value}
-                control={<Radio />}
+                control={
+                  <Radio
+                    {...slotProps?.radio}
+                    inputProps={{
+                      ...(!option.label && { 'aria-label': ariaLabel(option.label) }),
+                      ...slotProps?.radio?.inputProps,
+                    }}
+                  />
+                }
                 label={option.label}
-                sx={{
-                  '&:not(:last-of-type)': {
-                    mb: spacing || 0
-                  },
-                  ...(row && {
-                    mr: 0,
-                    '&:not(:last-of-type)': {
-                      mr: spacing || 2
-                    }
-                  })
-                }}
               />
             ))}
           </RadioGroup>
 
           {(!!error || helperText) && (
-            <FormHelperText error={!!error} sx={{ mx: 0 }}>
+            <FormHelperText error={!!error} sx={{ mx: 0 }} {...slotProps?.formHelperText}>
               {error ? error?.message : helperText}
             </FormHelperText>
           )}
         </FormControl>
       )}
     />
-  )
+  );
 }

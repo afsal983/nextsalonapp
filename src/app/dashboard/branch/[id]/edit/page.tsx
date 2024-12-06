@@ -1,11 +1,11 @@
-import { _userList } from "src/_mock/_user";
+import { _userList } from 'src/_data/_user';
 
-import { BranchEditView } from "src/sections/branch/view";
+import { BranchEditView } from 'src/sections/branch/view';
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: "Dashboard: Branch Edit",
+  title: 'Dashboard: Branch Edit',
 };
 
 interface Props {

@@ -1,32 +1,31 @@
-import { type LocationItem } from 'src/types/location'
-import { type OrganizationItem } from 'src/types/organization'
+import { type LocationItem } from 'src/types/location';
+import { type OrganizationItem } from 'src/types/organization';
 // ----------------------------------------------------------------------
 
-export type BranchTableFilterValue = string | string[]
+export type BranchTableFilterValue = string | string[];
 
 export interface BranchTableFilters {
-  name: string
-  location: string[]
-  status: string
+  name: string;
+  status: string;
 }
 
 // ----------------------------------------------------------------------
 
 export interface BranchItem {
-    branch_id: string
-    name: string
-    reg_name: string
-    address: string
-    telephone: string
-    taxid: string
-    org_id: number
-    loc_id: number
-    Organization: OrganizationItem
-    Location: LocationItem
+  branch_id: string;
+  name: string;
+  reg_name: string;
+  address: string;
+  telephone: string;
+  taxid: string;
+  org_id: number;
+  loc_id: number;
+  Organization: OrganizationItem;
+  Location: LocationItem;
 }
 
 export interface ServiceCategoryItem {
-  id: string
-  name: string
-  type: number
+  id: string;
+  name: string;
+  type: number;
 }

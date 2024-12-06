@@ -1,27 +1,27 @@
-import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
-import Table from "@mui/material/Table";
-import Button from "@mui/material/Button";
-import { Typography } from "@mui/material";
-import Divider from "@mui/material/Divider";
-import MenuItem from "@mui/material/MenuItem";
-import TableRow from "@mui/material/TableRow";
-import { useTheme } from "@mui/material/styles";
-import TableCell from "@mui/material/TableCell";
-import TableBody from "@mui/material/TableBody";
-import IconButton from "@mui/material/IconButton";
-import CardHeader from "@mui/material/CardHeader";
-import Card, { CardProps } from "@mui/material/Card";
-import ListItemText from "@mui/material/ListItemText";
-import TableContainer from "@mui/material/TableContainer";
+import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
+import Table from '@mui/material/Table';
+import Button from '@mui/material/Button';
+import { Typography } from '@mui/material';
+import Divider from '@mui/material/Divider';
+import MenuItem from '@mui/material/MenuItem';
+import TableRow from '@mui/material/TableRow';
+import { useTheme } from '@mui/material/styles';
+import TableCell from '@mui/material/TableCell';
+import TableBody from '@mui/material/TableBody';
+import IconButton from '@mui/material/IconButton';
+import CardHeader from '@mui/material/CardHeader';
+import Card, { CardProps } from '@mui/material/Card';
+import ListItemText from '@mui/material/ListItemText';
+import TableContainer from '@mui/material/TableContainer';
 
-import { fCurrency } from "src/utils/format-number";
+import { fCurrency } from 'src/utils/format-number';
 
-import Label from "src/components/label";
-import Iconify from "src/components/iconify";
-import Scrollbar from "src/components/scrollbar";
-import { TableHeadCustom } from "src/components/table";
-import CustomPopover, { usePopover } from "src/components/custom-popover";
+import { Label } from 'src/components/label';
+import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
+import { TableHeadCustom } from 'src/components/table';
+import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
 
@@ -55,33 +55,25 @@ export default function LatestTransactions({
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} sx={{ mb: 3 }} />
 
-      <TableContainer sx={{ overflow: "unset" }}>
+      <TableContainer sx={{ overflow: 'unset' }}>
         <Scrollbar>
           <Table sx={{ minWidth: 960 }}>
             <TableHeadCustom headLabel={tableLabels} />
 
             <TableBody>
-              {tableData?.map((row) => (
-                <LatestTransactionsRow key={row.id} row={row} />
-              ))}
+              {tableData?.map((row) => <LatestTransactionsRow key={row.id} row={row} />)}
             </TableBody>
           </Table>
         </Scrollbar>
       </TableContainer>
 
-      <Divider sx={{ borderStyle: "dashed" }} />
+      <Divider sx={{ borderStyle: 'dashed' }} />
 
-      <Box sx={{ p: 2, textAlign: "right" }}>
+      <Box sx={{ p: 2, textAlign: 'right' }}>
         <Button
           size="small"
           color="inherit"
-          endIcon={
-            <Iconify
-              icon="eva:arrow-ios-forward-fill"
-              width={18}
-              sx={{ ml: -0.5 }}
-            />
-          }
+          endIcon={<Iconify icon="eva:arrow-ios-forward-fill" width={18} sx={{ ml: -0.5 }} />}
         >
           View All
         </Button>
@@ -99,28 +91,28 @@ type LatestTransactionsRowProps = {
 function LatestTransactionsRow({ row }: LatestTransactionsRowProps) {
   const theme = useTheme();
 
-  const lightMode = theme.palette.mode === "light";
+  const lightMode = theme.palette.mode === 'light';
 
   const popover = usePopover();
 
   const handleDownload = () => {
     popover.onClose();
-    console.info("DOWNLOAD", row.id);
+    console.info('DOWNLOAD', row.id);
   };
 
   const handlePrint = () => {
     popover.onClose();
-    console.info("PRINT", row.id);
+    console.info('PRINT', row.id);
   };
 
   const handleShare = () => {
     popover.onClose();
-    console.info("SHARE", row.id);
+    console.info('SHARE', row.id);
   };
 
   const handleDelete = () => {
     popover.onClose();
-    console.info("DELETE", row.id);
+    console.info('DELETE', row.id);
   };
 
   return (
@@ -141,11 +133,11 @@ function LatestTransactionsRow({ row }: LatestTransactionsRowProps) {
           <ListItemText
             primary={row.billingname}
             secondary={row.telephone}
-            primaryTypographyProps={{ typography: "body2", noWrap: true }}
+            primaryTypographyProps={{ typography: 'body2', noWrap: true }}
             secondaryTypographyProps={{
               mt: 0.5,
-              component: "span",
-              typography: "caption",
+              component: 'span',
+              typography: 'caption',
             }}
           />
         </TableCell>
@@ -165,13 +157,13 @@ function LatestTransactionsRow({ row }: LatestTransactionsRowProps) {
 
         <TableCell>
           <ListItemText
-            primary={row.date.split(" ")[0]}
-            secondary={row.date.split(" ")[1]}
-            primaryTypographyProps={{ typography: "body2", noWrap: true }}
+            primary={row.date.split(' ')[0]}
+            secondary={row.date.split(' ')[1]}
+            primaryTypographyProps={{ typography: 'body2', noWrap: true }}
             secondaryTypographyProps={{
               mt: 0.5,
-              component: "span",
-              typography: "caption",
+              component: 'span',
+              typography: 'caption',
             }}
           />
         </TableCell>
@@ -180,11 +172,11 @@ function LatestTransactionsRow({ row }: LatestTransactionsRowProps) {
 
         <TableCell>
           <Label
-            variant={lightMode ? "soft" : "filled"}
+            variant={lightMode ? 'soft' : 'filled'}
             color={
-              (row.paymentstatus === "Paid" && "success") ||
-              (row.paymentstatus === "Pending" && "warning") ||
-              "error"
+              (row.paymentstatus === 'Paid' && 'success') ||
+              (row.paymentstatus === 'Pending' && 'warning') ||
+              'error'
             }
           >
             {row.paymentstatus}
@@ -194,10 +186,7 @@ function LatestTransactionsRow({ row }: LatestTransactionsRowProps) {
         <TableCell>{row.paymentmethod}</TableCell>
 
         <TableCell align="right" sx={{ pr: 1 }}>
-          <IconButton
-            color={popover.open ? "inherit" : "default"}
-            onClick={popover.onOpen}
-          >
+          <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
         </TableCell>
@@ -224,9 +213,9 @@ function LatestTransactionsRow({ row }: LatestTransactionsRowProps) {
           Share
         </MenuItem>
 
-        <Divider sx={{ borderStyle: "dashed" }} />
+        <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <MenuItem onClick={handleDelete} sx={{ color: "error.main" }}>
+        <MenuItem onClick={handleDelete} sx={{ color: 'error.main' }}>
           <Iconify icon="solar:trash-bin-trash-bold" />
           Delete
         </MenuItem>

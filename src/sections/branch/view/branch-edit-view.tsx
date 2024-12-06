@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import useSWR from "swr";
-import React from "react";
+import useSWR from 'swr';
+import React from 'react';
 
-import Container from "@mui/material/Container";
+import Container from '@mui/material/Container';
 
-import { paths } from "src/routes/paths";
+import { paths } from 'src/routes/paths';
+import { DashboardContent } from 'src/layouts/dashboard';
+import { fetcher } from 'src/utils/axios';
 
-import { fetcher } from "src/utils/axios";
+import { useTranslate } from 'src/locales';
 
-import { useTranslate } from "src/locales";
+import { useSettingsContext } from 'src/components/settings';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
-
-import BranchNewEditForm from "../branch-new-edit-form";
+import BranchNewEditForm from '../branch-new-edit-form';
 
 // ----------------------------------------------------------------------
 
@@ -33,30 +33,25 @@ export default function BranchEditView({ id }: Props) {
     fetcher
   );
   const { data: organization, error: organizationError } = useSWR(
-    "/api/salonapp/organization",
+    '/api/salonapp/organization',
     fetcher
   );
-  const { data: location, error: locationError } = useSWR(
-    "/api/salonapp/location",
-    fetcher
-  );
+  const { data: location, error: locationError } = useSWR('/api/salonapp/location', fetcher);
 
-  if (categoryError || organizationError || locationError)
-    return <div>Failed to load</div>;
-  if (!organization || !branchData || !organization)
-    return <div>Loading...</div>;
+  if (categoryError || organizationError || locationError) return <div>Failed to load</div>;
+  if (!organization || !branchData || !organization) return <div>Loading...</div>;
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : "lg"}>
+    <DashboardContent>
       <CustomBreadcrumbs
         heading="Edit"
         links={[
           {
-            name: t("salonapp.dashboard"),
+            name: t('salonapp.dashboard'),
             href: paths.dashboard.root,
           },
           {
-            name: t("salonapp.services"),
+            name: t('salonapp.services'),
             href: paths.dashboard.employees.timeslots.root,
           },
           { name: branchData?.data[0].name },
@@ -71,6 +66,6 @@ export default function BranchEditView({ id }: Props) {
         organization={organization.data}
         location={location.data}
       />
-    </Container>
+    </DashboardContent>
   );
 }

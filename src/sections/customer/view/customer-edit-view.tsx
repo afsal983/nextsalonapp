@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import useSWR from "swr";
-import React from "react";
+import useSWR from 'swr';
+import React from 'react';
 
-import Container from "@mui/material/Container";
+import Container from '@mui/material/Container';
 
-import { paths } from "src/routes/paths";
+import { paths } from 'src/routes/paths';
 
-import { fetcher } from "src/utils/axios";
+import { fetcher } from 'src/utils/axios';
 
-import { useTranslate } from "src/locales";
+import { useTranslate } from 'src/locales';
 
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+import { useSettingsContext } from 'src/components/settings';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import CustomerNewEditForm from "../customer-new-edit-form";
+import CustomerNewEditForm from '../customer-new-edit-form';
 
 // ----------------------------------------------------------------------
 
@@ -32,25 +32,22 @@ export default function CustomerEditView({ id }: Props) {
     `/api/salonapp/customer/${id}`,
     fetcher
   );
-  const { data: customercategoryData } = useSWR(
-    `/api/salonapp/customercategory`,
-    fetcher
-  );
+  const { data: customercategoryData } = useSWR(`/api/salonapp/customercategory`, fetcher);
 
   if (customerError || customerError) return <div>Failed to load</div>;
   if (!customerData || !customercategoryData) return <div>Loading...</div>;
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : "lg"}>
+    <DashboardContent>
       <CustomBreadcrumbs
         heading="Edit"
         links={[
           {
-            name: t("salonapp.dashboard"),
+            name: t('salonapp.dashboard'),
             href: paths.dashboard.root,
           },
           {
-            name: t("salonapp.services"),
+            name: t('salonapp.services'),
             href: paths.dashboard.customers.root,
           },
           { name: customerData?.data.firstname },

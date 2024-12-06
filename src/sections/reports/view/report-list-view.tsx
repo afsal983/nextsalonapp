@@ -1,41 +1,37 @@
-"use client";
+'use client';
 
-import orderBy from "lodash/orderBy";
-import isEqual from "lodash/isEqual";
-import { useState, useCallback } from "react";
+import { orderBy, isEqual } from 'src/utils/helper';
 
-import Stack from "@mui/material/Stack";
-import Container from "@mui/material/Container";
+import { useState, useCallback } from 'react';
 
-import { paths } from "src/routes/paths";
+import Stack from '@mui/material/Stack';
+import Container from '@mui/material/Container';
 
-import { useBoolean } from "src/hooks/use-boolean";
+import { paths } from 'src/routes/paths';
 
-import { countries } from "src/assets/data";
+import { useBoolean } from 'src/hooks/use-boolean';
+
+import { countries } from 'src/assets/data';
 import {
   _roles,
   JOB_SORT_OPTIONS,
   JOB_BENEFIT_OPTIONS,
   JOB_EXPERIENCE_OPTIONS,
   JOB_EMPLOYMENT_TYPE_OPTIONS,
-} from "src/_mock";
+} from 'src/_data';
 
-import EmptyContent from "src/components/empty-content";
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+import { EmptyContent } from 'src/components/empty-content';
+import { useSettingsContext } from 'src/components/settings';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import {
-  IReportItem,
-  ReportFilters,
-  ReportFilterValue,
-} from "src/types/report";
+import { IReportItem, ReportFilters, ReportFilterValue } from 'src/types/report';
 
-import JobSort from "../job-sort";
-import ReportList from "../report-list";
-import JobFilters from "../job-filters";
-import ReportSearch from "../report-search";
-import { report_types } from "./_reporttypes";
-import ReportFiltersResult from "../report-filters-result";
+import JobSort from '../job-sort';
+import ReportList from '../report-list';
+import JobFilters from '../job-filters';
+import ReportSearch from '../report-search';
+import { report_types } from './_reporttypes';
+import ReportFiltersResult from '../report-filters-result';
 
 // ----------------------------------------------------------------------
 
@@ -50,13 +46,13 @@ export default function ReportListView() {
 
   const openFilters = useBoolean();
 
-  const [sortBy, setSortBy] = useState("latest");
+  const [sortBy, setSortBy] = useState('latest');
 
   const [search, setSearch] = useState<{
     query: string;
     results: IReportItem[];
   }>({
-    query: "",
+    query: '',
     results: [],
   });
 
@@ -72,15 +68,12 @@ export default function ReportListView() {
 
   const notFound = !dataFiltered.length && canReset;
 
-  const handleFilters = useCallback(
-    (name: string, value: ReportFilterValue) => {
-      setFilters((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    },
-    []
-  );
+  const handleFilters = useCallback((name: string, value: ReportFilterValue) => {
+    setFilters((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  }, []);
 
   const handleResetFilters = useCallback(() => {
     setFilters(defaultFilters);
@@ -101,9 +94,7 @@ export default function ReportListView() {
         const results = report_types
           .map((category) => {
             const filteredItems = category.items.filter(
-              (item) =>
-                item.name.toLowerCase().indexOf(search.query.toLowerCase()) !==
-                -1
+              (item) => item.name.toLowerCase().indexOf(search.query.toLowerCase()) !== -1
             );
             if (filteredItems.length > 0) {
               return {
@@ -131,8 +122,8 @@ export default function ReportListView() {
     <Stack
       spacing={3}
       justifyContent="space-between"
-      alignItems={{ xs: "flex-end", sm: "center" }}
-      direction={{ xs: "column", sm: "row" }}
+      alignItems={{ xs: 'flex-end', sm: 'center' }}
+      direction={{ xs: 'column', sm: 'row' }}
     >
       <ReportSearch
         query={search.query}
@@ -156,20 +147,11 @@ export default function ReportListView() {
           locationOptions={countries.map((option) => option.label)}
           roleOptions={_roles}
           benefitOptions={JOB_BENEFIT_OPTIONS.map((option) => option.label)}
-          experienceOptions={[
-            "all",
-            ...JOB_EXPERIENCE_OPTIONS.map((option) => option.label),
-          ]}
-          employmentTypeOptions={JOB_EMPLOYMENT_TYPE_OPTIONS.map(
-            (option) => option.label
-          )}
+          experienceOptions={['all', ...JOB_EXPERIENCE_OPTIONS.map((option) => option.label)]}
+          employmentTypeOptions={JOB_EMPLOYMENT_TYPE_OPTIONS.map((option) => option.label)}
         />
 
-        <JobSort
-          sort={sortBy}
-          onSort={handleSortBy}
-          sortOptions={JOB_SORT_OPTIONS}
-        />
+        <JobSort sort={sortBy} onSort={handleSortBy} sortOptions={JOB_SORT_OPTIONS} />
       </Stack>
     </Stack>
   );
@@ -187,16 +169,16 @@ export default function ReportListView() {
   );
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : "lg"}>
+    <DashboardContent>
       <CustomBreadcrumbs
         heading="List"
         links={[
-          { name: "Dashboard", href: paths.dashboard.root },
+          { name: 'Dashboard', href: paths.dashboard.root },
           {
-            name: "Reports",
+            name: 'Reports',
             href: paths.dashboard.report.root,
           },
-          { name: "List" },
+          { name: 'List' },
         ]}
         sx={{
           mb: { xs: 3, md: 5 },
@@ -235,16 +217,16 @@ const applyFilter = ({
   const { name } = filters;
 
   // SORT BY
-  if (sortBy === "latest") {
-    inputData = orderBy(inputData, ["createdAt"], ["desc"]);
+  if (sortBy === 'latest') {
+    inputData = orderBy(inputData, ['createdAt'], ['desc']);
   }
 
-  if (sortBy === "oldest") {
-    inputData = orderBy(inputData, ["createdAt"], ["asc"]);
+  if (sortBy === 'oldest') {
+    inputData = orderBy(inputData, ['createdAt'], ['asc']);
   }
 
-  if (sortBy === "popular") {
-    inputData = orderBy(inputData, ["totalViews"], ["desc"]);
+  if (sortBy === 'popular') {
+    inputData = orderBy(inputData, ['totalViews'], ['desc']);
   }
 
   // FILTERS
@@ -252,9 +234,7 @@ const applyFilter = ({
     // inputData = inputData.filter((job) => name.includes(job.name));
     inputData = report_types
       .map((category) => {
-        const filteredItems = category.items.filter((item) =>
-          name.includes(item.name)
-        );
+        const filteredItems = category.items.filter((item) => name.includes(item.name));
         if (filteredItems.length > 0) {
           return {
             ...category,

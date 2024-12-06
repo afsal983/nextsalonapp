@@ -9,9 +9,9 @@ import Grid from "@mui/material/Unstable_Grid2";
 
 import { fetcher } from "src/utils/axios";
 
-import { useSettingsContext } from "src/components/settings";
-
 import Loading from "src/app/loading";
+
+import { useSettingsContext } from "src/components/settings";
 
 import BestProducts from "../salon-best-product";
 import SalonYearlySales from "../salon-yearly-sales";

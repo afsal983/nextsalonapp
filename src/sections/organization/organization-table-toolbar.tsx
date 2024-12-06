@@ -1,18 +1,18 @@
-import { useCallback } from "react";
+import { useCallback } from 'react';
 
-import Stack from "@mui/material/Stack";
-import MenuItem from "@mui/material/MenuItem";
-import TextField from "@mui/material/TextField";
-import FormControl from "@mui/material/FormControl";
-import InputAdornment from "@mui/material/InputAdornment";
+import Stack from '@mui/material/Stack';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
+import InputAdornment from '@mui/material/InputAdornment';
 
-import Iconify from "src/components/iconify";
-import CustomPopover, { usePopover } from "src/components/custom-popover";
+import { Iconify } from 'src/components/iconify';
+import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
 import {
   OrganizationTableFilters,
   type OrganizationTableFilterValue,
-} from "src/types/organization";
+} from 'src/types/organization';
 
 // ----------------------------------------------------------------------
 
@@ -24,14 +24,13 @@ interface Props {
 
 export default function OrganizationTableToolbar({
   filters,
-  onFilters,
-} //
-: Props) {
+  onFilters, //
+}: Props) {
   const popover = usePopover();
 
   const handleFilterName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      onFilters("name", event.target.value);
+      onFilters('name', event.target.value);
     },
     [onFilters]
   );
@@ -40,10 +39,10 @@ export default function OrganizationTableToolbar({
     <>
       <Stack
         spacing={2}
-        alignItems={{ xs: "flex-end", md: "center" }}
+        alignItems={{ xs: 'flex-end', md: 'center' }}
         direction={{
-          xs: "column",
-          md: "row",
+          xs: 'column',
+          md: 'row',
         }}
         sx={{
           p: 2.5,
@@ -57,13 +56,7 @@ export default function OrganizationTableToolbar({
           }}
         />
 
-        <Stack
-          direction="row"
-          alignItems="center"
-          spacing={2}
-          flexGrow={1}
-          sx={{ width: 1 }}
-        >
+        <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
           <TextField
             fullWidth
             value={filters.name}
@@ -72,10 +65,7 @@ export default function OrganizationTableToolbar({
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Iconify
-                    icon="eva:search-fill"
-                    sx={{ color: "text.disabled" }}
-                  />
+                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
                 </InputAdornment>
               ),
             }}

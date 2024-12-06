@@ -1,116 +1,153 @@
-import { m } from "framer-motion";
+import type { BoxProps } from '@mui/material/Box';
 
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import Stack from "@mui/material/Stack";
-import { alpha } from "@mui/material/styles";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
+import { m } from 'framer-motion';
 
-import { varFade, MotionViewport } from "src/components/animate";
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Grid from '@mui/material/Unstable_Grid2';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
 
-// ----------------------------------------------------------------------
+import { CONFIG } from 'src/config-global';
+import { varAlpha, stylesMode } from 'src/theme/styles';
 
-const CARDS = [
-  {
-    icon: " /assets/icons/home/ic_basic.svg",
-    title: "Basic Plan",
-    description: "Single Orgnaization & Single Branch. Email support included.",
-  },
-  {
-    icon: " /assets/icons/home/ic_standard.svg",
-    title: "Standard Plan",
-    description:
-      "Single Orgnaization & Upto 2 branches. Email support included.",
-  },
-  {
-    icon: " /assets/icons/home/ic_pro.svg",
-    title: "Pro Plan",
-    description:
-      "Single Orgnaization & Upto 5 branches. Priority phone and email support included.",
-  },
-];
+import { SvgColor } from 'src/components/svg-color';
+import { varFade, MotionViewport } from 'src/components/animate';
+
+import { SectionTitle } from './components/section-title';
+import { CircleSvg, FloatLine, FloatPlusIcon } from './components/svg-elements';
 
 // ----------------------------------------------------------------------
 
-export default function HomeMinimal() {
-  return (
-    <Container
-      component={MotionViewport}
-      sx={{
-        py: { xs: 10, md: 15 },
-      }}
-    >
+export function HomeMinimal({ sx, ...other }: BoxProps) {
+  const renderLines = (
+    <>
+      <FloatPlusIcon sx={{ top: 72, left: 72 }} />
+      <FloatPlusIcon sx={{ bottom: 72, left: 72 }} />
+      <FloatLine sx={{ top: 80, left: 0 }} />
+      <FloatLine sx={{ bottom: 80, left: 0 }} />
+      <FloatLine vertical sx={{ top: 0, left: 80 }} />
+    </>
+  );
+
+  const renderDescription = (
+    <>
+      <SectionTitle
+        caption="Visualizing Success"
+        title="What's in"
+        txtGradient="Minimal?"
+        sx={{ mb: { xs: 5, md: 8 }, textAlign: { xs: 'center', md: 'left' } }}
+      />
+
       <Stack
-        spacing={3}
+        spacing={6}
         sx={{
-          textAlign: "center",
-          mb: { xs: 5, md: 10 },
+          maxWidth: { sm: 560, md: 400 },
+          mx: { xs: 'auto', md: 'unset' },
         }}
       >
-        <m.div variants={varFade().inUp}>
-          <Typography
-            component="div"
-            variant="overline"
-            sx={{ color: "text.disabled" }}
+        {ITEMS.map((item) => (
+          <Box
+            component={m.div}
+            key={item.title}
+            variants={varFade({ distance: 24 }).inUp}
+            gap={3}
+            display="flex"
           >
-            SMEEYE BUSINESS
-          </Typography>
-        </m.div>
-
-        <m.div variants={varFade().inDown}>
-          <Typography variant="h2">
-            SMEEYE <br /> Comprehensive Packages
-          </Typography>
-        </m.div>
+            <SvgColor src={item.icon} sx={{ width: 40, height: 40 }} />
+            <Stack spacing={1}>
+              <Typography variant="h5" component="h6">
+                {item.title}
+              </Typography>
+              <Typography sx={{ color: 'text.secondary' }}>{item.description}</Typography>
+            </Stack>
+          </Box>
+        ))}
       </Stack>
+    </>
+  );
 
+  const renderImg = (
+    <Stack
+      component={m.div}
+      variants={varFade({ distance: 24 }).inRight}
+      alignItems="center"
+      justifyContent="center"
+      sx={{ height: 1, position: 'relative' }}
+    >
       <Box
-        gap={{ xs: 3, lg: 10 }}
-        display="grid"
-        alignItems="center"
-        gridTemplateColumns={{
-          xs: "repeat(1, 1fr)",
-          md: "repeat(3, 1fr)",
+        sx={{
+          left: 0,
+          width: 720,
+          borderRadius: 2,
+          position: 'absolute',
+          bgcolor: 'background.default',
+          boxShadow: (theme) =>
+            `-40px 40px 80px 0px ${varAlpha(theme.vars.palette.grey['500Channel'], 0.16)}`,
+          [stylesMode.dark]: {
+            boxShadow: (theme) =>
+              `-40px 40px 80px 0px ${varAlpha(theme.vars.palette.common.blackChannel, 0.16)}`,
+          },
         }}
       >
-        {CARDS.map((card, index) => (
-          <m.div variants={varFade().inUp} key={card.title}>
-            <Card
-              sx={{
-                textAlign: "center",
-                boxShadow: { md: "none" },
-                bgcolor: "background.default",
-                p: (theme) => theme.spacing(10, 5),
-                ...(index === 1 && {
-                  boxShadow: (theme) => ({
-                    md: `-40px 40px 80px ${
-                      theme.palette.mode === "light"
-                        ? alpha(theme.palette.grey[500], 0.16)
-                        : alpha(theme.palette.common.black, 0.4)
-                    }`,
-                  }),
-                }),
-              }}
-            >
-              <Box
-                component="img"
-                src={card.icon}
-                alt={card.title}
-                sx={{ mx: "auto", width: 48, height: 48 }}
-              />
-
-              <Typography variant="h5" sx={{ mt: 8, mb: 2 }}>
-                {card.title}
-              </Typography>
-
-              <Typography sx={{ color: "text.secondary" }}>
-                {card.description}
-              </Typography>
-            </Card>
-          </m.div>
-        ))}
+        <Box
+          component="img"
+          alt="Home Chart"
+          src={`${CONFIG.assetsDir}/assets/images/home/home-chart.webp`}
+          sx={{ width: 720 }}
+        />
       </Box>
-    </Container>
+    </Stack>
+  );
+
+  return (
+    <Box
+      component="section"
+      sx={{
+        overflow: 'hidden',
+        position: 'relative',
+        py: { xs: 10, md: 20 },
+        ...sx,
+      }}
+      {...other}
+    >
+      <MotionViewport>
+        {renderLines}
+
+        <Container sx={{ position: 'relative' }}>
+          <Grid container columnSpacing={{ xs: 0, md: 8 }} sx={{ position: 'relative', zIndex: 9 }}>
+            <Grid xs={12} md={6} lg={7}>
+              {renderDescription}
+            </Grid>
+
+            <Grid md={6} lg={5} sx={{ display: { xs: 'none', md: 'block' } }}>
+              {renderImg}
+            </Grid>
+          </Grid>
+
+          <CircleSvg variants={varFade().in} sx={{ display: { xs: 'none', md: 'block' } }} />
+        </Container>
+      </MotionViewport>
+    </Box>
   );
 }
+
+// ----------------------------------------------------------------------
+
+const ITEMS = [
+  {
+    icon: `${CONFIG.assetsDir}/assets/icons/home/ic-make-brand.svg`,
+    title: 'Branding',
+    description: 'Consistent design makes it easy to brand your own.',
+  },
+  {
+    icon: `${CONFIG.assetsDir}/assets/icons/home/ic-design.svg`,
+    title: 'UI & UX design',
+    description: 'The kit is built on the principles of the atomic design system.',
+  },
+  {
+    icon: `${CONFIG.assetsDir}/assets/icons/home/ic-development.svg`,
+    title: 'Development',
+    description: 'Easy to customize and extend, saving you time and money.',
+  },
+];

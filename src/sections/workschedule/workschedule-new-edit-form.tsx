@@ -1,26 +1,25 @@
-import * as Yup from "yup";
-import { mutate } from "swr";
-import { useForm } from "react-hook-form";
-import { useMemo, useEffect } from "react";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { mutate } from 'swr';
+import { useForm } from 'react-hook-form';
+import { useMemo, useEffect } from 'react';
+import { z as zod } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import Card from '@mui/material/Card';
+import Stack from '@mui/material/Stack';
+import LoadingButton from '@mui/lab/LoadingButton';
 
-import Card from "@mui/material/Card";
-import Stack from "@mui/material/Stack";
-import LoadingButton from "@mui/lab/LoadingButton";
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 
-import { paths } from "src/routes/paths";
-import { useRouter } from "src/routes/hooks";
+import { useBoolean } from 'src/hooks/use-boolean';
 
-import { useBoolean } from "src/hooks/use-boolean";
+import { useTranslate } from 'src/locales';
 
-import { useTranslate } from "src/locales";
+import { Form } from 'src/components/hook-form';
+import { toast } from 'src/components/snackbar';
 
-import FormProvider from "src/components/hook-form";
-import { useSnackbar } from "src/components/snackbar";
+import { Schedule, EmployeeItem, type TimeSlotItem } from 'src/types/employee';
 
-import { Schedule, EmployeeItem, type TimeSlotItem } from "src/types/employee";
-
-import WorkScheduleNewEditDetails from "./workschedule-new-edit-details";
+import WorkScheduleNewEditDetails from './workschedule-new-edit-details';
 
 // ----------------------------------------------------------------------
 
@@ -30,6 +29,36 @@ type Props = {
   employee?: EmployeeItem[];
 };
 
+export type scheduleSchemaType = zod.infer<typeof scheduleSchema>;
+
+const slotSchema = zod.object({
+  id: zod.number({ required_error: 'Slot is required' }), // Required number with a custom error message
+  name: zod.string({ required_error: 'Name is required' }), // Required string with a custom error message
+});
+
+// Define the day schedule schema
+const dayScheduleSchema = zod.object({
+  day: zod.number({ required_error: 'Day is required' }), // Required number with a custom error
+  slots: zod
+    .array(slotSchema, { required_error: 'Slots are required' }) // Array of slotSchema
+    .min(1, { message: 'At least one slot is required' }), // Minimum one slot required
+});
+
+// Define the employee schedule schema
+const employeeScheduleSchema = zod.object({
+  employee_id: zod.number({ required_error: 'Employee ID is required' }), // Required number
+  dayschedule: zod
+    .array(dayScheduleSchema, { required_error: 'Day schedule is required' }) // Array of dayScheduleSchema
+    .min(1, { message: 'At least one day schedule is required' }), // Minimum one day schedule
+});
+
+// Define the schedule schema
+const scheduleSchema = zod.object({
+  employeeschedule: zod
+    .array(employeeScheduleSchema, { required_error: 'Employee schedule is required' })
+    .min(1, { message: 'At least one employee schedule is required' }),
+});
+
 export default function WorkScheduleNewEditForm({
   currentWorkSchedule,
   timeSlot,
@@ -37,42 +66,9 @@ export default function WorkScheduleNewEditForm({
 }: Props) {
   const router = useRouter();
 
-  const { enqueueSnackbar } = useSnackbar();
-
   const { t } = useTranslate();
 
   const loadingSend = useBoolean();
-
-  // Define the schema for each slot
-  const slotSchema = Yup.object().shape({
-    id: Yup.number().required("Slot is required"),
-    name: Yup.string().required("Name is required"),
-  });
-
-  // Define the schema for each day schedule
-  const dayScheduleSchema = Yup.object().shape({
-    day: Yup.number().required("Day is required"),
-    slots: Yup.array()
-      .of(slotSchema)
-      .required("Slots are required")
-      .min(1, "At least one slot is required"),
-  });
-
-  // Define the schema for the entire object
-  const employeeScheduleSchema = Yup.object().shape({
-    employee_id: Yup.number().required("Employee ID is required"),
-    dayschedule: Yup.array()
-      .of(dayScheduleSchema)
-      .required("Day schedule is required")
-      .min(1, "At least one day schedule is required"),
-  });
-
-  const schedule = Yup.object().shape({
-    employeeschedule: Yup.array()
-      .of(employeeScheduleSchema)
-      .required("Slots are required")
-      .min(1, "At least one slot is required"),
-  });
 
   const defaultValues = useMemo(
     () => ({
@@ -81,8 +77,9 @@ export default function WorkScheduleNewEditForm({
     [currentWorkSchedule]
   );
 
-  const methods = useForm({
-    resolver: yupResolver(schedule),
+  const methods = useForm<scheduleSchemaType>({
+    mode: 'all',
+    resolver: zodResolver(scheduleSchema),
     defaultValues,
   });
 
@@ -96,22 +93,21 @@ export default function WorkScheduleNewEditForm({
     loadingSend.onTrue();
 
     const result = data?.employeeschedule?.flatMap((emp) =>
-      emp.dayschedule.flatMap(
-        (day) =>
-          day?.slots?.map((slot) => ({
-            employee_id: emp.employee_id,
-            day: day.day,
-            timeslotid: slot.id,
-          }))
+      emp.dayschedule.flatMap((day) =>
+        day?.slots?.map((slot) => ({
+          employee_id: emp.employee_id,
+          day: day.day,
+          timeslotid: slot.id,
+        }))
       )
     );
 
     try {
       // Post the data
       const response = await fetch(`/api/salonapp/workschedule`, {
-        method: currentWorkSchedule ? "PUT" : "POST",
+        method: currentWorkSchedule ? 'PUT' : 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(result),
       });
@@ -119,26 +115,20 @@ export default function WorkScheduleNewEditForm({
       const responseData = await response.json();
 
       if (responseData?.status > 401) {
-        enqueueSnackbar(
-          currentWorkSchedule ? responseData?.message : responseData?.message,
-          { variant: "error" }
-        );
+        toast.error(currentWorkSchedule ? responseData?.message : responseData?.message);
       } else {
         // Keep 500ms delay
         await new Promise((resolve) => setTimeout(resolve, 500));
         reset();
-        enqueueSnackbar(
-          currentWorkSchedule
-            ? t("general.update_success")
-            : t("general.create_success"),
-          { variant: "success" }
+        toast.success(
+          currentWorkSchedule ? t('general.update_success') : t('general.create_success')
         );
 
-        mutate("/api/salonapp/workschedule");
+        mutate('/api/salonapp/workschedule');
         router.push(paths.dashboard.employees.workschedule.root);
       }
     } catch (error) {
-      enqueueSnackbar(error, { variant: "error" });
+      toast.error(error);
     }
   });
 
@@ -152,7 +142,7 @@ export default function WorkScheduleNewEditForm({
   }, [currentWorkSchedule, reset]);
 
   return (
-    <FormProvider methods={methods}>
+    <Form methods={methods}>
       <Card>
         <WorkScheduleNewEditDetails
           currentWorkSchedule={currentWorkSchedule}
@@ -161,21 +151,16 @@ export default function WorkScheduleNewEditForm({
         />
       </Card>
 
-      <Stack
-        justifyContent="flex-end"
-        direction="row"
-        spacing={2}
-        sx={{ mt: 3 }}
-      >
+      <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mt: 3 }}>
         <LoadingButton
           size="large"
           variant="contained"
           loading={loadingSend.value && isSubmitting}
           onClick={handleCreateAndSend}
         >
-          {currentWorkSchedule ? "Update" : "Create"} & Send
+          {currentWorkSchedule ? 'Update' : 'Create'} & Send
         </LoadingButton>
       </Stack>
-    </FormProvider>
+    </Form>
   );
 }

@@ -1,32 +1,26 @@
-import * as Yup from "yup";
-import { mutate } from "swr";
-import { useMemo } from "react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { mutate } from 'swr';
+import { useMemo } from 'react';
+import { useForm } from 'react-hook-form';
 
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import Chip from "@mui/material/Chip";
-import Stack from "@mui/material/Stack";
-import Grid from "@mui/material/Unstable_Grid2";
-import LoadingButton from "@mui/lab/LoadingButton";
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import Grid from '@mui/material/Unstable_Grid2';
+import LoadingButton from '@mui/lab/LoadingButton';
 
-import { paths } from "src/routes/paths";
-import { useRouter } from "src/routes/hooks";
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 
-import { useTranslate } from "src/locales";
+import { useTranslate } from 'src/locales';
 
-import { useSnackbar } from "src/components/snackbar";
-import FormProvider, {
-  RHFSelect,
-  RHFTextField,
-  RHFAutocomplete,
-} from "src/components/hook-form";
+import { toast } from 'src/components/snackbar';
+import { Form, RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
-import { type UserItem } from "src/types/user";
-import { type BranchItem } from "src/types/branch";
-import { type ServiceItem } from "src/types/service";
-import { type EmployeeItem } from "src/types/employee";
+import { type UserItem } from 'src/types/user';
+import { type BranchItem } from 'src/types/branch';
+import { type ServiceItem } from 'src/types/service';
+import { type EmployeeItem } from 'src/types/employee';
 
 // ----------------------------------------------------------------------
 
@@ -37,24 +31,17 @@ interface Props {
   users: UserItem[];
 }
 
-export default function EmployeeNewEditForm({
-  currentEmployee,
-  branches,
-  users,
-  services,
-}: Props) {
+export default function EmployeeNewEditForm({ currentEmployee, branches, users, services }: Props) {
   const router = useRouter();
-
-  const { enqueueSnackbar } = useSnackbar();
 
   const { t } = useTranslate();
 
   const NewProductSchema = Yup.object().shape({
     id: Yup.string(),
-    name: Yup.string().required(t("salonapp.employee.name_fvalid_error")),
+    name: Yup.string().required(t('salonapp.employee.name_fvalid_error')),
     address: Yup.string(),
-    telephone: Yup.string().required(t("general.color_fvalid_error")),
-    email: Yup.string().required(t("general.color_fvalid_error")),
+    telephone: Yup.string().required(t('general.color_fvalid_error')),
+    email: Yup.string().required(t('general.color_fvalid_error')),
     branch_id: Yup.number(),
     user_id: Yup.number(),
     employeeservice: Yup.array(),
@@ -63,11 +50,11 @@ export default function EmployeeNewEditForm({
 
   const defaultValues = useMemo(
     () => ({
-      id: currentEmployee?.id || "0",
-      name: currentEmployee?.name || "",
-      address: currentEmployee?.address || "",
-      telephone: currentEmployee?.telephone || "",
-      email: currentEmployee?.email || "",
+      id: currentEmployee?.id || '0',
+      name: currentEmployee?.name || '',
+      address: currentEmployee?.address || '',
+      telephone: currentEmployee?.telephone || '',
+      email: currentEmployee?.email || '',
       user_id: currentEmployee?.user_id || 0,
       branch_id: currentEmployee?.branch_id || 0,
       employeeservice:
@@ -75,7 +62,7 @@ export default function EmployeeNewEditForm({
           service_id: service.service_id,
           name: service.Product.name,
         })) || [],
-      avatarimagename: currentEmployee?.avatarimagename || "",
+      avatarimagename: currentEmployee?.avatarimagename || '',
     }),
     [currentEmployee]
   );
@@ -107,9 +94,9 @@ export default function EmployeeNewEditForm({
     try {
       // Post the data
       const response = await fetch(`/api/salonapp/employee`, {
-        method: currentEmployee ? "PUT" : "POST",
+        method: currentEmployee ? 'PUT' : 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(employeeData),
       });
@@ -117,22 +104,16 @@ export default function EmployeeNewEditForm({
       const responseData = await response.json();
 
       if (responseData?.status > 401) {
-        enqueueSnackbar(
+        toast.error(
           currentEmployee
-            ? `${t("general.update_failed")}:${responseData.message}`
-            : `${t("general.create_failed")}:${responseData.message}`,
-          { variant: "error" }
+            ? `${t('general.update_failed')}:${responseData.message}`
+            : `${t('general.create_failed')}:${responseData.message}`
         );
       } else {
         // Keep 500ms delay
         await new Promise((resolve) => setTimeout(resolve, 500));
         reset();
-        enqueueSnackbar(
-          currentEmployee
-            ? t("general.update_success")
-            : t("general.create_success"),
-          { variant: "success" }
-        );
+        toast.success(currentEmployee ? t('general.update_success') : t('general.create_success'));
 
         mutate(`/api/salonapp/employee/${currentEmployee?.id}`);
 
@@ -140,12 +121,12 @@ export default function EmployeeNewEditForm({
         router.push(paths.dashboard.employees.list);
       }
     } catch (error) {
-      enqueueSnackbar(error, { variant: "error" });
+      toast.error(error);
     }
   });
 
   return (
-    <FormProvider methods={methods} onSubmit={onSubmit}>
+    <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
         <Grid xs={12} md={12}>
           <Card sx={{ p: 3 }}>
@@ -155,14 +136,14 @@ export default function EmployeeNewEditForm({
                 columnGap={2}
                 display="grid"
                 gridTemplateColumns={{
-                  xs: "repeat(1, 1fr)",
-                  sm: "repeat(2, 1fr)",
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
                 }}
               >
                 <RHFTextField
                   name="name"
-                  label={t("salonapp.employee.emp_name")}
-                  helperText={t("salonapp.employee.sn_helper")}
+                  label={t('salonapp.employee.emp_name')}
+                  helperText={t('salonapp.employee.sn_helper')}
                 />
 
                 <RHFTextField name="address" label="Address" />
@@ -174,10 +155,10 @@ export default function EmployeeNewEditForm({
                 <RHFSelect
                   native
                   name="branch_id"
-                  label={t("salonapp.employee.branch")}
+                  label={t('salonapp.employee.branch')}
                   InputLabelProps={{ shrink: true }}
                 >
-                  <option key={0}>{t("general.dropdown_select")}</option>
+                  <option key={0}>{t('general.dropdown_select')}</option>
                   {branches.map((item) => (
                     <option key={item.branch_id} value={item.branch_id}>
                       {item.name}
@@ -187,10 +168,10 @@ export default function EmployeeNewEditForm({
                 <RHFSelect
                   native
                   name="user_id"
-                  label={t("salonapp.employee.link_to_user_account")}
+                  label={t('salonapp.employee.link_to_user_account')}
                   InputLabelProps={{ shrink: true }}
                 >
-                  <option key={0}>{t("general.dropdown_select")}</option>
+                  <option key={0}>{t('general.dropdown_select')}</option>
                   {users.map((item) => (
                     <option key={item.id} value={item.id}>
                       {item.name}
@@ -201,9 +182,9 @@ export default function EmployeeNewEditForm({
 
               <RHFAutocomplete
                 name="employeeservice"
-                label={t("salonapp.employee.assign_employee_services")}
-                placeholder={t("salonapp.employee.plus_services")}
-                helperText={t("salonapp.employee.service_assign_helper")}
+                label={t('salonapp.employee.assign_employee_services')}
+                placeholder={t('salonapp.employee.plus_services')}
+                helperText={t('salonapp.employee.service_assign_helper')}
                 multiple
                 freeSolo
                 options={services?.map((option: ServiceItem) => ({
@@ -214,10 +195,7 @@ export default function EmployeeNewEditForm({
                 }))}
                 getOptionLabel={(option) => (option as { name: string }).name}
                 renderOption={(props, option) => (
-                  <li
-                    {...props}
-                    key={(option as { service_id: string }).service_id}
-                  >
+                  <li {...props} key={(option as { service_id: string }).service_id}>
                     {(option as { name: string }).name}
                   </li>
                 )}
@@ -237,19 +215,15 @@ export default function EmployeeNewEditForm({
             </Stack>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton
-                type="submit"
-                variant="contained"
-                loading={isSubmitting}
-              >
+              <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
                 {!currentEmployee
-                  ? t("salonapp.employee.create_employee")
-                  : t("salonapp.employee.save_employee")}
+                  ? t('salonapp.employee.create_employee')
+                  : t('salonapp.employee.save_employee')}
               </LoadingButton>
             </Stack>
           </Card>
         </Grid>
       </Grid>
-    </FormProvider>
+    </Form>
   );
 }

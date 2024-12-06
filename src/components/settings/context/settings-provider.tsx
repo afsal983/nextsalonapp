@@ -1,92 +1,64 @@
-'use client'
+'use client';
 
-import isEqual from 'lodash/isEqual'
-import { useMemo, useState, useEffect, useCallback } from 'react'
+import { useMemo, useState, useCallback, createContext } from 'react';
 
-import { useLocalStorage } from 'src/hooks/use-local-storage'
+import { useCookies } from 'src/hooks/use-cookies';
+import { useLocalStorage } from 'src/hooks/use-local-storage';
 
-import { localStorageGetItem } from 'src/utils/storage-available'
-
-import { type SettingsValueProps } from '../types'
-import { SettingsContext } from './settings-context'
+import { STORAGE_KEY, defaultSettings } from '../config-settings';
+import type { SettingsState, SettingsContextValue, SettingsProviderProps } from '../types';
 
 // ----------------------------------------------------------------------
 
-const STORAGE_KEY = 'settings'
+export const SettingsContext = createContext<SettingsContextValue | undefined>(undefined);
 
-interface SettingsProviderProps {
-  children: React.ReactNode
-  defaultSettings: SettingsValueProps
-}
+export const SettingsConsumer = SettingsContext.Consumer;
 
-export function SettingsProvider ({
+// ----------------------------------------------------------------------
+
+export function SettingsProvider({
   children,
-  defaultSettings
+  settings,
+  caches = 'localStorage',
 }: SettingsProviderProps) {
-  const { state, update, reset } = useLocalStorage(
-    STORAGE_KEY,
-    defaultSettings
-  )
+  const cookies = useCookies<SettingsState>(STORAGE_KEY, settings, defaultSettings);
 
-  const [openDrawer, setOpenDrawer] = useState(false)
+  const localStorage = useLocalStorage<SettingsState>(STORAGE_KEY, settings);
 
-  const isArabic = localStorageGetItem('i18nextLng') === 'ar'
+  const values = caches === 'cookie' ? cookies : localStorage;
 
-  useEffect(() => {
-    if (isArabic) {
-      onChangeDirectionByLang('ar')
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isArabic])
+  const [openDrawer, setOpenDrawer] = useState(false);
 
-  // Direction by lang
-  const onChangeDirectionByLang = useCallback(
-    (lang: string) => {
-      update('themeDirection', lang === 'ar' ? 'rtl' : 'ltr')
-    },
-    [update]
-  )
-
-  // Drawer
   const onToggleDrawer = useCallback(() => {
-    setOpenDrawer((prev) => !prev)
-  }, [])
+    setOpenDrawer((prev) => !prev);
+  }, []);
 
   const onCloseDrawer = useCallback(() => {
-    setOpenDrawer(false)
-  }, [])
-
-  const canReset = !isEqual(state, defaultSettings)
+    setOpenDrawer(false);
+  }, []);
 
   const memoizedValue = useMemo(
     () => ({
-      ...state,
-      onUpdate: update,
-      // Direction
-      onChangeDirectionByLang,
-      // Reset
-      canReset,
-      onReset: reset,
-      // Drawer
-      open: openDrawer,
-      onToggle: onToggleDrawer,
-      onClose: onCloseDrawer
-    }),
-    [
-      reset,
-      update,
-      state,
-      canReset,
+      ...values.state,
+      canReset: values.canReset,
+      onReset: values.resetState,
+      onUpdate: values.setState,
+      onUpdateField: values.setField,
       openDrawer,
       onCloseDrawer,
       onToggleDrawer,
-      onChangeDirectionByLang
+    }),
+    [
+      values.state,
+      values.setField,
+      values.setState,
+      values.canReset,
+      values.resetState,
+      openDrawer,
+      onCloseDrawer,
+      onToggleDrawer,
     ]
-  )
+  );
 
-  return (
-    <SettingsContext.Provider value={memoizedValue}>
-      {children}
-    </SettingsContext.Provider>
-  )
+  return <SettingsContext.Provider value={memoizedValue}>{children}</SettingsContext.Provider>;
 }

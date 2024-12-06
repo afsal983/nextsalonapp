@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import useSWR from "swr";
+import useSWR from 'swr';
 
-import Container from "@mui/material/Container";
+import Container from '@mui/material/Container';
 
-import { paths } from "src/routes/paths";
+import { paths } from 'src/routes/paths';
+import { DashboardContent } from 'src/layouts/dashboard';
+import { fetcher } from 'src/utils/axios';
 
-import { fetcher } from "src/utils/axios";
+import { useTranslate } from 'src/locales';
 
-import { useTranslate } from "src/locales";
+import { useSettingsContext } from 'src/components/settings';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
-
-import ServiceNewEditForm from "../service-new-edit-form";
+import ServiceNewEditForm from '../service-new-edit-form';
 
 // ----------------------------------------------------------------------
 
@@ -24,43 +24,39 @@ export default function ServiceCreateView() {
 
   // Pre data fetching via API calls
   const { data: servicecategory, isLoading: isservicecategoryLoading } = useSWR(
-    "/api/salonapp/servicecategory",
+    '/api/salonapp/servicecategory',
     fetcher
   );
   const { data: retailbrands, isLoading: isretailbrandsLoading } = useSWR(
-    "/api/salonapp/retailbrand",
+    '/api/salonapp/retailbrand',
     fetcher
   );
 
   // Wait for data loading
-  if (isservicecategoryLoading || isretailbrandsLoading)
-    return <div>Loading...</div>;
+  if (isservicecategoryLoading || isretailbrandsLoading) return <div>Loading...</div>;
   if (!servicecategory || !retailbrands) return <div>Loading...</div>;
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : "lg"}>
+    <DashboardContent>
       <CustomBreadcrumbs
-        heading={t("salonapp.service.create_a_new_service")}
+        heading={t('salonapp.service.create_a_new_service')}
         links={[
           {
-            name: t("salonapp.dashboard"),
+            name: t('salonapp.dashboard'),
             href: paths.dashboard.root,
           },
           {
-            name: t("salonapp.services"),
+            name: t('salonapp.services'),
             href: paths.dashboard.services.root,
           },
-          { name: t("salonapp.service.new_service") },
+          { name: t('salonapp.service.new_service') },
         ]}
         sx={{
           mb: { xs: 3, md: 5 },
         }}
       />
 
-      <ServiceNewEditForm
-        servicecategory={servicecategory.data}
-        retailbrands={retailbrands.data}
-      />
-    </Container>
+      <ServiceNewEditForm servicecategory={servicecategory.data} retailbrands={retailbrands.data} />
+    </DashboardContent>
   );
 }

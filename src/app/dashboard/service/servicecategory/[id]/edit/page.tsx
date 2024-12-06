@@ -1,11 +1,11 @@
-import { _userList } from "src/_mock/_user";
+import { _userList } from 'src/_data/_user';
 
-import { ServiceCategoryEditView } from "src/sections/servicecategory/view";
+import { ServiceCategoryEditView } from 'src/sections/servicecategory/view';
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: "Dashboard: ServiceCategory Edit",
+  title: 'Dashboard: ServiceCategory Edit',
 };
 
 interface Props {

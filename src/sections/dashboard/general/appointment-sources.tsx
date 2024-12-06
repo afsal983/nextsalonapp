@@ -1,13 +1,13 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { ApexOptions } from "apexcharts";
+import { ApexOptions } from 'apexcharts';
 
-import CardHeader from "@mui/material/CardHeader";
-import Card, { CardProps } from "@mui/material/Card";
-import { styled, useTheme } from "@mui/material/styles";
+import CardHeader from '@mui/material/CardHeader';
+import Card, { CardProps } from '@mui/material/Card';
+import { styled, useTheme } from '@mui/material/styles';
 
-import { fNumber } from "src/utils/format-number";
+import { fNumber } from 'src/utils/format-number';
 
-import Chart, { useChart } from "src/components/chart";
+import { Chart, useChart } from 'src/components/chart';
 
 // ----------------------------------------------------------------------
 
@@ -17,10 +17,10 @@ const LEGEND_HEIGHT = 72;
 
 const StyledChart = styled(Chart)(({ theme }) => ({
   height: CHART_HEIGHT,
-  "& .apexcharts-canvas, .apexcharts-inner, svg, foreignObject": {
+  '& .apexcharts-canvas, .apexcharts-inner, svg, foreignObject': {
     height: `100% !important`,
   },
-  "& .apexcharts-legend": {
+  '& .apexcharts-legend': {
     height: LEGEND_HEIGHT,
     borderTop: `dashed 1px ${theme.palette.divider}`,
     top: `calc(${CHART_HEIGHT - LEGEND_HEIGHT}px) !important`,
@@ -42,12 +42,7 @@ interface Props extends CardProps {
   };
 }
 
-export default function AppointmentSource({
-  title,
-  subheader,
-  chart,
-  ...other
-}: Props) {
+export default function AppointmentSource({ title, subheader, chart, ...other }: Props) {
   const theme = useTheme();
 
   const { colors, series, options } = chart;
@@ -67,8 +62,8 @@ export default function AppointmentSource({
     },
     legend: {
       floating: true,
-      position: "bottom",
-      horizontalAlign: "center",
+      position: 'bottom',
+      horizontalAlign: 'center',
     },
     dataLabels: {
       enabled: true,

@@ -1,99 +1,73 @@
-import { Tree, TreeNode } from 'react-organizational-chart'
+import dynamic from 'next/dynamic';
+import { cloneElement } from 'react';
 
-import { useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles';
 
-import { flattenArray } from 'src/utils/flatten-array'
+import { flattenArray } from 'src/utils/helper';
 
-import GroupNode from './common/group-node'
-import SimpleNode from './common/simple-node'
-import StandardNode from './common/standard-node'
-import { type ListProps, type SubListProps, type OrganizationalChartProps } from './types'
+import type { OrgChartProps, OrgChartListProps, OrgChartSubListProps } from './types';
 
 // ----------------------------------------------------------------------
 
-export default function OrganizationalChart ({
-  data,
-  variant = 'simple',
-  sx,
-  ...other
-}: OrganizationalChartProps) {
-  const theme = useTheme()
+const Tree = dynamic(() => import('react-organizational-chart').then((mod) => mod.Tree), {
+  ssr: false,
+});
+
+const TreeNode = dynamic(() => import('react-organizational-chart').then((mod) => mod.TreeNode), {
+  ssr: false,
+});
+
+// ----------------------------------------------------------------------
+
+export function OrganizationalChart<T>({ data, nodeItem, ...other }: OrgChartProps<T>) {
+  const theme = useTheme();
+
+  const cloneNode = (props: T) => cloneElement(nodeItem(props));
+
+  const label = cloneNode({ ...data } as T);
 
   return (
     <Tree
       lineWidth="1.5px"
       nodePadding="4px"
       lineBorderRadius="24px"
-      lineColor={theme.palette.divider}
-      label={
-        (variant === 'simple' && <SimpleNode sx={sx} node={data} />) ||
-        (variant === 'standard' && (
-          <StandardNode
-            sx={sx}
-            node={data}
-            onEdit={() => { console.info('EDIT', data.name) }}
-            onDelete={() => { console.info('DELETE', data.name) }}
-          />
-        )) ||
-        (variant === 'group' && <GroupNode sx={sx} node={data} />)
-      }
+      lineColor={theme.vars.palette.divider}
+      label={label}
       {...other}
     >
-      {data.children.map((list) => (
-        <List key={list.name} depth={1} data={list} variant={variant} sx={sx} />
+      {data.children.map((list, index) => (
+        <TreeList key={index} depth={1} data={list} nodeItem={nodeItem} />
       ))}
     </Tree>
-  )
+  );
 }
 
 // ----------------------------------------------------------------------
 
-export function List ({ data, depth, variant, sx }: ListProps) {
-  const hasChild = data.children && !!data.children
+export function TreeList<T>({ data, depth, nodeItem }: OrgChartListProps<T>) {
+  const childs = (data as any).children;
+
+  const cloneNode = (props: T) => cloneElement(nodeItem(props));
+
+  const totalChildren = childs ? flattenArray(childs)?.length : 0;
+
+  const label = cloneNode({ ...data, depth, totalChildren } as T);
 
   return (
-    <TreeNode
-      label={
-        (variant === 'simple' && <SimpleNode sx={sx} node={data} />) ||
-        (variant === 'standard' && (
-          <StandardNode
-            sx={sx}
-            node={data}
-            onEdit={() => { console.info('EDIT', data.name) }}
-            onDelete={() => { console.info('DELETE', data.name) }}
-          />
-        )) ||
-        (variant === 'group' && (
-          <GroupNode
-            sx={sx}
-            node={data}
-            depth={depth}
-            length={flattenArray(data.children)?.length}
-          />
-        ))
-      }
-    >
-      {hasChild && (
-        <SubList data={data.children} depth={depth} variant={variant} sx={sx} />
-      )}
+    <TreeNode label={label}>
+      {childs && <TreeSubList data={childs} depth={depth} nodeItem={nodeItem} />}
     </TreeNode>
-  )
+  );
 }
 
 // ----------------------------------------------------------------------
 
-function SubList ({ data, depth, variant, sx }: SubListProps) {
+function TreeSubList<T>({ data, depth, nodeItem }: OrgChartSubListProps<T>) {
   return (
     <>
-      {data.map((list) => (
-        <List
-          key={list.name}
-          data={list}
-          depth={depth + 1}
-          variant={variant}
-          sx={sx}
-        />
+      {data.map((list, index) => (
+        <TreeList key={index} data={list} depth={depth + 1} nodeItem={nodeItem} />
       ))}
     </>
-  )
+  );
 }

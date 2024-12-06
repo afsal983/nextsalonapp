@@ -1,13 +1,13 @@
-import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
-import Stack from "@mui/material/Stack";
-import { Chip, Avatar } from "@mui/material";
-import { GridCellParams } from "@mui/x-data-grid";
-import ListItemText from "@mui/material/ListItemText";
+import Box from '@mui/material/Box';
+import Link from '@mui/material/Link';
+import Stack from '@mui/material/Stack';
+import { Chip, Avatar } from '@mui/material';
+import { GridCellParams } from '@mui/x-data-grid';
+import ListItemText from '@mui/material/ListItemText';
 
-import { fCurrency } from "src/utils/format-number";
+import { fCurrency } from 'src/utils/format-number';
 
-import Iconify from "src/components/iconify";
+import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -21,15 +21,11 @@ export function RenderCellPrice({ params }: ParamsProps) {
 
 export function RenderCellEventNotify({ params }: ParamsProps) {
   return (
-    <Stack
-      sx={{ typography: "caption", color: "text.secondary" }}
-      direction="row"
-      spacing={1}
-    >
-      {(params.row.eventnotify === "Yes" && (
+    <Stack sx={{ typography: 'caption', color: 'text.secondary' }} direction="row" spacing={1}>
+      {(params.row.eventnotify === 'Yes' && (
         <Iconify color="primary" icon="healthicons:yes-outline" />
       )) ||
-        (params.row.eventnotify === "No" && (
+        (params.row.eventnotify === 'No' && (
           <Iconify color="error" icon="healthicons:no-outline" />
         ))}
       {params.row.eventnotify}
@@ -39,15 +35,11 @@ export function RenderCellEventNotify({ params }: ParamsProps) {
 
 export function RenderCellPromoNotify({ params }: ParamsProps) {
   return (
-    <Stack
-      sx={{ typography: "caption", color: "text.secondary" }}
-      direction="row"
-      spacing={1}
-    >
-      {(params.row.promonotify === "Yes" && (
+    <Stack sx={{ typography: 'caption', color: 'text.secondary' }} direction="row" spacing={1}>
+      {(params.row.promonotify === 'Yes' && (
         <Iconify color="primary" icon="healthicons:yes-outline" />
       )) ||
-        (params.row.promonotify === "No" && (
+        (params.row.promonotify === 'No' && (
           <Iconify color="error" icon="healthicons:no-outline" />
         ))}
       {params.row.promonotify}
@@ -57,12 +49,12 @@ export function RenderCellPromoNotify({ params }: ParamsProps) {
 
 export function RenderCellSex({ params }: ParamsProps) {
   return (
-    <Stack sx={{ typography: "caption", color: "text.secondary" }}>
+    <Stack sx={{ typography: 'caption', color: 'text.secondary' }}>
       <Chip
         color={
-          (params.row.sex === "Female" && "success") ||
-          (params.row.sex === "Male" && "warning") ||
-          "error"
+          (params.row.sex === 'Female' && 'success') ||
+          (params.row.sex === 'Male' && 'warning') ||
+          'error'
         }
         label={params.row.sex}
       />
@@ -84,20 +76,17 @@ export function RenderCellProduct({ params }: ParamsProps) {
             color="inherit"
             variant="subtitle2"
             // onClick={params.row.item.onViewRow}
-            sx={{ cursor: "pointer" }}
+            sx={{ cursor: 'pointer' }}
           >
             {params.row.productinfo.name}
           </Link>
         }
         secondary={
-          <Box
-            component="div"
-            sx={{ typography: "body2", color: "text.disabled" }}
-          >
+          <Box component="div" sx={{ typography: 'body2', color: 'text.disabled' }}>
             {params.row.productinfo.telephone}
           </Box>
         }
-        sx={{ display: "flex", flexDirection: "column" }}
+        sx={{ display: 'flex', flexDirection: 'column' }}
       />
     </Stack>
   );

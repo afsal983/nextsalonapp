@@ -1,44 +1,53 @@
-import { useEffect, useCallback } from 'react'
+'use client';
 
-import { paths } from 'src/routes/paths'
-import { useRouter, useSearchParams } from 'src/routes/hooks'
+import { useState, useEffect } from 'react';
 
-import { SplashScreen } from 'src/components/loading-screen'
+import { useRouter, useSearchParams } from 'src/routes/hooks';
 
-import { useAuthContext } from '../hooks'
+import { CONFIG } from 'src/config-global';
 
-// ----------------------------------------------------------------------
+import { SplashScreen } from 'src/components/loading-screen';
 
-interface Props {
-  children: React.ReactNode
-}
-
-export default function GuestGuard ({ children }: Props) {
-  const { loading } = useAuthContext()
-
-  return <>{loading ? <SplashScreen /> : <Container>{children}</Container>}</>
-}
+import { useAuthContext } from '../hooks';
 
 // ----------------------------------------------------------------------
 
-function Container ({ children }: Props) {
-  const router = useRouter()
+type Props = {
+  children: React.ReactNode;
+};
 
-  const searchParams = useSearchParams()
+export function GuestGuard({ children }: Props) {
+  const router = useRouter();
 
-  const returnTo = searchParams.get('returnTo') || paths.dashboard.root
+  const searchParams = useSearchParams();
 
-  const { authenticated } = useAuthContext()
+  const { loading, authenticated } = useAuthContext();
 
-  const check = useCallback(() => {
-    if (authenticated) {
-      router.replace(returnTo)
+  const [isChecking, setIsChecking] = useState<boolean>(true);
+
+  const returnTo = searchParams.get('returnTo') || CONFIG.auth.redirectPath;
+
+  const checkPermissions = async (): Promise<void> => {
+    if (loading) {
+      return;
     }
-  }, [authenticated, returnTo, router])
+
+    if (authenticated) {
+      router.replace(returnTo);
+      return;
+    }
+
+    setIsChecking(false);
+  };
 
   useEffect(() => {
-    check()
-  }, [check])
+    checkPermissions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authenticated, loading]);
 
-  return <>{children}</>
+  if (isChecking) {
+    return <SplashScreen />;
+  }
+
+  return <>{children}</>;
 }

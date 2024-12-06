@@ -1,39 +1,39 @@
-"use client";
+'use client';
 
-import useSWR, { mutate } from "swr";
-import isEqual from "lodash/isEqual";
-import { useState, useEffect, useCallback } from "react";
+import useSWR, { mutate } from 'swr';
+import { isEqual } from 'src/utils/helper';
+import { useState, useEffect, useCallback } from 'react';
 
-import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
-import Card from "@mui/material/Card";
-import Table from "@mui/material/Table";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import { alpha } from "@mui/material/styles";
-import Container from "@mui/material/Container";
-import TableBody from "@mui/material/TableBody";
-import IconButton from "@mui/material/IconButton";
-import TableContainer from "@mui/material/TableContainer";
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import Card from '@mui/material/Card';
+import Table from '@mui/material/Table';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import { alpha } from '@mui/material/styles';
+import Container from '@mui/material/Container';
+import TableBody from '@mui/material/TableBody';
+import IconButton from '@mui/material/IconButton';
+import TableContainer from '@mui/material/TableContainer';
 
-import { paths } from "src/routes/paths";
-import { useRouter } from "src/routes/hooks";
-import { RouterLink } from "src/routes/components";
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+import { RouterLink } from 'src/routes/components';
 
-import { useBoolean } from "src/hooks/use-boolean";
+import { useBoolean } from 'src/hooks/use-boolean';
 
-import { fetcher } from "src/utils/axios";
+import { fetcher } from 'src/utils/axios';
 
-import { useTranslate } from "src/locales";
-import { useAuthContext } from "src/auth/hooks";
+import { useTranslate } from 'src/locales';
+import { useAuthContext } from 'src/auth/hooks';
 
-import Label from "src/components/label";
-import Iconify from "src/components/iconify";
-import Scrollbar from "src/components/scrollbar";
-import { useSnackbar } from "src/components/snackbar";
-import { ConfirmDialog } from "src/components/custom-dialog";
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+import { Label } from 'src/components/label';
+import { toast } from 'src/components/snackbar';
+import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
+import { ConfirmDialog } from 'src/components/custom-dialog';
+import { useSettingsContext } from 'src/components/settings';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import {
   useTable,
   emptyRows,
@@ -43,25 +43,25 @@ import {
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
-} from "src/components/table";
+} from 'src/components/table';
 
 import {
   type RetailBrandItem,
   type RetailBrandTableFilters,
   type RetailBrandTableFilterValue,
-} from "src/types/service";
+} from 'src/types/service';
 
-import RetailTableRow from "../retailbrand-table-row";
-import RetailBrandTableToolbar from "../retailbrand-table-toolbar";
-import RetailTableFiltersResult from "../retailbrand-table-filters-result";
+import RetailTableRow from '../retailbrand-table-row';
+import RetailBrandTableToolbar from '../retailbrand-table-toolbar';
+import RetailTableFiltersResult from '../retailbrand-table-filters-result';
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [{ value: "all", label: "All" }];
+const STATUS_OPTIONS = [{ value: 'all', label: 'All' }];
 
 const defaultFilters: RetailBrandTableFilters = {
-  name: "",
-  status: "all",
+  name: '',
+  status: 'all',
 };
 
 // ----------------------------------------------------------------------
@@ -69,9 +69,9 @@ export default function RetailBrandListView() {
   const { t } = useTranslate();
 
   const TABLE_HEAD = [
-    { id: "name", label: t("general.name"), width: 320 },
-    { id: "desc", label: t("general.description"), width: 120 },
-    { id: "", width: 18 },
+    { id: 'name', label: t('general.name'), width: 320 },
+    { id: 'desc', label: t('general.description'), width: 120 },
+    { id: '', width: 18 },
   ];
 
   // Initialize
@@ -84,9 +84,7 @@ export default function RetailBrandListView() {
     data: retail,
     isLoading: isretailLoading,
     error: errorA,
-  } = useSWR("/api/salonapp/retailbrand", fetcher);
-
-  const { enqueueSnackbar } = useSnackbar();
+  } = useSWR('/api/salonapp/retailbrand', fetcher);
 
   const table = useTable();
 
@@ -102,7 +100,7 @@ export default function RetailBrandListView() {
   const handleLogout = async () => {
     try {
       await logout();
-      router.replace("/");
+      router.replace('/');
     } catch (error) {
       console.error(error);
     }
@@ -123,8 +121,7 @@ export default function RetailBrandListView() {
 
   const canReset = !isEqual(defaultFilters, filters);
 
-  const notFound =
-    (dataFiltered.length === 0 && canReset) || dataFiltered.length === 0;
+  const notFound = (dataFiltered.length === 0 && canReset) || dataFiltered.length === 0;
 
   const handleFilters = useCallback(
     (name: string, value: RetailBrandTableFilterValue) => {
@@ -145,38 +142,34 @@ export default function RetailBrandListView() {
   const handleDeleteRow = useCallback(
     async (id: string) => {
       const response = await fetch(`/api/salonapp/retailbrand/${id}`, {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
 
       const responseData = await response.json();
 
       if (responseData?.status > 401) {
-        enqueueSnackbar(t("general.delete_fail"), { variant: "error" });
+        toast.error(t('general.delete_fail'));
         return;
       }
 
-      const deleteRow = tableData.filter(
-        (row: RetailBrandItem) => row.id !== id
-      );
+      const deleteRow = tableData.filter((row: RetailBrandItem) => row.id !== id);
 
-      enqueueSnackbar(t("general.delete_success"));
+      toast.success(t('general.delete_success'));
 
       setTableData(deleteRow);
 
       table.onUpdatePageDeleteRow(dataInPage.length);
     },
-    [dataInPage.length, enqueueSnackbar, table, tableData, t]
+    [dataInPage.length, table, tableData, t]
   );
 
   const handleDeleteRows = useCallback(() => {
-    const deleteRows = tableData.filter(
-      (row: RetailBrandItem) => !table.selected.includes(row.id)
-    );
+    const deleteRows = tableData.filter((row: RetailBrandItem) => !table.selected.includes(row.id));
 
-    enqueueSnackbar(t("general.delete_success"));
+    toast.success(t('general.delete_success'));
 
     setTableData(deleteRows);
 
@@ -184,14 +177,7 @@ export default function RetailBrandListView() {
       totalRowsInPage: dataInPage.length,
       totalRowsFiltered: dataFiltered.length,
     });
-  }, [
-    dataFiltered.length,
-    dataInPage.length,
-    enqueueSnackbar,
-    table,
-    tableData,
-    t,
-  ]);
+  }, [dataFiltered.length, dataInPage.length, table, tableData, t]);
 
   const handleEditRow = useCallback(
     (id: string) => {
@@ -202,7 +188,7 @@ export default function RetailBrandListView() {
 
   const handleFilterStatus = useCallback(
     (event: React.SyntheticEvent, newValue: string) => {
-      handleFilters("status", newValue);
+      handleFilters('status', newValue);
     },
     [handleFilters]
   );
@@ -232,16 +218,16 @@ export default function RetailBrandListView() {
 
   return (
     <>
-      <Container maxWidth={settings.themeStretch ? false : "lg"}>
+      <DashboardContent>
         <CustomBreadcrumbs
           heading="List"
           links={[
-            { name: t("salonapp.dashboard"), href: paths.dashboard.root },
+            { name: t('salonapp.dashboard'), href: paths.dashboard.root },
             {
-              name: t("salonapp.retail_brand"),
+              name: t('salonapp.retail_brand'),
               href: paths.dashboard.retails.root,
             },
-            { name: t("general.list") },
+            { name: t('general.list') },
           ]}
           action={
             <Button
@@ -250,7 +236,7 @@ export default function RetailBrandListView() {
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >
-              {t("salonapp.service.new_retail_brand")}
+              {t('salonapp.service.new_retail_brand')}
             </Button>
           }
           sx={{
@@ -264,8 +250,7 @@ export default function RetailBrandListView() {
             onChange={handleFilterStatus}
             sx={{
               px: 2.5,
-              boxShadow: (theme) =>
-                `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
+              boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
             }}
           >
             {STATUS_OPTIONS.map((tab) => (
@@ -277,16 +262,13 @@ export default function RetailBrandListView() {
                 icon={
                   <Label
                     variant={
-                      ((tab.value === "all" || tab.value === filters.status) &&
-                        "filled") ||
-                      "soft"
+                      ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
                     }
                     color="default"
                   >
-                    {["active"].includes(tab.value)
+                    {['active'].includes(tab.value)
                       ? tableData.filter(
-                          (retailitem: RetailBrandItem) =>
-                            retailitem.name === tab.value
+                          (retailitem: RetailBrandItem) => retailitem.name === tab.value
                         ).length
                       : tableData.length}
                   </Label>
@@ -295,10 +277,7 @@ export default function RetailBrandListView() {
             ))}
           </Tabs>
 
-          <RetailBrandTableToolbar
-            filters={filters}
-            onFilters={handleFilters}
-          />
+          <RetailBrandTableToolbar filters={filters} onFilters={handleFilters} />
 
           {canReset && (
             <RetailTableFiltersResult
@@ -312,7 +291,7 @@ export default function RetailBrandListView() {
             />
           )}
 
-          <TableContainer sx={{ position: "relative", overflow: "unset" }}>
+          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
@@ -333,10 +312,7 @@ export default function RetailBrandListView() {
             />
 
             <Scrollbar>
-              <Table
-                size={table.dense ? "small" : "medium"}
-                sx={{ minWidth: 960 }}
-              >
+              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={table.order}
                   orderBy={table.orderBy}
@@ -377,11 +353,7 @@ export default function RetailBrandListView() {
 
                   <TableEmptyRows
                     height={denseHeight}
-                    emptyRows={emptyRows(
-                      table.page,
-                      table.rowsPerPage,
-                      dataFiltered.length
-                    )}
+                    emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
                   />
 
                   <TableNoData notFound={notFound} />
@@ -409,8 +381,7 @@ export default function RetailBrandListView() {
         title="Delete"
         content={
           <>
-            Are you sure want to delete{" "}
-            <strong> {table.selected.length} </strong> items?
+            Are you sure want to delete <strong> {table.selected.length} </strong> items?
           </>
         }
         action={

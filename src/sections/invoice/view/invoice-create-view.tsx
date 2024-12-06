@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import useSWR from "swr";
+import useSWR from 'swr';
 
-import Container from "@mui/material/Container";
+import Container from '@mui/material/Container';
 
-import { paths } from "src/routes/paths";
+import { paths } from 'src/routes/paths';
 
-import { fetcher } from "src/utils/axios";
+import { fetcher } from 'src/utils/axios';
 
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+import { useSettingsContext } from 'src/components/settings';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import InvoiceNewEditForm from "../invoice-new-edit-form";
+import InvoiceNewEditForm from '../invoice-new-edit-form';
 
 // ----------------------------------------------------------------------
 
@@ -23,27 +23,27 @@ export default function InvoiceCreateView() {
     data: service,
     isLoading: isserviceLoading,
     error: errorS,
-  } = useSWR("/api/salonapp/services", fetcher);
+  } = useSWR('/api/salonapp/services', fetcher);
   const {
     data: branches,
     isLoading: isbranchesLoading,
     error: errorB,
-  } = useSWR("/api/salonapp/branches", fetcher);
+  } = useSWR('/api/salonapp/branches', fetcher);
   const {
     data: employees,
     isLoading: isEmployeeLoading,
     error: errorE,
-  } = useSWR("/api/salonapp/employee", fetcher);
+  } = useSWR('/api/salonapp/employee', fetcher);
   const {
     data: appsettings,
     isLoading: isAppSettingsLoading,
     error: errorI,
-  } = useSWR("/api/salonapp/settings", fetcher);
+  } = useSWR('/api/salonapp/settings', fetcher);
   const {
     data: paymenttypes,
     isLoading: isPaymenttypesLoading,
     error: errorP,
-  } = useSWR("/api/salonapp/paymenttype", fetcher);
+  } = useSWR('/api/salonapp/paymenttype', fetcher);
 
   if (
     isserviceLoading ||
@@ -53,24 +53,23 @@ export default function InvoiceCreateView() {
     isPaymenttypesLoading
   )
     return <div>Loading...</div>;
-  if (errorS || errorB || errorE || errorI || errorP)
-    return <div>Error Loading...</div>;
+  if (errorS || errorB || errorE || errorI || errorP) return <div>Error Loading...</div>;
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : "lg"}>
+    <DashboardContent>
       <CustomBreadcrumbs
         heading="Create a new invoice"
         links={[
           {
-            name: "Dashboard",
+            name: 'Dashboard',
             href: paths.dashboard.root,
           },
           {
-            name: "Invoice",
+            name: 'Invoice',
             href: paths.dashboard.invoice.root,
           },
           {
-            name: "New Invoice",
+            name: 'New Invoice',
           },
         ]}
         sx={{

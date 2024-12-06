@@ -1,78 +1,78 @@
-import Box from '@mui/material/Box'
-import Link from '@mui/material/Link'
-import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
-import Breadcrumbs from '@mui/material/Breadcrumbs'
+import Box from '@mui/material/Box';
+import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
 
-import LinkItem from './link-item'
-import { type CustomBreadcrumbsProps } from './types'
+import { BreadcrumbsLink } from './breadcrumb-link';
+import type { CustomBreadcrumbsProps } from './types';
 
 // ----------------------------------------------------------------------
 
-export default function CustomBreadcrumbs ({
+export function CustomBreadcrumbs({
   links,
   action,
   heading,
   moreLink,
   activeLast,
+  slotProps,
   sx,
   ...other
 }: CustomBreadcrumbsProps) {
-  const lastLink = links[links.length - 1].name
+  const lastLink = links[links.length - 1].name;
+
+  const renderHeading = (
+    <Typography variant="h4" sx={{ mb: 2, ...slotProps?.heading }}>
+      {heading}
+    </Typography>
+  );
+
+  const renderLinks = (
+    <Breadcrumbs separator={<Separator />} sx={slotProps?.breadcrumbs} {...other}>
+      {links.map((link, index) => (
+        <BreadcrumbsLink
+          key={link.name ?? index}
+          link={link}
+          activeLast={activeLast}
+          disabled={link.name === lastLink}
+        />
+      ))}
+    </Breadcrumbs>
+  );
+
+  const renderAction = <Box sx={{ flexShrink: 0, ...slotProps?.action }}> {action} </Box>;
+
+  const renderMoreLink = (
+    <Box component="ul">
+      {moreLink?.map((href) => (
+        <Box key={href} component="li" sx={{ display: 'flex' }}>
+          <Link href={href} variant="body2" target="_blank" rel="noopener" sx={slotProps?.moreLink}>
+            {href}
+          </Link>
+        </Box>
+      ))}
+    </Box>
+  );
 
   return (
-    <Box sx={{ ...sx }}>
-      <Stack direction="row" alignItems="center">
+    <Box gap={2} display="flex" flexDirection="column" sx={sx} {...other}>
+      <Box display="flex" alignItems="center">
         <Box sx={{ flexGrow: 1 }}>
-          {/* HEADING */}
-          {heading && (
-            <Typography variant="h4" gutterBottom>
-              {heading}
-            </Typography>
-          )}
+          {heading && renderHeading}
 
-          {/* BREADCRUMBS */}
-          {!(links.length === 0) && (
-            <Breadcrumbs separator={<Separator />} {...other}>
-              {links.map((link) => (
-                <LinkItem
-                  key={link.name || ''}
-                  link={link}
-                  activeLast={activeLast}
-                  disabled={link.name === lastLink}
-                />
-              ))}
-            </Breadcrumbs>
-          )}
+          {!!links.length && renderLinks}
         </Box>
 
-        {action && <Box sx={{ flexShrink: 0 }}> {action} </Box>}
-      </Stack>
+        {action && renderAction}
+      </Box>
 
-      {/* MORE LINK */}
-      {!!moreLink && (
-        <Box sx={{ mt: 2 }}>
-          {moreLink.map((href) => (
-            <Link
-              key={href}
-              href={href}
-              variant="body2"
-              target="_blank"
-              rel="noopener"
-              sx={{ display: 'table' }}
-            >
-              {href}
-            </Link>
-          ))}
-        </Box>
-      )}
+      {!!moreLink && renderMoreLink}
     </Box>
-  )
+  );
 }
 
 // ----------------------------------------------------------------------
 
-function Separator () {
+function Separator() {
   return (
     <Box
       component="span"
@@ -80,8 +80,8 @@ function Separator () {
         width: 4,
         height: 4,
         borderRadius: '50%',
-        bgcolor: 'text.disabled'
+        bgcolor: 'text.disabled',
       }}
     />
-  )
+  );
 }

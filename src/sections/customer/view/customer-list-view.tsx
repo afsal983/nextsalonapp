@@ -1,39 +1,40 @@
-"use client";
+'use client';
 
-import useSWR, { mutate } from "swr";
-import isEqual from "lodash/isEqual";
-import { useState, useEffect, useCallback } from "react";
+import useSWR, { mutate } from 'swr';
+import { isEqual } from 'src/utils/helper';
+import { useState, useEffect, useCallback } from 'react';
+import { useSetState } from 'src/hooks/use-set-state';
+import { DashboardContent } from 'src/layouts/dashboard';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import Card from '@mui/material/Card';
+import Table from '@mui/material/Table';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import { alpha } from '@mui/material/styles';
+import Container from '@mui/material/Container';
+import TableBody from '@mui/material/TableBody';
+import IconButton from '@mui/material/IconButton';
+import TableContainer from '@mui/material/TableContainer';
 
-import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
-import Card from "@mui/material/Card";
-import Table from "@mui/material/Table";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import { alpha } from "@mui/material/styles";
-import Container from "@mui/material/Container";
-import TableBody from "@mui/material/TableBody";
-import IconButton from "@mui/material/IconButton";
-import TableContainer from "@mui/material/TableContainer";
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+import { RouterLink } from 'src/routes/components';
 
-import { paths } from "src/routes/paths";
-import { useRouter } from "src/routes/hooks";
-import { RouterLink } from "src/routes/components";
+import { useBoolean } from 'src/hooks/use-boolean';
 
-import { useBoolean } from "src/hooks/use-boolean";
+import { fetcher } from 'src/utils/axios';
 
-import { fetcher } from "src/utils/axios";
+import { useTranslate } from 'src/locales';
+import { useAuthContext } from 'src/auth/hooks';
 
-import { useTranslate } from "src/locales";
-import { useAuthContext } from "src/auth/hooks";
-
-import Label from "src/components/label";
-import Iconify from "src/components/iconify";
-import Scrollbar from "src/components/scrollbar";
-import { useSnackbar } from "src/components/snackbar";
-import { ConfirmDialog } from "src/components/custom-dialog";
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+import { Label } from 'src/components/label';
+import { toast } from 'src/components/snackbar';
+import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
+import { ConfirmDialog } from 'src/components/custom-dialog';
+import { useSettingsContext } from 'src/components/settings';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import {
   useTable,
   emptyRows,
@@ -42,63 +43,59 @@ import {
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
-} from "src/components/table";
+} from 'src/components/table';
 
 import {
   type Customer,
   type CustomerCategory,
   type CustomerTableFilters,
   type CustomerTableFilterValue,
-} from "src/types/customer";
+} from 'src/types/customer';
 
-import CustomerTableRow from "../customer-table-row";
-import CustomerTableToolbar from "../customer-table-toolbar";
-import CustomerTableFiltersResult from "../customer-table-filters-result";
+import CustomerTableRow from '../customer-table-row';
+import CustomerTableToolbar from '../customer-table-toolbar';
+import CustomerTableFiltersResult from '../customer-table-filters-result';
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [{ value: "all", label: "All" }];
-
-const defaultFilters: CustomerTableFilters = {
-  name: "",
-  customercategory: [],
-  status: "all",
-};
+const STATUS_OPTIONS = [{ value: 'all', label: 'All' }];
 
 // ----------------------------------------------------------------------
 export default function CustomerListView() {
   const { t } = useTranslate();
 
   const TABLE_HEAD = [
-    { id: "name", label: t("salonapp.customer.fullname"), width: 320 },
-    { id: "telephone", label: t("salonapp.customer.telephone") },
-    { id: "email", label: t("salonapp.customer.email") },
-    { id: "sex", label: t("salonapp.customer.sex") },
-    { id: "dob", label: t("salonapp.customer.dob"), width: 100 },
+    { id: 'name', label: t('salonapp.customer.fullname'), width: 320 },
+    { id: 'telephone', label: t('salonapp.customer.telephone') },
+    { id: 'email', label: t('salonapp.customer.email') },
+    { id: 'sex', label: t('salonapp.customer.sex') },
+    { id: 'dob', label: t('salonapp.customer.dob'), width: 100 },
     {
-      id: "customercategory",
-      label: t("salonapp.customer.customercategory.name"),
+      id: 'customercategory',
+      label: t('salonapp.customer.customercategory.name'),
       width: 100,
     },
-    { id: "", width: 18 },
+    { id: '', width: 18 },
   ];
 
   // Initialize
   const [tableData, setTableData] = useState<Customer[]>([]);
-  const [customerCategory, setcustomerCategory] = useState<CustomerCategory[]>(
-    []
-  );
+  const [customerCategory, setcustomerCategory] = useState<CustomerCategory[]>([]);
+
+  const filters = useSetState<CustomerTableFilters>({
+    name: '',
+    customercategory: [],
+    status: 'all',
+  });
 
   const { logout } = useAuthContext();
 
   // Use SWR to fetch data from multiple endpoints in parallel
 
   const { data: customercategory, error: errorB } = useSWR(
-    "/api/salonapp/customercategory",
+    '/api/salonapp/customercategory',
     fetcher
   );
-
-  const { enqueueSnackbar } = useSnackbar();
 
   const table = useTable();
 
@@ -108,13 +105,11 @@ export default function CustomerListView() {
 
   const confirm = useBoolean();
 
-  const [filters, setFilters] = useState(defaultFilters);
-
   // Logout the user
   const handleLogout = async () => {
     try {
       await logout();
-      router.replace("/");
+      router.replace('/');
     } catch (error) {
       console.error(error);
     }
@@ -133,10 +128,7 @@ export default function CustomerListView() {
   // return
   // }
 
-  const { data } = useSWR(
-    `/api/salonapp/customer?search=${filters.name}`,
-    fetcher
-  );
+  const { data } = useSWR(`/api/salonapp/customer?search=${filters.state.name}`, fetcher);
 
   if (data) {
     dataFiltered = data.data;
@@ -149,46 +141,33 @@ export default function CustomerListView() {
 
   const denseHeight = table.dense ? 56 : 56 + 20;
 
-  const canReset = !isEqual(defaultFilters, filters);
+  const canReset =
+    !!filters.state.name ||
+    filters.state.customercategory.length > 0 ||
+    filters.state.status !== 'all';
 
-  const notFound =
-    (dataFiltered.length === 0 && canReset) || dataFiltered.length === 0;
-
-  const handleFilters = useCallback(
-    (name: string, value: CustomerTableFilterValue) => {
-      // table.onResetPage()
-      setFilters((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    },
-    []
-  );
-
-  const handleResetFilters = useCallback(() => {
-    setFilters(defaultFilters);
-  }, []);
+  const notFound = (dataFiltered.length === 0 && canReset) || dataFiltered.length === 0;
 
   // Delete an item
   const handleDeleteRow = useCallback(
     async (id: string) => {
       const response = await fetch(`/api/salonapp/customer/${id}`, {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
 
       const responseData = await response.json();
 
       if (responseData?.status > 401) {
-        enqueueSnackbar(t("general.delete_fail"), { variant: "error" });
+        toast.error(t('general.delete_fail'));
         return;
       }
 
       const deleteRow = tableData.filter((row: Customer) => row.id !== id);
 
-      enqueueSnackbar(t("general.delete_success"));
+      toast.success(t('general.delete_success'));
 
       setTableData(deleteRow);
 
@@ -196,15 +175,13 @@ export default function CustomerListView() {
 
       router.push(paths.dashboard.customers.list);
     },
-    [dataInPage.length, enqueueSnackbar, table, tableData, t, router]
+    [dataInPage.length, table, tableData, t, router]
   );
 
   const handleDeleteRows = useCallback(() => {
-    const deleteRows = tableData.filter(
-      (row: Customer) => !table.selected.includes(row.id)
-    );
+    const deleteRows = tableData.filter((row: Customer) => !table.selected.includes(row.id));
 
-    enqueueSnackbar(t("general.delete_success"));
+    toast.success(t('general.delete_success'));
 
     setTableData(deleteRows);
 
@@ -212,14 +189,7 @@ export default function CustomerListView() {
       totalRowsInPage: dataInPage.length,
       totalRowsFiltered: dataFiltered.length,
     });
-  }, [
-    dataFiltered.length,
-    dataInPage.length,
-    enqueueSnackbar,
-    table,
-    tableData,
-    t,
-  ]);
+  }, [dataFiltered.length, dataInPage.length, table, tableData, t]);
 
   const handleEditRow = useCallback(
     (id: string) => {
@@ -230,9 +200,10 @@ export default function CustomerListView() {
 
   const handleFilterStatus = useCallback(
     (event: React.SyntheticEvent, newValue: string) => {
-      handleFilters("status", newValue);
+      table.onResetPage();
+      filters.setState({ status: newValue });
     },
-    [handleFilters]
+    [filters, table]
   );
 
   // Use useEffect to update state2 when data2 is available
@@ -256,16 +227,16 @@ export default function CustomerListView() {
 
   return (
     <>
-      <Container maxWidth={settings.themeStretch ? false : "lg"}>
+      <DashboardContent>
         <CustomBreadcrumbs
           heading="List"
           links={[
-            { name: t("salonapp.dashboard"), href: paths.dashboard.root },
+            { name: t('salonapp.dashboard'), href: paths.dashboard.root },
             {
-              name: t("salonapp.customers"),
+              name: t('salonapp.customers'),
               href: paths.dashboard.customers.root,
             },
-            { name: t("general.list") },
+            { name: t('general.list') },
           ]}
           action={
             <Button
@@ -274,7 +245,7 @@ export default function CustomerListView() {
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >
-              {t("salonapp.customer.new_customer")}
+              {t('salonapp.customer.new_customer')}
             </Button>
           }
           sx={{
@@ -284,12 +255,11 @@ export default function CustomerListView() {
 
         <Card>
           <Tabs
-            value={filters.status}
+            value={filters.state.status}
             onChange={handleFilterStatus}
             sx={{
               px: 2.5,
-              boxShadow: (theme) =>
-                `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
+              boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
             }}
           >
             {STATUS_OPTIONS.map((tab) => (
@@ -301,16 +271,14 @@ export default function CustomerListView() {
                 icon={
                   <Label
                     variant={
-                      ((tab.value === "all" || tab.value === filters.status) &&
-                        "filled") ||
-                      "soft"
+                      ((tab.value === 'all' || tab.value === filters.state.status) && 'filled') ||
+                      'soft'
                     }
                     color="default"
                   >
-                    {["active"].includes(tab.value)
+                    {['active'].includes(tab.value)
                       ? tableData.filter(
-                          (customeritem: Customer) =>
-                            customeritem.firstname === tab.value
+                          (customeritem: Customer) => customeritem.firstname === tab.value
                         ).length
                       : tableData.length}
                   </Label>
@@ -321,24 +289,20 @@ export default function CustomerListView() {
 
           <CustomerTableToolbar
             filters={filters}
-            onFilters={handleFilters}
-            //
-            customerCategory={customerCategory.map((obj) => obj.name)}
+            onResetPage={table.onResetPage}
+            options={{ productcategory: customerCategory.map((obj) => obj.name) }}
           />
 
           {canReset && (
             <CustomerTableFiltersResult
               filters={filters}
-              onFilters={handleFilters}
-              //
-              onResetFilters={handleResetFilters}
-              //
-              results={dataFiltered.length}
+              onResetPage={table.onResetPage}
+              totalResults={dataFiltered.length}
               sx={{ p: 2.5, pt: 0 }}
             />
           )}
 
-          <TableContainer sx={{ position: "relative", overflow: "unset" }}>
+          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
@@ -359,10 +323,7 @@ export default function CustomerListView() {
             />
 
             <Scrollbar>
-              <Table
-                size={table.dense ? "small" : "medium"}
-                sx={{ minWidth: 960 }}
-              >
+              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={table.order}
                   orderBy={table.orderBy}
@@ -403,11 +364,7 @@ export default function CustomerListView() {
 
                   <TableEmptyRows
                     height={denseHeight}
-                    emptyRows={emptyRows(
-                      table.page,
-                      table.rowsPerPage,
-                      dataFiltered.length
-                    )}
+                    emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
                   />
 
                   <TableNoData notFound={notFound} />
@@ -427,7 +384,7 @@ export default function CustomerListView() {
             onChangeDense={table.onChangeDense}
           />
         </Card>
-      </Container>
+      </DashboardContent>
 
       <ConfirmDialog
         open={confirm.value}
@@ -435,8 +392,7 @@ export default function CustomerListView() {
         title="Delete"
         content={
           <>
-            Are you sure want to delete{" "}
-            <strong> {table.selected.length} </strong> items?
+            Are you sure want to delete <strong> {table.selected.length} </strong> items?
           </>
         }
         action={

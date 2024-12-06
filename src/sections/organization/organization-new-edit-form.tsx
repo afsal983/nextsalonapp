@@ -1,24 +1,22 @@
-import * as Yup from "yup";
-import { mutate } from "swr";
-import { useMemo } from "react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { mutate } from 'swr';
+import { useMemo } from 'react';
+import { useForm } from 'react-hook-form';
 
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import Stack from "@mui/material/Stack";
-import Grid from "@mui/material/Unstable_Grid2";
-import LoadingButton from "@mui/lab/LoadingButton";
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import Stack from '@mui/material/Stack';
+import Grid from '@mui/material/Unstable_Grid2';
+import LoadingButton from '@mui/lab/LoadingButton';
 
-import { paths } from "src/routes/paths";
-import { useRouter } from "src/routes/hooks";
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 
-import { useTranslate } from "src/locales";
+import { useTranslate } from 'src/locales';
 
-import { useSnackbar } from "src/components/snackbar";
-import FormProvider, { RHFTextField } from "src/components/hook-form";
+import { toast } from 'src/components/snackbar';
+import { Form, RHFTextField } from 'src/components/hook-form';
 
-import { type OrganizationItem } from "src/types/organization";
+import { type OrganizationItem } from 'src/types/organization';
 
 // ----------------------------------------------------------------------
 
@@ -26,34 +24,26 @@ interface Props {
   currentOrganization?: OrganizationItem;
 }
 
-export default function OrganizationNewEditForm({
-  currentOrganization,
-}: Props) {
+export default function OrganizationNewEditForm({ currentOrganization }: Props) {
   const router = useRouter();
-
-  const { enqueueSnackbar } = useSnackbar();
 
   const { t } = useTranslate();
 
   const NewProductSchema = Yup.object().shape({
     org_id: Yup.string(),
-    name: Yup.string().required(t("salonapp.organization.name_fvalid_error")),
-    address: Yup.string().required(
-      t("salonapp.organization.addr_fvalid_error")
-    ),
-    telephone: Yup.string().required(
-      t("salonapp.organization.telephone_fvalid_error")
-    ),
-    email: Yup.string().required(t("salonapp.organization.email_fvalid_error")),
+    name: Yup.string().required(t('salonapp.organization.name_fvalid_error')),
+    address: Yup.string().required(t('salonapp.organization.addr_fvalid_error')),
+    telephone: Yup.string().required(t('salonapp.organization.telephone_fvalid_error')),
+    email: Yup.string().required(t('salonapp.organization.email_fvalid_error')),
   });
 
   const defaultValues = useMemo(
     () => ({
-      org_id: currentOrganization?.org_id || "0",
-      name: currentOrganization?.name || "",
-      address: currentOrganization?.address || "",
-      telephone: currentOrganization?.telephone || "",
-      email: currentOrganization?.email || "",
+      org_id: currentOrganization?.org_id || '0',
+      name: currentOrganization?.name || '',
+      address: currentOrganization?.address || '',
+      telephone: currentOrganization?.telephone || '',
+      email: currentOrganization?.email || '',
     }),
     [currentOrganization]
   );
@@ -82,9 +72,9 @@ export default function OrganizationNewEditForm({
     try {
       // Post the data
       const response = await fetch(`/api/salonapp/organization`, {
-        method: currentOrganization ? "PUT" : "POST",
+        method: currentOrganization ? 'PUT' : 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(OrganizationData),
       });
@@ -92,21 +82,17 @@ export default function OrganizationNewEditForm({
       const responseData = await response.json();
 
       if (responseData?.status > 401) {
-        enqueueSnackbar(
+        toast.error(
           currentOrganization
-            ? `${t("general.update_failed")}:${responseData.message}`
-            : `${t("general.create_failed")}:${responseData.message}`,
-          { variant: "error" }
+            ? `${t('general.update_failed')}:${responseData.message}`
+            : `${t('general.create_failed')}:${responseData.message}`
         );
       } else {
         // Keep 500ms delay
         await new Promise((resolve) => setTimeout(resolve, 500));
         reset();
-        enqueueSnackbar(
-          currentOrganization
-            ? t("general.update_success")
-            : t("general.create_success"),
-          { variant: "success" }
+        toast.success(
+          currentOrganization ? t('general.update_success') : t('general.create_success')
         );
 
         mutate(`/api/salonapp/organization/${currentOrganization?.org_id}`);
@@ -114,12 +100,12 @@ export default function OrganizationNewEditForm({
         router.push(paths.dashboard.organization.list);
       }
     } catch (error) {
-      enqueueSnackbar(error, { variant: "error" });
+      toast.error(error);
     }
   });
 
   return (
-    <FormProvider methods={methods}>
+    <Form methods={methods}>
       <Grid container spacing={3}>
         <Grid xs={12} md={12}>
           <Card sx={{ p: 3 }}>
@@ -128,46 +114,42 @@ export default function OrganizationNewEditForm({
               columnGap={2}
               display="grid"
               gridTemplateColumns={{
-                xs: "repeat(1, 1fr)",
-                sm: "repeat(2, 1fr)",
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
               }}
             >
               <RHFTextField
                 name="name"
-                label={t("salonapp.organization.name")}
-                helperText={t("salonapp.organization.on_helper")}
+                label={t('salonapp.organization.name')}
+                helperText={t('salonapp.organization.on_helper')}
               />
               <RHFTextField
                 name="address"
-                label={t("salonapp.organization.addr")}
-                helperText={t("salonapp.organization.addr_helper")}
+                label={t('salonapp.organization.addr')}
+                helperText={t('salonapp.organization.addr_helper')}
               />
               <RHFTextField
                 name="telephone"
-                label={t("salonapp.organization.telephone")}
-                helperText={t("salonapp.organization.tel_helper")}
+                label={t('salonapp.organization.telephone')}
+                helperText={t('salonapp.organization.tel_helper')}
               />
               <RHFTextField
                 name="email"
-                label={t("salonapp.organization.email")}
-                helperText={t("salonapp.organization.em_helper")}
+                label={t('salonapp.organization.email')}
+                helperText={t('salonapp.organization.em_helper')}
               />
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton
-                type="submit"
-                variant="contained"
-                loading={isSubmitting}
-              >
+              <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
                 {!currentOrganization
-                  ? t("salonapp.organization.create_organization")
-                  : t("salonapp.organization.save_organization")}
+                  ? t('salonapp.organization.create_organization')
+                  : t('salonapp.organization.save_organization')}
               </LoadingButton>
             </Stack>
           </Card>
         </Grid>
       </Grid>
-    </FormProvider>
+    </Form>
   );
 }

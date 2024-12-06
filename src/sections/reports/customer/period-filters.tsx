@@ -1,21 +1,17 @@
-import { useCallback } from "react";
 
-import Stack from "@mui/material/Stack";
-import Badge from "@mui/material/Badge";
-import { LoadingButton } from "@mui/lab";
-import Drawer from "@mui/material/Drawer";
-import Divider from "@mui/material/Divider";
-import Tooltip from "@mui/material/Tooltip";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import SearchIcon from "@mui/icons-material/Search";
+import Stack from '@mui/material/Stack';
+import Badge from '@mui/material/Badge';
+import { LoadingButton } from '@mui/lab';
+import Drawer from '@mui/material/Drawer';
+import Divider from '@mui/material/Divider';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import SearchIcon from '@mui/icons-material/Search';
 
-import Iconify from "src/components/iconify";
+import { Iconify } from 'src/components/iconify';
 
-import {
-  CustomerReportPeriodFilters,
-  CustomerReportPeriodFilterValue,
-} from "src/types/report";
+import { CustomerReportPeriodFilters, CustomerReportPeriodFilterValue } from 'src/types/report';
 
 // ----------------------------------------------------------------------
 
@@ -115,7 +111,7 @@ export default function PeriodFilters({
     >
       {renderHead}
 
-      <Divider sx={{ borderStyle: "dashed" }} />
+      <Divider sx={{ borderStyle: 'dashed' }} />
 
       {renderDateRange}
     </Drawer>

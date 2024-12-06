@@ -1,21 +1,25 @@
-import { useCallback } from "react";
-import { useFieldArray, useFormContext, Controller } from "react-hook-form";
+import { useCallback } from 'react';
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
-import MenuItem from "@mui/material/MenuItem";
-import Typography from "@mui/material/Typography";
-import { MobileDateTimePicker } from "@mui/x-date-pickers/MobileDateTimePicker";
-import { useResponsive } from "src/hooks/use-responsive";
-import { fTimestamp } from "src/utils/format-time";
-import Iconify from "src/components/iconify";
-import { RHFSelect } from "src/components/hook-form";
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
+import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 
-import { ServiceItem } from "src/types/service";
-import { EmployeeItem } from "src/types/employee";
-import { AppointmentDate, AppointmentItem } from "src/types/appointment";
+import { useResponsive } from 'src/hooks/use-responsive';
+
+import { fTimestamp, fAdd } from 'src/utils/format-time';
+import dayjs from 'dayjs';
+
+import { Iconify } from 'src/components/iconify';
+import { Field, RHFSelect } from 'src/components/hook-form';
+
+import { ServiceItem } from 'src/types/service';
+import { EmployeeItem } from 'src/types/employee';
+import { AppointmentDate, AppointmentItem } from 'src/types/appointment';
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -31,26 +35,26 @@ export default function AppointmentNewEditDetails({
 }: Props) {
   const { control, setValue, getValues, watch, resetField } = useFormContext();
 
-  const mdUp = useResponsive("up", "md");
+  const mdUp = useResponsive('up', 'md');
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "Additional_products",
+    name: 'Additional_products',
   });
 
   const values = watch();
 
-  // const dateError = isAfter(filters.startDate, filters.endDate);
-  const dateError = false;
+  console.log(values);
+  // const dateError = fIsAfter(filters.state.startDate, filters.state.endDate);
 
   const handleAdd = () => {
     append({
       id: 0,
       event_id: 0,
-      product_id: "",
-      employee_id: "",
-      start: "",
-      end: "",
+      product_id: '',
+      employee_id: '',
+      start: '',
+      end: '',
       deleted: 0,
     });
   };
@@ -80,43 +84,29 @@ export default function AppointmentNewEditDetails({
     (index: number, service: ServiceItem) => {
       if (index === -1) {
         setValue(`Product`, service);
-        const start = getValues(`start`);
-        setValue(`end`, fTimestamp(new Date(start + service.duration * 60000)));
+        const start = dayjs(getValues(`start`));
+
+        setValue(`end`, start.add(service.duration, 'minute'));
       } else {
         setValue(`Additional_products[${index}].Product`, service);
-        const start = getValues(`Additional_products[${index}].start`);
+        const start = dayjs(getValues(`Additional_products[${index}].start`));
 
-        setValue(
-          `Additional_products[${index}].end`,
-          fTimestamp(new Date(start + service.duration * 60000))
-        );
+        setValue(`Additional_products[${index}].end`, '');
       }
     },
 
     [setValue, getValues]
   );
 
-  const handleSelectEmployee = useCallback(
-    (index: number, option: string) => {},
-    []
-  );
+  const handleSelectEmployee = useCallback((index: number, option: string) => {}, []);
 
   return (
     <Box sx={{ p: 2 }}>
-      <Typography variant="h6" sx={{ color: "text.disabled" }} gutterBottom>
+      <Typography variant="h6" sx={{ color: 'text.disabled' }} gutterBottom>
         Appointments:
       </Typography>
-      <Stack
-        key={currentAppointment?.id}
-        alignItems="flex-end"
-        spacing={2.5}
-        my={5}
-      >
-        <Stack
-          direction={{ xs: "column", md: "row" }}
-          spacing={2}
-          sx={{ width: 1 }}
-        >
+      <Stack key={currentAppointment?.id} alignItems="flex-end" spacing={2.5} my={5}>
+        <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ width: 1 }}>
           <RHFSelect
             name="product_id"
             size="small"
@@ -129,12 +119,12 @@ export default function AppointmentNewEditDetails({
             <MenuItem
               value=""
               onClick={() => handleClearService(0)}
-              sx={{ fontStyle: "italic", color: "text.secondary" }}
+              sx={{ fontStyle: 'italic', color: 'text.secondary' }}
             >
               None
             </MenuItem>
 
-            <Divider sx={{ borderStyle: "dashed" }} />
+            <Divider sx={{ borderStyle: 'dashed' }} />
 
             {services?.map((service) => (
               <MenuItem
@@ -156,14 +146,11 @@ export default function AppointmentNewEditDetails({
               maxWidth: { md: 400 },
             }}
           >
-            <MenuItem
-              value=""
-              sx={{ fontStyle: "italic", color: "text.secondary" }}
-            >
+            <MenuItem value="" sx={{ fontStyle: 'italic', color: 'text.secondary' }}>
               None
             </MenuItem>
 
-            <Divider sx={{ borderStyle: "dashed" }} />
+            <Divider sx={{ borderStyle: 'dashed' }} />
 
             {employees?.map((employee) => (
               <MenuItem
@@ -176,85 +163,30 @@ export default function AppointmentNewEditDetails({
             ))}
           </RHFSelect>
         </Stack>
-        <Stack
-          direction={{ xs: "column", md: "row" }}
-          spacing={2}
-          sx={{ width: 1 }}
-        >
-          <Controller
+        <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ width: 1 }}>
+          <Field.MobileDateTimePicker
             name="start"
-            control={control}
-            render={({ field }) => (
-              <MobileDateTimePicker
-                {...field}
-                value={new Date(field.value as AppointmentDate)}
-                onChange={(newValue) => {
-                  if (newValue) {
-                    field.onChange(fTimestamp(newValue));
-                    const product = getValues("Product");
-                    setValue(
-                      `end`,
-                      fTimestamp(
-                        new Date(newValue.getTime() + product.duration * 60000)
-                      )
-                    );
-                  }
-                }}
-                label="Start date"
-                format="dd/MM/yyyy hh:mm a"
-                slotProps={{
-                  textField: {
-                    fullWidth: true,
-                  },
-                }}
-              />
-            )}
+            label="Start"
+            onChange={(newValue) => {
+              if (newValue) {
+                setValue(`start`, newValue);
+                const product = getValues(`Product`);
+                if (product) {
+                  setValue(`end`, newValue.add(product.duration, 'minute'));
+                }
+              }
+            }}
           />
-
-          <Controller
-            name="end"
-            control={control}
-            render={({ field }) => (
-              <MobileDateTimePicker
-                {...field}
-                value={new Date(field.value as AppointmentDate)}
-                onChange={(newValue) => {
-                  if (newValue) {
-                    field.onChange(fTimestamp(newValue));
-                  }
-                }}
-                label="End date"
-                format="dd/MM/yyyy hh:mm a"
-                slotProps={{
-                  textField: {
-                    fullWidth: true,
-                    error: dateError,
-                    helperText:
-                      dateError && "End date must be later than start date",
-                  },
-                }}
-              />
-            )}
-          />
+          <Field.MobileDateTimePicker name="end" label="End" />
         </Stack>
       </Stack>
 
-      <Stack
-        divider={<Divider flexItem sx={{ borderStyle: "dashed" }} />}
-        spacing={1.5}
-      >
+      <Stack divider={<Divider flexItem sx={{ borderStyle: 'dashed' }} />} spacing={1.5}>
         {fields
-          .filter(
-            (field, index) =>
-              getValues(`Additional_products[${index}].deleted`) === 0
-          )
+          .filter((field, index) => getValues(`Additional_products[${index}].deleted`) === 0)
           .map((item, index) => (
             <Stack key={item.id} alignItems="flex-end" spacing={2.5}>
-              <Stack
-                direction={{ xs: "column", md: "row" }}
-                spacing={2}
-                sx={{ width: 1 }}
-              >
+              <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ width: 1 }}>
                 <RHFSelect
                   name={`Additional_products[${index}].product_id`}
                   size="small"
@@ -267,12 +199,12 @@ export default function AppointmentNewEditDetails({
                   <MenuItem
                     value=""
                     onClick={() => handleClearService(index)}
-                    sx={{ fontStyle: "italic", color: "text.secondary" }}
+                    sx={{ fontStyle: 'italic', color: 'text.secondary' }}
                   >
                     None
                   </MenuItem>
 
-                  <Divider sx={{ borderStyle: "dashed" }} />
+                  <Divider sx={{ borderStyle: 'dashed' }} />
 
                   {services?.map((service) => (
                     <MenuItem
@@ -294,14 +226,11 @@ export default function AppointmentNewEditDetails({
                     maxWidth: { md: 400 },
                   }}
                 >
-                  <MenuItem
-                    value=""
-                    sx={{ fontStyle: "italic", color: "text.secondary" }}
-                  >
+                  <MenuItem value="" sx={{ fontStyle: 'italic', color: 'text.secondary' }}>
                     None
                   </MenuItem>
 
-                  <Divider sx={{ borderStyle: "dashed" }} />
+                  <Divider sx={{ borderStyle: 'dashed' }} />
 
                   {employees?.map((employee) => (
                     <MenuItem
@@ -314,72 +243,27 @@ export default function AppointmentNewEditDetails({
                   ))}
                 </RHFSelect>
               </Stack>
-              <Stack
-                direction={{ xs: "column", md: "row" }}
-                spacing={2}
-                sx={{ width: 1 }}
-              >
-                <Controller
+              <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ width: 1 }}>
+                <Field.MobileDateTimePicker
                   name={`Additional_products[${index}].start`}
-                  control={control}
-                  render={({ field }) => (
-                    <MobileDateTimePicker
-                      {...field}
-                      value={new Date(field.value as AppointmentDate)}
-                      onChange={(newValue) => {
-                        if (newValue) {
-                          const product = getValues(
-                            `Additional_products[${index}].Product`
-                          );
-                          if (product) {
-                            setValue(
-                              `Additional_products[${index}].end`,
-                              fTimestamp(
-                                new Date(
-                                  newValue.getTime() + product.duration * 60000
-                                )
-                              )
-                            );
-                          }
-                          field.onChange(fTimestamp(newValue));
-                        }
-                      }}
-                      label="Start date"
-                      format="dd/MM/yyyy hh:mm a"
-                      slotProps={{
-                        textField: {
-                          fullWidth: true,
-                        },
-                      }}
-                    />
-                  )}
+                  label="Start"
+                  onChange={(newValue) => {
+                    if (newValue) {
+                      setValue(`Additional_products[${index}].start`, newValue);
+                      const product = getValues(`Additional_products[${index}].Product`);
+                      if (product) {
+                        setValue(
+                          `Additional_products[${index}].end`,
+                          newValue.add(product.duration, 'minute')
+                        );
+                      }
+                    }
+                  }}
                 />
 
-                <Controller
+                <Field.MobileDateTimePicker
                   name={`Additional_products[${index}].end`}
-                  control={control}
-                  render={({ field }) => (
-                    <MobileDateTimePicker
-                      {...field}
-                      value={new Date(field.value as AppointmentDate)}
-                      onChange={(newValue) => {
-                        if (newValue) {
-                          field.onChange(fTimestamp(newValue));
-                        }
-                      }}
-                      label="End date"
-                      format="dd/MM/yyyy hh:mm a"
-                      slotProps={{
-                        textField: {
-                          fullWidth: true,
-                          error: dateError,
-                          helperText:
-                            dateError &&
-                            "End date must be later than start date",
-                        },
-                      }}
-                    />
-                  )}
+                  label="End"
                 />
               </Stack>
 
@@ -395,12 +279,12 @@ export default function AppointmentNewEditDetails({
           ))}
       </Stack>
 
-      <Divider sx={{ my: 3, borderStyle: "dashed" }} />
+      <Divider sx={{ my: 3, borderStyle: 'dashed' }} />
 
       <Stack
         spacing={1}
-        direction={{ xs: "column", md: "row" }}
-        alignItems={{ xs: "flex-end", md: "center" }}
+        direction={{ xs: 'column', md: 'row' }}
+        alignItems={{ xs: 'flex-end', md: 'center' }}
       >
         <Button
           size="small"
@@ -413,16 +297,16 @@ export default function AppointmentNewEditDetails({
         </Button>
       </Stack>
       <Stack
-        direction={{ xs: "column", md: "row" }} // Vertical on xs, horizontal on md
+        direction={{ xs: 'column', md: 'row' }} // Vertical on xs, horizontal on md
         justifyContent="space-between" // Items at two ends when in row
-        alignItems={{ xs: "stretch" }} // Aligns stretch in column, center in row
+        alignItems={{ xs: 'stretch' }} // Aligns stretch in column, center in row
         spacing={2}
         my={4}
       >
         <Divider
           flexItem
-          orientation={mdUp ? "vertical" : "horizontal"}
-          sx={{ borderStyle: "dashed", order: { xs: 1, md: 3 } }}
+          orientation={mdUp ? 'vertical' : 'horizontal'}
+          sx={{ borderStyle: 'dashed', order: { xs: 1, md: 3 } }}
         />
 
         {/* {renderTotal} */}

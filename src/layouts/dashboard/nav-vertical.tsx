@@ -1,107 +1,110 @@
-import { useEffect } from 'react'
+import type { Breakpoint } from '@mui/material/styles';
+import type { NavSectionProps } from 'src/components/nav-section';
 
-import Box from '@mui/material/Box'
-import Stack from '@mui/material/Stack'
-import Drawer from '@mui/material/Drawer'
+import Box from '@mui/material/Box';
+import { useTheme } from '@mui/material/styles';
 
-import { usePathname } from 'src/routes/hooks'
+import { varAlpha, hideScrollY } from 'src/theme/styles';
 
-import { useResponsive } from 'src/hooks/use-responsive'
+import { Logo } from 'src/components/logo';
+import { Scrollbar } from 'src/components/scrollbar';
+import { NavSectionMini, NavSectionVertical } from 'src/components/nav-section';
 
-import { useAuthContext } from 'src/auth/hooks'
-
-import Logo from 'src/components/logo'
-import Scrollbar from 'src/components/scrollbar'
-import { NavSectionVertical } from 'src/components/nav-section'
-
-import { NAV } from '../config-layout'
-import { useNavData } from './config-navigation'
-import NavToggleButton from '../common/nav-toggle-button'
+import { NavUpgrade } from '../components/nav-upgrade';
+import { NavToggleButton } from '../components/nav-toggle-button';
 
 // ----------------------------------------------------------------------
 
-interface Props {
-  openNav: boolean
-  onCloseNav: VoidFunction
-}
+export type NavVerticalProps = NavSectionProps & {
+  isNavMini: boolean;
+  layoutQuery: Breakpoint;
+  onToggleNav: () => void;
+  slots?: {
+    topArea?: React.ReactNode;
+    bottomArea?: React.ReactNode;
+  };
+};
 
-export default function NavVertical ({ openNav, onCloseNav }: Props) {
-  const { user } = useAuthContext()
-  const pathname = usePathname()
+export function NavVertical({
+  sx,
+  data,
+  slots,
+  isNavMini,
+  layoutQuery,
+  onToggleNav,
+  ...other
+}: NavVerticalProps) {
+  const theme = useTheme();
 
-  const lgUp = useResponsive('up', 'lg')
+  const renderNavVertical = (
+    <>
+      {slots?.topArea ?? (
+        <Box sx={{ pl: 3.5, pt: 2.5, pb: 1 }}>
+          <Logo />
+        </Box>
+      )}
 
-  const navData = useNavData()
+      <Scrollbar fillContent>
+        <NavSectionVertical data={data} sx={{ px: 2, flex: '1 1 auto' }} {...other} />
+        {/*
+        {slots?.bottomArea ?? <NavUpgrade />}
+           */}
+      </Scrollbar>
+    </>
+  );
 
-  useEffect(() => {
-    if (openNav) {
-      onCloseNav()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname])
+  const renderNavMini = (
+    <>
+      {slots?.topArea ?? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', py: 2.5 }}>
+          <Logo />
+        </Box>
+      )}
 
-  const renderContent = (
-    <Scrollbar
-      sx={{
-        height: 1,
-        '& .simplebar-content': {
-          height: 1,
-          display: 'flex',
-          flexDirection: 'column'
-        }
-      }}
-    >
-      <Logo
-        logourl={`${user?.domain_id  }_logo.png`}
-        sx={{ mt: 3, ml: 4, mb: 1 }}
+      <NavSectionMini
+        data={data}
+        sx={{ pb: 2, px: 0.5, ...hideScrollY, flex: '1 1 auto', overflowY: 'auto' }}
+        {...other}
       />
 
-      <NavSectionVertical
-        data={navData}
-        slotProps={{
-          currentRole: user?.role
-        }}
-      />
-
-      <Box sx={{ flexGrow: 1 }} />
-    </Scrollbar>
-  )
+      {slots?.bottomArea}
+    </>
+  );
 
   return (
     <Box
       sx={{
-        flexShrink: { lg: 0 },
-        width: { lg: NAV.W_VERTICAL }
+        top: 0,
+        left: 0,
+        height: 1,
+        display: 'none',
+        position: 'fixed',
+        flexDirection: 'column',
+        bgcolor: 'var(--layout-nav-bg)',
+        zIndex: 'var(--layout-nav-zIndex)',
+        width: isNavMini ? 'var(--layout-nav-mini-width)' : 'var(--layout-nav-vertical-width)',
+        borderRight: `1px solid var(--layout-nav-border-color, ${varAlpha(theme.vars.palette.grey['500Channel'], 0.12)})`,
+        transition: theme.transitions.create(['width'], {
+          easing: 'var(--layout-transition-easing)',
+          duration: 'var(--layout-transition-duration)',
+        }),
+        [theme.breakpoints.up(layoutQuery)]: {
+          display: 'flex',
+        },
+        ...sx,
       }}
     >
-      <NavToggleButton />
-
-      {lgUp
-        ? (
-        <Stack
-          sx={{
-            height: 1,
-            position: 'fixed',
-            width: NAV.W_VERTICAL,
-            borderRight: (theme) => `dashed 1px ${theme.palette.divider}`
-          }}
-        >
-          {renderContent}
-        </Stack>
-          )
-        : (
-        <Drawer
-          open={openNav}
-          onClose={onCloseNav}
-          PaperProps={{
-            sx: {
-              width: NAV.W_VERTICAL
-            }
-          }}
-        >
-          {renderContent}
-        </Drawer>
-          )}
+      <NavToggleButton
+        isNavMini={isNavMini}
+        onClick={onToggleNav}
+        sx={{
+          display: 'none',
+          [theme.breakpoints.up(layoutQuery)]: {
+            display: 'inline-flex',
+          },
+        }}
+      />
+      {isNavMini ? renderNavMini : renderNavVertical}
     </Box>
-  )
+  );
 }

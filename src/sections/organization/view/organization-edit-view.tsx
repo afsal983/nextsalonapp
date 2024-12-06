@@ -1,20 +1,18 @@
-"use client";
+'use client';
 
-import useSWR from "swr";
-import React from "react";
+import useSWR from 'swr';
+import React from 'react';
 
-import Container from "@mui/material/Container";
+import { paths } from 'src/routes/paths';
+import { DashboardContent } from 'src/layouts/dashboard';
+import { fetcher } from 'src/utils/axios';
 
-import { paths } from "src/routes/paths";
+import { useTranslate } from 'src/locales';
 
-import { fetcher } from "src/utils/axios";
+import { useSettingsContext } from 'src/components/settings';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { useTranslate } from "src/locales";
-
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
-
-import OrganizationNewEditForm from "../organization-new-edit-form";
+import OrganizationNewEditForm from '../organization-new-edit-form';
 
 // ----------------------------------------------------------------------
 
@@ -29,7 +27,7 @@ export default function OrganizationEditView({ id }: Props) {
 
   // Pre data fetching via API calls
   const { data: organization, error: organizationError } = useSWR(
-    "/api/salonapp/organization",
+    '/api/salonapp/organization',
     fetcher
   );
 
@@ -37,16 +35,16 @@ export default function OrganizationEditView({ id }: Props) {
   if (!organization) return <div>Loading...</div>;
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : "lg"}>
+    <DashboardContent>
       <CustomBreadcrumbs
         heading="Edit"
         links={[
           {
-            name: t("salonapp.dashboard"),
+            name: t('salonapp.dashboard'),
             href: paths.dashboard.root,
           },
           {
-            name: t("salonapp.organization.organizations"),
+            name: t('salonapp.organization.organizations'),
             href: paths.dashboard.organization.root,
           },
           { name: organization?.data[0].name },
@@ -57,6 +55,6 @@ export default function OrganizationEditView({ id }: Props) {
       />
 
       <OrganizationNewEditForm currentOrganization={organization?.data[0]} />
-    </Container>
+    </DashboardContent>
   );
 }

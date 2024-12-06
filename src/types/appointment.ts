@@ -1,7 +1,8 @@
-import { BranchItem } from "./branch";
-import { Customer } from "./customer";
-import { ServiceItem } from "./service";
-import { EmployeeItem } from "./employee";
+import type { IDatePickerControl } from './common';
+import { BranchItem } from './branch';
+import { Customer } from './customer';
+import { ServiceItem } from './service';
+import { EmployeeItem } from './employee';
 // ----------------------------------------------------------------------
 
 export type AppointmentTableFilterValue = string | Date | null;
@@ -9,8 +10,8 @@ export type AppointmentTableFilterValue = string | Date | null;
 export interface AppointmentTableFilters {
   name: string;
   status: string;
-  startDate: Date | null;
-  endDate: Date | null;
+  endDate: IDatePickerControl;
+  startDate: IDatePickerControl;
 }
 
 // ----------------------------------------------------------------------
@@ -21,13 +22,13 @@ export interface AppointmentItem {
   start: Date;
   end: Date;
   resource: string;
-  customer_id: string;
+  customer_id: number;
   Customer: Customer;
-  product_id: string;
+  product_id: number;
   Product: ServiceItem;
-  employee_id: string;
+  employee_id: number;
   Employee: EmployeeItem;
-  branch_id: string;
+  branch_id: number;
   Branches_organization: BranchItem;
   Reminder_count: number;
   Additional_products: Additional_products[];
@@ -37,7 +38,7 @@ export interface AppointmentItem {
 }
 
 export interface Additional_products {
-  id: string;
+  id: number;
   event_id: number;
   start: Date;
   end: Date;

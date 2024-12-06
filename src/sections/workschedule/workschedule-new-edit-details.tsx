@@ -1,22 +1,22 @@
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFieldArray, useFormContext } from 'react-hook-form';
 
-import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
-import MenuItem from "@mui/material/MenuItem";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import DownloadIcon from "@mui/icons-material/Download";
+import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import DownloadIcon from '@mui/icons-material/Download';
 
-import { useTranslate } from "src/locales";
+import { useTranslate } from 'src/locales';
 
-import Iconify from "src/components/iconify";
-import { RHFSelect, RHFAutocomplete } from "src/components/hook-form";
+import { Iconify } from 'src/components/iconify';
+import { RHFSelect, RHFAutocomplete } from 'src/components/hook-form';
 
-import { Schedule } from "src/types/employee";
-import { EmployeeItem, type TimeSlotItem } from "src/types/employee";
+import { Schedule } from 'src/types/employee';
+import { EmployeeItem, type TimeSlotItem } from 'src/types/employee';
 
 // ----------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ export default function WorkScheduleNewEditDetails({
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "employeeschedule",
+    name: 'employeeschedule',
   });
 
   console.log(currentWorkSchedule);
@@ -65,15 +65,13 @@ export default function WorkScheduleNewEditDetails({
   const downloadSchedule = async () => {
     try {
       // Axios GET request to the API endpoint
-      const response = await fetch(
-        "/api/salonapp/workschedule/downloadschedule"
-      );
+      const response = await fetch('/api/salonapp/workschedule/downloadschedule');
 
       // Convert the response into an ArrayBuffer
       const arrayBuffer = await response.arrayBuffer();
 
       // Create a Blob from the ArrayBuffer
-      const pdfBlob = new Blob([arrayBuffer], { type: "application/pdf" });
+      const pdfBlob = new Blob([arrayBuffer], { type: 'application/pdf' });
 
       // Create a URL for the Blob
       const pdfUrl = URL.createObjectURL(pdfBlob);
@@ -86,22 +84,15 @@ export default function WorkScheduleNewEditDetails({
   };
 
   return (
-    <Box sx={{ width: "100%", overflowX: "auto", whiteSpace: "nowrap", p: 3 }}>
-      <Typography variant="h6" sx={{ color: "text.disabled", mb: 3 }}>
+    <Box sx={{ width: '100%', overflowX: 'auto', whiteSpace: 'nowrap', p: 3 }}>
+      <Typography variant="h6" sx={{ color: 'text.disabled', mb: 3 }}>
         Employee Work Schedules:
       </Typography>
 
-      <Stack
-        divider={<Divider flexItem sx={{ borderStyle: "dashed" }} />}
-        spacing={3}
-      >
+      <Stack divider={<Divider flexItem sx={{ borderStyle: 'dashed' }} />} spacing={3}>
         {fields.map((item, schedulecount) => (
           <Stack key={item.id} alignItems="flex-end" spacing={1.5}>
-            <Stack
-              direction={{ xs: "column", md: "row" }}
-              spacing={4}
-              sx={{ width: 1 }}
-            >
+            <Stack direction={{ xs: 'column', md: 'row' }} spacing={4} sx={{ width: 1 }}>
               <RHFSelect
                 name={`employeeschedule[${schedulecount}].employee_id`}
                 size="small"
@@ -111,14 +102,11 @@ export default function WorkScheduleNewEditDetails({
                   maxWidth: { md: 150 },
                 }}
               >
-                <MenuItem
-                  value=""
-                  sx={{ fontStyle: "italic", color: "text.secondary" }}
-                >
+                <MenuItem value="" sx={{ fontStyle: 'italic', color: 'text.secondary' }}>
                   None
                 </MenuItem>
 
-                <Divider sx={{ borderStyle: "dashed" }} />
+                <Divider sx={{ borderStyle: 'dashed' }} />
 
                 {employee?.map((emp) => (
                   <MenuItem key={emp.id} value={emp.id}>
@@ -126,49 +114,41 @@ export default function WorkScheduleNewEditDetails({
                   </MenuItem>
                 ))}
               </RHFSelect>
-              <Stack direction="row" spacing={2} sx={{ flexWrap: "wrap" }}>
-                {[
-                  "Monday",
-                  "Tuesday",
-                  "Wednesday",
-                  "Thursday",
-                  "Firday",
-                  "Saturday",
-                  "Sunday",
-                ].map((day: string, weekday: number) => (
-                  <RHFAutocomplete
-                    name={`employeeschedule[${schedulecount}].dayschedule[${weekday}].slots`}
-                    label={day}
-                    placeholder={t("salonapp.workschedule.plus_timeslots")}
-                    multiple
-                    freeSolo
-                    options={timeSlot.map((option: TimeSlotItem) => ({
-                      id: option?.id,
-                      name: option?.name,
-                    }))}
-                    getOptionLabel={(option) =>
-                      (option as { name: string }).name
-                    }
-                    renderOption={(props, option) => (
-                      <li {...props} key={(option as { id: string }).id}>
-                        {(option as { name: string }).name}
-                      </li>
-                    )}
-                    renderTags={(selected, getTagProps) =>
-                      selected.map((option, index) => (
-                        <Chip
-                          {...getTagProps({ index })}
-                          key={(option as { id: string }).id}
-                          label={(option as { name: string }).name}
-                          size="small"
-                          color="info"
-                          variant="soft"
-                        />
-                      ))
-                    }
-                    sx={{ width: "300px" }}
-                  />
-                ))}
+              <Stack direction="row" spacing={2} sx={{ flexWrap: 'wrap' }}>
+                {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Firday', 'Saturday', 'Sunday'].map(
+                  (day: string, weekday: number) => (
+                    <RHFAutocomplete
+                      name={`employeeschedule[${schedulecount}].dayschedule[${weekday}].slots`}
+                      label={day}
+                      placeholder={t('salonapp.workschedule.plus_timeslots')}
+                      multiple
+                      freeSolo
+                      options={timeSlot.map((option: TimeSlotItem) => ({
+                        id: option?.id,
+                        name: option?.name,
+                      }))}
+                      getOptionLabel={(option) => (option as { name: string }).name}
+                      renderOption={(props, option) => (
+                        <li {...props} key={(option as { id: string }).id}>
+                          {(option as { name: string }).name}
+                        </li>
+                      )}
+                      renderTags={(selected, getTagProps) =>
+                        selected.map((option, index) => (
+                          <Chip
+                            {...getTagProps({ index })}
+                            key={(option as { id: string }).id}
+                            label={(option as { name: string }).name}
+                            size="small"
+                            color="info"
+                            variant="soft"
+                          />
+                        ))
+                      }
+                      sx={{ width: '300px' }}
+                    />
+                  )
+                )}
               </Stack>
               <Button
                 size="small"
@@ -183,12 +163,12 @@ export default function WorkScheduleNewEditDetails({
         ))}
       </Stack>
 
-      <Divider sx={{ my: 3, borderStyle: "dashed" }} />
+      <Divider sx={{ my: 3, borderStyle: 'dashed' }} />
 
       <Stack
         spacing={3}
-        direction={{ xs: "column", md: "row" }}
-        alignItems={{ xs: "flex-end", md: "center" }}
+        direction={{ xs: 'column', md: 'row' }}
+        alignItems={{ xs: 'flex-end', md: 'center' }}
       >
         <Button
           size="small"
@@ -202,14 +182,10 @@ export default function WorkScheduleNewEditDetails({
         <Stack
           spacing={2}
           justifyContent="flex-end"
-          direction={{ xs: "column", md: "row" }}
+          direction={{ xs: 'column', md: 'row' }}
           sx={{ width: 1 }}
         >
-          <IconButton
-            size="large"
-            aria-label="delete"
-            onClick={downloadSchedule}
-          >
+          <IconButton size="large" aria-label="delete" onClick={downloadSchedule}>
             <DownloadIcon />
           </IconButton>
         </Stack>

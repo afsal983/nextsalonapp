@@ -1,117 +1,77 @@
-import { useCallback } from "react";
+import type { Theme, SxProps } from '@mui/material/styles';
+import { useCallback } from 'react';
+import type { UseSetStateReturn } from 'src/hooks/use-set-state';
+import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import Stack, { type StackProps } from '@mui/material/Stack';
 
-import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
-import Paper from "@mui/material/Paper";
-import Button from "@mui/material/Button";
-import Stack, { type StackProps } from "@mui/material/Stack";
+import { Iconify } from 'src/components/iconify';
 
-import Iconify from "src/components/iconify";
-
-import {
-  type ServiceTableFilters,
-  type ServiceTableFilterValue,
-} from "src/types/service";
-
+import { type ServiceTableFilters } from 'src/types/service';
+import { chipProps, FiltersBlock, FiltersResult } from 'src/components/filters-result';
 // ----------------------------------------------------------------------
 
 type Props = StackProps & {
-  filters: ServiceTableFilters;
-  onFilters: (name: string, value: ServiceTableFilterValue) => void;
-  //
-  onResetFilters: VoidFunction;
-  //
-  results: number;
+  totalResults: number;
+  sx?: SxProps<Theme>;
+  onResetPage: () => void;
+  filters: UseSetStateReturn<ServiceTableFilters>;
 };
 
 export default function ServiceTableFiltersResult({
   filters,
-  onFilters,
-  //
-  onResetFilters,
-  //
-  results,
-  ...other
+  totalResults,
+  onResetPage,
+  sx,
 }: Props) {
   const handleRemoveKeyword = useCallback(() => {
-    onFilters("name", "");
-  }, [onFilters]);
+    onResetPage();
+    filters.setState({ name: '' });
+  }, [filters, onResetPage]);
 
-  const handleRemoveStatus = useCallback(() => {
-    onFilters("status", "all");
-  }, [onFilters]);
-
-  const handleRemoveRole = useCallback(
+  const handleRemoveProductCategory = useCallback(
     (inputValue: string) => {
-      const newValue = filters.productcategory.filter(
-        (item) => item !== inputValue
-      );
+      const newValue = filters.state.productcategory.filter((item) => item !== inputValue);
 
-      onFilters("productcategory", newValue);
+      onResetPage();
+      filters.setState({ productcategory: newValue });
     },
-    [filters.productcategory, onFilters]
+    [filters, onResetPage]
   );
 
+  const handleRemoveStatus = useCallback(() => {
+    onResetPage();
+    filters.setState({ status: 'all' });
+  }, [filters, onResetPage]);
+
   return (
-    <Stack spacing={1.5} {...other}>
-      <Box sx={{ typography: "body2" }}>
-        <strong>{results}</strong>
-        <Box component="span" sx={{ color: "text.secondary", ml: 0.25 }}>
-          results found
-        </Box>
-      </Box>
+    <FiltersResult totalResults={totalResults} onReset={filters.onResetState} sx={sx}>
+      <FiltersBlock label="Service:" isShow={!!filters.state.productcategory.length}>
+        {filters.state.productcategory.map((item) => (
+          <Chip
+            {...chipProps}
+            key={item}
+            label={item}
+            onDelete={() => handleRemoveProductCategory(item)}
+          />
+        ))}
+      </FiltersBlock>
 
-      <Stack
-        flexGrow={1}
-        spacing={1}
-        direction="row"
-        flexWrap="wrap"
-        alignItems="center"
-      >
-        {filters.status !== "all" && (
-          <Block label="Status:">
-            <Chip
-              size="small"
-              label={filters.status}
-              onDelete={handleRemoveStatus}
-            />
-          </Block>
-        )}
+      <FiltersBlock label="Status:" isShow={filters.state.status !== 'all'}>
+        <Chip
+          {...chipProps}
+          label={filters.state.status}
+          onDelete={handleRemoveStatus}
+          sx={{ textTransform: 'capitalize' }}
+        />
+      </FiltersBlock>
 
-        {!(filters.productcategory.length === 0) && (
-          <Block label="Role:">
-            {filters.productcategory.map((item) => (
-              <Chip
-                key={item}
-                label={item}
-                size="small"
-                onDelete={() => {
-                  handleRemoveRole(item);
-                }}
-              />
-            ))}
-          </Block>
-        )}
-
-        {!!filters.name && (
-          <Block label="Keyword:">
-            <Chip
-              label={filters.name}
-              size="small"
-              onDelete={handleRemoveKeyword}
-            />
-          </Block>
-        )}
-
-        <Button
-          color="error"
-          onClick={onResetFilters}
-          startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
-        >
-          Clear
-        </Button>
-      </Stack>
-    </Stack>
+      <FiltersBlock label="Keyword:" isShow={!!filters.state.name}>
+        <Chip {...chipProps} label={filters.state.name} onDelete={handleRemoveKeyword} />
+      </FiltersBlock>
+    </FiltersResult>
   );
 }
 
@@ -131,13 +91,13 @@ function Block({ label, children, sx, ...other }: BlockProps) {
       sx={{
         p: 1,
         borderRadius: 1,
-        overflow: "hidden",
-        borderStyle: "dashed",
+        overflow: 'hidden',
+        borderStyle: 'dashed',
         ...sx,
       }}
       {...other}
     >
-      <Box component="span" sx={{ typography: "subtitle2" }}>
+      <Box component="span" sx={{ typography: 'subtitle2' }}>
         {label}
       </Box>
 

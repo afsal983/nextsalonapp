@@ -1,17 +1,14 @@
-import { type ApexOptions } from "apexcharts";
+import { type ApexOptions } from 'apexcharts';
 
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import { useTheme } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
-import Card, { type CardProps } from "@mui/material/Card";
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import { useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import Card, { type CardProps } from '@mui/material/Card';
 
-import {
-  fNumber,
-  fCurrency,
-} from "src/utils/format-number";
+import { fNumber, fCurrency } from 'src/utils/format-number';
 
-import Chart, { useChart } from "src/components/chart";
+import { Chart, useChart } from 'src/components/chart';
 
 // ----------------------------------------------------------------------
 
@@ -45,7 +42,7 @@ export default function SalonDashBoardWidgetSummary({
   const chartOptions = useChart({
     colors: [colors[1]],
     fill: {
-      type: "gradient",
+      type: 'gradient',
       gradient: {
         colorStops: [
           { offset: 0, color: colors[0], opacity: 1 },
@@ -68,7 +65,7 @@ export default function SalonDashBoardWidgetSummary({
       y: {
         formatter: (value: number) => fNumber(value),
         title: {
-          formatter: () => "",
+          formatter: () => '',
         },
       },
       marker: {
@@ -81,25 +78,19 @@ export default function SalonDashBoardWidgetSummary({
   const renderTrending = (
     <Stack direction="row" alignItems="center" sx={{ mt: 2, mb: 1 }}>
       <Typography variant="subtitle2" component="div" noWrap>
-        {count > 0 && "#"}
+        {count > 0 && '#'}
 
         {count}
 
-        <Box
-          component="span"
-          sx={{ color: "text.secondary", typography: "body2" }}
-        >
-          {" Sales"}
+        <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
+          {' Sales'}
         </Box>
       </Typography>
     </Stack>
   );
 
   return (
-    <Card
-      sx={{ display: "flex", alignItems: "center", p: 3, ...sx }}
-      {...other}
-    >
+    <Card sx={{ display: 'flex', alignItems: 'center', p: 3, ...sx }} {...other}>
       <Box sx={{ flexGrow: 1 }}>
         <Typography variant="subtitle2" sx={{ mb: 2 }}>
           {title}

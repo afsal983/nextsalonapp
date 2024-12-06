@@ -1,15 +1,16 @@
-"use client";
+'use client';
 
-import Container from "@mui/material/Container";
+import Container from '@mui/material/Container';
 
-import { paths } from "src/routes/paths";
+import { paths } from 'src/routes/paths';
+import { DashboardContent } from 'src/layouts/dashboard';
 
-import { useTranslate } from "src/locales";
+import { useTranslate } from 'src/locales';
 
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+import { useSettingsContext } from 'src/components/settings';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import TimeSlotNewEditForm from "../timeslot-new-edit-form";
+import TimeSlotNewEditForm from '../timeslot-new-edit-form';
 
 // ----------------------------------------------------------------------
 
@@ -19,19 +20,19 @@ export default function TimeSlotCreateView() {
   const settings = useSettingsContext();
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : "lg"}>
+    <DashboardContent>
       <CustomBreadcrumbs
-        heading={t("salonapp.service.timeslot.create_a_new_servicecategory")}
+        heading={t('salonapp.service.timeslot.create_a_new_servicecategory')}
         links={[
           {
-            name: t("salonapp.dashboard"),
+            name: t('salonapp.dashboard'),
             href: paths.dashboard.root,
           },
           {
-            name: t("salonapp.service_category"),
+            name: t('salonapp.service_category'),
             href: paths.dashboard.employees.timeslots.root,
           },
-          { name: t("salonapp.service.timeslot.create_a_new_servicecategory") },
+          { name: t('salonapp.service.timeslot.create_a_new_servicecategory') },
         ]}
         sx={{
           mb: { xs: 3, md: 5 },
@@ -39,6 +40,6 @@ export default function TimeSlotCreateView() {
       />
 
       <TimeSlotNewEditForm />
-    </Container>
+    </DashboardContent>
   );
 }

@@ -1,11 +1,11 @@
-import { useMemo } from "react";
-import merge from "lodash/merge";
-import useSWR, { mutate } from "swr";
+import { useMemo } from 'react';
+import { merge } from 'src/utils/helper';
+import useSWR, { mutate } from 'swr';
 
-import { fetcher } from "src/utils/axios";
+import { fetcher } from 'src/utils/axios';
 
-import { ICalendarEvent } from "src/types/calendar";
-import { AppointmentItem } from "src/types/appointment";
+import { ICalendarEvent } from 'src/types/calendar';
+import { AppointmentItem } from 'src/types/appointment';
 // ----------------------------------------------------------------------
 
 let URL: string;
@@ -40,7 +40,7 @@ export function useGetEvents({ employeeId, startDate, endDate }: Props) {
     */
     const events = data?.data?.map((event: AppointmentItem) => ({
       id: String(event.id),
-      color: "red",
+      color: 'red',
       title: `${event?.Customer?.firstname} ${event?.Customer?.lastname}`,
       allDay: false,
       description: event?.Customer?.firstname,
@@ -52,7 +52,7 @@ export function useGetEvents({ employeeId, startDate, endDate }: Props) {
       start: event.start,
       end: event.end,
       notes: event?.notes,
-      textColor: "red",
+      textColor: 'red',
     }));
 
     return {
@@ -87,9 +87,9 @@ export async function createEvent(eventData: ICalendarEvent) {
 
   // Post the data to remote server
   const response = await fetch(`/api/salonapp/appointments`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(newevent),
   });
@@ -130,8 +130,8 @@ export async function updateEvent(eventData: Partial<ICalendarEvent>) {
   // Convert the ICalendarEvent to Actual Event supported in the server
   const newevent = {
     id: Number(eventData?.id),
-    start: new Date(eventData?.start || "").toISOString(),
-    end: new Date(eventData?.end || "").toISOString(),
+    start: new Date(eventData?.start || '').toISOString(),
+    end: new Date(eventData?.end || '').toISOString(),
     customer_id: eventData.customer_id,
     product_id: eventData?.service_id,
     employee_id: eventData?.employee_id,
@@ -144,9 +144,9 @@ export async function updateEvent(eventData: Partial<ICalendarEvent>) {
 
   // Post the data to remote server
   const response = await fetch(`/api/salonapp/appointments`, {
-    method: "PUT",
+    method: 'PUT',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(newevent),
   });
@@ -160,11 +160,8 @@ export async function updateEvent(eventData: Partial<ICalendarEvent>) {
   mutate(
     URL,
     (currentData: any) => {
-      const data: ICalendarEvent[] = currentData?.data?.map(
-        (event: AppointmentItem) =>
-          Number(event.id) === Number(eventData.id)
-            ? { ...event, ...newevent }
-            : event
+      const data: ICalendarEvent[] = currentData?.data?.map((event: AppointmentItem) =>
+        Number(event.id) === Number(eventData.id) ? { ...event, ...newevent } : event
       );
 
       return {
@@ -183,9 +180,9 @@ export async function updateEvent(eventData: Partial<ICalendarEvent>) {
 export async function deleteEvent(eventId: string) {
   // Post the data to remote server
   const response = await fetch(`/api/salonapp/appointments/${eventId}`, {
-    method: "DELETE",
+    method: 'DELETE',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
   });
 

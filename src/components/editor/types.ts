@@ -1,12 +1,43 @@
-import { type ReactQuillProps } from 'react-quill'
-
-import { type Theme, type SxProps } from '@mui/material/styles'
+import type { Theme, SxProps } from '@mui/material/styles';
+import type { Editor, Extension, EditorOptions } from '@tiptap/react';
 
 // ----------------------------------------------------------------------
 
-export interface EditorProps extends ReactQuillProps {
-  error?: boolean
-  simple?: boolean
-  helperText?: React.ReactNode
-  sx?: SxProps<Theme>
-}
+export type EditorProps = Partial<EditorOptions> & {
+  value?: string;
+  error?: boolean;
+  fullItem?: boolean;
+  className?: string;
+  sx?: SxProps<Theme>;
+  resetValue?: boolean;
+  placeholder?: string;
+  helperText?: React.ReactNode;
+  onChange?: (value: string) => void;
+  slotProps?: {
+    wrap: SxProps<Theme>;
+  };
+};
+
+export type EditorToolbarProps = {
+  fullScreen: boolean;
+  editor: Editor | null;
+  onToggleFullScreen: () => void;
+  fullItem?: EditorProps['fullItem'];
+};
+
+export type EditorToolbarItemProps = {
+  icon?: React.ReactNode;
+  label?: string;
+  active?: boolean;
+  disabled?: boolean;
+};
+
+export type EditorCodeHighlightBlockProps = {
+  extension: Extension;
+  updateAttributes: (attributes: Record<string, any>) => void;
+  node: {
+    attrs: {
+      language: string;
+    };
+  };
+};

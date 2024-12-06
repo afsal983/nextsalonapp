@@ -1,181 +1,153 @@
-import { useRef, useState, useEffect, useCallback } from 'react'
+import { useRef, useState, useEffect, useCallback } from 'react';
 
-import Masonry from '@mui/lab/Masonry'
-import Stack from '@mui/material/Stack'
-import Popover from '@mui/material/Popover'
-import Divider from '@mui/material/Divider'
+import Paper from '@mui/material/Paper';
+import Popover from '@mui/material/Popover';
+import { useTheme } from '@mui/material/styles';
 
-import { usePathname, useActiveLink } from 'src/routes/hooks'
+import { isExternalLink } from 'src/routes/utils';
+import { usePathname, useActiveLink } from 'src/routes/hooks';
 
-import { hideScroll } from 'src/theme/css'
+import { paper } from 'src/theme/styles';
 
-import NavItem from './nav-item'
-import MenuTags from '../common/menu-tags'
-import { type NavListProps } from '../types'
-import NavSubList from '../common/nav-sub-list'
-import MenuProducts from '../common/menu-products'
-import MenuMoreLink from '../common/menu-more-link'
+import { NavItem } from './nav-item';
+import { NavLi } from '../../nav-section';
+import type { NavListProps } from '../types';
+import { NavContent } from '../components/nav-content';
 
 // ----------------------------------------------------------------------
 
-export default function NavList ({ data, slotProps }: NavListProps) {
-  const navRef = useRef<HTMLDivElement | null>(null)
+export function NavList({ data, render, slotProps, enabledRootRedirect, cssVars }: NavListProps) {
+  const theme = useTheme();
 
-  const pathname = usePathname()
+  const pathname = usePathname();
 
-  const active = useActiveLink(data.path, !!data.children)
+  const [openMenu, setOpenMenu] = useState(false);
 
-  const singleList = data.children?.length === 1
+  const navItemRef = useRef<HTMLButtonElement | null>(null);
 
-  const [openMenu, setOpenMenu] = useState(false)
+  const active = useActiveLink(data.path, !!data.children);
 
-  const [rectTop, setRectTop] = useState(0)
+  const [clientRect, setClientRect] = useState<Record<string, number>>({ top: 0, height: 0 });
+
+  const singleList = data.children?.length === 1;
+
+  const multiList = !singleList;
 
   useEffect(() => {
     if (openMenu) {
-      handleCloseMenu()
+      handleCloseMenu();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname])
+  }, [pathname]);
+
+  const handleGetClientRect = useCallback(() => {
+    const element = navItemRef.current;
+
+    if (element) {
+      const rect = element.getBoundingClientRect();
+      setClientRect({ top: rect.top, height: rect.height });
+    }
+  }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const element = navRef.current
+    handleGetClientRect();
 
-      if (element) {
-        const clientRect = element.getBoundingClientRect()
-
-        setRectTop(clientRect.top + clientRect.height)
-      }
-    }
-
-    handleScroll()
-
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleGetClientRect);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [])
+      window.removeEventListener('scroll', handleGetClientRect);
+    };
+  }, [handleGetClientRect]);
 
   const handleOpenMenu = useCallback(() => {
     if (data.children) {
-      setOpenMenu(true)
+      setOpenMenu(true);
     }
-  }, [data.children])
+  }, [data.children]);
 
   const handleCloseMenu = useCallback(() => {
-    setOpenMenu(false)
-  }, [])
+    setOpenMenu(false);
+  }, []);
 
-  return (
-    <>
-      <NavItem
-        ref={navRef}
-        open={openMenu}
-        onMouseEnter={handleOpenMenu}
-        onMouseLeave={handleCloseMenu}
-        //
-        title={data.title}
-        path={data.path}
-        icon={data.icon}
-        //
-        hasChild={!!data.children}
-        externalLink={data.path.includes('http')}
-        //
-        active={active}
-        className={active ? 'active' : ''}
-        sx={slotProps?.rootItem}
-      />
+  const renderNavItem = (
+    <NavItem
+      ref={navItemRef}
+      render={render}
+      // slots
+      path={data.path}
+      icon={data.icon}
+      info={data.info}
+      title={data.title}
+      // state
+      active={active}
+      disabled={data.disabled}
+      hasChild={!!data.children}
+      open={data.children && !!openMenu}
+      externalLink={isExternalLink(data.path)}
+      enabledRootRedirect={enabledRootRedirect}
+      // styles
+      slotProps={slotProps?.rootItem}
+      // actions
+      onMouseEnter={handleOpenMenu}
+      onMouseLeave={handleCloseMenu}
+    />
+  );
 
-      {!!data.children && (
+  if (data.children) {
+    return (
+      <NavLi disabled={data.disabled}>
+        {renderNavItem}
+
         <Popover
           disableScrollLock
           open={openMenu}
-          anchorEl={navRef.current}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left'
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'left'
-          }}
+          anchorEl={navItemRef.current}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'left' }}
           slotProps={{
             paper: {
               onMouseEnter: handleOpenMenu,
               onMouseLeave: handleCloseMenu,
               sx: {
-                ...hideScroll.y,
-                p: 3,
-                right: 0,
-                mx: 'auto',
-                mt: '-2px',
-                left: '0 !important',
-                top: `${rectTop}px !important`,
-                maxWidth: (theme) => theme.breakpoints.values.lg,
-                ...(singleList && {
-                  p: 2,
-                  minWidth: 160,
-                  left: 'auto',
-                  right: 'auto'
+                /* Reset */
+                boxShadow: 'none',
+                overflow: 'unset',
+                backdropFilter: 'none',
+                background: 'transparent',
+                /**/
+                ...(multiList && {
+                  right: 0,
+                  mx: 'auto',
+                  left: '0 !important',
+                  top: `${clientRect.top + clientRect.height}px !important`,
+                  maxWidth: {
+                    xs: theme.breakpoints.values.lg,
+                    xl: theme.breakpoints.values.xl,
+                  },
                 }),
-                ...(openMenu && {
-                  pointerEvents: 'auto'
-                })
-              }
-            }
+                ...(openMenu && { pointerEvents: 'auto' }),
+                ...slotProps?.paper,
+              },
+            },
           }}
-          sx={{
-            pointerEvents: 'none'
-          }}
+          sx={{ ...cssVars, pointerEvents: 'none' }}
         >
-          {singleList
-            ? (
-            <NavSubList data={data.children} slotProps={slotProps} />
-              )
-            : (
-            <Masonry
-              columns={4}
-              spacing={3}
-              defaultColumns={4}
-              defaultSpacing={3}
-            >
-              <NavSubList
-                data={data.children}
-                slotProps={slotProps}
-                sx={{ mb: 2.5 }}
-              />
-            </Masonry>
-              )}
-
-          <Stack spacing={3}>
-            {!!data.moreLink && (
-              <MenuMoreLink
-                path={data.moreLink.path}
-                title={data.moreLink.title}
-              />
-            )}
-
-            {!!data.products && (
-              <>
-                <Divider sx={{ borderStyle: 'dashed' }} />
-                <MenuProducts
-                  products={data.products}
-                  displayProduct={slotProps?.displayProduct}
-                />
-              </>
-            )}
-
-            {!!data.tags && (
-              <>
-                <Divider sx={{ borderStyle: 'dashed' }} />
-                <MenuTags tags={data.tags} />
-              </>
-            )}
-          </Stack>
+          <Paper
+            sx={{
+              ...paper({ theme, dropdown: true }),
+              p: 2.5,
+              borderRadius: 2,
+              ...(singleList && { minWidth: 240 }),
+              ...(multiList && {}),
+              ...slotProps?.paper,
+            }}
+          >
+            <NavContent singleList={singleList} data={data} slotProps={slotProps} />
+          </Paper>
         </Popover>
-      )}
-    </>
-  )
+      </NavLi>
+    );
+  }
+
+  return <NavLi disabled={data.disabled}>{renderNavItem}</NavLi>;
 }

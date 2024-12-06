@@ -1,86 +1,102 @@
-import Box from '@mui/material/Box'
-import Stack from '@mui/material/Stack'
-import Tooltip from '@mui/material/Tooltip'
-import { type Theme, type SxProps } from '@mui/material/styles'
+import Box from '@mui/material/Box';
+import Tooltip from '@mui/material/Tooltip';
 
-import DownloadButton from './download-button'
-import { fileData, fileThumb, fileFormat } from './utils'
+import { fileThumbnailClasses } from './classes';
+import type { FileThumbnailProps } from './types';
+import { fileData, fileThumb, fileFormat } from './utils';
+import { RemoveButton, DownloadButton } from './action-buttons';
 
 // ----------------------------------------------------------------------
 
-interface FileIconProps {
-  file: File | string
-  tooltip?: boolean
-  imageView?: boolean
-  onDownload?: VoidFunction
-  sx?: SxProps<Theme>
-  imgSx?: SxProps<Theme>
-}
-
-export default function FileThumbnail ({
+export function FileThumbnail({
+  sx,
   file,
   tooltip,
+  onRemove,
   imageView,
+  slotProps,
   onDownload,
-  sx,
-  imgSx
-}: FileIconProps) {
-  const { name = '', path = '', preview = '' } = fileData(file)
+  className,
+  ...other
+}: FileThumbnailProps) {
+  const previewUrl = typeof file === 'string' ? file : URL.createObjectURL(file);
 
-  const format = fileFormat(path || preview)
+  const { name, path } = fileData(file);
 
-  const renderContent =
-    format === 'image' && imageView
-      ? (
-      <Box
-        component="img"
-        src={preview}
-        sx={{
-          width: 1,
-          height: 1,
-          flexShrink: 0,
-          objectFit: 'cover',
-          ...imgSx
-        }}
-      />
-        )
-      : (
-      <Box
-        component="img"
-        src={fileThumb(format)}
-        sx={{
-          width: 32,
-          height: 32,
-          flexShrink: 0,
-          ...sx
-        }}
-      />
-        )
+  const format = fileFormat(path || previewUrl);
+
+  const renderImg = (
+    <Box
+      component="img"
+      src={previewUrl}
+      className={fileThumbnailClasses.img}
+      sx={{
+        width: 1,
+        height: 1,
+        objectFit: 'cover',
+        borderRadius: 'inherit',
+        ...slotProps?.img,
+      }}
+    />
+  );
+
+  const renderIcon = (
+    <Box
+      component="img"
+      src={fileThumb(format)}
+      className={fileThumbnailClasses.icon}
+      sx={{ width: 1, height: 1, ...slotProps?.icon }}
+    />
+  );
+
+  const renderContent = (
+    <Box
+      component="span"
+      className={fileThumbnailClasses.root.concat(className ? ` ${className}` : '')}
+      sx={{
+        width: 36,
+        height: 36,
+        flexShrink: 0,
+        borderRadius: 1.25,
+        alignItems: 'center',
+        position: 'relative',
+        display: 'inline-flex',
+        justifyContent: 'center',
+        ...sx,
+      }}
+      {...other}
+    >
+      {format === 'image' && imageView ? renderImg : renderIcon}
+
+      {onRemove && (
+        <RemoveButton
+          onClick={onRemove}
+          className={fileThumbnailClasses.removeBtn}
+          sx={slotProps?.removeBtn}
+        />
+      )}
+
+      {onDownload && (
+        <DownloadButton
+          onClick={onDownload}
+          className={fileThumbnailClasses.downloadBtn}
+          sx={slotProps?.downloadBtn}
+        />
+      )}
+    </Box>
+  );
 
   if (tooltip) {
     return (
-      <Tooltip title={name}>
-        <Stack
-          flexShrink={0}
-          component="span"
-          alignItems="center"
-          justifyContent="center"
-          sx={{
-            width: 'fit-content',
-            height: 'inherit'
-          }}
-        >
-          {renderContent}
-          {onDownload && <DownloadButton onDownload={onDownload} />}
-        </Stack>
+      <Tooltip
+        arrow
+        title={name}
+        slotProps={{ popper: { modifiers: [{ name: 'offset', options: { offset: [0, -12] } }] } }}
+      >
+        {renderContent}
       </Tooltip>
-    )
+    );
   }
 
-  return (
-    <>
-      {renderContent}
-      {onDownload && <DownloadButton onDownload={onDownload} />}
-    </>
-  )
+  return renderContent;
 }

@@ -1,82 +1,77 @@
-'use client'
+'use client';
 
-import NProgress from 'nprogress'
-import { Suspense, useEffect } from 'react'
+import NProgress from 'nprogress';
+import { Suspense, useEffect } from 'react';
 
-import { useRouter, usePathname, useSearchParams } from 'src/routes/hooks'
+import { useRouter, usePathname, useSearchParams } from 'src/routes/hooks';
 
-import StyledProgressBar from './styles'
+import './styles.css';
 
 // ----------------------------------------------------------------------
 
-type PushStateInput = [
-  data: any,
-  unused: string,
-  url?: string | URL | null | undefined,
-]
+type PushStateInput = [data: any, unused: string, url?: string | URL | null | undefined];
 
-export default function ProgressBar () {
+export function ProgressBar() {
   useEffect(() => {
-    NProgress.configure({ showSpinner: false })
+    NProgress.configure({ showSpinner: false });
 
     const handleAnchorClick = (event: MouseEvent) => {
-      const targetUrl = (event.currentTarget as HTMLAnchorElement).href
+      const targetUrl = (event.currentTarget as HTMLAnchorElement).href;
 
-      const currentUrl = window.location.href
+      const currentUrl = window.location.href;
 
       if (targetUrl !== currentUrl) {
-        NProgress.start()
+        NProgress.start();
       }
-    }
+    };
 
     const handleMutation = () => {
-      const anchorElements: NodeListOf<HTMLAnchorElement> =
-        document.querySelectorAll('a[href]')
+      const anchorElements: NodeListOf<HTMLAnchorElement> = document.querySelectorAll('a[href]');
 
       const filteredAnchors = Array.from(anchorElements).filter((element) => {
-        const href = element.getAttribute('href')
-        return href && href.startsWith('/')
-      })
+        const rel = element.getAttribute('rel');
 
-      filteredAnchors.forEach((anchor) => { anchor.addEventListener('click', handleAnchorClick) }
-      )
-    }
+        const href = element.getAttribute('href');
 
-    const mutationObserver = new MutationObserver(handleMutation)
+        const target = element.getAttribute('target');
 
-    mutationObserver.observe(document, { childList: true, subtree: true })
+        return href?.startsWith('/') && target !== '_blank' && rel !== 'noopener';
+      });
+
+      filteredAnchors.forEach((anchor) => anchor.addEventListener('click', handleAnchorClick));
+    };
+
+    const mutationObserver = new MutationObserver(handleMutation);
+
+    mutationObserver.observe(document, { childList: true, subtree: true });
 
     window.history.pushState = new Proxy(window.history.pushState, {
       apply: (target, thisArg, argArray: PushStateInput) => {
-        NProgress.done()
-        target.apply(thisArg, argArray)
-      }
-    })
-  })
+        NProgress.done();
+        return target.apply(thisArg, argArray);
+      },
+    });
+  });
 
   return (
-    <>
-      <StyledProgressBar />
-
-      <Suspense fallback={null}>
-        <NProgressDone />
-      </Suspense>
-    </>
-  )
+    <Suspense fallback={null}>
+      <NProgressDone />
+    </Suspense>
+  );
 }
 
 // ----------------------------------------------------------------------
 
-function NProgressDone () {
-  const pathname = usePathname()
+function NProgressDone() {
+  const pathname = usePathname();
 
-  const router = useRouter()
+  const router = useRouter();
 
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    NProgress.done()
-  }, [pathname, router, searchParams])
+    NProgress.done();
+  }, [pathname, router, searchParams]);
 
-  return null
+  return null;
 }

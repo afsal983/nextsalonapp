@@ -1,45 +1,35 @@
-import * as Yup from "yup";
-import { useState, useCallback } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { useState, useCallback } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import IconButton from "@mui/material/IconButton";
-import LoadingButton from "@mui/lab/LoadingButton";
-import DialogActions from "@mui/material/DialogActions";
-import { MobileDateTimePicker } from "@mui/x-date-pickers/MobileDateTimePicker";
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import LoadingButton from '@mui/lab/LoadingButton';
+import DialogActions from '@mui/material/DialogActions';
+import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 
-import { useBoolean } from "src/hooks/use-boolean";
+import { useBoolean } from 'src/hooks/use-boolean';
 
-import uuidv4 from "src/utils/uuidv4";
-import { isAfter, fTimestamp } from "src/utils/format-time";
+import { uuidv4 } from 'src/utils/uuidv4';
+import { fIsAfter, fTimestamp } from 'src/utils/format-time';
 
-import { useTranslate } from "src/locales";
-import {
-  createEvent,
-  updateEvent,
-  deleteEvent,
-} from "src/app/api/salonapp/appointments/calendar";
+import { useTranslate } from 'src/locales';
+import { createEvent, updateEvent, deleteEvent } from 'src/app/api/salonapp/appointments/calendar';
 
-import Iconify from "src/components/iconify";
-import { useSnackbar } from "src/components/snackbar";
-import { ColorPicker } from "src/components/color-utils";
-import { LiveCustomerSearch } from "src/components/livecustomersearch";
-import FormProvider, {
-  RHFSelect,
-  RHFSwitch,
-  RHFTextField,
-} from "src/components/hook-form";
+import { toast } from 'src/components/snackbar';
+import { Iconify } from 'src/components/iconify';
+import { ColorPicker } from 'src/components/color-utils';
+import { LiveCustomerSearch } from 'src/components/livecustomersearch';
+import { Form, RHFSelect, RHFSwitch, RHFTextField } from 'src/components/hook-form';
 
-import { Customer } from "src/types/customer";
-import { ServiceItem } from "src/types/service";
-import { EmployeeItem } from "src/types/employee";
-import { ICalendarDate, ICalendarEvent } from "src/types/calendar";
+import { Customer } from 'src/types/customer';
+import { ServiceItem } from 'src/types/service';
+import { EmployeeItem } from 'src/types/employee';
+import { ICalendarDate, ICalendarEvent } from 'src/types/calendar';
 
-import AddressNewForm from "../../customeraddress/address-new-form";
+import AddressNewForm from '../../customeraddress/address-new-form';
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -69,8 +59,6 @@ export default function CalendarForm({
   SelectedCustomer,
   Product,
 }: Props) {
-  const { enqueueSnackbar } = useSnackbar();
-
   const to = useBoolean();
 
   const { t } = useTranslate();
@@ -78,7 +66,7 @@ export default function CalendarForm({
   const [customer, setCustomer] = useState<Customer | null>(SelectedCustomer);
 
   const EventSchema = Yup.object().shape({
-    notes: Yup.string().max(5000, "Notes must be at most 5000 characters"),
+    notes: Yup.string().max(5000, 'Notes must be at most 5000 characters'),
     // not required
     color: Yup.string(),
     allDay: Yup.boolean(),
@@ -105,13 +93,13 @@ export default function CalendarForm({
 
   const values = watch();
 
-  const dateError = isAfter(values.start, values.end);
+  const dateError = fIsAfter(values.start, values.end);
 
   // handle customer
   const handleSelectCustomer = useCallback(
     (value: Customer | null) => {
       // onFilters("filtervalue", typeof value === undefined ? "" : value);
-      setValue("customer_id", Number(value?.id));
+      setValue('customer_id', Number(value?.id));
       // setValue("Customer", value);
     },
     [setValue]
@@ -137,27 +125,25 @@ export default function CalendarForm({
       if (!dateError) {
         if (currentEvent?.id) {
           const responseData = await updateEvent(eventData);
-          console.log("Here");
+          console.log('Here');
           if (responseData?.status < 300) {
-            enqueueSnackbar("Appointment Updated Sucessfully!");
+            toast.success('Appointment Updated Sucessfully!');
           } else {
-            enqueueSnackbar(
+            toast.error(
               currentEvent
-                ? `${t("general.update_failed")}:${responseData?.message}`
-                : `${t("general.create_failed")}:${responseData.message}`,
-              { variant: "error" }
+                ? `${t('general.update_failed')}:${responseData?.message}`
+                : `${t('general.create_failed')}:${responseData.message}`
             );
           }
         } else {
           const responseData = await createEvent(eventData);
           if (responseData.status < 300) {
-            enqueueSnackbar("Appointment Created Sucessfully!");
+            toast.success('Appointment Created Sucessfully!');
           } else {
-            enqueueSnackbar(
+            toast.error(
               currentEvent
-                ? `${t("general.update_failed")}:${responseData.message}`
-                : `${t("general.create_failed")}:${responseData.message}`,
-              { variant: "error" }
+                ? `${t('general.update_failed')}:${responseData.message}`
+                : `${t('general.create_failed')}:${responseData.message}`
             );
           }
         }
@@ -174,18 +160,15 @@ export default function CalendarForm({
       const responseData = await deleteEvent(`${currentEvent?.id}`);
       console.log(responseData);
       if (responseData?.status < 300) {
-        enqueueSnackbar("Appointment Deleted Sucessfully!");
+        toast.success('Appointment Deleted Sucessfully!');
       } else {
-        enqueueSnackbar(
-          `${t("general.delete_failed")}:${responseData.message}`,
-          { variant: "error" }
-        );
+        toast.error(`${t('general.delete_failed')}:${responseData.message}`);
       }
       onClose();
     } catch (error) {
       console.error(error);
     }
-  }, [currentEvent?.id, enqueueSnackbar, onClose, t]);
+  }, [currentEvent?.id, onClose, t]);
 
   const handleCreateCustomer = useCallback(
     async (customerInfo: Customer) => {
@@ -194,9 +177,9 @@ export default function CalendarForm({
       try {
         // Post the data
         const response = await fetch(`/api/salonapp/customer`, {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify(customerInfo),
         });
@@ -204,36 +187,36 @@ export default function CalendarForm({
         const responseData = await response.json();
 
         if (responseData?.status > 401) {
-          enqueueSnackbar("Create Failed", { variant: "error" });
+          toast.error('Create Failed');
         } else {
           // Keep 500ms delay
           await new Promise((resolve) => setTimeout(resolve, 500));
           // reset();
-          enqueueSnackbar("Create Suucess", { variant: "success" });
+          toast.success('Create Suucess');
           to.onFalse();
         }
       } catch (error) {
-        enqueueSnackbar(error, { variant: "error" });
+        toast.error(error);
       }
     },
-    [to, enqueueSnackbar]
+    [to]
   );
 
   return (
-    <FormProvider methods={methods} onSubmit={onSubmit}>
+    <Form methods={methods} onSubmit={onSubmit}>
       <Stack spacing={3} sx={{ px: 3, my: 3 }}>
-        <Box sx={{ position: "relative", display: "inline-block" }}>
+        <Box sx={{ position: 'relative', display: 'inline-block' }}>
           <IconButton
             onClick={to.onTrue}
             edge="start"
             sx={{
-              position: "absolute",
+              position: 'absolute',
               top: -40, // Adjust the top position as needed
               right: 1, // Align to the right edge
             }}
           >
             <Iconify
-              icon={customer_id ? "solar:pen-bold" : "mingcute:add-line"}
+              icon={customer_id ? 'solar:pen-bold' : 'mingcute:add-line'}
               onClick={to.onTrue}
             />
           </IconButton>
@@ -249,13 +232,8 @@ export default function CalendarForm({
           />
         </Box>
 
-        <RHFSelect
-          native
-          name="employee_id"
-          label="Employee"
-          InputLabelProps={{ shrink: true }}
-        >
-          <option key={0}>{t("general.dropdown_select")}</option>
+        <RHFSelect native name="employee_id" label="Employee" InputLabelProps={{ shrink: true }}>
+          <option key={0}>{t('general.dropdown_select')}</option>
           {employees.map((item: EmployeeItem) => (
             <option key={item.id} value={item.id}>
               {item.name}
@@ -263,13 +241,8 @@ export default function CalendarForm({
           ))}
         </RHFSelect>
 
-        <RHFSelect
-          native
-          name="service_id"
-          label="Service"
-          InputLabelProps={{ shrink: true }}
-        >
-          <option key={0}>{t("general.dropdown_select")}</option>
+        <RHFSelect native name="service_id" label="Service" InputLabelProps={{ shrink: true }}>
+          <option key={0}>{t('general.dropdown_select')}</option>
           {services.map((item) => (
             <option key={item.id} value={item.id}>
               {item.name}
@@ -322,8 +295,7 @@ export default function CalendarForm({
                 textField: {
                   fullWidth: true,
                   error: dateError,
-                  helperText:
-                    dateError && "End date must be later than start date",
+                  helperText: dateError && 'End date must be later than start date',
                 },
               }}
             />
@@ -367,11 +339,7 @@ export default function CalendarForm({
           Save Changes
         </LoadingButton>
       </DialogActions>
-      <AddressNewForm
-        open={to.value}
-        onClose={to.onFalse}
-        onCreate={handleCreateCustomer}
-      />
-    </FormProvider>
+      <AddressNewForm open={to.value} onClose={to.onFalse} onCreate={handleCreateCustomer} />
+    </Form>
   );
 }

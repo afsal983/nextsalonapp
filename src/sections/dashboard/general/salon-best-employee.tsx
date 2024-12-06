@@ -1,16 +1,16 @@
-import Table from "@mui/material/Table";
-import TableRow from "@mui/material/TableRow";
-import TableCell from "@mui/material/TableCell";
-import TableBody from "@mui/material/TableBody";
-import CardHeader from "@mui/material/CardHeader";
-import Card, { type CardProps } from "@mui/material/Card";
-import TableContainer from "@mui/material/TableContainer";
+import Table from '@mui/material/Table';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import TableBody from '@mui/material/TableBody';
+import CardHeader from '@mui/material/CardHeader';
+import Card, { type CardProps } from '@mui/material/Card';
+import TableContainer from '@mui/material/TableContainer';
 
-import { fCurrency } from "src/utils/format-number";
+import { fCurrency } from 'src/utils/format-number';
 
-import Label from "src/components/label";
-import Scrollbar from "src/components/scrollbar";
-import { TableHeadCustom } from "src/components/table";
+import { Label } from 'src/components/label';
+import { Scrollbar } from 'src/components/scrollbar';
+import { TableHeadCustom } from 'src/components/table';
 
 // ----------------------------------------------------------------------
 
@@ -40,7 +40,7 @@ export default function SalonBestEmployee({
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} sx={{ mb: 3 }} />
 
-      <TableContainer sx={{ overflow: "unset" }}>
+      <TableContainer sx={{ overflow: 'unset' }}>
         <Scrollbar>
           <Table sx={{ minWidth: 640 }}>
             <TableHeadCustom headLabel={tableLabels} />
@@ -66,9 +66,7 @@ interface EcommerceBestEmployeeRowProps {
 function EcommerceEmployeeRow({ row, rank }: EcommerceBestEmployeeRowProps) {
   return (
     <TableRow>
-      <TableCell sx={{ display: "flex", alignItems: "center" }}>
-        {row.employee}
-      </TableCell>
+      <TableCell sx={{ display: 'flex', alignItems: 'center' }}>{row.employee}</TableCell>
 
       <TableCell align="center">{fCurrency(row.revenue)}</TableCell>
 
@@ -77,11 +75,11 @@ function EcommerceEmployeeRow({ row, rank }: EcommerceBestEmployeeRowProps) {
         <Label
           variant="soft"
           color={
-            (rank === 0 && "primary") ||
-            (rank === 1 && "info") ||
-            (rank === 2 && "success") ||
-            (rank === 3 && "warning") ||
-            "error"
+            (rank === 0 && 'primary') ||
+            (rank === 1 && 'info') ||
+            (rank === 2 && 'success') ||
+            (rank === 3 && 'warning') ||
+            'error'
           }
         >
           {rank + 1}

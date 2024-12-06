@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import useSWR from "swr";
-import React from "react";
+import useSWR from 'swr';
+import React from 'react';
 
-import Container from "@mui/material/Container";
+import Container from '@mui/material/Container';
 
-import { paths } from "src/routes/paths";
+import { paths } from 'src/routes/paths';
+import { DashboardContent } from 'src/layouts/dashboard';
+import { fetcher } from 'src/utils/axios';
 
-import { fetcher } from "src/utils/axios";
+import { useTranslate } from 'src/locales';
 
-import { useTranslate } from "src/locales";
+import { useSettingsContext } from 'src/components/settings';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
-
-import ServiceNewEditForm from "../service-new-edit-form";
+import ServiceNewEditForm from '../service-new-edit-form';
 
 // ----------------------------------------------------------------------
 
@@ -37,26 +37,24 @@ export default function ServiceEditView({ id }: Props) {
     fetcher
   );
   const { data: retailbrands, error: retailbrandError } = useSWR(
-    "/api/salonapp/retailbrand",
+    '/api/salonapp/retailbrand',
     fetcher
   );
 
-  if (serviceError || categoryError || retailbrandError)
-    return <div>Failed to load</div>;
-  if (!serviceData || !servicecategoryData || !retailbrands)
-    return <div>Loading...</div>;
+  if (serviceError || categoryError || retailbrandError) return <div>Failed to load</div>;
+  if (!serviceData || !servicecategoryData || !retailbrands) return <div>Loading...</div>;
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : "lg"}>
+    <DashboardContent>
       <CustomBreadcrumbs
         heading="Edit"
         links={[
           {
-            name: t("salonapp.dashboard"),
+            name: t('salonapp.dashboard'),
             href: paths.dashboard.root,
           },
           {
-            name: t("salonapp.services"),
+            name: t('salonapp.services'),
             href: paths.dashboard.services.servicecategory.root,
           },
           { name: serviceData?.data[0].name },
@@ -71,6 +69,6 @@ export default function ServiceEditView({ id }: Props) {
         servicecategory={servicecategoryData?.data}
         retailbrands={retailbrands.data}
       />
-    </Container>
+    </DashboardContent>
   );
 }

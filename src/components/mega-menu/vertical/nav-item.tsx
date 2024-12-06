@@ -1,105 +1,127 @@
-import { forwardRef } from 'react'
+import { forwardRef } from 'react';
 
-import Box from '@mui/material/Box'
-import Link from '@mui/material/Link'
-import { alpha, styled } from '@mui/material/styles'
-import ListItemButton from '@mui/material/ListItemButton'
+import Box from '@mui/material/Box';
+import { styled } from '@mui/material/styles';
+import ButtonBase from '@mui/material/ButtonBase';
 
-import { RouterLink } from 'src/routes/components'
-
-import Iconify from '../../iconify'
-import { type NavItemProps, type NavItemStateProps } from '../types'
+import { Iconify } from '../../iconify';
+import type { NavItemProps, NavItemStateProps } from '../types';
+import { useNavItem, stateClasses, sharedStyles, navSectionClasses } from '../../nav-section';
 
 // ----------------------------------------------------------------------
 
-const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
+export const NavItem = forwardRef<HTMLButtonElement, NavItemProps>(
   (
-    { title, path, icon, open, active, hasChild, externalLink, ...other },
+    {
+      path,
+      icon,
+      info,
+      title,
+      //
+      open,
+      render,
+      active,
+      hasChild,
+      disabled,
+      slotProps,
+      externalLink,
+      enabledRootRedirect,
+      ...other
+    },
     ref
   ) => {
-    const renderContent = (
-      <StyledNavItem ref={ref} open={open} active={active} {...other}>
+    const navItem = useNavItem({
+      path,
+      icon,
+      info,
+      render,
+      hasChild,
+      externalLink,
+      enabledRootRedirect,
+    });
+
+    return (
+      <StyledNavItem
+        ref={ref}
+        aria-label={title}
+        open={open}
+        active={active}
+        disabled={disabled}
+        className={stateClasses({ open: open && !active, active, disabled })}
+        sx={{
+          ...slotProps?.sx,
+          [`& .${navSectionClasses.item.icon}`]: slotProps?.icon,
+          [`& .${navSectionClasses.item.title}`]: slotProps?.title,
+          [`& .${navSectionClasses.item.info}`]: slotProps?.info,
+          [`& .${navSectionClasses.item.arrow}`]: slotProps?.arrow,
+        }}
+        {...navItem.baseProps}
+        {...other}
+      >
         {icon && (
-          <Box component="span" className="icon">
-            {icon}
+          <Box component="span" className={navSectionClasses.item.icon}>
+            {navItem.renderIcon}
           </Box>
         )}
 
         {title && (
-          <Box component="span" className="label">
+          <Box component="span" className={navSectionClasses.item.title}>
             {title}
           </Box>
         )}
 
+        {info && (
+          <Box component="span" className={navSectionClasses.item.info}>
+            {navItem.renderInfo}
+          </Box>
+        )}
+
         {hasChild && (
-          <Iconify
-            width={16}
-            className="arrow"
-            icon="eva:arrow-ios-forward-fill"
-          />
+          <Iconify icon="eva:arrow-ios-forward-fill" className={navSectionClasses.item.arrow} />
         )}
       </StyledNavItem>
-    )
-
-    if (externalLink) {
-      return (
-        <Link
-          href={path}
-          target="_blank"
-          rel="noopener"
-          underline="none"
-          color="inherit"
-        >
-          {renderContent}
-        </Link>
-      )
-    }
-
-    return (
-      <Link component={RouterLink} href={path} underline="none" color="inherit">
-        {renderContent}
-      </Link>
-    )
+    );
   }
-)
-
-export default NavItem
+);
 
 // ----------------------------------------------------------------------
 
-const StyledNavItem = styled(ListItemButton, {
-  shouldForwardProp: (prop) => prop !== 'active'
-})<NavItemStateProps>(({ active, open, theme }) => {
-  const opened = open && !active
-
-  return {
+const StyledNavItem = styled(ButtonBase, {
+  shouldForwardProp: (prop) => prop !== 'active' && prop !== 'open' && prop !== 'disabled',
+})<NavItemStateProps>(({ active, open, disabled, theme }) => ({
+  minHeight: 'var(--nav-item-height)',
+  borderRadius: 'var(--nav-item-radius)',
+  padding: 'var(--nav-item-padding)',
+  transition: theme.transitions.create(['background-color'], {
+    duration: theme.transitions.duration.standard,
+  }),
+  '&:hover': {
+    backgroundColor: 'var(--nav-item-hover-bg)',
+  },
+  [`& .${navSectionClasses.item.title}`]: {
     ...theme.typography.body2,
-    paddingLeft: theme.spacing(2.5),
-    paddingRight: theme.spacing(1.5),
-    fontWeight: theme.typography.fontWeightMedium,
-    '& .icon': {
-      width: 20,
-      height: 20,
-      flexShrink: 0,
-      marginRight: theme.spacing(2)
+    flex: '1 1 auto',
+    fontWeight: active ? theme.typography.fontWeightSemiBold : theme.typography.fontWeightMedium,
+  },
+  [`& .${navSectionClasses.item.icon}`]: {
+    ...sharedStyles.icon,
+    width: 'var(--nav-icon-size)',
+    height: 'var(--nav-icon-size)',
+    margin: 'var(--nav-icon-margin)',
+  },
+  [`& .${navSectionClasses.item.arrow}`]: { ...sharedStyles.arrow },
+  [`& .${navSectionClasses.item.info}`]: { ...sharedStyles.info },
+  // State
+  ...(active && {
+    color: 'var(--nav-item-active-color)',
+    backgroundColor: 'var(--nav-item-active-bg)',
+    '&:hover': {
+      backgroundColor: 'var(--nav-item-active-hover-bg)',
     },
-    '& .label': {
-      flexGrow: 1
-    },
-    '& .arrow': {
-      marginLeft: theme.spacing(0.75)
-    },
-    ...(active && {
-      color: theme.palette.primary.main,
-      fontWeight: theme.typography.fontWeightSemiBold,
-      backgroundColor: alpha(theme.palette.primary.main, 0.08),
-      '&:hover': {
-        backgroundColor: alpha(theme.palette.primary.main, 0.16)
-      }
-    }),
-    ...(opened && {
-      color: theme.palette.text.primary,
-      backgroundColor: theme.palette.action.hover
-    })
-  }
-})
+  }),
+  ...(open && {
+    color: 'var(--nav-item-open-color)',
+    backgroundColor: 'var(--nav-item-open-bg)',
+  }),
+  ...(disabled && sharedStyles.disabled),
+}));

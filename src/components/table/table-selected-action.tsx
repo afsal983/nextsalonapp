@@ -1,18 +1,19 @@
-import Checkbox from '@mui/material/Checkbox'
-import Typography from '@mui/material/Typography'
-import Stack, { type StackProps } from '@mui/material/Stack'
+import Stack from '@mui/material/Stack';
+import Checkbox from '@mui/material/Checkbox';
+import Typography from '@mui/material/Typography';
+import type { StackProps } from '@mui/material/Stack';
 
 // ----------------------------------------------------------------------
 
-interface Props extends StackProps {
-  dense?: boolean
-  action?: React.ReactNode
-  rowCount: number
-  numSelected: number
-  onSelectAllRows: (checked: boolean) => void
-}
+export type TableSelectedActionProps = StackProps & {
+  dense?: boolean;
+  rowCount: number;
+  numSelected: number;
+  action?: React.ReactNode;
+  onSelectAllRows: (checked: boolean) => void;
+};
 
-export default function TableSelectedAction ({
+export function TableSelectedAction({
   dense,
   action,
   rowCount,
@@ -20,9 +21,9 @@ export default function TableSelectedAction ({
   onSelectAllRows,
   sx,
   ...other
-}: Props) {
+}: TableSelectedActionProps) {
   if (!numSelected) {
-    return null
+    return null;
   }
 
   return (
@@ -39,17 +40,16 @@ export default function TableSelectedAction ({
         height: 58,
         position: 'absolute',
         bgcolor: 'primary.lighter',
-        ...(dense && {
-          height: 38
-        }),
-        ...sx
+        ...(dense && { height: 38 }),
+        ...sx,
       }}
       {...other}
     >
       <Checkbox
         indeterminate={!!numSelected && numSelected < rowCount}
         checked={!!rowCount && numSelected === rowCount}
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => { onSelectAllRows(event.target.checked) }
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+          onSelectAllRows(event.target.checked)
         }
       />
 
@@ -59,9 +59,7 @@ export default function TableSelectedAction ({
           ml: 2,
           flexGrow: 1,
           color: 'primary.main',
-          ...(dense && {
-            ml: 3
-          })
+          ...(dense && { ml: 3 }),
         }}
       >
         {numSelected} selected
@@ -69,5 +67,5 @@ export default function TableSelectedAction ({
 
       {action && action}
     </Stack>
-  )
+  );
 }

@@ -1,38 +1,28 @@
-import { type TreeProps } from 'react-organizational-chart'
-
-import { type Theme, type SxProps } from '@mui/material/styles'
+import type { TreeProps } from 'react-organizational-chart';
 
 // ----------------------------------------------------------------------
 
-type VariantValue = 'simple' | 'standard' | 'group'
-
-export interface ItemProps {
-  name: string
-  group?: string
-  role?: string | null
-  avatarUrl?: string | null
-  children?: any
-}
-
-export interface ListProps {
-  data: ItemProps
-  depth: number
-  variant?: VariantValue
-  sx?: SxProps<Theme>
-}
-
-export interface SubListProps {
-  data: ItemProps[]
-  depth: number
-  variant?: VariantValue
-  sx?: SxProps<Theme>
-}
-
-export type OrganizationalChartProps = Partial<TreeProps> & {
+export type OrgChartProps<T> = Omit<TreeProps, 'label' | 'children'> & {
   data: {
-    name: string
-    children: ItemProps[]
-  }
-  variant?: VariantValue
-  sx?: SxProps<Theme>
-}
+    name: string;
+    children: T[];
+  };
+  nodeItem: (props: T) => React.ReactElement;
+};
+
+export type OrgChartListProps<T> = {
+  data: T;
+  depth: number;
+  nodeItem: (props: T) => React.ReactElement;
+};
+
+export type OrgChartSubListProps<T> = {
+  data: T[];
+  depth: number;
+  nodeItem: (props: T) => React.ReactElement;
+};
+
+export type OrgChartBaseNode = {
+  depth?: number;
+  totalChildren?: number;
+};

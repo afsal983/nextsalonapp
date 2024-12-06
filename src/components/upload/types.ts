@@ -1,28 +1,41 @@
-import { type DropzoneOptions } from 'react-dropzone'
+import type { DropzoneOptions } from 'react-dropzone';
 
-import { type Theme, type SxProps } from '@mui/material/styles'
+import type { BoxProps } from '@mui/material/Box';
+import type { Theme, SxProps } from '@mui/material/styles';
+
+import type { FileThumbnailProps } from '../file-thumbnail';
 
 // ----------------------------------------------------------------------
 
-export interface CustomFile extends File {
-  path?: string
-  preview?: string
-  lastModifiedDate?: Date
-}
+export type FileUploadType = File | string | null;
 
-export interface UploadProps extends DropzoneOptions {
-  error?: boolean
-  sx?: SxProps<Theme>
-  thumbnail?: boolean
-  placeholder?: React.ReactNode
-  helperText?: React.ReactNode
-  disableMultiple?: boolean
-  //
-  file?: CustomFile | string | null
-  onDelete?: VoidFunction
-  //
-  files?: Array<File | string>
-  onUpload?: VoidFunction
-  onRemove?: (file: CustomFile | string) => void
-  onRemoveAll?: VoidFunction
-}
+export type FilesUploadType = (File | string)[];
+
+export type SingleFilePreviewProps = BoxProps & {
+  file: File | string;
+};
+
+export type MultiFilePreviewProps = BoxProps & {
+  files: FilesUploadType;
+  lastNode?: React.ReactNode;
+  firstNode?: React.ReactNode;
+  onRemove: UploadProps['onRemove'];
+  thumbnail: UploadProps['thumbnail'];
+  slotProps?: {
+    thumbnail?: Omit<FileThumbnailProps, 'file'>;
+  };
+};
+
+export type UploadProps = DropzoneOptions & {
+  error?: boolean;
+  sx?: SxProps<Theme>;
+  className?: string;
+  thumbnail?: boolean;
+  onDelete?: () => void;
+  onUpload?: () => void;
+  onRemoveAll?: () => void;
+  helperText?: React.ReactNode;
+  placeholder?: React.ReactNode;
+  value?: FileUploadType | FilesUploadType;
+  onRemove?: (file: File | string) => void;
+};

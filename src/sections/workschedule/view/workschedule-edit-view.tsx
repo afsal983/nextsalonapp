@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import React from "react";
-import useSWR, { mutate } from "swr";
+import React from 'react';
+import useSWR, { mutate } from 'swr';
 
-import Container from "@mui/material/Container";
+import { DashboardContent } from 'src/layouts/dashboard';
 
-import { paths } from "src/routes/paths";
+import { paths } from 'src/routes/paths';
 
-import { fetcher } from "src/utils/axios";
+import { fetcher } from 'src/utils/axios';
 
-import { useTranslate } from "src/locales";
+import { useTranslate } from 'src/locales';
 
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+import { useSettingsContext } from 'src/components/settings';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import WorkScheduleNewEditForm from "../workschedule-new-edit-form";
+import WorkScheduleNewEditForm from '../workschedule-new-edit-form';
 
 // ----------------------------------------------------------------------
 
@@ -24,39 +24,31 @@ export default function WorkScheduleEditView() {
   const settings = useSettingsContext();
 
   mutate(`/api/salonapp/workschedule`);
-  const { data: workscheduleData, error: wError } = useSWR(
-    `/api/salonapp/workschedule`,
-    fetcher,
-    { revalidateOnFocus: true, revalidateOnMount: true }
-  );
+  const { data: workscheduleData, error: wError } = useSWR(`/api/salonapp/workschedule`, fetcher, {
+    revalidateOnFocus: true,
+    revalidateOnMount: true,
+  });
 
-  const { data: timeslotData, error: tError } = useSWR(
-    `/api/salonapp/timeslot`,
-    fetcher
-  );
-  const { data: employeeData, error: eError } = useSWR(
-    `/api/salonapp/employee`,
-    fetcher
-  );
+  const { data: timeslotData, error: tError } = useSWR(`/api/salonapp/timeslot`, fetcher);
+  const { data: employeeData, error: eError } = useSWR(`/api/salonapp/employee`, fetcher);
 
   if (wError || tError || eError) return <div>Failed to load</div>;
-  if (!workscheduleData || !timeslotData || !employeeData)
-    return <div>Loading...</div>;
+  if (!workscheduleData || !timeslotData || !employeeData) return <div>Loading...</div>;
 
   if (workscheduleData) {
     console.log(workscheduleData);
   }
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : "lg"}>
+    <DashboardContent>
       <CustomBreadcrumbs
         heading="Edit"
         links={[
           {
-            name: t("salonapp.dashboard"),
+            name: t('salonapp.dashboard'),
             href: paths.dashboard.root,
           },
-          { name: t("salonapp.workschedule.workschedules") },
+          { name: t('salonapp.workschedule.workschedules') },
         ]}
         sx={{
           mb: { xs: 3, md: 5 },
@@ -68,6 +60,6 @@ export default function WorkScheduleEditView() {
         timeSlot={timeslotData.data}
         employee={employeeData.data}
       />
-    </Container>
+    </DashboardContent>
   );
 }

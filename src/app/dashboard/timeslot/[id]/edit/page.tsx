@@ -1,11 +1,11 @@
-import { _userList } from "src/_mock/_user";
+import { _userList } from 'src/_data/_user';
 
-import { TimeSlotEditView } from "src/sections/timeslot/view";
+import { TimeSlotEditView } from 'src/sections/timeslot/view';
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: "Dashboard: TimeSlot Edit",
+  title: 'Dashboard: TimeSlot Edit',
 };
 
 interface Props {

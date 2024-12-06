@@ -1,31 +1,24 @@
-import useSWR from "swr";
-import * as Yup from "yup";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import useSWR from 'swr';
+import { useForm } from 'react-hook-form';
+import { z as zod } from 'zod';
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import Typography from '@mui/material/Typography';
+import LoadingButton from '@mui/lab/LoadingButton';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { fetcher } from 'src/utils/axios';
 
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import Typography from "@mui/material/Typography";
-import LoadingButton from "@mui/lab/LoadingButton";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { useTranslate } from 'src/locales';
 
-import { fetcher } from "src/utils/axios";
+import { Form, RHFSelect, RHFSwitch, RHFTextField, RHFRadioGroup } from 'src/components/hook-form';
 
-import { useTranslate } from "src/locales";
-
-import FormProvider, {
-  RHFSelect,
-  RHFSwitch,
-  RHFTextField,
-  RHFRadioGroup,
-} from "src/components/hook-form";
-
-import { Customer, CustomerCategory } from "src/types/customer";
+import { Customer, CustomerCategory } from 'src/types/customer';
 
 // ----------------------------------------------------------------------
 
@@ -35,40 +28,44 @@ type Props = {
   onCreate: (address: Customer) => void;
 };
 
+const NewAddressSchema = zod.object({
+  firstname: zod.string().min(1, 'First name is required'),
+  lastname: zod.string().optional(),
+  telephone: zod.string().min(1, 'Phone number is required'),
+  email: zod.string().min(1, 'Email is required'),
+  cardno: zod.string().optional(),
+  taxid: zod.string().optional(),
+  address: zod.string().optional(),
+  comments: zod.string().optional(),
+  dob: zod.any().nullable().optional(),
+  sex: zod.number().refine((value) => value !== undefined, { message: 'Sex is required' }),
+  category_id: zod
+    .number()
+    .refine((value) => value !== undefined, { message: 'Category is required' }),
+  promonotify: zod.boolean().optional(),
+  eventnotify: zod.boolean().optional(),
+});
+
+export type NewAddressSchemaType = zod.infer<typeof NewAddressSchema>;
+
 export default function AddressNewForm({ open, onClose, onCreate }: Props) {
-  const NewAddressSchema = Yup.object().shape({
-    firstname: Yup.string().required("First name is required"),
-    lastname: Yup.string(),
-    telephone: Yup.string().required("Phone number is required"),
-    email: Yup.string().required("Email is required"),
-    cardno: Yup.string(),
-    taxid: Yup.string(),
-    address: Yup.string(),
-    comments: Yup.string(),
-    dob: Yup.mixed<any>().nullable(),
-    sex: Yup.number().required("Sex is required"),
-    category_id: Yup.number().required("Categoryis required"),
-    // not required
-    promonotify: Yup.boolean(),
-    eventnotify: Yup.boolean(),
-  });
   const { t } = useTranslate();
 
   // Use SWR to fetch data from multiple endpoints in parallel
   const { data: customercategory, error: errorC } = useSWR(
-    "/api/salonapp/customercategory",
+    '/api/salonapp/customercategory',
     fetcher
   );
 
   const defaultValues = {
-    firstname: "",
-    lastname: "",
-    telephone: "",
-    email: "",
-    cardno: "",
-    taxid: "",
-    address: "",
-    comments: "",
+    firstname: '',
+    lastname: '',
+    telephone: '',
+    email: '',
+    cardno: '',
+    taxid: '',
+    address: '',
+    comments: '',
     dob: null,
     sex: 0,
     category_id: 0,
@@ -77,8 +74,9 @@ export default function AddressNewForm({ open, onClose, onCreate }: Props) {
     eventnotify: false,
   };
 
-  const methods = useForm({
-    resolver: yupResolver(NewAddressSchema),
+  const methods = useForm<NewAddressSchemaType>({
+    mode: 'all',
+    resolver: zodResolver(NewAddressSchema),
     defaultValues,
   });
 
@@ -92,28 +90,28 @@ export default function AddressNewForm({ open, onClose, onCreate }: Props) {
 
     // Create a new Date object from the string
     if (!data?.dob) {
-      const dateObj = new Date("1970-01-01");
+      const dateObj = new Date('1970-01-01');
       // Convert to ISO string with UTC time
-      isoDateString = dateObj.toLocaleDateString("en-CA");
+      isoDateString = dateObj.toLocaleDateString('en-CA');
     }
 
     try {
       onCreate({
-        id: "",
+        id: '',
         CustomerCategory: {
-          id: "",
-          name: "",
+          id: '',
+          name: '',
           discount: 0,
           default_category: false,
         },
         firstname: data.firstname,
-        lastname: data.lastname || "",
-        comment: data.comments || "",
+        lastname: data.lastname || '',
+        comment: data.comments || '',
         telephone: data.telephone,
         email: data.email,
-        cardno: data.cardno || "",
-        taxid: data.taxid || "",
-        address: data.address || "",
+        cardno: data.cardno || '',
+        taxid: data.taxid || '',
+        address: data.address || '',
         sex: data.sex,
         dob: isoDateString || null,
         category_id: Number(data.category_id),
@@ -135,7 +133,7 @@ export default function AddressNewForm({ open, onClose, onCreate }: Props) {
 
   return (
     <Dialog fullWidth maxWidth="sm" open={open} onClose={onClose}>
-      <FormProvider methods={methods} onSubmit={onSubmit}>
+      <Form methods={methods} onSubmit={onSubmit}>
         <DialogTitle>New Customer</DialogTitle>
 
         <DialogContent dividers>
@@ -145,8 +143,8 @@ export default function AddressNewForm({ open, onClose, onCreate }: Props) {
               columnGap={2}
               display="grid"
               gridTemplateColumns={{
-                xs: "repeat(1, 1fr)",
-                sm: "repeat(2, 1fr)",
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
               }}
             >
               <RHFTextField name="firstname" label="First Name" />
@@ -170,9 +168,9 @@ export default function AddressNewForm({ open, onClose, onCreate }: Props) {
                   row
                   name="sex"
                   options={[
-                    { label: "Male", value: 0 },
-                    { label: "Female", value: 1 },
-                    { label: "Other", value: 2 },
+                    { label: 'Male', value: 0 },
+                    { label: 'Female', value: 1 },
+                    { label: 'Other', value: 2 },
                   ]}
                 />
               </Stack>
@@ -193,10 +191,10 @@ export default function AddressNewForm({ open, onClose, onCreate }: Props) {
             <RHFSelect
               native
               name="category_id"
-              label={t("general.category")}
+              label={t('general.category')}
               InputLabelProps={{ shrink: true }}
             >
-              <option key={0}>{t("general.dropdown_select")}</option>
+              <option key={0}>{t('general.dropdown_select')}</option>
               {customercategory.data.map((item: CustomerCategory) => (
                 <option key={item.id} value={item.id}>
                   {item.name}
@@ -216,15 +214,11 @@ export default function AddressNewForm({ open, onClose, onCreate }: Props) {
             Cancel
           </Button>
 
-          <LoadingButton
-            type="submit"
-            variant="contained"
-            loading={isSubmitting}
-          >
+          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
             Create
           </LoadingButton>
         </DialogActions>
-      </FormProvider>
+      </Form>
     </Dialog>
   );
 }

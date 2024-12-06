@@ -1,75 +1,35 @@
-import { useRef, useState } from 'react'
-import {
-  STATUS,
-  type Step,
-  LIFECYCLE,
-  type StoreHelpers,
-  type CallBackProps
-} from 'react-joyride'
+import { STATUS } from 'react-joyride';
+import { useRef, useState } from 'react';
+import type { StoreHelpers, CallBackProps } from 'react-joyride';
 
-import WalktourProgressBar from './walktour-progress-bar'
+import type { UseWalktourProps, UseWalktourReturn } from './types';
 
 // ----------------------------------------------------------------------
 
-interface ReturnType {
-  run: boolean
-  steps: Step[]
-  onCallback: (data: CallBackProps) => void
-  setHelpers: (storeHelpers: StoreHelpers) => void
-  setRun: React.Dispatch<React.SetStateAction<boolean>>
-}
+export function useWalktour({ steps, defaultRun }: UseWalktourProps): UseWalktourReturn {
+  const helpers = useRef<StoreHelpers>();
 
-export interface UseWalktourProps {
-  defaultRun?: boolean
-  showProgress?: boolean
-  steps: Step[]
-}
-
-export function useWalktour (props: UseWalktourProps): ReturnType {
-  const helpers = useRef<StoreHelpers>()
-
-  const [run, setRun] = useState(!!props?.defaultRun)
-
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [run, setRun] = useState(!!defaultRun);
 
   const setHelpers = (storeHelpers: StoreHelpers) => {
-    helpers.current = storeHelpers
-  }
+    helpers.current = storeHelpers;
+  };
 
   const onCallback = (data: CallBackProps) => {
-    const { status, index, lifecycle } = data
+    const { status } = data;
 
-    if (lifecycle === LIFECYCLE.TOOLTIP) {
-      setCurrentIndex(index + 1)
+    const finishedStatuses: string[] = [STATUS.FINISHED, STATUS.SKIPPED];
+
+    if (finishedStatuses.includes(status)) {
+      setRun(false);
     }
-
-    if (([STATUS.FINISHED, STATUS.SKIPPED] as string[]).includes(status)) {
-      setRun(false)
-      setCurrentIndex(0)
-    }
-  }
-
-  const steps = props.steps.map((step) => ({
-    ...step,
-    content: (
-      <>
-        {step.content}
-        {props.showProgress && (
-          <WalktourProgressBar
-            currentStep={currentIndex}
-            totalSteps={props.steps.length}
-            onGoStep={(index: number) => helpers.current?.go(index)}
-          />
-        )}
-      </>
-    )
-  }))
+  };
 
   return {
-    steps,
     run,
+    steps,
     setRun,
     onCallback,
-    setHelpers
-  }
+    setHelpers,
+  };
 }

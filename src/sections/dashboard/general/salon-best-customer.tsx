@@ -1,20 +1,20 @@
-import { Avatar } from "@mui/material";
-import Table from "@mui/material/Table";
-import TableRow from "@mui/material/TableRow";
-import ListItem from "@mui/material/ListItem";
-import TableCell from "@mui/material/TableCell";
-import TableBody from "@mui/material/TableBody";
-import CardHeader from "@mui/material/CardHeader";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Card, { type CardProps } from "@mui/material/Card";
-import TableContainer from "@mui/material/TableContainer";
+import { Avatar } from '@mui/material';
+import Table from '@mui/material/Table';
+import TableRow from '@mui/material/TableRow';
+import ListItem from '@mui/material/ListItem';
+import TableCell from '@mui/material/TableCell';
+import TableBody from '@mui/material/TableBody';
+import CardHeader from '@mui/material/CardHeader';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Card, { type CardProps } from '@mui/material/Card';
+import TableContainer from '@mui/material/TableContainer';
 
-import { fCurrency } from "src/utils/format-number";
+import { fCurrency } from 'src/utils/format-number';
 
-import Label from "src/components/label";
-import Scrollbar from "src/components/scrollbar";
-import { TableHeadCustom } from "src/components/table";
+import { Label } from 'src/components/label';
+import { Scrollbar } from 'src/components/scrollbar';
+import { TableHeadCustom } from 'src/components/table';
 
 // ----------------------------------------------------------------------
 
@@ -45,7 +45,7 @@ export default function SalonBestCustomer({
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} sx={{ mb: 3 }} />
 
-      <TableContainer sx={{ overflow: "unset" }}>
+      <TableContainer sx={{ overflow: 'unset' }}>
         <Scrollbar>
           <Table sx={{ minWidth: 640 }}>
             <TableHeadCustom headLabel={tableLabels} />
@@ -69,22 +69,19 @@ interface EcommerceBestCsutomerRowProps {
   rank: number;
 }
 
-function EcommerceBestCsutomerRow({
-  row,
-  rank,
-}: EcommerceBestCsutomerRowProps) {
+function EcommerceBestCsutomerRow({ row, rank }: EcommerceBestCsutomerRowProps) {
   return (
     <TableRow>
-      <TableCell sx={{ display: "flex", alignItems: "center" }}>
+      <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
         <ListItem>
           <ListItemAvatar>
             <Avatar sx={{ mr: 2 }}>{row.customer.charAt(0)}</Avatar>
           </ListItemAvatar>
           <ListItemText
-            primaryTypographyProps={{ typography: "body2", noWrap: true }}
+            primaryTypographyProps={{ typography: 'body2', noWrap: true }}
             secondaryTypographyProps={{
-              component: "span",
-              typography: "caption",
+              component: 'span',
+              typography: 'caption',
             }}
             primary={row.customer}
             secondary={row.telephone}
@@ -99,11 +96,11 @@ function EcommerceBestCsutomerRow({
         <Label
           variant="soft"
           color={
-            (rank === 0 && "primary") ||
-            (rank === 1 && "info") ||
-            (rank === 2 && "success") ||
-            (rank === 3 && "warning") ||
-            "error"
+            (rank === 0 && 'primary') ||
+            (rank === 1 && 'info') ||
+            (rank === 2 && 'success') ||
+            (rank === 3 && 'warning') ||
+            'error'
           }
         >
           {rank + 1}

@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import isEqual from "lodash/isEqual";
-import { useState, useEffect, useCallback } from "react";
+import { isEqual } from 'src/utils/helper';
+import { useState, useEffect, useCallback } from 'react';
 
-import FilterListIcon from "@mui/icons-material/FilterList";
+import FilterListIcon from '@mui/icons-material/FilterList';
 import {
   Card,
   Stack,
@@ -13,7 +13,7 @@ import {
   useTheme,
   Container,
   IconButton,
-} from "@mui/material";
+} from '@mui/material';
 import {
   DataGrid,
   GridColDef,
@@ -24,54 +24,54 @@ import {
   GridToolbarFilterButton,
   GridToolbarColumnsButton,
   GridColumnVisibilityModel,
-} from "@mui/x-data-grid";
+} from '@mui/x-data-grid';
 
-import { paths } from "src/routes/paths";
+import { paths } from 'src/routes/paths';
 
-import { useBoolean } from "src/hooks/use-boolean";
+import { useBoolean } from 'src/hooks/use-boolean';
 
-import { isAfter } from "src/utils/format-time";
+import { fIsAfter } from 'src/utils/format-time';
 
-import Iconify from "src/components/iconify";
-import Scrollbar from "src/components/scrollbar";
-import { useSnackbar } from "src/components/snackbar";
-import EmptyContent from "src/components/empty-content";
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+import { toast } from 'src/components/snackbar';
+import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
+import { EmptyContent } from 'src/components/empty-content';
+import { useSettingsContext } from 'src/components/settings';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { BranchItem } from "src/types/branch";
-import { PaymentTypeItem } from "src/types/payment";
+import { BranchItem } from 'src/types/branch';
+import { PaymentTypeItem } from 'src/types/payment';
 import {
   DetailedInvoice,
   DetailedSalesReportTableFilters,
   DetailedSalesReportPeriodFilters,
   DetailedSalesReportTableFilterValue,
-} from "src/types/report";
+} from 'src/types/report';
 
-import PeriodFilters from "../period-filters";
-import DetailedSalesAnalytic from "../detailedsales-analytic";
-import DeatailedSalesTableToolbar from "../detailedsales-table-toolbar";
-import DeatailedSalesTableFiltersResult from "../detailedsales-table-filters-result";
+import PeriodFilters from '../period-filters';
+import DetailedSalesAnalytic from '../detailedsales-analytic';
+import DeatailedSalesTableToolbar from '../detailedsales-table-toolbar';
+import DeatailedSalesTableFiltersResult from '../detailedsales-table-filters-result';
 import {
   RenderCellPrice,
   RenderCellProduct,
   RenderCellDiscount,
   RenderCellCreatedAt,
   RenderCellUnitPrice,
-} from "../detailedsales-table-row";
+} from '../detailedsales-table-row';
 
 // ----------------------------------------------------------------------
 
 const STATUS_OPTIONS = [
-  { value: "paid", label: "Paid" },
-  { value: "draft", label: "Draft" },
+  { value: 'paid', label: 'Paid' },
+  { value: 'draft', label: 'Draft' },
 ];
 
 const HIDE_COLUMNS = {
   category: false,
 };
 
-const HIDE_COLUMNS_TOGGLABLE = ["category", "actions"];
+const HIDE_COLUMNS_TOGGLABLE = ['category', 'actions'];
 
 // This is for date filter to conditionaly fetch data from remote API
 const defaultperiodFilters: DetailedSalesReportPeriodFilters = {
@@ -89,8 +89,6 @@ const defaultitemFilters: DetailedSalesReportTableFilters = {
 // ----------------------------------------------------------------------
 
 export default function DetailedSalesListView() {
-  const { enqueueSnackbar } = useSnackbar();
-
   const confirmRows = useBoolean();
 
   const theme = useTheme();
@@ -109,11 +107,9 @@ export default function DetailedSalesListView() {
   const [periodfilters, setFilters] = useState(defaultperiodFilters);
   const [itemfilters, setitemFilters] = useState(defaultitemFilters);
 
-  const dateError = isAfter(periodfilters.startDate, periodfilters.endDate);
+  const dateError = fIsAfter(periodfilters.startDate, periodfilters.endDate);
 
-  const [selectedRowIds, setSelectedRowIds] = useState<GridRowSelectionModel>(
-    []
-  );
+  const [selectedRowIds, setSelectedRowIds] = useState<GridRowSelectionModel>([]);
 
   const [columnVisibilityModel, setColumnVisibilityModel] =
     useState<GridColumnVisibilityModel>(HIDE_COLUMNS);
@@ -165,11 +161,11 @@ export default function DetailedSalesListView() {
     (id: string) => {
       const deleteRow = tableData.filter((row) => row.id !== id);
 
-      enqueueSnackbar("Delete success!");
+      toast.success('Delete success!');
 
       setTableData(deleteRow);
     },
-    [enqueueSnackbar, tableData]
+    [tableData]
   );
 
   const handleSearch = async () => {
@@ -179,20 +175,20 @@ export default function DetailedSalesListView() {
     const data = {
       start: periodfilters.startDate,
       end: periodfilters.endDate,
-      filtername: "detailedsales",
+      filtername: 'detailedsales',
       filterid: 1,
     };
 
     if (!periodfilters.startDate || !periodfilters.endDate) {
-      enqueueSnackbar("Missing Filter", { variant: "error" });
+      toast.error('Missing Filter');
       setisLoading(false);
       return;
     }
 
-    const response = await fetch("/api/salonapp/report/detailedsales", {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
+    const response = await fetch('/api/salonapp/report/detailedsales', {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(data), // body data type must match "Content-Type" header
     });
@@ -200,7 +196,7 @@ export default function DetailedSalesListView() {
 
     if (responseData.status > 300) {
       setisLoading(false);
-      enqueueSnackbar("Fetching report data failed", { variant: "error" });
+      toast.error('Fetching report data failed');
       return;
     }
     setTableData(responseData.data);
@@ -211,82 +207,82 @@ export default function DetailedSalesListView() {
 
   const columns: GridColDef[] = [
     {
-      field: "id",
-      headerName: "Sn",
+      field: 'id',
+      headerName: 'Sn',
       filterable: true,
       width: 40,
       hideable: false,
     },
     {
-      field: "invoicenumber",
-      headerName: "Bill No",
+      field: 'invoicenumber',
+      headerName: 'Bill No',
       filterable: true,
       hideable: false,
     },
     {
-      field: "createdat",
-      headerName: "Date",
+      field: 'createdat',
+      headerName: 'Date',
       width: 100,
       renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
     {
-      field: "total",
-      headerName: "Total",
+      field: 'total',
+      headerName: 'Total',
       width: 100,
       editable: true,
       hideable: false,
       renderCell: (params) => <RenderCellPrice params={params} />,
     },
     {
-      field: "discount",
-      headerName: "Discount",
+      field: 'discount',
+      headerName: 'Discount',
       width: 100,
       editable: true,
       renderCell: (params) => <RenderCellDiscount params={params} />,
     },
     {
-      field: "billingname",
-      headerName: "Billing Name",
+      field: 'billingname',
+      headerName: 'Billing Name',
       width: 180,
       filterable: true,
       hideable: false,
     },
     {
-      field: "employee",
-      headerName: "Employee",
+      field: 'employee',
+      headerName: 'Employee',
       width: 180,
       filterable: true,
     },
     {
-      field: "tip",
-      headerName: "Tip",
+      field: 'tip',
+      headerName: 'Tip',
       filterable: false,
     },
     {
-      field: "paymentmode",
+      field: 'paymentmode',
       width: 100,
-      headerName: "Payment Mode",
+      headerName: 'Payment Mode',
       filterable: true,
     },
     {
-      field: "CASH",
-      headerName: "Cash",
+      field: 'CASH',
+      headerName: 'Cash',
       filterable: false,
     },
     {
-      field: "CARD",
-      headerName: "Card",
+      field: 'CARD',
+      headerName: 'Card',
       filterable: false,
     },
     {
-      field: "authcode",
-      headerName: "Auth Code",
+      field: 'authcode',
+      headerName: 'Auth Code',
       filterable: false,
     },
 
     {
-      field: "item",
-      headerName: "Product",
+      field: 'item',
+      headerName: 'Product',
       flex: 1,
       minWidth: 260,
       hideable: false,
@@ -294,27 +290,27 @@ export default function DetailedSalesListView() {
       renderCell: (params) => <RenderCellProduct params={params} />,
     },
     {
-      field: "itemquantity",
-      headerName: "Quantity",
+      field: 'itemquantity',
+      headerName: 'Quantity',
       filterable: false,
     },
 
     {
-      field: "unitprice",
-      headerName: "unit Price",
+      field: 'unitprice',
+      headerName: 'unit Price',
       width: 140,
       editable: true,
       renderCell: (params) => <RenderCellUnitPrice params={params} />,
     },
     {
-      field: "branch",
+      field: 'branch',
       width: 240,
-      headerName: "Branch",
+      headerName: 'Branch',
       filterable: false,
     },
     {
-      field: "invstatus",
-      headerName: "Status",
+      field: 'invstatus',
+      headerName: 'Status',
       filterable: false,
     },
 
@@ -409,22 +405,22 @@ export default function DetailedSalesListView() {
   return (
     <>
       <Container
-        maxWidth={settings.themeStretch ? false : "lg"}
+        maxWidth={settings.themeStretch ? false : 'lg'}
         sx={{
           flexGrow: 1,
-          display: "flex",
-          flexDirection: "column",
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
         <CustomBreadcrumbs
           heading="List"
           links={[
-            { name: "Dashboard", href: paths.dashboard.root },
+            { name: 'Dashboard', href: paths.dashboard.root },
             {
-              name: "Reports",
+              name: 'Reports',
               href: paths.dashboard.report.root,
             },
-            { name: "Detailed Sales Report" },
+            { name: 'Detailed Sales Report' },
           ]}
           action={
             <IconButton onClick={() => openFilters.onTrue()} size="large">
@@ -449,13 +445,7 @@ export default function DetailedSalesListView() {
           <Scrollbar>
             <Stack
               direction="row"
-              divider={
-                <Divider
-                  orientation="vertical"
-                  flexItem
-                  sx={{ borderStyle: "dashed" }}
-                />
-              }
+              divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
               sx={{ py: 2 }}
             >
               <DetailedSalesAnalytic
@@ -501,8 +491,8 @@ export default function DetailedSalesListView() {
           sx={{
             height: { xs: 800, md: 2 },
             flexGrow: { md: 1 },
-            display: { md: "flex" },
-            flexDirection: { md: "column" },
+            display: { md: 'flex' },
+            flexDirection: { md: 'column' },
           }}
         >
           <DataGrid
@@ -511,7 +501,7 @@ export default function DetailedSalesListView() {
             rows={dataFiltered}
             columns={columns}
             loading={isLoading}
-            getRowHeight={() => "auto"}
+            getRowHeight={() => 'auto'}
             pageSizeOptions={[5, 10, 25]}
             initialState={{
               pagination: {
@@ -522,9 +512,7 @@ export default function DetailedSalesListView() {
               setSelectedRowIds(newSelectionModel);
             }}
             columnVisibilityModel={columnVisibilityModel}
-            onColumnVisibilityModelChange={(newModel) =>
-              setColumnVisibilityModel(newModel)
-            }
+            onColumnVisibilityModelChange={(newModel) => setColumnVisibilityModel(newModel)}
             slots={{
               toolbar: () => (
                 <>
@@ -556,9 +544,7 @@ export default function DetailedSalesListView() {
                         <Button
                           size="small"
                           color="error"
-                          startIcon={
-                            <Iconify icon="solar:trash-bin-trash-bold" />
-                          }
+                          startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
                           onClick={confirmRows.onTrue}
                         >
                           Delete ({selectedRowIds.length})
@@ -632,15 +618,11 @@ function applyFilter({
   }
 
   if (status?.length) {
-    inputData = inputData.filter((invoice) =>
-      status.includes(invoice?.invstatus)
-    );
+    inputData = inputData.filter((invoice) => status.includes(invoice?.invstatus));
   }
 
   if (paymenttype?.length) {
-    inputData = inputData.filter((invoice) =>
-      status.includes(invoice?.paymentmode)
-    );
+    inputData = inputData.filter((invoice) => status.includes(invoice?.paymentmode));
   }
 
   return inputData;

@@ -1,11 +1,11 @@
-import { _userList } from "src/_mock/_user";
+import { _userList } from 'src/_data/_user';
 
-import { PaymentTypeEditView } from "src/sections/paymenttype/view";
+import { PaymentTypeEditView } from 'src/sections/paymenttype/view';
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: "Dashboard: PaymentType Edit",
+  title: 'Dashboard: PaymentType Edit',
 };
 
 interface Props {

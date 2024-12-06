@@ -1,18 +1,18 @@
-import Button from "@mui/material/Button";
-import MenuItem from "@mui/material/MenuItem";
-import TableRow from "@mui/material/TableRow";
-import Checkbox from "@mui/material/Checkbox";
-import TableCell from "@mui/material/TableCell";
-import IconButton from "@mui/material/IconButton";
-import ListItemText from "@mui/material/ListItemText";
+import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
+import TableRow from '@mui/material/TableRow';
+import Checkbox from '@mui/material/Checkbox';
+import TableCell from '@mui/material/TableCell';
+import IconButton from '@mui/material/IconButton';
+import ListItemText from '@mui/material/ListItemText';
 
-import { useBoolean } from "src/hooks/use-boolean";
+import { useBoolean } from 'src/hooks/use-boolean';
 
-import Iconify from "src/components/iconify";
-import { ConfirmDialog } from "src/components/custom-dialog";
-import CustomPopover, { usePopover } from "src/components/custom-popover";
+import { Iconify } from 'src/components/iconify';
+import { ConfirmDialog } from 'src/components/custom-dialog';
+import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-import { type CustomerCategory } from "src/types/customer";
+import { type CustomerCategory } from 'src/types/customer';
 
 // ----------------------------------------------------------------------
 
@@ -44,29 +44,24 @@ export default function CustomerCategoryTableRow({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
 
-        <TableCell sx={{ display: "flex", alignItems: "center" }}>
+        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
           <ListItemText
             primary={name}
             // secondary={ProductCategory.name}
-            primaryTypographyProps={{ typography: "body2" }}
+            primaryTypographyProps={{ typography: 'body2' }}
             secondaryTypographyProps={{
-              component: "span",
-              color: "text.disabled",
+              component: 'span',
+              color: 'text.disabled',
             }}
           />
         </TableCell>
 
-        <TableCell sx={{ whiteSpace: "nowrap" }}>{discount}%</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{discount}%</TableCell>
 
-        <TableCell sx={{ whiteSpace: "nowrap" }}>
-          {default_category ? "Yes" : "No"}
-        </TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{default_category ? 'Yes' : 'No'}</TableCell>
 
-        <TableCell align="right" sx={{ px: 1, whiteSpace: "nowrap" }}>
-          <IconButton
-            color={popover.open ? "inherit" : "default"}
-            onClick={popover.onOpen}
-          >
+        <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+          <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
         </TableCell>
@@ -83,7 +78,7 @@ export default function CustomerCategoryTableRow({
             confirm.onTrue();
             popover.onClose();
           }}
-          sx={{ color: "error.main" }}
+          sx={{ color: 'error.main' }}
         >
           <Iconify icon="solar:trash-bin-trash-bold" />
           Delete

@@ -1,29 +1,26 @@
-import * as Yup from "yup";
-import { mutate } from "swr";
-import { useMemo } from "react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
+import { mutate } from 'swr';
+import { z as zod } from 'zod';
+import { useMemo } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import Stack from "@mui/material/Stack";
-import Grid from "@mui/material/Unstable_Grid2";
-import LoadingButton from "@mui/lab/LoadingButton";
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import Stack from '@mui/material/Stack';
+import Grid from '@mui/material/Unstable_Grid2';
+import LoadingButton from '@mui/lab/LoadingButton';
 
-import { paths } from "src/routes/paths";
-import { useRouter } from "src/routes/hooks";
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 
-import { useTranslate } from "src/locales";
+import { useTranslate } from 'src/locales';
 
-import { useSnackbar } from "src/components/snackbar";
-import FormProvider, {
-  RHFSelect,
-  RHFTextField,
-} from "src/components/hook-form";
+import { toast } from 'src/components/snackbar';
+import { Form, RHFSelect, RHFTextField } from 'src/components/hook-form';
 
-import { type BranchItem } from "src/types/branch";
-import { type LocationItem } from "src/types/location";
-import { type OrganizationItem } from "src/types/organization";
+import { type BranchItem } from 'src/types/branch';
+import { type LocationItem } from 'src/types/location';
+import { type OrganizationItem } from 'src/types/organization';
 
 // ----------------------------------------------------------------------
 
@@ -33,45 +30,39 @@ interface Props {
   location: LocationItem[];
 }
 
-export default function BranchNewEditForm({
-  currentBranch,
-  organization,
-  location,
-}: Props) {
+export type NewBranchSchemaType = zod.infer<typeof NewBranchSchema>;
+const NewBranchSchema = zod.object({
+  id: zod.string().optional(), // Optional field
+  name: zod.string().min(1, { message: 'salonapp.branch.name_fvalid_error' }), // Required with error message
+  reg_name: zod.string().min(1, { message: 'salonapp.branch.reg_fvalid_error' }), // Required with error message
+  address: zod.string().optional(), // Optional field
+  telephone: zod.string().optional(), // Optional field
+  taxid: zod.string().optional(), // Optional field
+  org_id: zod.number().min(1, { message: 'salonapp.branch.orgid_fvalid_error' }), // Required with error message
+  loc_id: zod.number().min(1, { message: 'salonapp.branch.locid_fvalid_error' }), // Required with error message
+});
+export default function BranchNewEditForm({ currentBranch, organization, location }: Props) {
   const router = useRouter();
-
-  const { enqueueSnackbar } = useSnackbar();
 
   const { t } = useTranslate();
 
-  const NewProductSchema = Yup.object().shape({
-    id: Yup.string(),
-    name: Yup.string().required(t("salonapp.branch.name_fvalid_error")),
-    reg_name: Yup.string().required(t("salonapp.branch.reg_fvalid_error")),
-    address: Yup.string(),
-    telephone: Yup.string(),
-    taxid: Yup.string(),
-    org_id: Yup.number().required(t("salonapp.branch.orgid_fvalid_error")),
-    loc_id: Yup.number().required(t("salonapp.branch.locid_fvalid_error")),
-  });
-
   const defaultValues = useMemo(
     () => ({
-      id: currentBranch?.branch_id || "0",
-      name: currentBranch?.name || "",
-      reg_name: currentBranch?.reg_name || "",
-      address: currentBranch?.address || "",
-      telephone: currentBranch?.telephone || "",
-      taxid: currentBranch?.taxid || "",
+      id: currentBranch?.branch_id || '0',
+      name: currentBranch?.name || '',
+      reg_name: currentBranch?.reg_name || '',
+      address: currentBranch?.address || '',
+      telephone: currentBranch?.telephone || '',
+      taxid: currentBranch?.taxid || '',
       org_id: currentBranch?.org_id || 0,
       loc_id: currentBranch?.loc_id || 0,
     }),
     [currentBranch]
   );
 
-  console.log(defaultValues);
-  const methods = useForm({
-    resolver: yupResolver(NewProductSchema),
+  const methods = useForm<NewBranchSchemaType>({
+    mode: 'all',
+    resolver: zodResolver(NewBranchSchema),
     defaultValues,
   });
 
@@ -96,9 +87,9 @@ export default function BranchNewEditForm({
     try {
       // Post the data
       const response = await fetch(`/api/salonapp/branches`, {
-        method: currentBranch ? "PUT" : "POST",
+        method: currentBranch ? 'PUT' : 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(BranchData),
       });
@@ -106,34 +97,28 @@ export default function BranchNewEditForm({
       const responseData = await response.json();
 
       if (responseData?.status > 401) {
-        enqueueSnackbar(
+        toast.success(
           currentBranch
-            ? `${t("general.update_failed")}:${responseData.message}`
-            : `${t("general.create_failed")}:${responseData.message}`,
-          { variant: "error" }
+            ? `${t('general.update_failed')}:${responseData.message}`
+            : `${t('general.create_failed')}:${responseData.message}`
         );
       } else {
         // Keep 500ms delay
         await new Promise((resolve) => setTimeout(resolve, 500));
         reset();
-        enqueueSnackbar(
-          currentBranch
-            ? t("general.update_success")
-            : t("general.create_success"),
-          { variant: "success" }
-        );
+        toast.success(currentBranch ? t('general.update_success') : t('general.create_success'));
 
         mutate(`/api/salonapp/branches/${currentBranch?.branch_id}`);
         // Service listing again
         router.push(paths.dashboard.branches.list);
       }
     } catch (error) {
-      enqueueSnackbar(error, { variant: "error" });
+      toast.error(error);
     }
   });
 
   return (
-    <FormProvider methods={methods} onSubmit={onSubmit}>
+    <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
         <Grid xs={12} md={12}>
           <Card sx={{ p: 3 }}>
@@ -142,42 +127,42 @@ export default function BranchNewEditForm({
               columnGap={2}
               display="grid"
               gridTemplateColumns={{
-                xs: "repeat(1, 1fr)",
-                sm: "repeat(2, 1fr)",
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
               }}
             >
               <RHFTextField
                 name="name"
-                label={t("salonapp.branch.brname")}
-                helperText={t("salonapp.branch.bn_helper")}
+                label={t('salonapp.branch.brname')}
+                helperText={t('salonapp.branch.bn_helper')}
               />
               <RHFTextField
                 name="reg_name"
-                label={t("salonapp.branch.regname")}
-                helperText={t("salonapp.branch.rn_helper")}
+                label={t('salonapp.branch.regname')}
+                helperText={t('salonapp.branch.rn_helper')}
               />
               <RHFTextField
                 name="address"
-                label={t("salonapp.branch.address")}
-                helperText={t("salonapp.branch.add_helper")}
+                label={t('salonapp.branch.address')}
+                helperText={t('salonapp.branch.add_helper')}
               />
               <RHFTextField
                 name="telephone"
-                label={t("salonapp.branch.telephone")}
-                helperText={t("salonapp.branch.tp_helper")}
+                label={t('salonapp.branch.telephone')}
+                helperText={t('salonapp.branch.tp_helper')}
               />
               <RHFTextField
                 name="taxid"
-                label={t("salonapp.branch.taxid")}
-                helperText={t("salonapp.branch.ti_helper")}
+                label={t('salonapp.branch.taxid')}
+                helperText={t('salonapp.branch.ti_helper')}
               />
               <RHFSelect
                 native
                 name="org_id"
-                label={t("salonapp.branch.orgname")}
+                label={t('salonapp.branch.orgname')}
                 InputLabelProps={{ shrink: true }}
               >
-                <option key={0}>{t("general.dropdown_select")}</option>
+                <option key={0}>{t('general.dropdown_select')}</option>
                 {organization.map((item) => (
                   <option key={item.org_id} value={item.org_id}>
                     {item.name}
@@ -188,10 +173,10 @@ export default function BranchNewEditForm({
               <RHFSelect
                 native
                 name="loc_id"
-                label={t("salonapp.branch.locname")}
+                label={t('salonapp.branch.locname')}
                 InputLabelProps={{ shrink: true }}
               >
-                <option key={0}>{t("general.dropdown_select")}</option>
+                <option key={0}>{t('general.dropdown_select')}</option>
                 {location.map((item) => (
                   <option key={item.loc_id} value={item.loc_id}>
                     {item.name}
@@ -201,19 +186,15 @@ export default function BranchNewEditForm({
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton
-                type="submit"
-                variant="contained"
-                loading={isSubmitting}
-              >
+              <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
                 {!currentBranch
-                  ? t("salonapp.branch.create_branch")
-                  : t("salonapp.branch.save_branch")}
+                  ? t('salonapp.branch.create_branch')
+                  : t('salonapp.branch.save_branch')}
               </LoadingButton>
             </Stack>
           </Card>
         </Grid>
       </Grid>
-    </FormProvider>
+    </Form>
   );
 }

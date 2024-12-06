@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import useSWR from "swr";
-import React from "react";
+import useSWR from 'swr';
+import React from 'react';
 
-import Container from "@mui/material/Container";
+import { DashboardContent } from 'src/layouts/dashboard';
 
-import { paths } from "src/routes/paths";
+import { paths } from 'src/routes/paths';
 
-import { fetcher } from "src/utils/axios";
+import { fetcher } from 'src/utils/axios';
 
-import { useTranslate } from "src/locales";
+import { useTranslate } from 'src/locales';
 
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+import { useSettingsContext } from 'src/components/settings';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import AppointmentNewEditForm from "../appointment-new-edit-form";
+import AppointmentNewEditForm from '../appointment-new-edit-form';
 
 // ----------------------------------------------------------------------
 
@@ -32,22 +32,22 @@ export default function OrganizationEditView({ id }: Props) {
     data: service,
     isLoading: isserviceLoading,
     error: errorS,
-  } = useSWR("/api/salonapp/services", fetcher);
+  } = useSWR('/api/salonapp/services', fetcher);
   const {
     data: branches,
     isLoading: isbranchesLoading,
     error: errorB,
-  } = useSWR("/api/salonapp/branches", fetcher);
+  } = useSWR('/api/salonapp/branches', fetcher);
   const {
     data: employees,
     isLoading: isEmployeeLoading,
     error: errorE,
-  } = useSWR("/api/salonapp/employee", fetcher);
+  } = useSWR('/api/salonapp/employee', fetcher);
   const {
     data: appsettings,
     isLoading: isAppSettingsLoading,
     error: errorI,
-  } = useSWR("/api/salonapp/settings", fetcher);
+  } = useSWR('/api/salonapp/settings', fetcher);
 
   const {
     data: currentappointment,
@@ -63,20 +63,19 @@ export default function OrganizationEditView({ id }: Props) {
     iscurrentappLoading
   )
     return <div>Loading...</div>;
-  if (errorS || errorB || errorE || errorI || errorC)
-    return <div>Error Loading...</div>;
+  if (errorS || errorB || errorE || errorI || errorC) return <div>Error Loading...</div>;
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : "lg"}>
+    <DashboardContent>
       <CustomBreadcrumbs
         heading="Edit"
         links={[
           {
-            name: t("salonapp.dashboard"),
+            name: t('salonapp.dashboard'),
             href: paths.dashboard.root,
           },
           {
-            name: t("salonapp.appointment.name"),
+            name: t('salonapp.appointment.name'),
             href: paths.dashboard.appointments.root,
           },
           { name: currentappointment?.data[0].id },
@@ -92,6 +91,6 @@ export default function OrganizationEditView({ id }: Props) {
         branches={branches.data}
         currentAppointment={currentappointment.data[0]}
       />
-    </Container>
+    </DashboardContent>
   );
 }

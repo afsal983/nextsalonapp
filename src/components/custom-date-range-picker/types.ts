@@ -1,25 +1,27 @@
+import type { IDatePickerControl } from 'src/types/common';
+
 // ----------------------------------------------------------------------
 
-export interface DateRangePickerProps {
-  startDate: Date | null
-  endDate: Date | null
-  onChangeStartDate: (newValue: Date | null) => void
-  onChangeEndDate: (newValue: Date | null) => void
+export type UseDateRangePickerReturn = {
+  startDate: IDatePickerControl;
+  endDate: IDatePickerControl;
+  onChangeStartDate: (newValue: IDatePickerControl) => void;
+  onChangeEndDate: (newValue: IDatePickerControl) => void;
   //
-  open: boolean
-  onOpen?: VoidFunction
-  onClose: VoidFunction
-  onReset?: VoidFunction
+  open: boolean;
+  onOpen?: () => void;
+  onClose: () => void;
+  onReset?: () => void;
   //
-  selected?: boolean
-  error?: boolean
+  selected?: boolean;
+  error?: boolean;
   //
-  label?: string
-  shortLabel?: string
+  label?: string;
+  shortLabel?: string;
   //
-  title?: string
-  variant?: 'calendar' | 'input'
+  title?: string;
+  variant?: 'calendar' | 'input';
   //
-  setStartDate?: React.Dispatch<React.SetStateAction<Date | null>>
-  setEndDate?: React.Dispatch<React.SetStateAction<Date | null>>
-}
+  setStartDate?: React.Dispatch<React.SetStateAction<IDatePickerControl>>;
+  setEndDate?: React.Dispatch<React.SetStateAction<IDatePickerControl>>;
+};

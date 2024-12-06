@@ -1,8 +1,9 @@
-import { Customer } from "./customer";
-import { BranchItem } from "./branch";
-import { ServiceItem } from "./service";
-import { EmployeeItem } from "./employee";
-import { AppointmentItem } from "./appointment";
+import type { IDateValue, IAddressItem, IDatePickerControl } from './common';
+import { Customer } from './customer';
+import { BranchItem } from './branch';
+import { ServiceItem } from './service';
+import { EmployeeItem } from './employee';
+import { AppointmentItem } from './appointment';
 // ----------------------------------------------------------------------
 
 export type IInvoiceTableFilterValue = string | string[] | Date | null;
@@ -12,8 +13,8 @@ export interface IInvoiceTableFilters {
   status: string;
   service: string[];
   filtervalue: 0;
-  startDate: Date | null;
-  endDate: Date | null;
+  endDate: IDatePickerControl;
+  startDate: IDatePickerControl;
 }
 
 // ----------------------------------------------------------------------

@@ -1,22 +1,22 @@
-'use client'
+'use client';
 
-import { m } from 'framer-motion'
+import { m } from 'framer-motion';
 
-import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
-import { RouterLink } from 'src/routes/components'
+import { RouterLink } from 'src/routes/components';
 
-import CompactLayout from 'src/layouts/compact'
-import { SeverErrorIllustration } from 'src/assets/illustrations'
+import { SimpleLayout } from 'src/layouts/simple';
+import { SeverErrorIllustration } from 'src/assets/illustrations';
 
-import { varBounce, MotionContainer } from 'src/components/animate'
+import { varBounce, MotionContainer } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 
-export default function Page500 () {
+export default function Page500() {
   return (
-    <CompactLayout>
+    <SimpleLayout content={{ compact: true }}>
       <MotionContainer>
         <m.div variants={varBounce().in}>
           <Typography variant="h3" sx={{ mb: 2 }}>
@@ -34,15 +34,10 @@ export default function Page500 () {
           <SeverErrorIllustration sx={{ height: 260, my: { xs: 5, sm: 10 } }} />
         </m.div>
 
-        <Button
-          component={RouterLink}
-          href="/"
-          size="large"
-          variant="contained"
-        >
+        <Button component={RouterLink} href="/" size="large" variant="contained">
           Go to Home
         </Button>
       </MotionContainer>
-    </CompactLayout>
-  )
+    </SimpleLayout>
+  );
 }

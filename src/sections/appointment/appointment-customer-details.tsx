@@ -1,49 +1,42 @@
-import sum from "lodash/sum";
-import { useEffect, useCallback } from "react";
-import { useFieldArray, useFormContext, Controller } from "react-hook-form";
+import { useCallback } from 'react';
+import { useFormContext } from 'react-hook-form';
 
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import { Iconify } from 'src/components/iconify';
+
+import Typography from '@mui/material/Typography';
+
 import {
-  Divider,
   Card,
-  CardHeader,
-  CardContent,
-  IconButton,
   Avatar,
-  CardMedia,
+  Divider,
   Skeleton,
-} from "@mui/material";
+  CardHeader,
+  IconButton,
+  CardContent,
+} from '@mui/material';
 
-import CallIcon from "@mui/icons-material/Call";
-import EmailIcon from "@mui/icons-material/Email";
-import HomeIcon from "@mui/icons-material/Home";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import Typography from "@mui/material/Typography";
-import { useResponsive } from "src/hooks/use-responsive";
-import { isAfter } from "src/utils/format-time";
+import { useResponsive } from 'src/hooks/use-responsive';
 
-import { BranchItem } from "src/types/branch";
-import { ServiceItem } from "src/types/service";
-import { Customer } from "src/types/customer";
+import { LiveCustomerSearch } from 'src/components/livecustomersearch';
 
-import { LiveCustomerSearch } from "src/components/livecustomersearch";
+import { Customer } from 'src/types/customer';
 // ----------------------------------------------------------------------
 
 export default function AppointmentCustomerDetails() {
   const { control, setValue, watch, getValues } = useFormContext();
 
-  const mdUp = useResponsive("up", "md");
+  const mdUp = useResponsive('up', 'md');
 
-  const Customerdata = getValues("Customer");
+  const Customerdata = getValues('Customer');
 
   // handle customer
   const handleSelectCustomer = useCallback(
     (value: Customer | null) => {
       // onFilters("filtervalue", typeof value === undefined ? "" : value);
-      setValue("customer_id", value?.id);
-      setValue("Customer", value);
+      setValue('customer_id', value?.id);
+      setValue('Customer', value);
     },
     [setValue]
   );
@@ -51,7 +44,7 @@ export default function AppointmentCustomerDetails() {
   return (
     <Box sx={{ p: 0 }}>
       <Stack alignItems="flex-start" spacing={2.5}>
-        <Typography variant="h6" sx={{ color: "text.disabled" }} gutterBottom>
+        <Typography variant="h6" sx={{ color: 'text.disabled' }} gutterBottom>
           Customer:
         </Typography>
         <LiveCustomerSearch
@@ -68,13 +61,13 @@ export default function AppointmentCustomerDetails() {
           <Card variant="outlined" sx={{ width: 1, minHeight: 300 }}>
             <CardHeader
               avatar={
-                <Avatar sx={{ bgcolor: "primary" }} aria-label="recipe">
+                <Avatar sx={{ bgcolor: 'primary' }} aria-label="recipe">
                   {Customerdata?.firstname?.charAt(0)}
                 </Avatar>
               }
               action={
                 <IconButton aria-label="settings">
-                  <MoreVertIcon />
+                  <Iconify icon="material-symbols:more-vert" />
                 </IconButton>
               }
               title={`${Customerdata?.firstname} ${Customerdata?.lastname}`}
@@ -84,7 +77,7 @@ export default function AppointmentCustomerDetails() {
               <Stack divider={<Divider orientation="horizontal" flexItem />}>
                 <Stack direction="row" spacing={2} alignItems="center">
                   <IconButton aria-label="settings">
-                    <CallIcon />
+                    <Iconify icon="material-symbols:call" />
                   </IconButton>
                   <Typography variant="body2" color="text.secondary">
                     {Customerdata?.telephone}
@@ -92,7 +85,7 @@ export default function AppointmentCustomerDetails() {
                 </Stack>
                 <Stack direction="row" spacing={2} alignItems="center">
                   <IconButton aria-label="settings">
-                    <EmailIcon />
+                    <Iconify icon="ic:outline-email" />
                   </IconButton>
                   <Typography variant="body2" color="text.secondary">
                     {Customerdata?.email}
@@ -101,7 +94,7 @@ export default function AppointmentCustomerDetails() {
 
                 <Stack direction="row" spacing={2} alignItems="center">
                   <IconButton aria-label="settings">
-                    <HomeIcon />
+                    <Iconify icon="tabler:home" />
                   </IconButton>
                   <Typography variant="body2" color="text.secondary">
                     {Customerdata?.address}

@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import Container from "@mui/material/Container";
+import Container from '@mui/material/Container';
 
-import { paths } from "src/routes/paths";
+import { paths } from 'src/routes/paths';
 
-import { useTranslate } from "src/locales";
+import { useTranslate } from 'src/locales';
 
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+import { useSettingsContext } from 'src/components/settings';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import ServiceCategoryNewEditForm from "../servicecategory-new-edit-form";
+import ServiceCategoryNewEditForm from '../servicecategory-new-edit-form';
 
 // ----------------------------------------------------------------------
 
@@ -19,24 +19,20 @@ export default function ServiceCategoryCreateView() {
   const settings = useSettingsContext();
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : "lg"}>
+    <DashboardContent>
       <CustomBreadcrumbs
-        heading={t(
-          "salonapp.service.servicecategory.create_a_new_servicecategory"
-        )}
+        heading={t('salonapp.service.servicecategory.create_a_new_servicecategory')}
         links={[
           {
-            name: t("salonapp.dashboard"),
+            name: t('salonapp.dashboard'),
             href: paths.dashboard.root,
           },
           {
-            name: t("salonapp.service_category"),
+            name: t('salonapp.service_category'),
             href: paths.dashboard.services.servicecategory.root,
           },
           {
-            name: t(
-              "salonapp.service.servicecategory.create_a_new_servicecategory"
-            ),
+            name: t('salonapp.service.servicecategory.create_a_new_servicecategory'),
           },
         ]}
         sx={{

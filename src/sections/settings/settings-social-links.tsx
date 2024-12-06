@@ -1,15 +1,15 @@
-import { useForm } from "react-hook-form";
+import { useForm } from 'react-hook-form';
 
-import Card from "@mui/material/Card";
-import Stack from "@mui/material/Stack";
-import LoadingButton from "@mui/lab/LoadingButton";
-import InputAdornment from "@mui/material/InputAdornment";
+import Card from '@mui/material/Card';
+import Stack from '@mui/material/Stack';
+import LoadingButton from '@mui/lab/LoadingButton';
+import InputAdornment from '@mui/material/InputAdornment';
 
-import Iconify from "src/components/iconify";
-import { useSnackbar } from "src/components/snackbar";
-import FormProvider, { RHFTextField } from "src/components/hook-form";
+import { toast } from 'src/components/snackbar';
+import { Iconify } from 'src/components/iconify';
+import { Form, RHFTextField } from 'src/components/hook-form';
 
-import { ISocialLink } from "src/types/settings";
+import { ISocialLink } from 'src/types/settings';
 
 // ----------------------------------------------------------------------
 
@@ -18,13 +18,11 @@ type Props = {
 };
 
 export default function SettingsSocialLinks({ socialLinks }: Props) {
-  const { enqueueSnackbar } = useSnackbar();
-
   const defaultValues = {
-    facebook: "",
-    instagram: "",
-    linkedin: "",
-    twitter: "",
+    facebook: '',
+    instagram: '',
+    linkedin: '',
+    twitter: '',
   };
 
   const methods = useForm({
@@ -39,15 +37,15 @@ export default function SettingsSocialLinks({ socialLinks }: Props) {
   const onSubmit = handleSubmit(async (data) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
-      enqueueSnackbar("Update success!");
-      console.info("DATA", data);
+      toast.success('Update success!');
+      console.info('DATA', data);
     } catch (error) {
       console.error(error);
     }
   });
 
   return (
-    <FormProvider methods={methods} onSubmit={onSubmit}>
+    <Form methods={methods} onSubmit={onSubmit}>
       <Stack component={Card} spacing={3} sx={{ p: 3 }}>
         {Object.keys(socialLinks).map((link) => (
           <RHFTextField
@@ -59,18 +57,18 @@ export default function SettingsSocialLinks({ socialLinks }: Props) {
                   <Iconify
                     width={24}
                     icon={
-                      (link === "facebook" && "eva:facebook-fill") ||
-                      (link === "instagram" && "ant-design:instagram-filled") ||
-                      (link === "linkedin" && "eva:linkedin-fill") ||
-                      (link === "twitter" && "eva:twitter-fill") ||
-                      ""
+                      (link === 'facebook' && 'eva:facebook-fill') ||
+                      (link === 'instagram' && 'ant-design:instagram-filled') ||
+                      (link === 'linkedin' && 'eva:linkedin-fill') ||
+                      (link === 'twitter' && 'eva:twitter-fill') ||
+                      ''
                     }
                     color={
-                      (link === "facebook" && "#1877F2") ||
-                      (link === "instagram" && "#DF3E30") ||
-                      (link === "linkedin" && "#006097") ||
-                      (link === "twitter" && "#1C9CEA") ||
-                      ""
+                      (link === 'facebook' && '#1877F2') ||
+                      (link === 'instagram' && '#DF3E30') ||
+                      (link === 'linkedin' && '#006097') ||
+                      (link === 'twitter' && '#1C9CEA') ||
+                      ''
                     }
                   />
                 </InputAdornment>
@@ -79,15 +77,10 @@ export default function SettingsSocialLinks({ socialLinks }: Props) {
           />
         ))}
 
-        <LoadingButton
-          type="submit"
-          variant="contained"
-          loading={isSubmitting}
-          sx={{ ml: "auto" }}
-        >
+        <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{ ml: 'auto' }}>
           Save Changes
         </LoadingButton>
       </Stack>
-    </FormProvider>
+    </Form>
   );
 }

@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import useSWR from "swr";
+import useSWR from 'swr';
 
-import Container from "@mui/material/Container";
+import Container from '@mui/material/Container';
 
-import { paths } from "src/routes/paths";
+import { paths } from 'src/routes/paths';
+import { DashboardContent } from 'src/layouts/dashboard';
+import { fetcher } from 'src/utils/axios';
 
-import { fetcher } from "src/utils/axios";
+import { useTranslate } from 'src/locales';
 
-import { useTranslate } from "src/locales";
+import { useSettingsContext } from 'src/components/settings';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
-
-import LocationNewEditForm from "../location-new-edit-form";
+import LocationNewEditForm from '../location-new-edit-form';
 
 // ----------------------------------------------------------------------
 
@@ -24,7 +24,7 @@ export default function LocationCreateView() {
 
   // Pre data fetching via API calls
   const { data: location, isLoading: islocationLoading } = useSWR(
-    "/api/salonapp/location",
+    '/api/salonapp/location',
     fetcher
   );
 
@@ -33,19 +33,19 @@ export default function LocationCreateView() {
   if (!location) return <div>Loading...</div>;
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : "lg"}>
+    <DashboardContent>
       <CustomBreadcrumbs
-        heading={t("salonapp.location.create_location")}
+        heading={t('salonapp.location.create_location')}
         links={[
           {
-            name: t("salonapp.dashboard"),
+            name: t('salonapp.dashboard'),
             href: paths.dashboard.root,
           },
           {
-            name: t("salonapp.location.locations"),
+            name: t('salonapp.location.locations'),
             href: paths.dashboard.branches.root,
           },
-          { name: t("salonapp.location.create_location") },
+          { name: t('salonapp.location.create_location') },
         ]}
         sx={{
           mb: { xs: 3, md: 5 },
@@ -53,6 +53,6 @@ export default function LocationCreateView() {
       />
 
       <LocationNewEditForm />
-    </Container>
+    </DashboardContent>
   );
 }

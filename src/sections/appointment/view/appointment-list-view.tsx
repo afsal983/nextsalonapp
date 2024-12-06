@@ -1,34 +1,35 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from 'react';
 
-import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
-import Card from "@mui/material/Card";
-import Table from "@mui/material/Table";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import { alpha } from "@mui/material/styles";
-import Container from "@mui/material/Container";
-import TableBody from "@mui/material/TableBody";
-import IconButton from "@mui/material/IconButton";
-import TableContainer from "@mui/material/TableContainer";
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import Card from '@mui/material/Card';
+import Table from '@mui/material/Table';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import { alpha } from '@mui/material/styles';
+import { DashboardContent } from 'src/layouts/dashboard';
+import TableBody from '@mui/material/TableBody';
+import IconButton from '@mui/material/IconButton';
+import TableContainer from '@mui/material/TableContainer';
 
-import { paths } from "src/routes/paths";
-import { useRouter } from "src/routes/hooks";
-import { RouterLink } from "src/routes/components";
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+import { RouterLink } from 'src/routes/components';
 
-import { useBoolean } from "src/hooks/use-boolean";
+import { useBoolean } from 'src/hooks/use-boolean';
+import { useSetState } from 'src/hooks/use-set-state';
 
-import { isAfter } from "src/utils/format-time";
+import { fIsAfter } from 'src/utils/format-time';
 
-import Label from "src/components/label";
-import Iconify from "src/components/iconify";
-import Scrollbar from "src/components/scrollbar";
-import { useSnackbar } from "src/components/snackbar";
-import { ConfirmDialog } from "src/components/custom-dialog";
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+import { Label } from 'src/components/label';
+import { toast } from 'src/components/snackbar';
+import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
+import { ConfirmDialog } from 'src/components/custom-dialog';
+import { useSettingsContext } from 'src/components/settings';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import {
   useTable,
   emptyRows,
@@ -38,36 +39,33 @@ import {
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
-} from "src/components/table";
+} from 'src/components/table';
 
-import {
-  AppointmentItem,
-  AppointmentTableFilters,
-  AppointmentTableFilterValue,
-} from "src/types/appointment";
+import { AppointmentItem, AppointmentTableFilters } from 'src/types/appointment';
 
-import AppointmentTableRow from "../appointment-table-row";
-import AppointmentTableToolbar from "../appointment-table-toolbar";
-import AppointmentTableFiltersResult from "../appointment-table-filters-result";
+import dayjs from 'dayjs';
+import AppointmentTableRow from '../appointment-table-row';
+import AppointmentTableToolbar from '../appointment-table-toolbar';
+import { AppointmentTableFiltersResult } from '../appointment-table-filters-result';
 
 // ----------------------------------------------------------------------
 
 const STATUS_OPTIONS = [
-  { value: "all", label: "All" },
-  { value: "Invoiced", label: "Invoiced" },
-  { value: "Pendinginvoice", label: "Pendinginvoice" },
+  { value: 'all', label: 'All' },
+  { value: 'Invoiced', label: 'Invoiced' },
+  { value: 'Pendinginvoice', label: 'Pendinginvoice' },
 ];
 
 const TABLE_HEAD = [
-  { id: "AppointmentNumber", label: "ID", width: 116 },
-  { id: "customer", label: "Customer" },
-  { id: "start", label: "Start Date", width: 140 },
-  { id: "end", label: "End Date", width: 140 },
-  { id: "products", label: "Products", width: 120, align: "center" },
-  { id: "employee", label: "Employee", width: 140 },
-  { id: "Branch", label: "Branch", width: 110 },
-  { id: "status", label: "Status", width: 110 },
-  { id: "", width: 88 },
+  { id: 'AppointmentNumber', label: 'ID', width: 116 },
+  { id: 'customer', label: 'Customer' },
+  { id: 'start', label: 'Start Date', width: 140 },
+  { id: 'end', label: 'End Date', width: 140 },
+  { id: 'products', label: 'Products', width: 120, align: 'center' },
+  { id: 'employee', label: 'Employee', width: 140 },
+  { id: 'Branch', label: 'Branch', width: 110 },
+  { id: 'status', label: 'Status', width: 110 },
+  { id: '', width: 88 },
 ];
 
 const start = new Date();
@@ -76,19 +74,10 @@ start.setDate(start.getDate() - 60);
 const end = new Date();
 end.setDate(end.getDate() + 7);
 
-const defaultFilters: AppointmentTableFilters = {
-  name: "",
-  status: "all",
-  startDate: start,
-  endDate: end,
-};
-
 // ----------------------------------------------------------------------
 
 export default function AppointmentListView() {
-  const { enqueueSnackbar } = useSnackbar();
-
-  const table = useTable({ defaultOrderBy: "orderNumber" });
+  const table = useTable({ defaultOrderBy: 'orderNumber' });
 
   const settings = useSettingsContext();
 
@@ -98,14 +87,27 @@ export default function AppointmentListView() {
 
   const [tableData, setTableData] = useState<AppointmentItem[]>([]);
 
+  const defaultstart = new Date();
+  defaultstart.setDate(defaultstart.getDate() - 60);
+
+  const defaultend = new Date();
+  defaultend.setDate(defaultend.getDate() + 7);
+
+  const defaultFilters = useSetState<AppointmentTableFilters>({
+    name: '',
+    status: 'all',
+    startDate: dayjs(start),
+    endDate: dayjs(end),
+  });
+
   const [filters, setFilters] = useState(defaultFilters);
 
-  const dateError = isAfter(filters.startDate, filters.endDate);
+  const dateError = fIsAfter(filters.state.startDate, filters.state.endDate);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
-    filters,
+    filters: filters.state,
     dateError,
   });
 
@@ -117,46 +119,29 @@ export default function AppointmentListView() {
   const denseHeight = table.dense ? 56 : 56 + 20;
 
   const canReset =
-    !!filters.name ||
-    filters.status !== "all" ||
-    (!!filters.startDate && !!filters.endDate);
+    !!filters.state.name ||
+    filters.state.status !== 'all' ||
+    (!!filters.state.startDate && !!filters.state.endDate);
 
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
-
-  const handleFilters = useCallback(
-    (name: string, value: AppointmentTableFilterValue) => {
-      table.onResetPage();
-      setFilters((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    },
-    [table]
-  );
-
-  const handleResetFilters = useCallback(() => {
-    setFilters(defaultFilters);
-  }, []);
 
   const handleDeleteRow = useCallback(
     (id: string) => {
       const deleteRow = tableData.filter((row) => row.id !== id);
 
-      enqueueSnackbar("Delete success!");
+      toast.success('Delete success!');
 
       setTableData(deleteRow);
 
       table.onUpdatePageDeleteRow(dataInPage.length);
     },
-    [dataInPage.length, enqueueSnackbar, table, tableData]
+    [dataInPage.length, table, tableData]
   );
 
   const handleDeleteRows = useCallback(() => {
-    const deleteRows = tableData.filter(
-      (row) => !table.selected.includes(row.id)
-    );
+    const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
 
-    enqueueSnackbar("Delete success!");
+    toast.success('Delete success!');
 
     setTableData(deleteRows);
 
@@ -164,13 +149,7 @@ export default function AppointmentListView() {
       totalRowsInPage: dataInPage.length,
       totalRowsFiltered: dataFiltered.length,
     });
-  }, [
-    dataFiltered.length,
-    dataInPage.length,
-    enqueueSnackbar,
-    table,
-    tableData,
-  ]);
+  }, [dataFiltered.length, dataInPage.length, table, tableData]);
 
   const handleViewRow = useCallback(
     (id: string) => {
@@ -195,36 +174,37 @@ export default function AppointmentListView() {
 
   const handleFilterStatus = useCallback(
     (event: React.SyntheticEvent, newValue: string) => {
-      handleFilters("status", newValue);
+      table.onResetPage();
+      filters.setState({ status: newValue });
     },
-    [handleFilters]
+    [filters, table]
   );
 
   useEffect(() => {
-    if (filters.startDate && filters.endDate) {
-      const datefilter = `startdate=${filters.startDate.toISOString()}&enddate=${filters.endDate.toISOString()}`;
+    if (filters.state.startDate && filters.state.endDate) {
+      const datefilter = `startdate=${filters.state.startDate.toISOString()}&enddate=${filters.state.endDate.toISOString()}`;
       fetch(`/api/salonapp/appointments?${datefilter}`)
         .then((response) => response.json())
         // 4. Setting *dogImage* to the image url that we received from the response above
         .then((data) => setTableData(data.data));
     }
-  }, [filters.startDate, filters.endDate]);
+  }, [filters.state.startDate, filters.state.endDate]);
 
   return (
     <>
-      <Container maxWidth={settings.themeStretch ? false : "lg"}>
+      <DashboardContent>
         <CustomBreadcrumbs
           heading="List"
           links={[
             {
-              name: "Dashboard",
+              name: 'Dashboard',
               href: paths.dashboard.root,
             },
             {
-              name: "Appointment",
+              name: 'Appointment',
               href: paths.dashboard.appointments.root,
             },
-            { name: "List" },
+            { name: 'List' },
           ]}
           action={
             <Button
@@ -243,12 +223,11 @@ export default function AppointmentListView() {
 
         <Card>
           <Tabs
-            value={filters.status}
+            value={filters.state.status}
             onChange={handleFilterStatus}
             sx={{
               px: 2.5,
-              boxShadow: (theme) =>
-                `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
+              boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
             }}
           >
             {STATUS_OPTIONS.map((tab) => (
@@ -260,22 +239,19 @@ export default function AppointmentListView() {
                 icon={
                   <Label
                     variant={
-                      ((tab.value === "all" || tab.value === filters.status) &&
-                        "filled") ||
-                      "soft"
+                      ((tab.value === 'all' || tab.value === filters.state.status) && 'filled') ||
+                      'soft'
                     }
                     color={
-                      (tab.value === "Invoiced" && "success") ||
-                      (tab.value === "Pendinginvoice" && "warning") ||
-                      "default"
+                      (tab.value === 'Invoiced' && 'success') ||
+                      (tab.value === 'Pendinginvoice' && 'warning') ||
+                      'default'
                     }
                   >
-                    {["Invoiced", "Pendinginvoice"].includes(tab.value)
+                    {['Invoiced', 'Pendinginvoice'].includes(tab.value)
                       ? tableData.filter(
                           (appointment) =>
-                            (appointment.is_invoiced
-                              ? "Invoiced"
-                              : "Pendinginvoice") === tab.value
+                            (appointment.is_invoiced ? 'Invoiced' : 'Pendinginvoice') === tab.value
                         ).length
                       : tableData.length}
                   </Label>
@@ -286,24 +262,20 @@ export default function AppointmentListView() {
 
           <AppointmentTableToolbar
             filters={filters}
-            onFilters={handleFilters}
-            //
             dateError={dateError}
+            onResetPage={table.onResetPage}
           />
 
           {canReset && (
             <AppointmentTableFiltersResult
               filters={filters}
-              onFilters={handleFilters}
-              //
-              onResetFilters={handleResetFilters}
-              //
-              results={dataFiltered.length}
+              onResetPage={table.onResetPage}
+              totalResults={dataFiltered.length}
               sx={{ p: 2.5, pt: 0 }}
             />
           )}
 
-          <TableContainer sx={{ position: "relative", overflow: "unset" }}>
+          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
@@ -324,10 +296,7 @@ export default function AppointmentListView() {
             />
 
             <Scrollbar>
-              <Table
-                size={table.dense ? "small" : "medium"}
-                sx={{ minWidth: 960 }}
-              >
+              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={table.order}
                   orderBy={table.orderBy}
@@ -358,19 +327,13 @@ export default function AppointmentListView() {
                         onDeleteRow={() => handleDeleteRow(row.id)}
                         onViewRow={() => handleViewRow(row.id)}
                         onEditRow={() => handleEditRow(row.id)}
-                        onCreateInvoiceRow={() =>
-                          handleCreateInvoiceRow(row.id)
-                        }
+                        onCreateInvoiceRow={() => handleCreateInvoiceRow(row.id)}
                       />
                     ))}
 
                   <TableEmptyRows
                     height={denseHeight}
-                    emptyRows={emptyRows(
-                      table.page,
-                      table.rowsPerPage,
-                      dataFiltered.length
-                    )}
+                    emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
                   />
 
                   <TableNoData notFound={notFound} />
@@ -390,7 +353,7 @@ export default function AppointmentListView() {
             onChangeDense={table.onChangeDense}
           />
         </Card>
-      </Container>
+      </DashboardContent>
 
       <ConfirmDialog
         open={confirm.value}
@@ -398,8 +361,7 @@ export default function AppointmentListView() {
         title="Delete"
         content={
           <>
-            Are you sure want to delete{" "}
-            <strong> {table.selected.length} </strong> items?
+            Are you sure want to delete <strong> {table.selected.length} </strong> items?
           </>
         }
         action={
@@ -459,20 +421,15 @@ function applyFilter({
   if (name) {
     inputData = inputData.filter(
       (appointment) =>
-        appointment.Customer.lastname
-          .toLowerCase()
-          .indexOf(name.toLowerCase()) !== -1 ||
-        appointment.Customer.firstname
-          .toLowerCase()
-          .indexOf(name.toLowerCase()) !== -1 ||
-        appointment.Customer.email.toLowerCase().indexOf(name.toLowerCase()) !==
-          -1
+        appointment.Customer.lastname.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+        appointment.Customer.firstname.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+        appointment.Customer.email.toLowerCase().indexOf(name.toLowerCase()) !== -1
     );
   }
 
-  if (status !== "all") {
+  if (status !== 'all') {
     inputData = inputData.filter((appointment) =>
-      appointment.is_invoiced ? "invoiced" : status === "pendinginvoice"
+      appointment.is_invoiced ? 'invoiced' : status === 'pendinginvoice'
     );
   }
 

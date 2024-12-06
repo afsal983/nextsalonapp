@@ -1,9 +1,9 @@
-import { useMemo } from "react";
-import merge from "lodash/merge";
+import { useMemo } from 'react';
+import { merge } from 'src/utils/helper';
 
-import { CALENDAR_COLOR_OPTIONS } from "src/_mock/_calendar";
+import { CALENDAR_COLOR_OPTIONS } from 'src/_data/_calendar';
 
-import { ICalendarRange, ICalendarEvent } from "src/types/calendar";
+import { ICalendarRange, ICalendarEvent } from 'src/types/calendar';
 
 // ----------------------------------------------------------------------
 
@@ -18,9 +18,9 @@ export default function useEvent(
 
   const defaultValues: ICalendarEvent = useMemo(
     () => ({
-      id: "",
-      title: "",
-      notes: "",
+      id: '',
+      title: '',
+      notes: '',
       color: CALENDAR_COLOR_OPTIONS[1],
       allDay: false,
       customer_id: 0,

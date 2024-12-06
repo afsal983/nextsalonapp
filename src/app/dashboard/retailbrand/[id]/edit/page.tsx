@@ -1,11 +1,11 @@
-import { _userList } from "src/_mock/_user";
+import { _userList } from 'src/_data/_user';
 
-import { RetailBrandEditView } from "src/sections/retailbrand/view";
+import { RetailBrandEditView } from 'src/sections/retailbrand/view';
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: "Dashboard: Retailbrand Edit",
+  title: 'Dashboard: Retailbrand Edit',
 };
 
 interface Props {

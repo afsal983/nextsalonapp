@@ -1,17 +1,20 @@
-import { type UseFormReturn, FormProvider as Form } from 'react-hook-form'
+import type { UseFormReturn } from 'react-hook-form';
+import { FormProvider as RHFForm } from 'react-hook-form';
 
 // ----------------------------------------------------------------------
 
-interface Props {
-  children: React.ReactNode
-  methods: UseFormReturn<any>
-  onSubmit?: VoidFunction
-}
+export type FormProps = {
+  onSubmit?: () => void;
+  children: React.ReactNode;
+  methods: UseFormReturn<any>;
+};
 
-export default function FormProvider ({ children, onSubmit, methods }: Props) {
+export function Form({ children, onSubmit, methods }: FormProps) {
   return (
-    <Form {...methods}>
-      <form onSubmit={onSubmit}>{children}</form>
-    </Form>
-  )
+    <RHFForm {...methods}>
+      <form onSubmit={onSubmit} noValidate autoComplete="off">
+        {children}
+      </form>
+    </RHFForm>
+  );
 }

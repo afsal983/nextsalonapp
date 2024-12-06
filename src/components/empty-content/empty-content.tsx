@@ -1,25 +1,35 @@
-import Box from '@mui/material/Box'
-import { alpha } from '@mui/material/styles'
-import Typography from '@mui/material/Typography'
-import Stack, { type StackProps } from '@mui/material/Stack'
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import type { StackProps } from '@mui/material/Stack';
+import type { Theme, SxProps } from '@mui/material/styles';
+
+import { CONFIG } from 'src/config-global';
+import { varAlpha } from 'src/theme/styles';
 
 // ----------------------------------------------------------------------
 
-type EmptyContentProps = StackProps & {
-  title?: string
-  imgUrl?: string
-  filled?: boolean
-  description?: string
-  action?: React.ReactNode
-}
+export type EmptyContentProps = StackProps & {
+  title?: string;
+  imgUrl?: string;
+  filled?: boolean;
+  description?: string;
+  action?: React.ReactNode;
+  slotProps?: {
+    img?: SxProps<Theme>;
+    title?: SxProps<Theme>;
+    description?: SxProps<Theme>;
+  };
+};
 
-export default function EmptyContent ({
-  title,
+export function EmptyContent({
+  sx,
   imgUrl,
   action,
   filled,
+  slotProps,
   description,
-  sx,
+  title = 'No data',
   ...other
 }: EmptyContentProps) {
   return (
@@ -32,26 +42,25 @@ export default function EmptyContent ({
         height: 1,
         ...(filled && {
           borderRadius: 2,
-          bgcolor: (theme) => alpha(theme.palette.grey[500], 0.04),
-          border: (theme) =>
-            `dashed 1px ${alpha(theme.palette.grey[500], 0.08)}`
+          bgcolor: (theme) => varAlpha(theme.vars.palette.grey['500Channel'], 0.04),
+          border: (theme) => `dashed 1px ${varAlpha(theme.vars.palette.grey['500Channel'], 0.08)}`,
         }),
-        ...sx
+        ...sx,
       }}
       {...other}
     >
       <Box
         component="img"
         alt="empty content"
-        src={imgUrl || '/assets/icons/empty/ic_content.svg'}
-        sx={{ width: 1, maxWidth: 160 }}
+        src={imgUrl ?? `${CONFIG.assetsDir}/assets/icons/empty/ic-content.svg`}
+        sx={{ width: 1, maxWidth: 160, ...slotProps?.img }}
       />
 
       {title && (
         <Typography
           variant="h6"
           component="span"
-          sx={{ mt: 1, color: 'text.disabled', textAlign: 'center' }}
+          sx={{ mt: 1, textAlign: 'center', ...slotProps?.title, color: 'text.disabled' }}
         >
           {title}
         </Typography>
@@ -60,7 +69,7 @@ export default function EmptyContent ({
       {description && (
         <Typography
           variant="caption"
-          sx={{ mt: 1, color: 'text.disabled', textAlign: 'center' }}
+          sx={{ mt: 1, textAlign: 'center', color: 'text.disabled', ...slotProps?.description }}
         >
           {description}
         </Typography>
@@ -68,5 +77,5 @@ export default function EmptyContent ({
 
       {action && action}
     </Stack>
-  )
+  );
 }

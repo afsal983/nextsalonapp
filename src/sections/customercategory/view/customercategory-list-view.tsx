@@ -1,39 +1,39 @@
-"use client";
+'use client';
 
-import useSWR, { mutate } from "swr";
-import isEqual from "lodash/isEqual";
-import { useState, useEffect, useCallback } from "react";
+import useSWR, { mutate } from 'swr';
+import { isEqual } from 'src/utils/helper';
+import { useState, useEffect, useCallback } from 'react';
 
-import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
-import Card from "@mui/material/Card";
-import Table from "@mui/material/Table";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import { alpha } from "@mui/material/styles";
-import Container from "@mui/material/Container";
-import TableBody from "@mui/material/TableBody";
-import IconButton from "@mui/material/IconButton";
-import TableContainer from "@mui/material/TableContainer";
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import Card from '@mui/material/Card';
+import Table from '@mui/material/Table';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import { alpha } from '@mui/material/styles';
+import Container from '@mui/material/Container';
+import TableBody from '@mui/material/TableBody';
+import IconButton from '@mui/material/IconButton';
+import TableContainer from '@mui/material/TableContainer';
 
-import { paths } from "src/routes/paths";
-import { useRouter } from "src/routes/hooks";
-import { RouterLink } from "src/routes/components";
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
+import { RouterLink } from 'src/routes/components';
 
-import { useBoolean } from "src/hooks/use-boolean";
+import { useBoolean } from 'src/hooks/use-boolean';
 
-import { fetcher } from "src/utils/axios";
+import { fetcher } from 'src/utils/axios';
 
-import { useTranslate } from "src/locales";
-import { useAuthContext } from "src/auth/hooks";
+import { useTranslate } from 'src/locales';
+import { useAuthContext } from 'src/auth/hooks';
 
-import Label from "src/components/label";
-import Iconify from "src/components/iconify";
-import Scrollbar from "src/components/scrollbar";
-import { useSnackbar } from "src/components/snackbar";
-import { ConfirmDialog } from "src/components/custom-dialog";
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+import { Label } from 'src/components/label';
+import { toast } from 'src/components/snackbar';
+import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
+import { ConfirmDialog } from 'src/components/custom-dialog';
+import { useSettingsContext } from 'src/components/settings';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import {
   useTable,
   emptyRows,
@@ -43,25 +43,25 @@ import {
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
-} from "src/components/table";
+} from 'src/components/table';
 
 import {
   type CustomerCategory,
   type CustomerCategoryTableFilters,
   type CustomerCategoryTableFilterValue,
-} from "src/types/customer";
+} from 'src/types/customer';
 
-import CustomerCategoryTableRow from "../customercategory-table-row";
-import CustomerCategoryTableToolbar from "../customercategory-table-toolbar";
-import CustomercategoryTableFiltersResult from "../customercategory-table-filters-result";
+import CustomerCategoryTableRow from '../customercategory-table-row';
+import CustomerCategoryTableToolbar from '../customercategory-table-toolbar';
+import CustomercategoryTableFiltersResult from '../customercategory-table-filters-result';
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [{ value: "all", label: "All" }];
+const STATUS_OPTIONS = [{ value: 'all', label: 'All' }];
 
 const defaultFilters: CustomerCategoryTableFilters = {
-  name: "",
-  status: "all",
+  name: '',
+  status: 'all',
 };
 
 // ----------------------------------------------------------------------
@@ -70,10 +70,10 @@ export default function CustomerCategoryListView() {
   const { t } = useTranslate();
 
   const TABLE_HEAD = [
-    { id: "name", label: t("general.name"), width: 320 },
-    { id: "name", label: t("general.discount"), width: 320 },
-    { id: "name", label: t("general.default_category"), width: 320 },
-    { id: "", width: 188 },
+    { id: 'name', label: t('general.name'), width: 320 },
+    { id: 'name', label: t('general.discount'), width: 320 },
+    { id: 'name', label: t('general.default_category'), width: 320 },
+    { id: '', width: 188 },
   ];
 
   // Initialize
@@ -84,9 +84,7 @@ export default function CustomerCategoryListView() {
     data: customercategory,
     isLoading: iscustomercategoryLoading,
     error: errorB,
-  } = useSWR("/api/salonapp/customercategory", fetcher);
-
-  const { enqueueSnackbar } = useSnackbar();
+  } = useSWR('/api/salonapp/customercategory', fetcher);
 
   const table = useTable();
 
@@ -102,7 +100,7 @@ export default function CustomerCategoryListView() {
   const handleLogout = async () => {
     try {
       await logout();
-      router.replace("/");
+      router.replace('/');
     } catch (error) {
       console.error(error);
     }
@@ -123,8 +121,7 @@ export default function CustomerCategoryListView() {
 
   const canReset = !isEqual(defaultFilters, filters);
 
-  const notFound =
-    (dataFiltered.length === 0 && canReset) || dataFiltered.length === 0;
+  const notFound = (dataFiltered.length === 0 && canReset) || dataFiltered.length === 0;
 
   const handleFilters = useCallback(
     (name: string, value: CustomerCategoryTableFilterValue) => {
@@ -145,30 +142,29 @@ export default function CustomerCategoryListView() {
   const handleDeleteRow = useCallback(
     async (id: string) => {
       const response = await fetch(`/api/salonapp/customercategory/${id}`, {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
 
       const responseData = await response.json();
 
       if (responseData?.status > 401) {
-        enqueueSnackbar(t("general.delete_fail"), { variant: "error" });
+        toast.error(t('general.delete_fail'));
+
         return;
       }
 
-      const deleteRow = tableData.filter(
-        (row: CustomerCategory) => row.id !== id
-      );
+      const deleteRow = tableData.filter((row: CustomerCategory) => row.id !== id);
 
-      enqueueSnackbar(t("general.delete_success"));
+      toast.success(t('general.delete_success'));
 
       setTableData(deleteRow);
 
       table.onUpdatePageDeleteRow(dataInPage.length);
     },
-    [dataInPage.length, enqueueSnackbar, table, tableData, t]
+    [dataInPage.length, table, tableData, t]
   );
 
   const handleDeleteRows = useCallback(() => {
@@ -176,7 +172,7 @@ export default function CustomerCategoryListView() {
       (row: CustomerCategory) => !table.selected.includes(row.id)
     );
 
-    enqueueSnackbar(t("general.delete_success"));
+    toast.success(t('general.delete_success'));
 
     setTableData(deleteRows);
 
@@ -184,14 +180,7 @@ export default function CustomerCategoryListView() {
       totalRowsInPage: dataInPage.length,
       totalRowsFiltered: dataFiltered.length,
     });
-  }, [
-    dataFiltered.length,
-    dataInPage.length,
-    enqueueSnackbar,
-    table,
-    tableData,
-    t,
-  ]);
+  }, [dataFiltered.length, dataInPage.length, table, tableData, t]);
 
   const handleEditRow = useCallback(
     (id: string) => {
@@ -202,7 +191,7 @@ export default function CustomerCategoryListView() {
 
   const handleFilterStatus = useCallback(
     (event: React.SyntheticEvent, newValue: string) => {
-      handleFilters("status", newValue);
+      handleFilters('status', newValue);
     },
     [handleFilters]
   );
@@ -230,16 +219,16 @@ export default function CustomerCategoryListView() {
 
   return (
     <>
-      <Container maxWidth={settings.themeStretch ? false : "lg"}>
+      <DashboardContent>
         <CustomBreadcrumbs
           heading="List"
           links={[
-            { name: t("salonapp.dashboard"), href: paths.dashboard.root },
+            { name: t('salonapp.dashboard'), href: paths.dashboard.root },
             {
-              name: t("salonapp.customer_category"),
+              name: t('salonapp.customer_category'),
               href: paths.dashboard.customers.customercategory.root,
             },
-            { name: t("general.list") },
+            { name: t('general.list') },
           ]}
           action={
             <Button
@@ -248,7 +237,7 @@ export default function CustomerCategoryListView() {
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >
-              {t("salonapp.customer.customercategory.new_customercategory")}
+              {t('salonapp.customer.customercategory.new_customercategory')}
             </Button>
           }
           sx={{
@@ -262,8 +251,7 @@ export default function CustomerCategoryListView() {
             onChange={handleFilterStatus}
             sx={{
               px: 2.5,
-              boxShadow: (theme) =>
-                `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
+              boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
             }}
           >
             {STATUS_OPTIONS.map((tab) => (
@@ -275,16 +263,13 @@ export default function CustomerCategoryListView() {
                 icon={
                   <Label
                     variant={
-                      ((tab.value === "all" || tab.value === filters.status) &&
-                        "filled") ||
-                      "soft"
+                      ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
                     }
                     color="default"
                   >
-                    {["active"].includes(tab.value)
+                    {['active'].includes(tab.value)
                       ? tableData.filter(
-                          (customeritem: CustomerCategory) =>
-                            customeritem.name === tab.value
+                          (customeritem: CustomerCategory) => customeritem.name === tab.value
                         ).length
                       : tableData.length}
                   </Label>
@@ -293,10 +278,7 @@ export default function CustomerCategoryListView() {
             ))}
           </Tabs>
 
-          <CustomerCategoryTableToolbar
-            filters={filters}
-            onFilters={handleFilters}
-          />
+          <CustomerCategoryTableToolbar filters={filters} onFilters={handleFilters} />
 
           {canReset && (
             <CustomercategoryTableFiltersResult
@@ -310,7 +292,7 @@ export default function CustomerCategoryListView() {
             />
           )}
 
-          <TableContainer sx={{ position: "relative", overflow: "unset" }}>
+          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
@@ -331,10 +313,7 @@ export default function CustomerCategoryListView() {
             />
 
             <Scrollbar>
-              <Table
-                size={table.dense ? "small" : "medium"}
-                sx={{ minWidth: 960 }}
-              >
+              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={table.order}
                   orderBy={table.orderBy}
@@ -375,11 +354,7 @@ export default function CustomerCategoryListView() {
 
                   <TableEmptyRows
                     height={denseHeight}
-                    emptyRows={emptyRows(
-                      table.page,
-                      table.rowsPerPage,
-                      dataFiltered.length
-                    )}
+                    emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
                   />
 
                   <TableNoData notFound={notFound} />
@@ -407,8 +382,7 @@ export default function CustomerCategoryListView() {
         title="Delete"
         content={
           <>
-            Are you sure want to delete{" "}
-            <strong> {table.selected.length} </strong> items?
+            Are you sure want to delete <strong> {table.selected.length} </strong> items?
           </>
         }
         action={

@@ -1,27 +1,21 @@
-import TableRow from '@mui/material/TableRow'
-import TableCell from '@mui/material/TableCell'
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
 
 // ----------------------------------------------------------------------
 
-interface Props {
-  height?: number
-  emptyRows: number
-}
+export type TableEmptyRowsProps = {
+  height?: number;
+  emptyRows: number;
+};
 
-export default function TableEmptyRows ({ emptyRows, height }: Props) {
+export function TableEmptyRows({ emptyRows, height }: TableEmptyRowsProps) {
   if (!emptyRows) {
-    return null
+    return null;
   }
 
   return (
-    <TableRow
-      sx={{
-        ...(height && {
-          height: height * emptyRows
-        })
-      }}
-    >
+    <TableRow sx={{ ...(height && { height: height * emptyRows }) }}>
       <TableCell colSpan={9} />
     </TableRow>
-  )
+  );
 }

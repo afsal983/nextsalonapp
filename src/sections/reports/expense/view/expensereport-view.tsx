@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import isEqual from "lodash/isEqual";
-import { useState, useEffect, useCallback } from "react";
+import { isEqual } from 'src/utils/helper';
+import { useState, useEffect, useCallback } from 'react';
 
-import FilterListIcon from "@mui/icons-material/FilterList";
+import FilterListIcon from '@mui/icons-material/FilterList';
 import {
   Card,
   Stack,
@@ -13,7 +13,7 @@ import {
   useTheme,
   Container,
   IconButton,
-} from "@mui/material";
+} from '@mui/material';
 import {
   DataGrid,
   GridColDef,
@@ -24,54 +24,54 @@ import {
   GridToolbarFilterButton,
   GridToolbarColumnsButton,
   GridColumnVisibilityModel,
-} from "@mui/x-data-grid";
+} from '@mui/x-data-grid';
 
-import { paths } from "src/routes/paths";
+import { paths } from 'src/routes/paths';
 
-import { useBoolean } from "src/hooks/use-boolean";
+import { useBoolean } from 'src/hooks/use-boolean';
 
-import { isAfter } from "src/utils/format-time";
+import { fIsAfter } from 'src/utils/format-time';
 
-import Iconify from "src/components/iconify";
-import Scrollbar from "src/components/scrollbar";
-import { useSnackbar } from "src/components/snackbar";
-import EmptyContent from "src/components/empty-content";
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+import { toast } from 'src/components/snackbar';
+import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
+import { EmptyContent } from 'src/components/empty-content';
+import { useSettingsContext } from 'src/components/settings';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { BranchItem } from "src/types/branch";
-import { PaymentTypeItem } from "src/types/payment";
+import { BranchItem } from 'src/types/branch';
+import { PaymentTypeItem } from 'src/types/payment';
 import {
   DetailedInvoice,
   ExpenseReportTableFilters,
   ExpenseReportPeriodFilters,
   ExpenseReportTableFilterValue,
-} from "src/types/report";
+} from 'src/types/report';
 
-import PeriodFilters from "../period-filters";
-import ExpenseReportAnalytic from "../expensereport-analytic";
-import DeatailedExpenseTableToolbar from "../expensereport-table-toolbar";
-import DeatailedExpenseTableFiltersResult from "../expensereport-table-filters-result";
+import PeriodFilters from '../period-filters';
+import ExpenseReportAnalytic from '../expensereport-analytic';
+import DeatailedExpenseTableToolbar from '../expensereport-table-toolbar';
+import DeatailedExpenseTableFiltersResult from '../expensereport-table-filters-result';
 import {
   RenderCellTax,
   RenderCellPrice,
   RenderCellTaxby2,
   RenderCellCustomer,
   RenderCellCreatedAt,
-} from "../expensereport-table-row";
+} from '../expensereport-table-row';
 
 // ----------------------------------------------------------------------
 
 const STATUS_OPTIONS = [
-  { value: "paid", label: "Paid" },
-  { value: "draft", label: "Draft" },
+  { value: 'paid', label: 'Paid' },
+  { value: 'draft', label: 'Draft' },
 ];
 
 const HIDE_COLUMNS = {
   category: false,
 };
 
-const HIDE_COLUMNS_TOGGLABLE = ["category", "actions"];
+const HIDE_COLUMNS_TOGGLABLE = ['category', 'actions'];
 
 // This is for date filter to conditionaly fetch data from remote API
 const defaultperiodFilters: ExpenseReportPeriodFilters = {
@@ -89,8 +89,6 @@ const defaultitemFilters: ExpenseReportTableFilters = {
 // ----------------------------------------------------------------------
 
 export default function ExpenseReportListView() {
-  const { enqueueSnackbar } = useSnackbar();
-
   const confirmRows = useBoolean();
 
   const theme = useTheme();
@@ -109,11 +107,9 @@ export default function ExpenseReportListView() {
   const [periodfilters, setFilters] = useState(defaultperiodFilters);
   const [itemfilters, setitemFilters] = useState(defaultitemFilters);
 
-  const dateError = isAfter(periodfilters.startDate, periodfilters.endDate);
+  const dateError = fIsAfter(periodfilters.startDate, periodfilters.endDate);
 
-  const [selectedRowIds, setSelectedRowIds] = useState<GridRowSelectionModel>(
-    []
-  );
+  const [selectedRowIds, setSelectedRowIds] = useState<GridRowSelectionModel>([]);
 
   const [columnVisibilityModel, setColumnVisibilityModel] =
     useState<GridColumnVisibilityModel>(HIDE_COLUMNS);
@@ -137,25 +133,19 @@ export default function ExpenseReportListView() {
 
   const canReset = !isEqual(defaultitemFilters, itemfilters);
 
-  const handleitemFilters = useCallback(
-    (name: string, value: ExpenseReportTableFilterValue) => {
-      setitemFilters((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    },
-    []
-  );
+  const handleitemFilters = useCallback((name: string, value: ExpenseReportTableFilterValue) => {
+    setitemFilters((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  }, []);
 
-  const handlePeriodFilters = useCallback(
-    (name: string, value: ExpenseReportTableFilterValue) => {
-      setFilters((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    },
-    []
-  );
+  const handlePeriodFilters = useCallback((name: string, value: ExpenseReportTableFilterValue) => {
+    setFilters((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  }, []);
 
   const handleResetFilters = useCallback(() => {
     setitemFilters(defaultitemFilters);
@@ -168,20 +158,20 @@ export default function ExpenseReportListView() {
     const data = {
       start: periodfilters.startDate,
       end: periodfilters.endDate,
-      filtername: "all",
+      filtername: 'all',
       filterid: 1,
     };
 
     if (!periodfilters.startDate || !periodfilters.endDate) {
-      enqueueSnackbar("Missing Filter", { variant: "error" });
+      toast.error('Missing Filter');
       setisLoading(false);
       return;
     }
 
-    const response = await fetch("/api/salonapp/report/expensereport", {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
+    const response = await fetch('/api/salonapp/report/expensereport', {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(data), // body data type must match "Content-Type" header
     });
@@ -189,7 +179,7 @@ export default function ExpenseReportListView() {
 
     if (responseData.status > 300) {
       setisLoading(false);
-      enqueueSnackbar("Fetching report data failed", { variant: "error" });
+      toast.error('Fetching report data failed');
       return;
     }
     setTableData(responseData.data);
@@ -200,51 +190,51 @@ export default function ExpenseReportListView() {
 
   const columns: GridColDef[] = [
     {
-      field: "id",
-      headerName: "Sn",
+      field: 'id',
+      headerName: 'Sn',
       filterable: true,
       width: 40,
       hideable: false,
     },
     {
-      field: "invoicenumber",
-      headerName: "Bill No",
+      field: 'invoicenumber',
+      headerName: 'Bill No',
       filterable: true,
       hideable: false,
     },
     {
-      field: "createdat",
-      headerName: "Date",
+      field: 'createdat',
+      headerName: 'Date',
       width: 100,
       renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
     {
-      field: "total",
-      headerName: "Total",
+      field: 'total',
+      headerName: 'Total',
       width: 100,
       editable: true,
       hideable: false,
       renderCell: (params) => <RenderCellPrice params={params} />,
     },
     {
-      field: "tax",
-      headerName: "Tax",
+      field: 'tax',
+      headerName: 'Tax',
       width: 100,
       editable: true,
       hideable: false,
       renderCell: (params) => <RenderCellTax params={params} />,
     },
     {
-      field: "taxby2",
-      headerName: "Tax/2",
+      field: 'taxby2',
+      headerName: 'Tax/2',
       width: 100,
       editable: true,
       hideable: false,
       renderCell: (params) => <RenderCellTaxby2 params={params} />,
     },
     {
-      field: "billinginfo",
-      headerName: "Billing Name",
+      field: 'billinginfo',
+      headerName: 'Billing Name',
       width: 180,
       filterable: true,
       hideable: false,
@@ -252,19 +242,19 @@ export default function ExpenseReportListView() {
       renderCell: (params) => <RenderCellCustomer params={params} />,
     },
     {
-      field: "tip",
-      headerName: "Tip",
+      field: 'tip',
+      headerName: 'Tip',
       filterable: false,
     },
     {
-      field: "branch",
+      field: 'branch',
       width: 240,
-      headerName: "Branch",
+      headerName: 'Branch',
       filterable: false,
     },
     {
-      field: "status",
-      headerName: "Status",
+      field: 'status',
+      headerName: 'Status',
       filterable: false,
     },
 
@@ -359,22 +349,22 @@ export default function ExpenseReportListView() {
   return (
     <>
       <Container
-        maxWidth={settings.themeStretch ? false : "lg"}
+        maxWidth={settings.themeStretch ? false : 'lg'}
         sx={{
           flexGrow: 1,
-          display: "flex",
-          flexDirection: "column",
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
         <CustomBreadcrumbs
           heading="List"
           links={[
-            { name: "Dashboard", href: paths.dashboard.root },
+            { name: 'Dashboard', href: paths.dashboard.root },
             {
-              name: "Reports",
+              name: 'Reports',
               href: paths.dashboard.report.root,
             },
-            { name: "Expense Report" },
+            { name: 'Expense Report' },
           ]}
           action={
             <IconButton onClick={() => openFilters.onTrue()} size="large">
@@ -399,13 +389,7 @@ export default function ExpenseReportListView() {
           <Scrollbar>
             <Stack
               direction="row"
-              divider={
-                <Divider
-                  orientation="vertical"
-                  flexItem
-                  sx={{ borderStyle: "dashed" }}
-                />
-              }
+              divider={<Divider orientation="vertical" flexItem sx={{ borderStyle: 'dashed' }} />}
               sx={{ py: 2 }}
             >
               <ExpenseReportAnalytic
@@ -451,8 +435,8 @@ export default function ExpenseReportListView() {
           sx={{
             height: { xs: 800, md: 2 },
             flexGrow: { md: 1 },
-            display: { md: "flex" },
-            flexDirection: { md: "column" },
+            display: { md: 'flex' },
+            flexDirection: { md: 'column' },
           }}
         >
           <DataGrid
@@ -461,7 +445,7 @@ export default function ExpenseReportListView() {
             rows={dataFiltered}
             columns={columns}
             loading={isLoading}
-            getRowHeight={() => "auto"}
+            getRowHeight={() => 'auto'}
             pageSizeOptions={[5, 10, 25]}
             initialState={{
               pagination: {
@@ -472,9 +456,7 @@ export default function ExpenseReportListView() {
               setSelectedRowIds(newSelectionModel);
             }}
             columnVisibilityModel={columnVisibilityModel}
-            onColumnVisibilityModelChange={(newModel) =>
-              setColumnVisibilityModel(newModel)
-            }
+            onColumnVisibilityModelChange={(newModel) => setColumnVisibilityModel(newModel)}
             slots={{
               toolbar: () => (
                 <>
@@ -506,9 +488,7 @@ export default function ExpenseReportListView() {
                         <Button
                           size="small"
                           color="error"
-                          startIcon={
-                            <Iconify icon="solar:trash-bin-trash-bold" />
-                          }
+                          startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
                           onClick={confirmRows.onTrue}
                         >
                           Delete ({selectedRowIds.length})
@@ -582,15 +562,11 @@ function applyFilter({
   }
 
   if (status?.length) {
-    inputData = inputData.filter((invoice) =>
-      status.includes(invoice?.invstatus)
-    );
+    inputData = inputData.filter((invoice) => status.includes(invoice?.invstatus));
   }
 
   if (paymenttype?.length) {
-    inputData = inputData.filter((invoice) =>
-      status.includes(invoice?.paymentmode)
-    );
+    inputData = inputData.filter((invoice) => status.includes(invoice?.paymentmode));
   }
 
   return inputData;

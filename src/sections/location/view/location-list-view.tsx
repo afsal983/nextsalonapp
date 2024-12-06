@@ -1,39 +1,40 @@
-"use client";
+'use client';
 
-import useSWR, { mutate } from "swr";
-import isEqual from "lodash/isEqual";
-import { useState, useEffect, useCallback } from "react";
+import useSWR, { mutate } from 'swr';
+import { isEqual } from 'src/utils/helper';
+import { useState, useEffect, useCallback } from 'react';
+import { useSetState } from 'src/hooks/use-set-state';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import Card from '@mui/material/Card';
+import Table from '@mui/material/Table';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import { alpha } from '@mui/material/styles';
+import Container from '@mui/material/Container';
+import TableBody from '@mui/material/TableBody';
+import IconButton from '@mui/material/IconButton';
+import TableContainer from '@mui/material/TableContainer';
 
-import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
-import Card from "@mui/material/Card";
-import Table from "@mui/material/Table";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import { alpha } from "@mui/material/styles";
-import Container from "@mui/material/Container";
-import TableBody from "@mui/material/TableBody";
-import IconButton from "@mui/material/IconButton";
-import TableContainer from "@mui/material/TableContainer";
+import { paths } from 'src/routes/paths';
+import { DashboardContent } from 'src/layouts/dashboard';
+import { useRouter } from 'src/routes/hooks';
+import { RouterLink } from 'src/routes/components';
 
-import { paths } from "src/routes/paths";
-import { useRouter } from "src/routes/hooks";
-import { RouterLink } from "src/routes/components";
+import { useBoolean } from 'src/hooks/use-boolean';
 
-import { useBoolean } from "src/hooks/use-boolean";
+import { fetcher } from 'src/utils/axios';
 
-import { fetcher } from "src/utils/axios";
+import { useTranslate } from 'src/locales';
+import { useAuthContext } from 'src/auth/hooks';
 
-import { useTranslate } from "src/locales";
-import { useAuthContext } from "src/auth/hooks";
-
-import Label from "src/components/label";
-import Iconify from "src/components/iconify";
-import Scrollbar from "src/components/scrollbar";
-import { useSnackbar } from "src/components/snackbar";
-import { ConfirmDialog } from "src/components/custom-dialog";
-import { useSettingsContext } from "src/components/settings";
-import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
+import { Label } from 'src/components/label';
+import { toast } from 'src/components/snackbar';
+import { Iconify } from 'src/components/iconify';
+import { Scrollbar } from 'src/components/scrollbar';
+import { ConfirmDialog } from 'src/components/custom-dialog';
+import { useSettingsContext } from 'src/components/settings';
+import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 import {
   useTable,
   emptyRows,
@@ -43,27 +44,21 @@ import {
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
-} from "src/components/table";
+} from 'src/components/table';
 
 import {
   type LocationItem,
   type LocationTableFilters,
   type LocationTableFilterValue,
-} from "src/types/location";
+} from 'src/types/location';
 
-import LocationTableRow from "../location-table-row";
-import LocationTableToolbar from "../location-table-toolbar";
-import ServicecategoryTableFiltersResult from "../location-table-filters-result";
+import LocationTableRow from '../location-table-row';
+import LocationTableToolbar from '../location-table-toolbar';
+import LocationTableFiltersResult from '../location-table-filters-result';
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [{ value: "all", label: "All" }];
-
-const defaultFilters: LocationTableFilters = {
-  name: "",
-  location: [],
-  status: "all",
-};
+const STATUS_OPTIONS = [{ value: 'all', label: 'All' }];
 
 // ----------------------------------------------------------------------
 
@@ -71,24 +66,28 @@ export default function LocationListView() {
   const { t } = useTranslate();
 
   const TABLE_HEAD = [
-    { id: "name", label: t("general.name"), width: 320 },
-    { id: "address", label: t("general.address"), width: 320 },
-    { id: "telephone", label: t("general.telephone"), width: 320 },
-    { id: "location", label: t("general.location"), width: 320 },
-    { id: "", width: 188 },
+    { id: 'name', label: t('general.name'), width: 320 },
+    { id: 'address', label: t('general.address'), width: 320 },
+    { id: 'telephone', label: t('general.telephone'), width: 320 },
+    { id: 'location', label: t('general.location'), width: 320 },
+    { id: '', width: 188 },
   ];
 
   // Initialize
   const [tableData, setTableData] = useState<LocationItem[]>([]);
+
+  const filters = useSetState<LocationTableFilters>({
+    name: '',
+    location: [],
+    status: 'all',
+  });
   const { logout } = useAuthContext();
 
   const {
     data: location,
     isLoading: isservicecategoryLoading,
     error: errorB,
-  } = useSWR("/api/salonapp/location", fetcher);
-
-  const { enqueueSnackbar } = useSnackbar();
+  } = useSWR('/api/salonapp/location', fetcher);
 
   const table = useTable();
 
@@ -98,13 +97,11 @@ export default function LocationListView() {
 
   const confirm = useBoolean();
 
-  const [filters, setFilters] = useState(defaultFilters);
-
   // Logout the user
   const handleLogout = async () => {
     try {
       await logout();
-      router.replace("/");
+      router.replace('/');
     } catch (error) {
       console.error(error);
     }
@@ -113,7 +110,7 @@ export default function LocationListView() {
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
-    filters,
+    filters: filters.state,
   });
 
   const dataInPage = dataFiltered.slice(
@@ -123,54 +120,36 @@ export default function LocationListView() {
 
   const denseHeight = table.dense ? 56 : 56 + 20;
 
-  const canReset = !isEqual(defaultFilters, filters);
+  const canReset = !!filters.state.name || filters.state.status !== 'all';
 
-  const notFound =
-    (dataFiltered.length === 0 && canReset) || dataFiltered.length === 0;
-
-  const handleFilters = useCallback(
-    (name: string, value: LocationTableFilterValue) => {
-      table.onResetPage();
-      setFilters((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    },
-    [table]
-  );
-
-  const handleResetFilters = useCallback(() => {
-    setFilters(defaultFilters);
-  }, []);
+  const notFound = (dataFiltered.length === 0 && canReset) || dataFiltered.length === 0;
 
   // Delete an item
   const handleDeleteRow = useCallback(
     async (id: string) => {
       const response = await fetch(`/api/salonapp/location/${id}`, {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
 
       const responseData = await response.json();
 
       if (responseData?.status > 401) {
-        enqueueSnackbar(t("general.delete_fail"), { variant: "error" });
+        toast.error(t('general.delete_fail'));
         return;
       }
 
-      const deleteRow = tableData.filter(
-        (row: LocationItem) => row.loc_id !== id
-      );
+      const deleteRow = tableData.filter((row: LocationItem) => row.loc_id !== id);
 
-      enqueueSnackbar(t("general.delete_success"));
+      toast.success(t('general.delete_success'));
 
       setTableData(deleteRow);
 
       table.onUpdatePageDeleteRow(dataInPage.length);
     },
-    [dataInPage.length, enqueueSnackbar, table, tableData, t]
+    [dataInPage.length, table, tableData, t]
   );
 
   const handleDeleteRows = useCallback(() => {
@@ -178,7 +157,7 @@ export default function LocationListView() {
       (row: LocationItem) => !table.selected.includes(row.loc_id)
     );
 
-    enqueueSnackbar(t("general.delete_success"));
+    toast.success(t('general.delete_success'));
 
     setTableData(deleteRows);
 
@@ -186,14 +165,7 @@ export default function LocationListView() {
       totalRowsInPage: dataInPage.length,
       totalRowsFiltered: dataFiltered.length,
     });
-  }, [
-    dataFiltered.length,
-    dataInPage.length,
-    enqueueSnackbar,
-    table,
-    tableData,
-    t,
-  ]);
+  }, [dataFiltered.length, dataInPage.length, table, tableData, t]);
 
   const handleEditRow = useCallback(
     (id: string) => {
@@ -204,9 +176,10 @@ export default function LocationListView() {
 
   const handleFilterStatus = useCallback(
     (event: React.SyntheticEvent, newValue: string) => {
-      handleFilters("status", newValue);
+      table.onResetPage();
+      filters.setState({ status: newValue });
     },
-    [handleFilters]
+    [filters, table]
   );
 
   // Use useEffect to update state1 when data1 is available
@@ -232,16 +205,16 @@ export default function LocationListView() {
 
   return (
     <>
-      <Container maxWidth={settings.themeStretch ? false : "lg"}>
+      <DashboardContent>
         <CustomBreadcrumbs
           heading="List"
           links={[
-            { name: t("salonapp.dashboard"), href: paths.dashboard.root },
+            { name: t('salonapp.dashboard'), href: paths.dashboard.root },
             {
-              name: t("salonapp.location.locations"),
+              name: t('salonapp.location.locations'),
               href: paths.dashboard.location.root,
             },
-            { name: t("general.list") },
+            { name: t('general.list') },
           ]}
           action={
             <Button
@@ -250,7 +223,7 @@ export default function LocationListView() {
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >
-              {t("salonapp.location.new_location")}
+              {t('salonapp.location.new_location')}
             </Button>
           }
           sx={{
@@ -260,12 +233,11 @@ export default function LocationListView() {
 
         <Card>
           <Tabs
-            value={filters.status}
+            value={filters.state.status}
             onChange={handleFilterStatus}
             sx={{
               px: 2.5,
-              boxShadow: (theme) =>
-                `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
+              boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
             }}
           >
             {STATUS_OPTIONS.map((tab) => (
@@ -277,16 +249,14 @@ export default function LocationListView() {
                 icon={
                   <Label
                     variant={
-                      ((tab.value === "all" || tab.value === filters.status) &&
-                        "filled") ||
-                      "soft"
+                      ((tab.value === 'all' || tab.value === filters.state.status) && 'filled') ||
+                      'soft'
                     }
                     color="default"
                   >
-                    {["active"].includes(tab.value)
+                    {['active'].includes(tab.value)
                       ? tableData.filter(
-                          (serviceitem: LocationItem) =>
-                            serviceitem.name === tab.value
+                          (serviceitem: LocationItem) => serviceitem.name === tab.value
                         ).length
                       : tableData.length}
                   </Label>
@@ -295,21 +265,18 @@ export default function LocationListView() {
             ))}
           </Tabs>
 
-          <LocationTableToolbar filters={filters} onFilters={handleFilters} />
+          <LocationTableToolbar filters={filters} onResetPage={table.onResetPage} />
 
           {canReset && (
-            <ServicecategoryTableFiltersResult
+            <LocationTableFiltersResult
               filters={filters}
-              onFilters={handleFilters}
-              //
-              onResetFilters={handleResetFilters}
-              //
-              results={dataFiltered.length}
+              onResetPage={table.onResetPage}
+              totalResults={dataFiltered.length}
               sx={{ p: 2.5, pt: 0 }}
             />
           )}
 
-          <TableContainer sx={{ position: "relative", overflow: "unset" }}>
+          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
@@ -330,10 +297,7 @@ export default function LocationListView() {
             />
 
             <Scrollbar>
-              <Table
-                size={table.dense ? "small" : "medium"}
-                sx={{ minWidth: 960 }}
-              >
+              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={table.order}
                   orderBy={table.orderBy}
@@ -374,11 +338,7 @@ export default function LocationListView() {
 
                   <TableEmptyRows
                     height={denseHeight}
-                    emptyRows={emptyRows(
-                      table.page,
-                      table.rowsPerPage,
-                      dataFiltered.length
-                    )}
+                    emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
                   />
 
                   <TableNoData notFound={notFound} />
@@ -398,7 +358,7 @@ export default function LocationListView() {
             onChangeDense={table.onChangeDense}
           />
         </Card>
-      </Container>
+      </DashboardContent>
 
       <ConfirmDialog
         open={confirm.value}
@@ -406,8 +366,7 @@ export default function LocationListView() {
         title="Delete"
         content={
           <>
-            Are you sure want to delete{" "}
-            <strong> {table.selected.length} </strong> items?
+            Are you sure want to delete <strong> {table.selected.length} </strong> items?
           </>
         }
         action={

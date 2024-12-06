@@ -1,18 +1,21 @@
-import { useCallback } from "react";
-import { useFormContext } from "react-hook-form";
+import { useCallback } from 'react';
+import { useFormContext } from 'react-hook-form';
 
-import { useResponsive } from "src/hooks/use-responsive";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from '@mui/material';
 
-import { BranchItem } from "src/types/branch";
-import { fDate, fTime } from "src/utils/format-time";
-import Iconify from "src/components/iconify";
+import { useResponsive } from 'src/hooks/use-responsive';
+
+import { fDate, fTime } from 'src/utils/format-time';
+
+import { Iconify } from 'src/components/iconify';
+
+import { BranchItem } from 'src/types/branch';
 // ----------------------------------------------------------------------
 
 export default function AppointmentBranchDetails() {
   const { control, setValue, getValues, watch, resetField } = useFormContext();
 
-  const mdUp = useResponsive("up", "md");
+  const mdUp = useResponsive('up', 'md');
 
   const values = watch();
 
@@ -20,25 +23,20 @@ export default function AppointmentBranchDetails() {
 
   const handleSelectBranch = useCallback(
     (value: BranchItem | null) => {
-      setValue("branch_id", value?.branch_id);
-      setValue("Branches_organization", value);
+      setValue('branch_id', value?.branch_id);
+      setValue('Branches_organization', value);
     },
     [setValue]
   );
 
   return (
     <Stack
-      direction={{ xs: "column", md: "row" }}
-      sx={{ justifyContent: "space-between", my: 3 }}
+      direction={{ xs: 'column', md: 'row' }}
+      sx={{ justifyContent: 'space-between', my: 3 }}
       spacing={{ xs: 3, md: 1 }}
     >
-      <Stack
-        direction="column"
-        sx={{ mb: 1 }}
-        spacing={1}
-        alignItems="flex-start"
-      >
-        <Stack direction={{ xs: "column", md: "row" }} spacing={3}>
+      <Stack direction="column" sx={{ mb: 1 }} spacing={1} alignItems="flex-start">
+        <Stack direction={{ xs: 'column', md: 'row' }} spacing={3}>
           {/*
           <Typography variant="h6" sx={{ color: "text.disabled", flexGrow: 1 }}>
             From:

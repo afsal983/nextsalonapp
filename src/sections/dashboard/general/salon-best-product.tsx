@@ -1,16 +1,16 @@
-import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
-import Chip from "@mui/material/Chip";
-import Stack from "@mui/material/Stack";
-import Avatar from "@mui/material/Avatar";
-import CardHeader from "@mui/material/CardHeader";
-import ListItemText from "@mui/material/ListItemText";
-import Card, { type CardProps } from "@mui/material/Card";
-import FilterNoneIcon from "@mui/icons-material/FilterNone";
+import Box from '@mui/material/Box';
+import Link from '@mui/material/Link';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import Avatar from '@mui/material/Avatar';
+import CardHeader from '@mui/material/CardHeader';
+import ListItemText from '@mui/material/ListItemText';
+import Card, { type CardProps } from '@mui/material/Card';
+import FilterNoneIcon from '@mui/icons-material/FilterNone';
 
-import { fCurrency } from "src/utils/format-number";
+import { fCurrency } from 'src/utils/format-number';
 
-import Scrollbar from "src/components/scrollbar";
+import { Scrollbar } from 'src/components/scrollbar';
 
 // ----------------------------------------------------------------------
 
@@ -27,12 +27,7 @@ interface Props extends CardProps {
   list: ItemProps[];
 }
 
-export default function BestProduct({
-  title,
-  subheader,
-  list,
-  ...other
-}: Props) {
+export default function BestProduct({ title, subheader, list, ...other }: Props) {
   return (
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} />
@@ -70,18 +65,11 @@ function ProductItem({ product }: ProductItemProps) {
     */}
 
       <ListItemText
-        primary={
-          <Link sx={{ color: "text.primary", typography: "subtitle2" }}>
-            {name}
-          </Link>
-        }
+        primary={<Link sx={{ color: 'text.primary', typography: 'subtitle2' }}>{name}</Link>}
         secondary={
-          <Box
-              component="span"
-              sx={{ color: totalprice ? "error.main" : "text.secondary" }}
-            >
-              {fCurrency(totalprice)}
-            </Box>
+          <Box component="span" sx={{ color: totalprice ? 'error.main' : 'text.secondary' }}>
+            {fCurrency(totalprice)}
+          </Box>
         }
         primaryTypographyProps={{
           noWrap: true,

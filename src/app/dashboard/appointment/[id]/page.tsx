@@ -1,11 +1,11 @@
-import { _userList } from "src/_mock/_user";
+import { _userList } from 'src/_data/_user';
 
-import { AppointmentDetailsView } from "src/sections/appointment/view";
+import { AppointmentDetailsView } from 'src/sections/appointment/view';
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: "Dashboard: Branch Edit",
+  title: 'Dashboard: Branch Edit',
 };
 
 interface Props {
