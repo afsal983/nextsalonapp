@@ -1,16 +1,19 @@
-import { z as zod } from 'zod';
 import { mutate } from 'swr';
+import { z as zod } from 'zod';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { allLangs, useTranslate } from 'src/locales';
+
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+
+import { useTranslate } from 'src/locales';
 
 import { toast } from 'src/components/snackbar';
 import { Form, RHFTextField } from 'src/components/hook-form';
@@ -22,18 +25,17 @@ import { type ServiceCategoryItem } from 'src/types/service';
 interface Props {
   currentServiceCategory?: ServiceCategoryItem;
 }
-const { t } = useTranslate();
+
 export type NewProductCategorySchemaType = zod.infer<typeof NewProductCategorySchema>;
 const NewProductCategorySchema = zod.object({
   id: zod.string().optional(), // Optional string field (equivalent to Yup.string())
-  name: zod.string().min(1, { message: t('salonapp.service.servicecategory.name_fvalid_error') }), // Required field with a custom error message
+  name: zod.string().min(1, { message: 'Name invalid' }), // Required field with a custom error message
 });
 
 export default function ServiceCategoryNewEditForm({ currentServiceCategory }: Props) {
   const router = useRouter();
 
   const { t } = useTranslate();
-
   const defaultValues = useMemo(
     () => ({
       id: currentServiceCategory?.id || '0',

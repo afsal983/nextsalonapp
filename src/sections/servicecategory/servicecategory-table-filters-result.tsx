@@ -1,16 +1,14 @@
 import { useCallback } from 'react';
-import type { Theme, SxProps } from '@mui/material/styles';
-import type { UseSetStateReturn } from 'src/hooks/use-set-state';
-import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import Stack, { type StackProps } from '@mui/material/Stack';
 
-import { Iconify } from 'src/components/iconify';
+import Chip from '@mui/material/Chip';
+import { type StackProps } from '@mui/material/Stack';
+import type { Theme, SxProps } from '@mui/material/styles';
+
+import type { UseSetStateReturn } from 'src/hooks/use-set-state';
+
+import { chipProps, FiltersBlock, FiltersResult } from 'src/components/filters-result';
 
 import { type ServiceCategoryTableFilters } from 'src/types/service';
-import { chipProps, FiltersBlock, FiltersResult } from 'src/components/filters-result';
 // ----------------------------------------------------------------------
 
 type Props = StackProps & {

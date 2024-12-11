@@ -1,9 +1,8 @@
 'use client';
 
 import useSWR, { mutate } from 'swr';
-import { isEqual } from 'src/utils/helper';
 import { useState, useEffect, useCallback } from 'react';
-import { useSetState } from 'src/hooks/use-set-state';
+
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
@@ -11,7 +10,6 @@ import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import { alpha } from '@mui/material/styles';
-
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
@@ -21,11 +19,13 @@ import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
+import { useSetState } from 'src/hooks/use-set-state';
 
 import { fetcher } from 'src/utils/axios';
 
 import { useTranslate } from 'src/locales';
-import { useAuthContext } from 'src/auth/hooks';
+import { signOut as jwtSignOut } from 'src/auth/context/jwt/action';
+import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
@@ -45,16 +45,11 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 
-import {
-  type ServiceCategoryItem,
-  type ServiceCategoryTableFilters,
-  type ServiceCategoryTableFilterValue,
-} from 'src/types/service';
+import { type ServiceCategoryItem, type ServiceCategoryTableFilters } from 'src/types/service';
 
 import ServiceCategoryTableRow from '../servicecategory-table-row';
 import ServiceCategoryTableToolbar from '../servicecategory-table-toolbar';
 import ServicecategoryTableFiltersResult from '../servicecategory-table-filters-result';
-import { DashboardContent } from 'src/layouts/dashboard';
 
 // ----------------------------------------------------------------------
 
@@ -62,6 +57,7 @@ const STATUS_OPTIONS = [{ value: 'all', label: 'All' }];
 
 // ----------------------------------------------------------------------
 
+const signOut = jwtSignOut;
 export default function ServiceCategoryListView() {
   const { t } = useTranslate();
 
@@ -72,7 +68,6 @@ export default function ServiceCategoryListView() {
 
   // Initialize
   const [tableData, setTableData] = useState<ServiceCategoryItem[]>([]);
-  const { logout } = useAuthContext();
 
   const {
     data: servicecategory,
@@ -96,7 +91,7 @@ export default function ServiceCategoryListView() {
   // Logout the user
   const handleLogout = async () => {
     try {
-      await logout();
+      await signOut();
       router.replace('/');
     } catch (error) {
       console.error(error);
