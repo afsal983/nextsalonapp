@@ -24,8 +24,8 @@ import { useSetState } from 'src/hooks/use-set-state';
 import { fetcher } from 'src/utils/axios';
 
 import { useTranslate } from 'src/locales';
-import { signOut as jwtSignOut } from 'src/auth/context/jwt/action';
 import { DashboardContent } from 'src/layouts/dashboard';
+import { signOut as jwtSignOut } from 'src/auth/context/jwt/action';
 
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
