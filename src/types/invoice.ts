@@ -1,9 +1,9 @@
-import type { IDateValue, IAddressItem, IDatePickerControl } from './common';
 import { Customer } from './customer';
 import { BranchItem } from './branch';
 import { ServiceItem } from './service';
 import { EmployeeItem } from './employee';
 import { AppointmentItem } from './appointment';
+import type { IDatePickerControl } from './common';
 // ----------------------------------------------------------------------
 
 export type IInvoiceTableFilterValue = string | string[] | Date | null;

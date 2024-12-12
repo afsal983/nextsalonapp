@@ -1,5 +1,3 @@
-import type { LinkProps } from '@mui/material/Link';
-
 import { m } from 'framer-motion';
 import { forwardRef } from 'react';
 
@@ -7,6 +5,7 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import { styled } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
+import type { LinkProps } from '@mui/material/Link';
 import CardActionArea from '@mui/material/CardActionArea';
 
 import { RouterLink } from 'src/routes/components';

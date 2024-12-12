@@ -2,10 +2,7 @@ import { paths } from 'src/routes/paths';
 
 import { CONFIG } from 'src/config-global';
 
-import { Label } from 'src/components/label';
-import { Iconify } from 'src/components/iconify';
 import { SvgColor } from 'src/components/svg-color';
-import { useTranslate } from 'src/locales';
 // ----------------------------------------------------------------------
 
 const icon = (name: string) => (

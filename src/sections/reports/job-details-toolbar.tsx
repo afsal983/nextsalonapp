@@ -87,9 +87,9 @@ export default function JobDetailsToolbar({
 
       <CustomPopover
         open={popover.open}
+        anchorEl={popover.anchorEl}
         onClose={popover.onClose}
-        arrow="top-right"
-        sx={{ width: 140 }}
+        slotProps={{ arrow: { placement: 'right-top' } }}
       >
         {publishOptions.map((option) => (
           <MenuItem

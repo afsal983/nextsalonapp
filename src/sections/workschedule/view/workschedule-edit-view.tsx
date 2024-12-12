@@ -3,13 +3,12 @@
 import React from 'react';
 import useSWR, { mutate } from 'swr';
 
-import { DashboardContent } from 'src/layouts/dashboard';
-
 import { paths } from 'src/routes/paths';
 
 import { fetcher } from 'src/utils/axios';
 
 import { useTranslate } from 'src/locales';
+import { DashboardContent } from 'src/layouts/dashboard';
 
 import { useSettingsContext } from 'src/components/settings';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';

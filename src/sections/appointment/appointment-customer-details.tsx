@@ -3,10 +3,7 @@ import { useFormContext } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import { Iconify } from 'src/components/iconify';
-
 import Typography from '@mui/material/Typography';
-
 import {
   Card,
   Avatar,
@@ -19,6 +16,7 @@ import {
 
 import { useResponsive } from 'src/hooks/use-responsive';
 
+import { Iconify } from 'src/components/iconify';
 import { LiveCustomerSearch } from 'src/components/livecustomersearch';
 
 import { Customer } from 'src/types/customer';

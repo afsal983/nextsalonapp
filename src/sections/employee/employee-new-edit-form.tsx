@@ -1,6 +1,8 @@
 import { mutate } from 'swr';
+import { z as zod } from 'zod';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -30,23 +32,24 @@ interface Props {
   services: ServiceItem[];
   users: UserItem[];
 }
+export type NewEmployeeSchemaType = zod.infer<typeof NewEmployeeSchema>;
+
+const NewEmployeeSchema = zod.object({
+  id: zod.string().optional(), // Optional string
+  name: zod.string({ required_error: 'Invalid name' }), // Required string with custom error
+  address: zod.string().optional(), // Optional string
+  telephone: zod.string({ required_error: 'Invalid telephone' }), // Required string with custom error
+  email: zod.string({ required_error: 'invalid email' }), // Required string with custom error
+  branch_id: zod.number().optional(), // Optional number
+  user_id: zod.number().optional(), // Optional number
+  employeeservice: zod.array(zod.unknown()).optional(), // Optional array with any type of items
+  avatarimagename: zod.string().optional(), // Optional string
+});
 
 export default function EmployeeNewEditForm({ currentEmployee, branches, users, services }: Props) {
   const router = useRouter();
 
   const { t } = useTranslate();
-
-  const NewProductSchema = Yup.object().shape({
-    id: Yup.string(),
-    name: Yup.string().required(t('salonapp.employee.name_fvalid_error')),
-    address: Yup.string(),
-    telephone: Yup.string().required(t('general.color_fvalid_error')),
-    email: Yup.string().required(t('general.color_fvalid_error')),
-    branch_id: Yup.number(),
-    user_id: Yup.number(),
-    employeeservice: Yup.array(),
-    avatarimagename: Yup.string(),
-  });
 
   const defaultValues = useMemo(
     () => ({
@@ -67,8 +70,9 @@ export default function EmployeeNewEditForm({ currentEmployee, branches, users, 
     [currentEmployee]
   );
 
-  const methods = useForm({
-    resolver: yupResolver(NewProductSchema),
+  const methods = useForm<NewEmployeeSchemaType>({
+    mode: 'all',
+    resolver: zodResolver(NewEmployeeSchema),
     defaultValues,
   });
 

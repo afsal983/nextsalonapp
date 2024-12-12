@@ -2,11 +2,11 @@
 
 import useSWR from 'swr';
 
-import Container from '@mui/material/Container';
-
 import { paths } from 'src/routes/paths';
 
 import { fetcher } from 'src/utils/axios';
+
+import { DashboardContent } from 'src/layouts/dashboard';
 
 import { useSettingsContext } from 'src/components/settings';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
@@ -94,6 +94,6 @@ export default function InvoiceEditView({ id }: Props) {
         appsettings={appsettings.data}
         paymenttypes={paymenttypes.data}
       />
-    </Container>
+    </DashboardContent>
   );
 }

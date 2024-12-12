@@ -10,9 +10,8 @@ import { localStorageGetItem } from 'src/utils/storage-available';
 
 import { CONFIG } from 'src/config-global';
 
-import { i18nOptions, fallbackLng } from './config-locales';
-
 import type { LanguageValue } from './config-locales';
+import { i18nOptions, fallbackLng } from './config-locales';
 
 // ----------------------------------------------------------------------
 

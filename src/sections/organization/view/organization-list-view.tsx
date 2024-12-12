@@ -1,9 +1,8 @@
 'use client';
 
 import useSWR, { mutate } from 'swr';
-import { isEqual } from 'src/utils/helper';
 import { useState, useEffect, useCallback } from 'react';
-import { useSetState } from 'src/hooks/use-set-state';
+
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
@@ -11,7 +10,6 @@ import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import { alpha } from '@mui/material/styles';
-import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
@@ -20,13 +18,14 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
-import { DashboardContent } from 'src/layouts/dashboard';
 import { useBoolean } from 'src/hooks/use-boolean';
+import { useSetState } from 'src/hooks/use-set-state';
 
 import { fetcher } from 'src/utils/axios';
 
 import { useTranslate } from 'src/locales';
-import { useAuthContext } from 'src/auth/hooks';
+import { DashboardContent } from 'src/layouts/dashboard';
+import { signOut as jwtSignOut } from 'src/auth/context/jwt/action';
 
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
@@ -46,16 +45,13 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 
-import {
-  type OrganizationItem,
-  type OrganizationTableFilters,
-  type OrganizationTableFilterValue,
-} from 'src/types/organization';
+import { type OrganizationItem, type OrganizationTableFilters } from 'src/types/organization';
 
 import OrganizationTableRow from '../organization-table-row';
 import OrganizationTableToolbar from '../organization-table-toolbar';
 import OrganizationTableFiltersResult from '../organization-table-filters-result';
 
+const signOut = jwtSignOut;
 // ----------------------------------------------------------------------
 
 const STATUS_OPTIONS = [{ value: 'all', label: 'All' }];
@@ -75,7 +71,6 @@ export default function OrganizationListView() {
 
   // Initialize
   const [tableData, setTableData] = useState<OrganizationItem[]>([]);
-  const { logout } = useAuthContext();
 
   const filters = useSetState<OrganizationTableFilters>({
     name: '',
@@ -99,7 +94,7 @@ export default function OrganizationListView() {
   // Logout the user
   const handleLogout = async () => {
     try {
-      await logout();
+      await signOut();
       router.replace('/');
     } catch (error) {
       console.error(error);
@@ -248,7 +243,8 @@ export default function OrganizationListView() {
                 icon={
                   <Label
                     variant={
-                      ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
+                      ((tab.value === 'all' || tab.value === filters.state.status) && 'filled') ||
+                      'soft'
                     }
                     color="default"
                   >

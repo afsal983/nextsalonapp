@@ -4,7 +4,6 @@ import useSWR from 'swr';
 import { useState, useCallback } from 'react';
 
 import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 
 import { paths } from 'src/routes/paths';
@@ -12,6 +11,7 @@ import { paths } from 'src/routes/paths';
 import { fetcher } from 'src/utils/axios';
 
 import { ORDER_STATUS_OPTIONS } from 'src/_data';
+import { DashboardContent } from 'src/layouts/dashboard';
 
 import { useSettingsContext } from 'src/components/settings';
 
@@ -78,6 +78,6 @@ export default function AppointmentDetailsView({ id }: Props) {
           />
         </Grid>
       </Grid>
-    </Container>
+    </DashboardContent>
   );
 }

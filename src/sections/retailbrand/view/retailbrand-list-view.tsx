@@ -1,7 +1,6 @@
 'use client';
 
 import useSWR, { mutate } from 'swr';
-import { isEqual } from 'src/utils/helper';
 import { useState, useEffect, useCallback } from 'react';
 
 import Tab from '@mui/material/Tab';
@@ -11,7 +10,6 @@ import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import { alpha } from '@mui/material/styles';
-import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
@@ -21,11 +19,13 @@ import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
+import { useSetState } from 'src/hooks/use-set-state';
 
 import { fetcher } from 'src/utils/axios';
 
 import { useTranslate } from 'src/locales';
-import { useAuthContext } from 'src/auth/hooks';
+import { DashboardContent } from 'src/layouts/dashboard';
+import { signOut as jwtSignOut } from 'src/auth/context/jwt/action';
 
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
@@ -48,7 +48,6 @@ import {
 import {
   type RetailBrandItem,
   type RetailBrandTableFilters,
-  type RetailBrandTableFilterValue,
 } from 'src/types/service';
 
 import RetailTableRow from '../retailbrand-table-row';
@@ -59,11 +58,7 @@ import RetailTableFiltersResult from '../retailbrand-table-filters-result';
 
 const STATUS_OPTIONS = [{ value: 'all', label: 'All' }];
 
-const defaultFilters: RetailBrandTableFilters = {
-  name: '',
-  status: 'all',
-};
-
+const signOut = jwtSignOut;
 // ----------------------------------------------------------------------
 export default function RetailBrandListView() {
   const { t } = useTranslate();
@@ -77,7 +72,10 @@ export default function RetailBrandListView() {
   // Initialize
   const [tableData, setTableData] = useState<RetailBrandItem[]>([]);
 
-  const { logout } = useAuthContext();
+  const filters = useSetState<RetailBrandTableFilters>({
+    name: '',
+    status: 'all',
+  });
 
   // Use SWR to fetch data from multiple endpoints in parallel
   const {
@@ -94,12 +92,10 @@ export default function RetailBrandListView() {
 
   const confirm = useBoolean();
 
-  const [filters, setFilters] = useState(defaultFilters);
-
   // Logout the user
   const handleLogout = async () => {
     try {
-      await logout();
+      await signOut();
       router.replace('/');
     } catch (error) {
       console.error(error);
@@ -109,7 +105,7 @@ export default function RetailBrandListView() {
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
-    filters,
+    filters: filters.state,
   });
 
   const dataInPage = dataFiltered.slice(
@@ -119,24 +115,9 @@ export default function RetailBrandListView() {
 
   const denseHeight = table.dense ? 56 : 56 + 20;
 
-  const canReset = !isEqual(defaultFilters, filters);
+  const canReset = !!filters.state.name || filters.state.status !== 'all';
 
   const notFound = (dataFiltered.length === 0 && canReset) || dataFiltered.length === 0;
-
-  const handleFilters = useCallback(
-    (name: string, value: RetailBrandTableFilterValue) => {
-      table.onResetPage();
-      setFilters((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    },
-    [table]
-  );
-
-  const handleResetFilters = useCallback(() => {
-    setFilters(defaultFilters);
-  }, []);
 
   // Delete an item
   const handleDeleteRow = useCallback(
@@ -188,9 +169,10 @@ export default function RetailBrandListView() {
 
   const handleFilterStatus = useCallback(
     (event: React.SyntheticEvent, newValue: string) => {
-      handleFilters('status', newValue);
+      table.onResetPage();
+      filters.setState({ status: newValue });
     },
-    [handleFilters]
+    [filters, table]
   );
 
   // Use useEffect to update state1 when data1 is available
@@ -246,7 +228,7 @@ export default function RetailBrandListView() {
 
         <Card>
           <Tabs
-            value={filters.status}
+            value={filters.state.status}
             onChange={handleFilterStatus}
             sx={{
               px: 2.5,
@@ -262,7 +244,8 @@ export default function RetailBrandListView() {
                 icon={
                   <Label
                     variant={
-                      ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
+                      ((tab.value === 'all' || tab.value === filters.state.status) && 'filled') ||
+                      'soft'
                     }
                     color="default"
                   >
@@ -277,16 +260,13 @@ export default function RetailBrandListView() {
             ))}
           </Tabs>
 
-          <RetailBrandTableToolbar filters={filters} onFilters={handleFilters} />
+          <RetailBrandTableToolbar filters={filters} onResetPage={table.onResetPage} />
 
           {canReset && (
             <RetailTableFiltersResult
               filters={filters}
-              onFilters={handleFilters}
-              //
-              onResetFilters={handleResetFilters}
-              //
-              results={dataFiltered.length}
+              onResetPage={table.onResetPage}
+              totalResults={dataFiltered.length}
               sx={{ p: 2.5, pt: 0 }}
             />
           )}
@@ -373,7 +353,7 @@ export default function RetailBrandListView() {
             onChangeDense={table.onChangeDense}
           />
         </Card>
-      </Container>
+      </DashboardContent>
 
       <ConfirmDialog
         open={confirm.value}

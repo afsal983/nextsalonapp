@@ -1,7 +1,5 @@
-import type { MotionValue } from 'framer-motion';
-import type { BoxProps } from '@mui/material/Box';
-
 import { useRef, useState } from 'react';
+import type { MotionValue } from 'framer-motion';
 import { m, useScroll, useSpring, useTransform, useMotionValueEvent } from 'framer-motion';
 
 import Box from '@mui/material/Box';
@@ -10,6 +8,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import { useTheme } from '@mui/material/styles';
+import type { BoxProps } from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Avatar, { avatarClasses } from '@mui/material/Avatar';
@@ -73,9 +72,9 @@ export function HomeHero({ sx, ...other }: BoxProps) {
         }}
       >
         <Box component="span" sx={{ width: 1, opacity: 0.24 }}>
-          Boost your building
+          Go-to platform for
         </Box>
-        process with
+        Customer-Obsessed Businesses
         <Box
           component={m.span}
           animate={{ backgroundPosition: '200% center' }}
@@ -93,7 +92,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
             ml: { xs: 0.75, md: 1, xl: 1.5 },
           }}
         >
-          Minimal
+          SMEEye
         </Box>
       </Box>
     </AnimatedDiv>
@@ -133,7 +132,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
             />
           ))}
         </AvatarGroup>
-        160+ Happy customers
+        100+ Happy customers
       </Box>
     </AnimatedDiv>
   );
@@ -151,7 +150,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
             startIcon={<Iconify width={24} icon="iconoir:flash" />}
           >
             <span>
-              Live preview
+              Login
               <Box
                 component="small"
                 sx={{
@@ -172,29 +171,16 @@ export function HomeHero({ sx, ...other }: BoxProps) {
             variant="body2"
             target="_blank"
             rel="noopener"
-            href={paths.freeUI}
+            href={paths.auth.jwt.login}
             underline="always"
             sx={{ gap: 0.5, alignItems: 'center', display: 'inline-flex' }}
           >
+            {/*
             Get free version
             <Iconify width={16} icon="eva:external-link-fill" />
+              */}
           </Link>
         </Stack>
-      </AnimatedDiv>
-
-      <AnimatedDiv>
-        <Button
-          color="inherit"
-          size="large"
-          variant="outlined"
-          target="_blank"
-          rel="noopener"
-          href={paths.figmaUrl}
-          startIcon={<Iconify width={24} icon="solar:figma-outline" />}
-          sx={{ borderColor: 'text.primary' }}
-        >
-          Figma preview
-        </Button>
       </AnimatedDiv>
     </Box>
   );

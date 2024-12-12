@@ -3,10 +3,10 @@
 import useSWR from 'swr';
 import Calendar from '@fullcalendar/react'; // => request placed at the top
 import listPlugin from '@fullcalendar/list';
+import { useState, useEffect } from 'react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
-import { useState, useEffect, useCallback } from 'react';
 import interactionPlugin from '@fullcalendar/interaction';
 
 import Card from '@mui/material/Card';
@@ -14,17 +14,18 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import { useTheme } from '@mui/material/styles';
-import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Select, SelectChangeEvent } from '@mui/material';
 
 import { useBoolean } from 'src/hooks/use-boolean';
+import { useSetState } from 'src/hooks/use-set-state';
 import { useResponsive } from 'src/hooks/use-responsive';
 
 import { fetcher } from 'src/utils/axios';
 import { fIsAfter, fIsBetween } from 'src/utils/format-time';
 
+import { DashboardContent } from 'src/layouts/dashboard';
 import { CALENDAR_COLOR_OPTIONS } from 'src/_data/_calendar';
 import { updateEvent, useGetEvents } from 'src/app/api/salonapp/appointments/calendar';
 
@@ -32,7 +33,7 @@ import { Iconify } from 'src/components/iconify';
 import { useSettingsContext } from 'src/components/settings';
 
 import { EmployeeItem } from 'src/types/employee';
-import { ICalendarEvent, ICalendarFilters, ICalendarFilterValue } from 'src/types/calendar';
+import { ICalendarEvent, ICalendarFilters } from 'src/types/calendar';
 
 import { StyledCalendar } from '../styles';
 import CalendarForm from '../calendar-form';
@@ -49,12 +50,6 @@ start.setDate(start.getDate() - 120);
 const end = new Date();
 end.setDate(end.getDate() + 30);
 
-const defaultFilters: ICalendarFilters = {
-  colors: [],
-  startDate: start,
-  endDate: end,
-};
-
 // ----------------------------------------------------------------------
 
 export default function CalendarView() {
@@ -66,19 +61,23 @@ export default function CalendarView() {
 
   const openFilters = useBoolean();
 
-  const [filters, setFilters] = useState(defaultFilters);
+  const filters = useSetState<ICalendarFilters>({
+    colors: [],
+    startDate: null,
+    endDate: null,
+  });
 
   const [selectedEmployee, setSelectedEmployee] = useState('');
 
   const appFilters = {
     employeeId: Number(selectedEmployee),
-    startDate: filters.startDate,
-    endDate: filters.endDate,
+    startDate: filters.state.startDate,
+    endDate: filters.state.endDate,
   };
 
   const { events, eventsLoading } = useGetEvents(appFilters);
 
-  const dateError = fIsAfter(filters.startDate, filters.endDate);
+  const dateError = fIsAfter(filters.state.startDate, filters.state.endDate);
 
   const { data: employees, isLoading: isemployeeLoading } = useSWR(
     '/api/salonapp/employee',
@@ -127,24 +126,10 @@ export default function CalendarView() {
     onInitialView();
   }, [onInitialView]);
 
-  const handleFilters = useCallback((name: string, value: ICalendarFilterValue) => {
-    setFilters((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  }, []);
+  const canReset =
+    filters.state.colors.length > 0 || (!!filters.state.startDate && !!filters.state.endDate);
 
-  const handleResetFilters = useCallback(() => {
-    setFilters(defaultFilters);
-  }, []);
-
-  const canReset = !!filters.colors.length || (!!filters.startDate && !!filters.endDate);
-
-  const dataFiltered = applyFilter({
-    inputData: events,
-    filters,
-    dateError,
-  });
+  const dataFiltered = applyFilter({ inputData: events, filters: filters.state, dateError });
 
   const handleEmployeeChange = (event: SelectChangeEvent<string>) => {
     setSelectedEmployee(event.target.value);
@@ -153,21 +138,17 @@ export default function CalendarView() {
   const renderResults = (
     <CalendarFiltersResult
       filters={filters}
-      onFilters={handleFilters}
-      //
-      canReset={canReset}
-      onResetFilters={handleResetFilters}
-      //
-      results={dataFiltered.length}
+      totalResults={dataFiltered.length}
       sx={{ mb: { xs: 3, md: 5 } }}
     />
   );
 
   if (isemployeeLoading || isservicesLoading) return <div>Loading...</div>;
 
+  const flexProps = { flex: '1 1 auto', display: 'flex', flexDirection: 'column' };
   return (
     <>
-      <Container maxWidth={settings.themeStretch ? false : 'xl'}>
+      <DashboardContent maxWidth="xl" sx={{ ...flexProps }}>
         <Stack
           direction="row"
           alignItems="center"
@@ -243,7 +224,7 @@ export default function CalendarView() {
             />
           </StyledCalendar>
         </Card>
-      </Container>
+      </DashboardContent>
 
       <Dialog
         fullWidth
@@ -265,11 +246,11 @@ export default function CalendarView() {
           customer_id={currentEvent?.customer_id || 0}
           SelectedCustomer={currentEvent?.Customer || null}
           Product={currentEvent?.Product || null}
-          employee={selectedEmployee}
+          // employee={selectedEmployee}
           services={services?.data}
           colorOptions={CALENDAR_COLOR_OPTIONS}
           onClose={onCloseForm}
-          appFilters={appFilters}
+          // appFilters={appFilters}
         />
       </Dialog>
 
@@ -278,10 +259,8 @@ export default function CalendarView() {
         onClose={openFilters.onFalse}
         //
         filters={filters}
-        onFilters={handleFilters}
         //
         canReset={canReset}
-        onResetFilters={handleResetFilters}
         //
         dateError={dateError}
         //

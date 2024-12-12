@@ -11,7 +11,6 @@ import { varAlpha } from 'src/theme/styles';
 import { NavLi, navSectionClasses, NavSectionVertical } from 'src/components/nav-section';
 
 import { NavItem } from './nav-mobile-item';
-
 import type { NavListProps } from '../types';
 
 // ----------------------------------------------------------------------

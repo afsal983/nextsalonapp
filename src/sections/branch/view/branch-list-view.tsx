@@ -1,9 +1,8 @@
 'use client';
 
 import useSWR, { mutate } from 'swr';
-import { isEqual } from 'src/utils/helper';
 import { useState, useEffect, useCallback } from 'react';
-import { useSetState } from 'src/hooks/use-set-state';
+
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
@@ -11,7 +10,6 @@ import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import { alpha } from '@mui/material/styles';
-import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
@@ -21,11 +19,13 @@ import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
+import { useSetState } from 'src/hooks/use-set-state';
 
 import { fetcher } from 'src/utils/axios';
 
 import { useTranslate } from 'src/locales';
-import { useAuthContext } from 'src/auth/hooks';
+import { DashboardContent } from 'src/layouts/dashboard';
+import { signOut as jwtSignOut } from 'src/auth/context/jwt/action';
 
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
@@ -47,11 +47,11 @@ import {
 
 import { type BranchItem, type BranchTableFilters } from 'src/types/branch';
 
-import { DashboardContent } from 'src/layouts/dashboard';
 import BranchTableRow from '../branch-table-row';
 import BranchTableToolbar from '../branch-table-toolbar';
 import ServicecategoryTableFiltersResult from '../branch-table-filters-result';
 
+const signOut = jwtSignOut;
 // ----------------------------------------------------------------------
 
 const STATUS_OPTIONS = [{ value: 'all', label: 'All' }];
@@ -72,7 +72,6 @@ export default function BranchListView() {
 
   // Initialize
   const [tableData, setTableData] = useState<BranchItem[]>([]);
-  const { logout } = useAuthContext();
 
   const {
     data: branch,
@@ -96,7 +95,7 @@ export default function BranchListView() {
   // Logout the user
   const handleLogout = async () => {
     try {
-      await logout();
+      await signOut();
       router.replace('/');
     } catch (error) {
       console.error(error);

@@ -8,6 +8,8 @@ import type { BoxProps } from '@mui/material/Box';
 
 import { RouterLink } from 'src/routes/components';
 
+import { CONFIG } from 'src/config-global';
+
 import { logoClasses } from './classes';
 
 // ----------------------------------------------------------------------
@@ -34,13 +36,14 @@ export const Logo = forwardRef<HTMLDivElement, LogoProps>(
     const PRIMARY_DARKER = theme.vars.palette.primary.dark;
 
     /*
-    * OR using local (public folder)
-    *
+     * OR using local (public folder)
+     *
+     * */
     const singleLogo = (
       <Box
         alt="Single logo"
         component="img"
-        src={`${CONFIG.assetsDir}/logo/logo-single.svg`}
+        src={`${CONFIG.assetsDir}/logo/smeeye-logo.png`}
         width="100%"
         height="100%"
       />
@@ -50,13 +53,13 @@ export const Logo = forwardRef<HTMLDivElement, LogoProps>(
       <Box
         alt="Full logo"
         component="img"
-        src={`${CONFIG.assetsDir}/logo/logo-full.svg`}
+        src={`${CONFIG.assetsDir}/logo/logo_full.svg`}
         width="100%"
         height="100%"
       />
     );
-    *
-    */
+
+    /*
 
     const singleLogo = (
       <svg
@@ -187,7 +190,7 @@ export const Logo = forwardRef<HTMLDivElement, LogoProps>(
         </defs>
       </svg>
     );
-
+      */
     const baseSize = {
       width: width ?? 40,
       height: height ?? 40,

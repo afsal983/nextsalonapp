@@ -1,5 +1,6 @@
-import type { Theme, SxProps } from '@mui/material/styles';
 import type { Editor, Extension, EditorOptions } from '@tiptap/react';
+
+import type { Theme, SxProps } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
 

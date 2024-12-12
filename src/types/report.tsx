@@ -1,3 +1,4 @@
+import { IDatePickerControl } from './common';
 // Report
 export type ReportFilterValue = string | string[] | Date | null;
 
@@ -26,8 +27,8 @@ export interface SalesReportTableFilters {
 export type SalesReportTableFilterValue = string | string[] | Date | null;
 
 export interface SalesReportPeriodFilters {
-  startDate: Date | null;
-  endDate: Date | null;
+  startDate: IDatePickerControl | null;
+  endDate: IDatePickerControl | null;
 }
 
 export type SalesReportPeriodFilterValue = string[] | Date | null;
@@ -40,15 +41,11 @@ export interface DetailedSalesReportTableFilters {
   paymenttype: string[];
 }
 
-export type DetailedSalesReportTableFilterValue =
-  | string
-  | string[]
-  | Date
-  | null;
+export type DetailedSalesReportTableFilterValue = string | string[] | Date | null;
 
 export interface DetailedSalesReportPeriodFilters {
-  startDate: Date | null;
-  endDate: Date | null;
+  startDate: IDatePickerControl | null;
+  endDate: IDatePickerControl | null;
 }
 
 export type DetailedSalesReportPeriodFilterValue = string[] | Date | null;
@@ -86,8 +83,8 @@ export interface CustomerReportTableFilters {
 export type CustomerReportTableFilterValue = string | string[] | Date | null;
 
 export interface CustomerReportPeriodFilters {
-  startDate: Date | null;
-  endDate: Date | null;
+  startDate: IDatePickerControl | null;
+  endDate: IDatePickerControl | null;
 }
 
 export type CustomerReportPeriodFilterValue = string[] | Date | null;
@@ -117,8 +114,8 @@ export interface ProductReportTableFilters {
 export type ProductReportTableFilterValue = string | string[] | Date | null;
 
 export interface ProductReportPeriodFilters {
-  startDate: Date | null;
-  endDate: Date | null;
+  startDate: IDatePickerControl | null;
+  endDate: IDatePickerControl | null;
 }
 
 export type ProductReportPeriodFilterValue = string[] | Date | null;
@@ -147,8 +144,8 @@ export interface AppointmentReportTableFilters {
 export type AppointmentReportTableFilterValue = string | string[] | Date | null;
 
 export interface AppointmentReportPeriodFilters {
-  startDate: Date | null;
-  endDate: Date | null;
+  startDate: IDatePickerControl | null;
+  endDate: IDatePickerControl | null;
 }
 
 export type AppointmentReportPeriodFilterValue = string[] | Date | null;
@@ -185,8 +182,8 @@ export interface ExpenseReportTableFilters {
 export type ExpenseReportTableFilterValue = string | string[] | Date | null;
 
 export interface ExpenseReportPeriodFilters {
-  startDate: Date | null;
-  endDate: Date | null;
+  startDate: IDatePickerControl | null;
+  endDate: IDatePickerControl | null;
 }
 
 export type ExpenseReportPeriodFilterValue = string[] | Date | null;

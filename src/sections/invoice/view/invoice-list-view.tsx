@@ -1,9 +1,9 @@
 'use client';
 
 import useSWR from 'swr';
-import { sumBy } from 'src/utils/helper';
-import { useState, useEffect, useCallback } from 'react';
 import dayjs from 'dayjs';
+import { useState, useEffect, useCallback } from 'react';
+
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
@@ -12,22 +12,24 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
-import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 import { alpha, useTheme } from '@mui/material/styles';
 import TableContainer from '@mui/material/TableContainer';
-import { useSetState } from 'src/hooks/use-set-state';
+
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
+import { useSetState } from 'src/hooks/use-set-state';
 
+import { sumBy } from 'src/utils/helper';
 import { fetcher } from 'src/utils/axios';
 import { fIsAfter } from 'src/utils/format-time';
 
 import { useTranslate } from 'src/locales';
+import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
@@ -488,7 +490,7 @@ export default function InvoiceListView() {
             onChangeDense={table.onChangeDense}
           />
         </Card>
-      </Container>
+      </DashboardContent>
 
       <ConfirmDialog
         open={confirm.value}

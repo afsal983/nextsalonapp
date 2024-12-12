@@ -1,5 +1,7 @@
+import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
 import { useMemo, useCallback } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -27,14 +29,15 @@ interface Props {
   currentSettings: AppSettings[];
 }
 
+export type UpdateAppointmentSettingSchemaType = zod.infer<typeof UpdateAppointmentSettingSchema>;
+const UpdateAppointmentSettingSchema = zod.object({
+  calendarsPerRow: zod.string().min(1, 'Calendar Per Show is required'),
+  showMonths: zod.string().min(1, 'Show Months is required'),
+});
+
 export default function SettingsAppointment({ currentSettings }: Props) {
   const router = useRouter();
   const { t } = useTranslate();
-
-  const UpdateUserSchema = Yup.object().shape({
-    calendarsPerRow: Yup.string().required('Calender Per Show'),
-    showMonths: Yup.string().required('Show Months'),
-  });
 
   const defaultValues = useMemo(
     () => ({
@@ -44,8 +47,9 @@ export default function SettingsAppointment({ currentSettings }: Props) {
     [currentSettings]
   );
 
-  const methods = useForm({
-    resolver: yupResolver(UpdateUserSchema),
+  const methods = useForm<UpdateAppointmentSettingSchemaType>({
+    mode: 'all',
+    resolver: zodResolver(UpdateAppointmentSettingSchema),
     defaultValues,
   });
 

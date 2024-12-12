@@ -7,14 +7,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
 import LoadingButton from '@mui/lab/LoadingButton';
 
-import { paths } from 'src/routes/paths';
-
 import { PasswordIcon } from 'src/assets/icons';
 
 import { Form, Field } from 'src/components/hook-form';
 
 import { FormHead } from '../../../components/form-head';
-import { FormReturnLink } from '../../../components/form-return-link';
 
 // ----------------------------------------------------------------------
 

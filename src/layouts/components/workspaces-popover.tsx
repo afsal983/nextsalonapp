@@ -1,7 +1,5 @@
 'use client';
 
-import type { ButtonBaseProps } from '@mui/material/ButtonBase';
-
 import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
@@ -9,6 +7,7 @@ import Avatar from '@mui/material/Avatar';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import ButtonBase from '@mui/material/ButtonBase';
+import type { ButtonBaseProps } from '@mui/material/ButtonBase';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';

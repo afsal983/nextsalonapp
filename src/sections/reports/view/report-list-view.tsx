@@ -1,17 +1,15 @@
 'use client';
 
-import { orderBy, isEqual } from 'src/utils/helper';
-
 import { useState, useCallback } from 'react';
 
 import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
 
 import { paths } from 'src/routes/paths';
 
 import { useBoolean } from 'src/hooks/use-boolean';
+import { useSetState } from 'src/hooks/use-set-state';
 
-import { countries } from 'src/assets/data';
+import { DashboardContent } from 'src/layouts/dashboard';
 import {
   _roles,
   JOB_SORT_OPTIONS,
@@ -24,7 +22,7 @@ import { EmptyContent } from 'src/components/empty-content';
 import { useSettingsContext } from 'src/components/settings';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
-import { IReportItem, ReportFilters, ReportFilterValue } from 'src/types/report';
+import { IReportItem, ReportFilters } from 'src/types/report';
 
 import JobSort from '../job-sort';
 import ReportList from '../report-list';
@@ -48,36 +46,24 @@ export default function ReportListView() {
 
   const [sortBy, setSortBy] = useState('latest');
 
-  const [search, setSearch] = useState<{
+  const search = useSetState<{
     query: string;
     results: IReportItem[];
-  }>({
-    query: '',
-    results: [],
-  });
+  }>({ query: '', results: [] });
 
-  const [filters, setFilters] = useState(defaultFilters);
+  const filters = useSetState<ReportFilters>({
+    name: [],
+  });
 
   const dataFiltered = applyFilter({
     inputData: report_types,
-    filters,
+    filters: filters.state,
     sortBy,
   });
 
-  const canReset = !isEqual(defaultFilters, filters);
+  const canReset = filters.state.name.length > 0;
 
   const notFound = !dataFiltered.length && canReset;
-
-  const handleFilters = useCallback((name: string, value: ReportFilterValue) => {
-    setFilters((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  }, []);
-
-  const handleResetFilters = useCallback(() => {
-    setFilters(defaultFilters);
-  }, []);
 
   const handleSortBy = useCallback((newValue: string) => {
     setSortBy(newValue);
@@ -85,37 +71,17 @@ export default function ReportListView() {
 
   const handleSearch = useCallback(
     (inputValue: string) => {
-      setSearch((prevState) => ({
-        ...prevState,
-        query: inputValue,
-      }));
+      search.setState({ query: inputValue });
 
       if (inputValue) {
-        const results = report_types
-          .map((category) => {
-            const filteredItems = category.items.filter(
-              (item) => item.name.toLowerCase().indexOf(search.query.toLowerCase()) !== -1
-            );
-            if (filteredItems.length > 0) {
-              return {
-                ...category,
-                items: filteredItems,
-              };
-            }
-            return {
-              ...category,
-              items: [],
-            };
-          })
-          .filter((category) => category !== null);
+        const results = report_types.filter(
+          (job) => job.category.toLowerCase().indexOf(search.state.query.toLowerCase()) !== -1
+        );
 
-        setSearch((prevState) => ({
-          ...prevState,
-          results,
-        }));
+        search.setState({ results });
       }
     },
-    [search.query]
+    [search]
   );
 
   const renderFilters = (
@@ -125,30 +91,21 @@ export default function ReportListView() {
       alignItems={{ xs: 'flex-end', sm: 'center' }}
       direction={{ xs: 'column', sm: 'row' }}
     >
-      <ReportSearch
-        query={search.query}
-        results={search.results}
-        onSearch={handleSearch}
-        hrefItem={(id: string) => paths.dashboard.report.details(id)}
-      />
+      <ReportSearch search={search} onSearch={handleSearch} />
 
       <Stack direction="row" spacing={1} flexShrink={0}>
         <JobFilters
+          filters={filters}
+          canReset={canReset}
           open={openFilters.value}
           onOpen={openFilters.onTrue}
           onClose={openFilters.onFalse}
-          //
-          filters={filters}
-          onFilters={handleFilters}
-          //
-          canReset={canReset}
-          onResetFilters={handleResetFilters}
-          //
-          locationOptions={countries.map((option) => option.label)}
-          roleOptions={_roles}
-          benefitOptions={JOB_BENEFIT_OPTIONS.map((option) => option.label)}
-          experienceOptions={['all', ...JOB_EXPERIENCE_OPTIONS.map((option) => option.label)]}
-          employmentTypeOptions={JOB_EMPLOYMENT_TYPE_OPTIONS.map((option) => option.label)}
+          options={{
+            roles: _roles,
+            benefits: JOB_BENEFIT_OPTIONS.map((option) => option.label),
+            employmentTypes: JOB_EMPLOYMENT_TYPE_OPTIONS.map((option) => option.label),
+            experiences: ['all', ...JOB_EXPERIENCE_OPTIONS.map((option) => option.label)],
+          }}
         />
 
         <JobSort sort={sortBy} onSort={handleSortBy} sortOptions={JOB_SORT_OPTIONS} />
@@ -157,15 +114,7 @@ export default function ReportListView() {
   );
 
   const renderResults = (
-    <ReportFiltersResult
-      filters={filters}
-      onResetFilters={handleResetFilters}
-      //
-      canReset={canReset}
-      onFilters={handleFilters}
-      //
-      results={dataFiltered.length}
-    />
+    <ReportFiltersResult filters={filters} totalResults={dataFiltered.length} />
   );
 
   return (
@@ -199,35 +148,20 @@ export default function ReportListView() {
       {notFound && <EmptyContent filled title="No Data" sx={{ py: 10 }} />}
 
       <ReportList reports={dataFiltered} />
-    </Container>
+    </DashboardContent>
   );
 }
 
 // ----------------------------------------------------------------------
 
-const applyFilter = ({
-  inputData,
-  filters,
-  sortBy,
-}: {
+type ApplyFilterProps = {
   inputData: IReportItem[];
   filters: ReportFilters;
   sortBy: string;
-}) => {
+};
+
+const applyFilter = ({ inputData, filters, sortBy }: ApplyFilterProps) => {
   const { name } = filters;
-
-  // SORT BY
-  if (sortBy === 'latest') {
-    inputData = orderBy(inputData, ['createdAt'], ['desc']);
-  }
-
-  if (sortBy === 'oldest') {
-    inputData = orderBy(inputData, ['createdAt'], ['asc']);
-  }
-
-  if (sortBy === 'popular') {
-    inputData = orderBy(inputData, ['totalViews'], ['desc']);
-  }
 
   // FILTERS
   if (name.length) {

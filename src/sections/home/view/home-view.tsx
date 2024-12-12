@@ -6,7 +6,6 @@ import { BackToTop } from 'src/components/animate/back-to-top';
 import { ScrollProgress, useScrollProgress } from 'src/components/animate/scroll-progress';
 
 import { HomeHero } from '../home-hero';
-
 import { HomeMinimal } from '../home-minimal';
 
 // ----------------------------------------------------------------------

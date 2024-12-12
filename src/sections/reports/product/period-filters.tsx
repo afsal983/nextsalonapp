@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import Stack from '@mui/material/Stack';
 import Badge from '@mui/material/Badge';
 import { LoadingButton } from '@mui/lab';
@@ -10,63 +8,33 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import SearchIcon from '@mui/icons-material/Search';
 
+import type { UseSetStateReturn } from 'src/hooks/use-set-state';
+
 import { Iconify } from 'src/components/iconify';
 
-import { CustomerReportPeriodFilters, CustomerReportPeriodFilterValue } from 'src/types/report';
+import { ProductReportPeriodFilters } from 'src/types/report';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  //
-  filters: CustomerReportPeriodFilters;
-  onFilters: (name: string, value: CustomerReportPeriodFilterValue) => void;
-  handleSearch: () => void;
-  //
-  canReset: boolean;
-  onResetFilters: VoidFunction;
-  //
-  dateError: boolean;
-  //
   open: boolean;
-  onClose: VoidFunction;
-  //
-  // events: ICalendarEvent[];
+  canReset: boolean;
+  dateError: boolean;
+  onClose: () => void;
   colorOptions: string[];
-  // onClickEvent: (eventId: string) => void;
-  isLoading: boolean;
+  filters: UseSetStateReturn<ProductReportPeriodFilters>;
+  handleSearch: () => void;
 };
 
 export default function PeriodFilters({
   open,
   onClose,
-  handleSearch,
-  //
   filters,
-  onFilters,
-  //
   canReset,
-  onResetFilters,
-  //
   dateError,
-  //
-  // events,
-  colorOptions, // onClickEvent,
-  isLoading,
+  colorOptions,
+  handleSearch,
 }: Props) {
-  const handleFilterStartDate = useCallback(
-    (newValue: Date | null) => {
-      onFilters('startDate', newValue);
-    },
-    [onFilters]
-  );
-
-  const handleFilterEndDate = useCallback(
-    (newValue: Date | null) => {
-      onFilters('endDate', newValue);
-    },
-    [onFilters]
-  );
-
   const renderHead = (
     <Stack
       direction="row"
@@ -79,7 +47,7 @@ export default function PeriodFilters({
       </Typography>
 
       <Tooltip title="Reset">
-        <IconButton onClick={onResetFilters}>
+        <IconButton onClick={filters.onResetState}>
           <Badge color="error" variant="dot" invisible={!canReset}>
             <Iconify icon="solar:restart-bold" />
           </Badge>
@@ -94,35 +62,17 @@ export default function PeriodFilters({
 
   const renderDateRange = (
     <Stack spacing={1.5} sx={{ mb: 3, px: 2.5 }}>
+      <Typography variant="subtitle2">Range</Typography>
+
       <Stack spacing={2}>
-        {/*
-        <DatePicker
-          label="Start date"
-          value={filters.startDate}
-          onChange={handleFilterStartDate}
-        />
-
-        <DatePicker
-          label="End date"
-          value={filters.endDate}
-          onChange={handleFilterEndDate}
-          slotProps={{
-            textField: {
-              error: dateError,
-              helperText: dateError && "End date must be later than start date",
-            },
-          }}
-        />
-        */}
-
         <LoadingButton
           variant="contained"
-          loading={isLoading}
           size="large"
           startIcon={<SearchIcon />}
           onClick={() => {
             handleSearch();
           }}
+          sx={{ my: 2.5 }}
         >
           Search
         </LoadingButton>

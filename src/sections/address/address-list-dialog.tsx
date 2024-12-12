@@ -10,7 +10,7 @@ import ListItemButton, { listItemButtonClasses } from '@mui/material/ListItemBut
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
-import SearchNotFound from 'src/components/search-not-found';
+import { SearchNotFound } from 'src/components/search-not-found';
 
 import { IAddressItem } from 'src/types/address';
 

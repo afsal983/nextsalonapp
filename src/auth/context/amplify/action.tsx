@@ -8,7 +8,6 @@ import type {
   ResendSignUpCodeInput,
   ConfirmResetPasswordInput,
 } from 'aws-amplify/auth';
-
 import {
   signIn as _signIn,
   signUp as _signUp,

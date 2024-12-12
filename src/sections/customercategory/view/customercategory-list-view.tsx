@@ -1,7 +1,6 @@
 'use client';
 
 import useSWR, { mutate } from 'swr';
-import { isEqual } from 'src/utils/helper';
 import { useState, useEffect, useCallback } from 'react';
 
 import Tab from '@mui/material/Tab';
@@ -11,7 +10,6 @@ import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import { alpha } from '@mui/material/styles';
-import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
@@ -21,11 +19,13 @@ import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
+import { useSetState } from 'src/hooks/use-set-state';
 
 import { fetcher } from 'src/utils/axios';
 
 import { useTranslate } from 'src/locales';
-import { useAuthContext } from 'src/auth/hooks';
+import { DashboardContent } from 'src/layouts/dashboard';
+import { signOut as jwtSignOut } from 'src/auth/context/jwt/action';
 
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
@@ -45,24 +45,16 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 
-import {
-  type CustomerCategory,
-  type CustomerCategoryTableFilters,
-  type CustomerCategoryTableFilterValue,
-} from 'src/types/customer';
+import { type CustomerCategory, type CustomerCategoryTableFilters } from 'src/types/customer';
 
 import CustomerCategoryTableRow from '../customercategory-table-row';
 import CustomerCategoryTableToolbar from '../customercategory-table-toolbar';
 import CustomercategoryTableFiltersResult from '../customercategory-table-filters-result';
 
+const signOut = jwtSignOut;
 // ----------------------------------------------------------------------
 
 const STATUS_OPTIONS = [{ value: 'all', label: 'All' }];
-
-const defaultFilters: CustomerCategoryTableFilters = {
-  name: '',
-  status: 'all',
-};
 
 // ----------------------------------------------------------------------
 
@@ -78,7 +70,11 @@ export default function CustomerCategoryListView() {
 
   // Initialize
   const [tableData, setTableData] = useState<CustomerCategory[]>([]);
-  const { logout } = useAuthContext();
+
+  const filters = useSetState<CustomerCategoryTableFilters>({
+    name: '',
+    status: 'all',
+  });
 
   const {
     data: customercategory,
@@ -94,12 +90,10 @@ export default function CustomerCategoryListView() {
 
   const confirm = useBoolean();
 
-  const [filters, setFilters] = useState(defaultFilters);
-
   // Logout the user
   const handleLogout = async () => {
     try {
-      await logout();
+      await signOut();
       router.replace('/');
     } catch (error) {
       console.error(error);
@@ -109,7 +103,7 @@ export default function CustomerCategoryListView() {
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
-    filters,
+    filters: filters.state,
   });
 
   const dataInPage = dataFiltered.slice(
@@ -118,25 +112,9 @@ export default function CustomerCategoryListView() {
   );
 
   const denseHeight = table.dense ? 56 : 56 + 20;
-
-  const canReset = !isEqual(defaultFilters, filters);
+  const canReset = !!filters.state.name || filters.state.status !== 'all';
 
   const notFound = (dataFiltered.length === 0 && canReset) || dataFiltered.length === 0;
-
-  const handleFilters = useCallback(
-    (name: string, value: CustomerCategoryTableFilterValue) => {
-      table.onResetPage();
-      setFilters((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    },
-    [table]
-  );
-
-  const handleResetFilters = useCallback(() => {
-    setFilters(defaultFilters);
-  }, []);
 
   // Delete an item
   const handleDeleteRow = useCallback(
@@ -188,14 +166,13 @@ export default function CustomerCategoryListView() {
     },
     [router]
   );
-
   const handleFilterStatus = useCallback(
     (event: React.SyntheticEvent, newValue: string) => {
-      handleFilters('status', newValue);
+      table.onResetPage();
+      filters.setState({ status: newValue });
     },
-    [handleFilters]
+    [filters, table]
   );
-
   // Use useEffect to update state1 when data1 is available
   useEffect(() => {
     if (customercategory) {
@@ -247,7 +224,7 @@ export default function CustomerCategoryListView() {
 
         <Card>
           <Tabs
-            value={filters.status}
+            value={filters.state.status}
             onChange={handleFilterStatus}
             sx={{
               px: 2.5,
@@ -263,7 +240,8 @@ export default function CustomerCategoryListView() {
                 icon={
                   <Label
                     variant={
-                      ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
+                      ((tab.value === 'all' || tab.value === filters.state.status) && 'filled') ||
+                      'soft'
                     }
                     color="default"
                   >
@@ -278,16 +256,13 @@ export default function CustomerCategoryListView() {
             ))}
           </Tabs>
 
-          <CustomerCategoryTableToolbar filters={filters} onFilters={handleFilters} />
+          <CustomerCategoryTableToolbar filters={filters} onResetPage={table.onResetPage} />
 
           {canReset && (
             <CustomercategoryTableFiltersResult
               filters={filters}
-              onFilters={handleFilters}
-              //
-              onResetFilters={handleResetFilters}
-              //
-              results={dataFiltered.length}
+              onResetPage={table.onResetPage}
+              totalResults={dataFiltered.length}
               sx={{ p: 2.5, pt: 0 }}
             />
           )}
@@ -374,7 +349,7 @@ export default function CustomerCategoryListView() {
             onChangeDense={table.onChangeDense}
           />
         </Card>
-      </Container>
+      </DashboardContent>
 
       <ConfirmDialog
         open={confirm.value}

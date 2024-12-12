@@ -1,8 +1,9 @@
-import { z as zod } from 'zod';
 import { mutate } from 'swr';
+import { z as zod } from 'zod';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -25,12 +26,12 @@ import { type TimeSlotItem } from 'src/types/employee';
 interface Props {
   currentTimeSlot?: TimeSlotItem;
 }
-const { t } = useTranslate();
+
 export type NewTimeSlotSchemaType = zod.infer<typeof NewTimeSlotSchema>;
 
 const NewTimeSlotSchema = zod.object({
   id: zod.string().optional(), // Optional field
-  name: zod.string().nonempty({ message: t('salonapp.service.timeslot.name_fvalid_error') }), // Required with custom error message
+  name: zod.string().nonempty({ message: 'invalid name' }), // Required with custom error message
   desc: zod.string().optional(), // Optional field
   starttime: zod.date().optional(), // Optional date field
   endtime: zod.date().optional(), // Optional date field
@@ -38,6 +39,8 @@ const NewTimeSlotSchema = zod.object({
 
 export default function TimeSlotNewEditForm({ currentTimeSlot }: Props) {
   const router = useRouter();
+
+  const { t } = useTranslate();
 
   const timeStringToDate = (timeString: string) => {
     const [hours, minutes, seconds] = timeString.split(':').map(Number);

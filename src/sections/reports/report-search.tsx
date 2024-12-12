@@ -7,7 +7,10 @@ import Typography from '@mui/material/Typography';
 import Autocomplete from '@mui/material/Autocomplete';
 import InputAdornment from '@mui/material/InputAdornment';
 
+import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+
+import type { UseSetStateReturn } from 'src/hooks/use-set-state';
 
 import { Iconify } from 'src/components/iconify';
 import { SearchNotFound } from 'src/components/search-not-found';
@@ -17,28 +20,28 @@ import { IReportItem } from 'src/types/report';
 // ----------------------------------------------------------------------
 
 type Props = {
-  query: string;
-  results: IReportItem[];
   onSearch: (inputValue: string) => void;
-  hrefItem: (id: string) => string;
+  search: UseSetStateReturn<{
+    query: string;
+    results: IReportItem[];
+  }>;
 };
 
-export default function ReportSearch({ query, results, onSearch, hrefItem }: Props) {
+export default function ReportSearch({ search, onSearch }: Props) {
   const router = useRouter();
 
   const handleClick = (id: string) => {
-    router.push(hrefItem(id));
+    router.push(paths.dashboard.report.details(id));
   };
 
   const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (query) {
+    if (search.state.query) {
       if (event.key === 'Enter') {
-        const selectProduct = results
-          .map((category) => category.items) // Extract items from each category
-          .flat() // Flatten the array of arrays into a single array of items
-          .filter((item) => item.name === query)[0]; // Filter items based on the query and get the first match
+        const selectProduct = search.state.results.filter(
+          (job) => job.category === search.state.query
+        )[0];
 
-        handleClick(selectProduct.id);
+        handleClick(selectProduct.category);
       }
     }
   };
@@ -48,10 +51,10 @@ export default function ReportSearch({ query, results, onSearch, hrefItem }: Pro
       sx={{ width: { xs: 1, sm: 260 } }}
       autoHighlight
       popupIcon={null}
-      options={results.map((category) => category.items).flat()}
+      options={search.state.results.map((category) => category.items).flat()}
       onInputChange={(event, newValue) => onSearch(newValue)}
       getOptionLabel={(option) => option.name}
-      noOptionsText={<SearchNotFound query={query} sx={{ bgcolor: 'unset' }} />}
+      noOptionsText={<SearchNotFound query={search.state.query} />}
       isOptionEqualToValue={(option, value) => option.id === value.id}
       renderInput={(params) => (
         <TextField

@@ -10,9 +10,8 @@ import axios from 'src/utils/axios';
 
 import { CONFIG } from 'src/config-global';
 
-import { AuthContext } from '../auth-context';
-
 import type { AuthState } from '../../types';
+import { AuthContext } from '../auth-context';
 
 // ----------------------------------------------------------------------
 

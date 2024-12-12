@@ -1,19 +1,15 @@
 import { useCallback } from 'react';
 
-import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import Stack, { StackProps } from '@mui/material/Stack';
+import type { Theme, SxProps } from '@mui/material/styles';
+
+import type { UseSetStateReturn } from 'src/hooks/use-set-state';
 
 import { fDateRangeShortLabel } from 'src/utils/format-time';
 
-import { Iconify } from 'src/components/iconify';
 import { chipProps, FiltersBlock, FiltersResult } from 'src/components/filters-result';
 
-import type { Theme, SxProps } from '@mui/material/styles';
 import type { IInvoiceTableFilters } from 'src/types/invoice';
-import type { UseSetStateReturn } from 'src/hooks/use-set-state';
 
 // ----------------------------------------------------------------------
 

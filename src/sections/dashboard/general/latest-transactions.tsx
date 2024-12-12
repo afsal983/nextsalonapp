@@ -194,9 +194,9 @@ function LatestTransactionsRow({ row }: LatestTransactionsRowProps) {
 
       <CustomPopover
         open={popover.open}
+        anchorEl={popover.anchorEl}
         onClose={popover.onClose}
-        arrow="right-top"
-        sx={{ width: 160 }}
+        slotProps={{ arrow: { placement: 'right-top' } }}
       >
         <MenuItem onClick={handleDownload}>
           <Iconify icon="eva:cloud-download-fill" />

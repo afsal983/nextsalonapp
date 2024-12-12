@@ -1,9 +1,8 @@
 'use client';
 
 import useSWR, { mutate } from 'swr';
-import { isEqual } from 'src/utils/helper';
 import { useState, useEffect, useCallback } from 'react';
-import { useSetState } from 'src/hooks/use-set-state';
+
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
@@ -18,13 +17,15 @@ import TableContainer from '@mui/material/TableContainer';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
-import { DashboardContent } from 'src/layouts/dashboard';
+
 import { useBoolean } from 'src/hooks/use-boolean';
+import { useSetState } from 'src/hooks/use-set-state';
 
 import { fetcher } from 'src/utils/axios';
 
 import { useTranslate } from 'src/locales';
-import { useAuthContext } from 'src/auth/hooks';
+import { DashboardContent } from 'src/layouts/dashboard';
+import { signOut as jwtSignOut } from 'src/auth/context/jwt/action';
 
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
@@ -44,17 +45,14 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 
-import {
-  type PaymentTypeItem,
-  type PaymentTypeFilterValue,
-  type PaymentTypeTableFilters,
-} from 'src/types/paymenttype';
+import { type PaymentTypeItem, type PaymentTypeTableFilters } from 'src/types/paymenttype';
 
 import RetailTableRow from '../paymenttype-table-row';
 import PaymentTypeTableToolbar from '../paymenttype-table-toolbar';
 import PaymentTypeTableFiltersResult from '../paymenttype-table-filters-result';
 
 // ----------------------------------------------------------------------
+const signOut = jwtSignOut;
 
 const STATUS_OPTIONS = [{ value: 'all', label: 'All' }];
 
@@ -82,8 +80,6 @@ export default function PaymentTypeListView() {
     status: 'all',
   });
 
-  const { logout } = useAuthContext();
-
   // Use SWR to fetch data from multiple endpoints in parallel
   const {
     data: retail,
@@ -102,7 +98,7 @@ export default function PaymentTypeListView() {
   // Logout the user
   const handleLogout = async () => {
     try {
-      await logout();
+      await signOut();
       router.replace('/');
     } catch (error) {
       console.error(error);

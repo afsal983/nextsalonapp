@@ -47,9 +47,9 @@ export default function ReportItem({ report, onView, onEdit, onDelete }: Props) 
 
       <CustomPopover
         open={popover.open}
+        anchorEl={popover.anchorEl}
         onClose={popover.onClose}
-        arrow="right-top"
-        sx={{ width: 140 }}
+        slotProps={{ arrow: { placement: 'right-top' } }}
       >
         <MenuItem
           onClick={() => {

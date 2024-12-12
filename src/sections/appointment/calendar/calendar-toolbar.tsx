@@ -118,9 +118,9 @@ export default function CalendarToolbar({
 
       <CustomPopover
         open={popover.open}
+        anchorEl={popover.anchorEl}
         onClose={popover.onClose}
-        arrow="top-left"
-        sx={{ width: 160 }}
+        slotProps={{ arrow: { placement: 'right-top' } }}
       >
         {VIEW_OPTIONS.map((viewOption) => (
           <MenuItem

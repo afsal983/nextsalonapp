@@ -8,7 +8,6 @@ import Typography from '@mui/material/Typography';
 
 import { editorClasses } from '../classes';
 import { ToolbarItem } from './toolbar-item';
-
 import type { EditorToolbarProps } from '../types';
 
 // ----------------------------------------------------------------------

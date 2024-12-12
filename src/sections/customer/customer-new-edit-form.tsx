@@ -29,9 +29,9 @@ interface Props {
   customercategory: CustomerCategory[];
 }
 export const GENDER_OPTIONS = [
-  { label: 'Female', value: 0 },
-  { label: 'Male', value: 1 },
-  { label: 'Other', value: 2 },
+  { label: 'Female', value: '0' },
+  { label: 'Male', value: '1' },
+  { label: 'Other', value: '2' },
 ];
 
 export type NewCustomerSchemaType = zod.infer<typeof NewCustomerSchema>;
@@ -241,7 +241,7 @@ export default function CustomerNewEditForm({ currentCustomer, customercategory 
             >
               <Stack spacing={1}>
                 <Typography variant="subtitle2">Sex</Typography>
-                <RHFRadioGroup row spacing={4} name="sex" options={GENDER_OPTIONS} />
+                <RHFRadioGroup row name="sex" options={GENDER_OPTIONS} />
               </Stack>
 
               <Stack direction={{ xs: 'column', md: 'row' }} spacing={10}>

@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import useSWR from "swr";
+import useSWR from 'swr';
 
-import { Stack } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Unstable_Grid2";
+import { Stack } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Unstable_Grid2';
 
-import { fetcher } from "src/utils/axios";
+import { fetcher } from 'src/utils/axios';
 
-import Loading from "src/app/loading";
+import Loading from 'src/app/loading';
+import { DashboardContent } from 'src/layouts/dashboard';
 
-import { useSettingsContext } from "src/components/settings";
+import { useSettingsContext } from 'src/components/settings';
 
-import BestProducts from "../salon-best-product";
-import SalonYearlySales from "../salon-yearly-sales";
-import CustomerByGender from "../customer-by-gender";
-import AppointmentEvents from "../appointment-events";
-import SalonBestCustomer from "../salon-best-customer";
-import SalonBestEmployee from "../salon-best-employee";
-import AppointmentSource from "../appointment-sources";
-import LatestTransactions from "../latest-transactions";
-import SalonDashBoardWidgetSummary from "../salondashboard-widget-summary";
+import BestProducts from '../salon-best-product';
+import SalonYearlySales from '../salon-yearly-sales';
+import CustomerByGender from '../customer-by-gender';
+import AppointmentEvents from '../appointment-events';
+import SalonBestCustomer from '../salon-best-customer';
+import SalonBestEmployee from '../salon-best-employee';
+import AppointmentSource from '../appointment-sources';
+import LatestTransactions from '../latest-transactions';
+import SalonDashBoardWidgetSummary from '../salondashboard-widget-summary';
 
 // ----------------------------------------------------------------------
 
@@ -35,49 +35,49 @@ export default function OverviewSalonView() {
     data: appointmentsummary,
     isLoading: isappointmentsummaryLoading,
     error: errorA,
-  } = useSWR("/api/salonapp/dashboard/appointmentdashboard", fetcher);
+  } = useSWR('/api/salonapp/dashboard/appointmentdashboard', fetcher);
   const {
     data: latestsales,
     isLoading: islatestsalesLoading,
     error: errorL,
-  } = useSWR("/api/salonapp/dashboard/latestsales", fetcher);
+  } = useSWR('/api/salonapp/dashboard/latestsales', fetcher);
   const {
     data: revenuebycriteria,
     isLoading: isrevenuebycriteriaLoading,
     error: errorR,
-  } = useSWR("/api/salonapp/dashboard/revenuebycriteria", fetcher);
+  } = useSWR('/api/salonapp/dashboard/revenuebycriteria', fetcher);
   const {
     data: bestcustomer,
     isLoading: isbestcustomerLoading,
     error: errorB,
-  } = useSWR("/api/salonapp/dashboard/bestcustomer", fetcher);
+  } = useSWR('/api/salonapp/dashboard/bestcustomer', fetcher);
   const { data: bestemployee, isLoading: isbestemployee } = useSWR(
-    "/api/salonapp/dashboard/bestemployee",
+    '/api/salonapp/dashboard/bestemployee',
     fetcher
   );
 
   const { data: appointment, isLoading: isappoitnment } = useSWR(
-    "/api/salonapp/dashboard/appointmentdashboard",
+    '/api/salonapp/dashboard/appointmentdashboard',
     fetcher
   );
 
   const { data: yearlysales, isLoading: isyearlysales } = useSWR(
-    "/api/salonapp/dashboard/yearlysales?periodfilter=thisyear",
+    '/api/salonapp/dashboard/yearlysales?periodfilter=thisyear',
     fetcher
   );
 
   const { data: bestproducts, isLoading: isbestproducts } = useSWR(
-    "/api/salonapp/dashboard/bestproducts?periodfilter=lasttwomonths",
+    '/api/salonapp/dashboard/bestproducts?periodfilter=lasttwomonths',
     fetcher
   );
 
   const { data: customerbygender, isLoading: iscustomerbygender } = useSWR(
-    "/api/salonapp/dashboard/customerbygender",
+    '/api/salonapp/dashboard/customerbygender',
     fetcher
   );
 
   const { data: appointmentsources, isLoading: isappointmentsources } = useSWR(
-    "/api/salonapp/dashboard/appointmentsource",
+    '/api/salonapp/dashboard/appointmentsource',
     fetcher
   );
 
@@ -97,7 +97,7 @@ export default function OverviewSalonView() {
   if (errorA || errorL || errorR || errorB) return <div>Error Loading...</div>;
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : "xl"}>
+    <DashboardContent>
       <Grid container spacing={3}>
         <Grid xs={12} md={3}>
           <SalonDashBoardWidgetSummary
@@ -151,14 +151,14 @@ export default function OverviewSalonView() {
               title="Latest Transactions"
               tableData={latestsales?.data}
               tableLabels={[
-                { id: "orderid", label: "Order ID" },
-                { id: "billingname", label: "Billing Name" },
-                { id: "employeename", label: "Employee Name" },
-                { id: "date", label: "Date" },
-                { id: "total", label: "Total" },
-                { id: "paymentstatus", label: "Status" },
-                { id: "paymentmethod", label: "Mode" },
-                { id: "" },
+                { id: 'orderid', label: 'Order ID' },
+                { id: 'billingname', label: 'Billing Name' },
+                { id: 'employeename', label: 'Employee Name' },
+                { id: 'date', label: 'Date' },
+                { id: 'total', label: 'Total' },
+                { id: 'paymentstatus', label: 'Status' },
+                { id: 'paymentmethod', label: 'Mode' },
+                { id: '' },
               ]}
             />
 
@@ -167,11 +167,11 @@ export default function OverviewSalonView() {
                 title="Upcoming appointments"
                 tableData={appointment?.data?.upcomingevents}
                 tableLabels={[
-                  { id: "customer", label: "Customer" },
-                  { id: "date", label: "Date" },
-                  { id: "product", label: "Product" },
-                  { id: "employee", label: "Employee", align: "right" },
-                  { id: "" },
+                  { id: 'customer', label: 'Customer' },
+                  { id: 'date', label: 'Date' },
+                  { id: 'product', label: 'Product' },
+                  { id: 'employee', label: 'Employee', align: 'right' },
+                  { id: '' },
                 ]}
               />
             )}
@@ -181,25 +181,25 @@ export default function OverviewSalonView() {
               subheader="(+43%) than last year"
               chart={{
                 categories: [
-                  "Jan",
-                  "Feb",
-                  "Mar",
-                  "Apr",
-                  "May",
-                  "Jun",
-                  "Jul",
-                  "Aug",
-                  "Sep",
-                  "Oct",
-                  "Nov",
-                  "Dec",
+                  'Jan',
+                  'Feb',
+                  'Mar',
+                  'Apr',
+                  'May',
+                  'Jun',
+                  'Jul',
+                  'Aug',
+                  'Sep',
+                  'Oct',
+                  'Nov',
+                  'Dec',
                 ],
                 series: [
                   {
                     year: yearlysales?.thisyearname,
                     data: [
                       {
-                        name: "Total Sales",
+                        name: 'Total Sales',
                         data: yearlysales?.thisyear,
                       },
                       /*
@@ -214,7 +214,7 @@ export default function OverviewSalonView() {
                     year: yearlysales?.lastyearname,
                     data: [
                       {
-                        name: "Total Sales",
+                        name: 'Total Sales',
                         data: yearlysales?.lastyear,
                       },
                       /*
@@ -234,10 +234,10 @@ export default function OverviewSalonView() {
               subheader="In this month"
               tableData={bestcustomer.data}
               tableLabels={[
-                { id: "customername", label: "Customer" },
-                { id: "revenue", label: "Revenue", align: "center" },
-                { id: "amount", label: "#Sales", align: "center" },
-                { id: "rank", label: "#Rank", align: "right" },
+                { id: 'customername', label: 'Customer' },
+                { id: 'revenue', label: 'Revenue', align: 'center' },
+                { id: 'amount', label: '#Sales', align: 'center' },
+                { id: 'rank', label: '#Rank', align: 'right' },
               ]}
             />
 
@@ -246,10 +246,10 @@ export default function OverviewSalonView() {
               subheader="Last two months"
               tableData={bestemployee.data}
               tableLabels={[
-                { id: "customername", label: "Employee Name" },
-                { id: "revenue", label: "Revenue", align: "center" },
-                { id: "amount", label: "#Sales", align: "center" },
-                { id: "rank", label: "Rank", align: "right" },
+                { id: 'customername', label: 'Employee Name' },
+                { id: 'revenue', label: 'Revenue', align: 'center' },
+                { id: 'amount', label: '#Sales', align: 'center' },
+                { id: 'rank', label: 'Rank', align: 'right' },
               ]}
             />
           </Stack>
@@ -279,6 +279,6 @@ export default function OverviewSalonView() {
           </Stack>
         </Grid>
       </Grid>
-    </Container>
+    </DashboardContent>
   );
 }

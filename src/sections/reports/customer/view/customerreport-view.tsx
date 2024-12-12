@@ -1,6 +1,5 @@
 'use client';
 
-import { isEqual } from 'src/utils/helper';
 import { useState, useEffect, useCallback } from 'react';
 
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -11,26 +10,34 @@ import {
   Button,
   Divider,
   useTheme,
-  Container,
   IconButton,
 } from '@mui/material';
+import type {
+  GridSlots,
+  GridColDef,
+  GridRowSelectionModel,
+  GridColumnVisibilityModel,
+} from '@mui/x-data-grid';
 import {
   DataGrid,
-  GridColDef,
+  gridClasses,
   GridToolbarExport,
   GridToolbarContainer,
-  GridRowSelectionModel,
   GridToolbarQuickFilter,
+  GridValueOptionsParams,
   GridToolbarFilterButton,
   GridToolbarColumnsButton,
-  GridColumnVisibilityModel,
 } from '@mui/x-data-grid';
 
 import { paths } from 'src/routes/paths';
 
 import { useBoolean } from 'src/hooks/use-boolean';
+import { useSetState } from 'src/hooks/use-set-state';
+import type { UseSetStateReturn } from 'src/hooks/use-set-state';
 
 import { fIsAfter } from 'src/utils/format-time';
+
+import { DashboardContent } from 'src/layouts/dashboard';
 
 import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
@@ -44,13 +51,12 @@ import {
   CustomerReport,
   CustomerReportTableFilters,
   CustomerReportPeriodFilters,
-  CustomerReportTableFilterValue,
 } from 'src/types/report';
 
 import PeriodFilters from '../period-filters';
 import CustomerReportAnalytic from '../customerreport-analytic';
-import DeatailedSalesTableToolbar from '../customerreport-table-toolbar';
-import DeatailedSalesTableFiltersResult from '../customerreport-table-filters-result';
+import CustomerReportTableToolbar from '../customerreport-table-toolbar';
+import CustomerReportTableFiltersResult from '../customerreport-table-filters-result';
 import {
   RenderCellSex,
   RenderCellCustomer,
@@ -72,18 +78,6 @@ const HIDE_COLUMNS = {
 
 const HIDE_COLUMNS_TOGGLABLE = ['category1', 'actions'];
 
-// This is for date filter to conditionaly fetch data from remote API
-const defaultperiodFilters: CustomerReportPeriodFilters = {
-  startDate: null,
-  endDate: null,
-};
-
-// This for filtering tables
-const defaultitemFilters: CustomerReportTableFilters = {
-  category: [],
-  sex: [],
-};
-
 // ----------------------------------------------------------------------
 
 export default function CustomerReportListView() {
@@ -99,57 +93,42 @@ export default function CustomerReportListView() {
 
   const [summaryData, setsummaryData] = useState<any>([]);
   const [tableData, setTableData] = useState<CustomerReport[]>([]);
-  const [categoryData, setcategoryData] = useState<CustomerCategory[]>([]);
 
-  const [periodfilters, setFilters] = useState(defaultperiodFilters);
-  const [itemfilters, setitemFilters] = useState(defaultitemFilters);
+  // This is for date filter to conditionaly fetch data from remote API
+  const periodfilters = useSetState<CustomerReportPeriodFilters>({
+    startDate: null,
+    endDate: null,
+  });
 
-  const dateError = fIsAfter(periodfilters.startDate, periodfilters.endDate);
+  // This for filtering tables
+  const itemfilters = useSetState<CustomerReportTableFilters>({
+    category: [],
+    sex: [],
+  });
+
+  const dateError = fIsAfter(periodfilters.state.startDate, periodfilters.state.endDate);
 
   const [selectedRowIds, setSelectedRowIds] = useState<GridRowSelectionModel>([]);
+
+  const [filterButtonEl, setFilterButtonEl] = useState<HTMLButtonElement | null>(null);
 
   const [columnVisibilityModel, setColumnVisibilityModel] =
     useState<GridColumnVisibilityModel>(HIDE_COLUMNS);
 
-  useEffect(() => {
-    fetch(`/api/salonapp/customercategory`)
-      .then((response) => response.json())
-      // 4. Setting *dogImage* to the image url that we received from the response above
-      .then((data) => setcategoryData(data.data));
-  }, [setcategoryData]);
-
   const dataFiltered = applyFilter({
     inputData: tableData,
-    filters: itemfilters,
+    filters: itemfilters.state,
   });
 
-  const canReset = !isEqual(defaultitemFilters, itemfilters);
-
-  const handleitemFilters = useCallback((name: string, value: CustomerReportTableFilterValue) => {
-    setitemFilters((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  }, []);
-
-  const handlePeriodFilters = useCallback((name: string, value: CustomerReportTableFilterValue) => {
-    setFilters((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  }, []);
-
-  const handleResetFilters = useCallback(() => {
-    setitemFilters(defaultitemFilters);
-  }, []);
+  const canReset = itemfilters.state.category.length > 0 || itemfilters.state.sex.length > 0;
 
   const handleSearch = async () => {
     setisLoading(true);
 
     // prepare query based on filter data
     const data = {
-      start: periodfilters.startDate,
-      end: periodfilters.endDate,
+      start: periodfilters.state.startDate,
+      end: periodfilters.state.endDate,
       filtername: 'all',
       filterid: 1,
     };
@@ -174,6 +153,20 @@ export default function CustomerReportListView() {
     setsummaryData(responseData.summary);
     setisLoading(false);
   };
+  const CustomToolbarCallback = useCallback(
+    () => (
+      <CustomToolbar
+        filters={itemfilters}
+        canReset={canReset}
+        selectedRowIds={selectedRowIds}
+        setFilterButtonEl={setFilterButtonEl}
+        filteredResults={dataFiltered.length}
+        onOpenConfirmDeleteRows={confirmRows.onTrue}
+      />
+    ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [itemfilters.state, selectedRowIds]
+  );
 
   const columns: GridColDef[] = [
     {
@@ -190,7 +183,7 @@ export default function CustomerReportListView() {
       hideable: false,
       width: 280,
       renderCell: (params) => <RenderCellCustomer params={params} />,
-      valueGetter: (params) => params.row.customerinfo.name,
+      valueGetter: (params: GridValueOptionsParams) => params.row.customerinfo.name,
     },
     {
       field: 'email',
@@ -240,87 +233,6 @@ export default function CustomerReportListView() {
       width: 100,
       renderCell: (params) => <RenderCellPromoNotify params={params} />,
     },
-    /*
-    {
-      field: "name",
-      headerName: "Product",
-      flex: 1,
-      minWidth: 360,
-      hideable: false,
-      renderCell: (params) => <RenderCellProduct params={params} />,
-    },
-    {
-      field: "date",
-      headerName: "Date",
-      width: 160,
-      renderCell: (params) => <RenderCellCreatedAt params={params} />,
-    },
-
-    {
-      field: "billingname",
-      headerName: "billingname",
-      width: 160,
-      renderCell: (params) => <RenderBillingName params={params} />,
-    },
-    {
-      field: "inventoryType",
-      headerName: "Stock",
-      width: 160,
-      type: "singleSelect",
-      valueOptions: PRODUCT_STOCK_OPTIONS,
-      renderCell: (params) => <RenderCellStock params={params} />,
-    },
-    {
-      field: "total",
-      headerName: "total",
-      width: 140,
-      editable: true,
-      renderCell: (params) => <RenderCellPrice params={params} />,
-    },
-    {
-      field: "publish",
-      headerName: "Publish",
-      width: 110,
-      type: "singleSelect",
-      editable: true,
-      valueOptions: categoryData,
-      renderCell: (params) => <RenderCellPublish params={params} />,
-    },
-    {
-      type: "actions",
-      field: "actions",
-      headerName: " ",
-      align: "right",
-      headerAlign: "right",
-      width: 80,
-      sortable: false,
-      filterable: false,
-      disableColumnMenu: true,
-      getActions: (params) => [
-        <GridActionsCellItem
-          showInMenu
-          icon={<Iconify icon="solar:eye-bold" />}
-          label="View"
-          onClick={() => handleViewRow(params.row.id)}
-        />,
-        <GridActionsCellItem
-          showInMenu
-          icon={<Iconify icon="solar:pen-bold" />}
-          label="Edit"
-          onClick={() => handleEditRow(params.row.id)}
-        />,
-        <GridActionsCellItem
-          showInMenu
-          icon={<Iconify icon="solar:trash-bin-trash-bold" />}
-          label="Delete"
-          onClick={() => {
-            handleDeleteRow(params.row.id);
-          }}
-          sx={{ color: "error.main" }}
-        />,
-      ],
-    },
-    */
   ];
 
   const getTogglableColumns = () =>
@@ -330,14 +242,7 @@ export default function CustomerReportListView() {
 
   return (
     <>
-      <Container
-        maxWidth={settings.themeStretch ? false : 'lg'}
-        sx={{
-          flexGrow: 1,
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
+      <DashboardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
         <CustomBreadcrumbs
           heading="List"
           links={[
@@ -415,9 +320,9 @@ export default function CustomerReportListView() {
 
         <Card
           sx={{
-            height: { xs: 800, md: 2 },
             flexGrow: { md: 1 },
             display: { md: 'flex' },
+            height: { xs: 800, md: 2 },
             flexDirection: { md: 'column' },
           }}
         >
@@ -429,97 +334,113 @@ export default function CustomerReportListView() {
             loading={isLoading}
             getRowHeight={() => 'auto'}
             pageSizeOptions={[5, 10, 25]}
-            initialState={{
-              pagination: {
-                paginationModel: { pageSize: 10 },
-              },
-            }}
-            onRowSelectionModelChange={(newSelectionModel) => {
-              setSelectedRowIds(newSelectionModel);
-            }}
+            initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
+            onRowSelectionModelChange={(newSelectionModel) => setSelectedRowIds(newSelectionModel)}
             columnVisibilityModel={columnVisibilityModel}
             onColumnVisibilityModelChange={(newModel) => setColumnVisibilityModel(newModel)}
             slots={{
-              toolbar: () => (
-                <>
-                  <GridToolbarContainer>
-                    <DeatailedSalesTableToolbar
-                      filters={itemfilters}
-                      onFilters={handleitemFilters}
-                      categoryOptions={categoryData.map((category) => ({
-                        value: category.name,
-                        label: category.name,
-                      }))}
-                      sexOptions={SEX_OPTIONS}
-                    />
-
-                    <GridToolbarQuickFilter />
-
-                    <Stack
-                      spacing={1}
-                      flexGrow={1}
-                      direction="row"
-                      alignItems="center"
-                      justifyContent="flex-end"
-                    >
-                      {!!selectedRowIds.length && (
-                        <Button
-                          size="small"
-                          color="error"
-                          startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
-                          onClick={confirmRows.onTrue}
-                        >
-                          Delete ({selectedRowIds.length})
-                        </Button>
-                      )}
-
-                      <GridToolbarColumnsButton />
-                      <GridToolbarFilterButton />
-                      <GridToolbarExport />
-                    </Stack>
-                  </GridToolbarContainer>
-
-                  {canReset && (
-                    <DeatailedSalesTableFiltersResult
-                      filters={itemfilters}
-                      onFilters={handleitemFilters}
-                      onResetFilters={handleResetFilters}
-                      results={dataFiltered.length}
-                      sx={{ p: 2.5, pt: 0 }}
-                    />
-                  )}
-                </>
-              ),
-              noRowsOverlay: () => <EmptyContent title="No Data" />,
+              toolbar: CustomToolbarCallback as GridSlots['toolbar'],
+              noRowsOverlay: () => <EmptyContent />,
               noResultsOverlay: () => <EmptyContent title="No results found" />,
             }}
             slotProps={{
-              columnsPanel: {
-                getTogglableColumns,
-              },
+              panel: { anchorEl: filterButtonEl },
+              // @ts-ignore
+              toolbar: { setFilterButtonEl },
+              columnsManagement: { getTogglableColumns },
             }}
+            sx={{ [`& .${gridClasses.cell}`]: { alignItems: 'center', display: 'inline-flex' } }}
           />
         </Card>
-      </Container>
+      </DashboardContent>
 
       <PeriodFilters
         open={openFilters.value}
         onClose={openFilters.onFalse}
         handleSearch={handleSearch}
-        //
         filters={periodfilters}
-        onFilters={handlePeriodFilters}
-        //
         canReset={canReset}
-        onResetFilters={handleResetFilters}
-        //
         dateError={dateError}
-        //
-        // events={[]}
         colorOptions={[]}
-        // onClickEvent={onClickEventInFilters}
-        isLoading={isLoading}
       />
+    </>
+  );
+}
+// ---------------------------------------------------------------------
+
+interface CustomToolbarProps {
+  canReset: boolean;
+  filteredResults: number;
+  selectedRowIds: GridRowSelectionModel;
+  onOpenConfirmDeleteRows: () => void;
+  filters: UseSetStateReturn<CustomerReportTableFilters>;
+  setFilterButtonEl: React.Dispatch<React.SetStateAction<HTMLButtonElement | null>>;
+}
+
+function CustomToolbar({
+  filters,
+  canReset,
+  selectedRowIds,
+  filteredResults,
+  setFilterButtonEl,
+  onOpenConfirmDeleteRows,
+}: CustomToolbarProps) {
+  const [categoryData, setcategoryData] = useState<CustomerCategory[]>([]);
+
+  useEffect(() => {
+    fetch(`/api/salonapp/customercategory`)
+      .then((response) => response.json())
+      // 4. Setting *dogImage* to the image url that we received from the response above
+      .then((data) => setcategoryData(data.data));
+  }, [setcategoryData]);
+
+  return (
+    <>
+      <GridToolbarContainer>
+        <CustomerReportTableToolbar
+          filters={filters}
+          options={{
+            categoryOptions: categoryData.map((category) => ({
+              value: category.name,
+              label: category.name,
+            })),
+            sexOptions: SEX_OPTIONS,
+          }}
+        />
+
+        <GridToolbarQuickFilter />
+
+        <Stack
+          spacing={1}
+          flexGrow={1}
+          direction="row"
+          alignItems="center"
+          justifyContent="flex-end"
+        >
+          {!!selectedRowIds.length && (
+            <Button
+              size="small"
+              color="error"
+              startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
+              onClick={onOpenConfirmDeleteRows}
+            >
+              Delete ({selectedRowIds.length})
+            </Button>
+          )}
+
+          <GridToolbarColumnsButton />
+          <GridToolbarFilterButton ref={setFilterButtonEl} />
+          <GridToolbarExport />
+        </Stack>
+      </GridToolbarContainer>
+
+      {canReset && (
+        <CustomerReportTableFiltersResult
+          filters={filters}
+          totalResults={filteredResults}
+          sx={{ p: 2.5, pt: 0 }}
+        />
+      )}
     </>
   );
 }

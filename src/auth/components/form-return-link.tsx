@@ -1,6 +1,5 @@
-import type { LinkProps } from '@mui/material/Link';
-
 import Link from '@mui/material/Link';
+import type { LinkProps } from '@mui/material/Link';
 
 import { RouterLink } from 'src/routes/components';
 

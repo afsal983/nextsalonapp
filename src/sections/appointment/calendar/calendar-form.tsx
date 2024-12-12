@@ -1,4 +1,6 @@
+import { z as zod } from 'zod';
 import { useState, useCallback } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, Controller } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
@@ -8,12 +10,11 @@ import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 import DialogActions from '@mui/material/DialogActions';
-import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
 import { uuidv4 } from 'src/utils/uuidv4';
-import { fIsAfter, fTimestamp } from 'src/utils/format-time';
+import { fIsAfter } from 'src/utils/format-time';
 
 import { useTranslate } from 'src/locales';
 import { createEvent, updateEvent, deleteEvent } from 'src/app/api/salonapp/appointments/calendar';
@@ -22,15 +23,30 @@ import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 import { ColorPicker } from 'src/components/color-utils';
 import { LiveCustomerSearch } from 'src/components/livecustomersearch';
-import { Form, RHFSelect, RHFSwitch, RHFTextField } from 'src/components/hook-form';
+import { Form, Field, RHFSelect, RHFSwitch, RHFTextField } from 'src/components/hook-form';
 
 import { Customer } from 'src/types/customer';
 import { ServiceItem } from 'src/types/service';
 import { EmployeeItem } from 'src/types/employee';
-import { ICalendarDate, ICalendarEvent } from 'src/types/calendar';
+import { ICalendarEvent } from 'src/types/calendar';
 
 import AddressNewForm from '../../customeraddress/address-new-form';
 // ----------------------------------------------------------------------
+
+export type EventSchemaType = zod.infer<typeof EventSchema>;
+const EventSchema = zod.object({
+  notes: zod
+    .string()
+    .max(5000, { message: 'Notes must be at most 5000 characters' }) // String with max length validation
+    .optional(), // Optional field
+  color: zod.string().optional(), // Optional string field
+  allDay: zod.boolean().optional(), // Optional boolean field
+  customer_id: zod.number().optional(), // Optional number field
+  employee_id: zod.number().optional(), // Optional number field
+  service_id: zod.number().optional(), // Optional number field
+  start: zod.any().optional(), // Mixed type, equivalent to `Yup.mixed()`
+  end: zod.any().optional(), // Mixed type, equivalent to `Yup.mixed()`
+});
 
 type Props = {
   colorOptions: string[];
@@ -41,12 +57,16 @@ type Props = {
   customer_id: number;
   services: ServiceItem[];
   employees: EmployeeItem[];
+
+  /*
   employee: string;
+
   appFilters: {
     employeeId: number;
-    startDate: Date | null;
-    endDate: Date | null;
+    startDate: IDatePickerControl | null;
+    endDate: IDatePickerControl | null;
   };
+  */
 };
 
 export default function CalendarForm({
@@ -65,20 +85,9 @@ export default function CalendarForm({
 
   const [customer, setCustomer] = useState<Customer | null>(SelectedCustomer);
 
-  const EventSchema = Yup.object().shape({
-    notes: Yup.string().max(5000, 'Notes must be at most 5000 characters'),
-    // not required
-    color: Yup.string(),
-    allDay: Yup.boolean(),
-    customer_id: Yup.number(),
-    employee_id: Yup.number(),
-    service_id: Yup.number(),
-    start: Yup.mixed(),
-    end: Yup.mixed(),
-  });
-
-  const methods = useForm({
-    resolver: yupResolver(EventSchema),
+  const methods = useForm<EventSchemaType>({
+    mode: 'all',
+    resolver: zodResolver(EventSchema),
     defaultValues: currentEvent,
   });
 
@@ -254,52 +263,17 @@ export default function CalendarForm({
 
         <RHFSwitch name="allDay" label="All day" />
 
-        <Controller
-          name="start"
-          control={control}
-          render={({ field }) => (
-            <MobileDateTimePicker
-              {...field}
-              value={new Date(field.value as ICalendarDate)}
-              onChange={(newValue) => {
-                if (newValue) {
-                  field.onChange(fTimestamp(newValue));
-                }
-              }}
-              label="Start date"
-              format="dd/MM/yyyy hh:mm a"
-              slotProps={{
-                textField: {
-                  fullWidth: true,
-                },
-              }}
-            />
-          )}
-        />
+        <Field.MobileDateTimePicker name="start" label="Start date" />
 
-        <Controller
+        <Field.MobileDateTimePicker
           name="end"
-          control={control}
-          render={({ field }) => (
-            <MobileDateTimePicker
-              {...field}
-              value={new Date(field.value as ICalendarDate)}
-              onChange={(newValue) => {
-                if (newValue) {
-                  field.onChange(fTimestamp(newValue));
-                }
-              }}
-              label="End date"
-              format="dd/MM/yyyy hh:mm a"
-              slotProps={{
-                textField: {
-                  fullWidth: true,
-                  error: dateError,
-                  helperText: dateError && 'End date must be later than start date',
-                },
-              }}
-            />
-          )}
+          label="End date"
+          slotProps={{
+            textField: {
+              error: dateError,
+              helperText: dateError ? 'End date must be later than start date' : null,
+            },
+          }}
         />
 
         <Controller

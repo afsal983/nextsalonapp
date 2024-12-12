@@ -1,11 +1,10 @@
-import type { BoxProps } from '@mui/material/Box';
-
 import { m } from 'framer-motion';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Unstable_Grid2';
 import Container from '@mui/material/Container';
+import type { BoxProps } from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import { CONFIG } from 'src/config-global';
@@ -33,9 +32,9 @@ export function HomeMinimal({ sx, ...other }: BoxProps) {
   const renderDescription = (
     <>
       <SectionTitle
-        caption="Visualizing Success"
-        title="What's in"
-        txtGradient="Minimal?"
+        caption="Tailor made for the need"
+        title="Avaialable Plans in"
+        txtGradient="SMEEye?"
         sx={{ mb: { xs: 5, md: 8 }, textAlign: { xs: 'center', md: 'left' } }}
       />
 
@@ -137,17 +136,18 @@ export function HomeMinimal({ sx, ...other }: BoxProps) {
 const ITEMS = [
   {
     icon: `${CONFIG.assetsDir}/assets/icons/home/ic-make-brand.svg`,
-    title: 'Branding',
-    description: 'Consistent design makes it easy to brand your own.',
+    title: 'Basic Plan',
+    description: 'Single Orgnaization & Single Branch. Email support included.',
   },
   {
     icon: `${CONFIG.assetsDir}/assets/icons/home/ic-design.svg`,
-    title: 'UI & UX design',
-    description: 'The kit is built on the principles of the atomic design system.',
+    title: 'Standard Plan',
+    description: 'Single Orgnaization & Upto 2 branches. Email support included..',
   },
   {
     icon: `${CONFIG.assetsDir}/assets/icons/home/ic-development.svg`,
-    title: 'Development',
-    description: 'Easy to customize and extend, saving you time and money.',
+    title: 'Pro Plan',
+    description:
+      'Single Orgnaization & Upto 5 branches. Priority phone and email support included.',
   },
 ];

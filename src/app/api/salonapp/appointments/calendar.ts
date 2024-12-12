@@ -1,19 +1,20 @@
 import { useMemo } from 'react';
-import { merge } from 'src/utils/helper';
 import useSWR, { mutate } from 'swr';
 
+import { merge } from 'src/utils/helper';
 import { fetcher } from 'src/utils/axios';
 
 import { ICalendarEvent } from 'src/types/calendar';
 import { AppointmentItem } from 'src/types/appointment';
+import type { IDatePickerControl } from 'src/types/common';
 // ----------------------------------------------------------------------
 
 let URL: string;
 
 type Props = {
   employeeId: Number;
-  startDate: Date | null;
-  endDate: Date | null;
+  startDate: IDatePickerControl | null;
+  endDate: IDatePickerControl | null;
 };
 
 export function useGetEvents({ employeeId, startDate, endDate }: Props) {

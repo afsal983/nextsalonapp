@@ -105,9 +105,9 @@ export default function AppointmentDetailsToolbar({
 
       <CustomPopover
         open={popover.open}
+        anchorEl={popover.anchorEl}
         onClose={popover.onClose}
-        arrow="top-right"
-        sx={{ width: 140 }}
+        slotProps={{ arrow: { placement: 'right-top' } }}
       >
         {statusOptions.map((option) => (
           <MenuItem

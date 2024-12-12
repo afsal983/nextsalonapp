@@ -1,6 +1,8 @@
 import { mutate } from 'swr';
+import { z as zod } from 'zod';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -18,6 +20,16 @@ import { Form, RHFSwitch, RHFTextField } from 'src/components/hook-form';
 
 import { type PaymentTypeItem } from 'src/types/paymenttype';
 
+
+export type PaymentTypeSchemaType = zod.infer<typeof PaymentTypeSchema>;
+const PaymentTypeSchema = zod.object({
+  id: zod.string().optional(), // Optional string field
+  name: zod.string({ required_error: 'Invalid Name' }), // Required string with a custom error
+  description: zod.string().optional(), // Optional string field
+  default_paymenttype: zod.boolean().optional(), // Optional boolean field
+  is_authcode: zod.boolean().optional(), // Optional boolean field
+  deleted: zod.boolean().optional(), // Optional boolean field
+});
 // ----------------------------------------------------------------------
 
 interface Props {
@@ -28,15 +40,6 @@ export default function PaymentTypeNewEditForm({ currentPaymentType }: Props) {
   const router = useRouter();
 
   const { t } = useTranslate();
-
-  const NewProductSchema = Yup.object().shape({
-    id: Yup.string(),
-    name: Yup.string().required(t('salonapp.service.name_fvalid_error')),
-    description: Yup.string(),
-    default_paymenttype: Yup.boolean(),
-    is_authcode: Yup.boolean(),
-    deleted: Yup.boolean(),
-  });
 
   const defaultValues = useMemo(
     () => ({
@@ -50,8 +53,9 @@ export default function PaymentTypeNewEditForm({ currentPaymentType }: Props) {
     [currentPaymentType]
   );
 
-  const methods = useForm({
-    resolver: yupResolver(NewProductSchema),
+  const methods = useForm<PaymentTypeSchemaType>({
+    mode: 'all',
+    resolver: zodResolver(PaymentTypeSchema),
     defaultValues,
   });
 

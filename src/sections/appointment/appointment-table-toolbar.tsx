@@ -7,11 +7,14 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { formHelperTextClasses } from '@mui/material/FormHelperText';
-import type { IDatePickerControl } from 'src/types/common';
+
+import type { UseSetStateReturn } from 'src/hooks/use-set-state';
+
 import { Iconify } from 'src/components/iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
-import type { UseSetStateReturn } from 'src/hooks/use-set-state';
-import { AppointmentTableFilters, AppointmentTableFilterValue } from 'src/types/appointment';
+
+import type { IDatePickerControl } from 'src/types/common';
+import { AppointmentTableFilters } from 'src/types/appointment';
 
 // ----------------------------------------------------------------------
 

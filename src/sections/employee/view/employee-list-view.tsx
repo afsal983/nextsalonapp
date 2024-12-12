@@ -1,9 +1,7 @@
 'use client';
 
 import useSWR, { mutate } from 'swr';
-import { isEqual } from 'src/utils/helper';
 import { useState, useEffect, useCallback } from 'react';
-import { useSetState } from 'src/hooks/use-set-state';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -12,7 +10,6 @@ import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import { alpha } from '@mui/material/styles';
-import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
@@ -20,13 +17,15 @@ import TableContainer from '@mui/material/TableContainer';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
-import { DashboardContent } from 'src/layouts/dashboard';
+
 import { useBoolean } from 'src/hooks/use-boolean';
+import { useSetState } from 'src/hooks/use-set-state';
 
 import { fetcher } from 'src/utils/axios';
 
 import { useTranslate } from 'src/locales';
-import { useAuthContext } from 'src/auth/hooks';
+import { DashboardContent } from 'src/layouts/dashboard';
+import { signOut as jwtSignOut } from 'src/auth/context/jwt/action';
 
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
@@ -47,16 +46,13 @@ import {
 } from 'src/components/table';
 
 import { BranchItem } from 'src/types/branch';
-import {
-  type EmployeeItem,
-  type EmployeeTableFilters,
-  type EmployeeTableFilterValue,
-} from 'src/types/employee';
+import { type EmployeeItem, type EmployeeTableFilters } from 'src/types/employee';
 
 import EmployeeTableRow from '../employee-table-row';
 import EmployeeTableToolbar from '../employee-table-toolbar';
 import EmployeeTableFiltersResult from '../employee-table-filters-result';
 
+const signOut = jwtSignOut;
 // ----------------------------------------------------------------------
 
 const STATUS_OPTIONS = [{ value: 'all', label: 'All' }];
@@ -84,8 +80,6 @@ export default function EmployeeListView() {
     status: 'all',
   });
 
-  const { logout } = useAuthContext();
-
   // Use SWR to fetch data from multiple endpoints in parallel
   const {
     data: employee,
@@ -109,7 +103,7 @@ export default function EmployeeListView() {
   // Logout the user
   const handleLogout = async () => {
     try {
-      await logout();
+      await signOut();
       router.replace('/');
     } catch (error) {
       console.error(error);

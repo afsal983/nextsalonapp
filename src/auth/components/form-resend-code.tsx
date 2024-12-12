@@ -1,7 +1,6 @@
-import type { BoxProps } from '@mui/material/Box';
-
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
+import type { BoxProps } from '@mui/material/Box';
 
 // ----------------------------------------------------------------------
 

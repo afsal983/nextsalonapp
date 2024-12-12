@@ -1,12 +1,11 @@
-import type { MotionProps } from 'framer-motion';
-import type { StackProps } from '@mui/material/Stack';
-import type { Theme, SxProps } from '@mui/material/styles';
-
 import { m } from 'framer-motion';
+import type { MotionProps } from 'framer-motion';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import type { StackProps } from '@mui/material/Stack';
+import type { Theme, SxProps } from '@mui/material/styles';
 
 import { varAlpha, textGradient } from 'src/theme/styles';
 

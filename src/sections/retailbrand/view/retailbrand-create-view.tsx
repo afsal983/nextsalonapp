@@ -1,10 +1,9 @@
 'use client';
 
-import Container from '@mui/material/Container';
-
 import { paths } from 'src/routes/paths';
 
 import { useTranslate } from 'src/locales';
+import { DashboardContent } from 'src/layouts/dashboard';
 
 import { useSettingsContext } from 'src/components/settings';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
@@ -39,6 +38,6 @@ export default function RetailCreateView() {
       />
 
       <RetailNewEditForm />
-    </Container>
+    </DashboardContent>
   );
 }

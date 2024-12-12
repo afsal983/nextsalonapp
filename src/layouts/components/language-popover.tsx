@@ -1,16 +1,15 @@
 'use client';
 
-import type { LanguageValue } from 'src/locales';
-import type { IconButtonProps } from '@mui/material/IconButton';
-
 import { m } from 'framer-motion';
 import { useCallback } from 'react';
 
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
+import type { IconButtonProps } from '@mui/material/IconButton';
 
 import { useTranslate } from 'src/locales';
+import type { LanguageValue } from 'src/locales';
 
 import { varHover } from 'src/components/animate';
 import { FlagIcon } from 'src/components/iconify';

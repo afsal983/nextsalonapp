@@ -8,7 +8,6 @@ import { varAlpha } from 'src/theme/styles';
 
 import { Iconify } from '../../iconify';
 import { ToolbarItem } from './toolbar-item';
-
 import type { EditorToolbarProps } from '../types';
 
 // ----------------------------------------------------------------------

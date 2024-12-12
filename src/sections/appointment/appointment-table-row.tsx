@@ -213,9 +213,9 @@ export default function AppointmentTableRow({
 
       <CustomPopover
         open={popover.open}
+        anchorEl={popover.anchorEl}
         onClose={popover.onClose}
-        arrow="right-top"
-        sx={{ width: 140 }}
+        slotProps={{ arrow: { placement: 'right-top' } }}
       >
         {!row.is_invoiced && (
           <MenuItem

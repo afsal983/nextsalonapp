@@ -10,8 +10,8 @@ import ListItemText from '@mui/material/ListItemText';
 import { fDate } from 'src/utils/format-time';
 import { fCurrency } from 'src/utils/format-number';
 
-import Markdown from 'src/components/markdown';
 import { Iconify } from 'src/components/iconify';
+import { Markdown } from 'src/components/markdown';
 
 import { IJobItem } from 'src/types/job';
 

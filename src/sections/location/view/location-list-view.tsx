@@ -1,9 +1,8 @@
 'use client';
 
 import useSWR, { mutate } from 'swr';
-import { isEqual } from 'src/utils/helper';
 import { useState, useEffect, useCallback } from 'react';
-import { useSetState } from 'src/hooks/use-set-state';
+
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
@@ -11,22 +10,22 @@ import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import { alpha } from '@mui/material/styles';
-import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
 
 import { paths } from 'src/routes/paths';
-import { DashboardContent } from 'src/layouts/dashboard';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
+import { useSetState } from 'src/hooks/use-set-state';
 
 import { fetcher } from 'src/utils/axios';
 
 import { useTranslate } from 'src/locales';
-import { useAuthContext } from 'src/auth/hooks';
+import { DashboardContent } from 'src/layouts/dashboard';
+import { signOut as jwtSignOut } from 'src/auth/context/jwt/action';
 
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
@@ -46,16 +45,13 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 
-import {
-  type LocationItem,
-  type LocationTableFilters,
-  type LocationTableFilterValue,
-} from 'src/types/location';
+import { type LocationItem, type LocationTableFilters } from 'src/types/location';
 
 import LocationTableRow from '../location-table-row';
 import LocationTableToolbar from '../location-table-toolbar';
 import LocationTableFiltersResult from '../location-table-filters-result';
 
+const signOut = jwtSignOut;
 // ----------------------------------------------------------------------
 
 const STATUS_OPTIONS = [{ value: 'all', label: 'All' }];
@@ -81,7 +77,6 @@ export default function LocationListView() {
     location: [],
     status: 'all',
   });
-  const { logout } = useAuthContext();
 
   const {
     data: location,
@@ -100,7 +95,7 @@ export default function LocationListView() {
   // Logout the user
   const handleLogout = async () => {
     try {
-      await logout();
+      await signOut();
       router.replace('/');
     } catch (error) {
       console.error(error);

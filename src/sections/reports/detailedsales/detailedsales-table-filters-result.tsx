@@ -1,155 +1,72 @@
 import { useCallback } from 'react';
 
-import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import Stack, { StackProps } from '@mui/material/Stack';
+import { StackProps } from '@mui/material/Stack';
+import type { Theme, SxProps } from '@mui/material/styles';
 
-import { Iconify } from 'src/components/iconify';
+import type { UseSetStateReturn } from 'src/hooks/use-set-state';
 
-import {
-  DetailedSalesReportTableFilters,
-  DetailedSalesReportTableFilterValue,
-} from 'src/types/report';
+import { chipProps, FiltersBlock, FiltersResult } from 'src/components/filters-result';
+
+import { DetailedSalesReportTableFilters } from 'src/types/report';
 
 // ----------------------------------------------------------------------
 
 type Props = StackProps & {
-  filters: DetailedSalesReportTableFilters;
-  onFilters: (name: string, value: DetailedSalesReportTableFilterValue) => void;
-  //
-  onResetFilters: VoidFunction;
-  //
-  results: number;
+  totalResults: number;
+  sx?: SxProps<Theme>;
+  filters: UseSetStateReturn<DetailedSalesReportTableFilters>;
 };
 
-export default function DeatailedSalesTableFiltersResult({
-  filters,
-  onFilters,
-  //
-  onResetFilters,
-  //
-  results,
-  ...other
-}: Props) {
+export default function DeatailedSalesTableFiltersResult({ filters, totalResults, sx }: Props) {
   const handleRemoveBranch = useCallback(
     (inputValue: string) => {
-      const newValue = filters.branch.filter((item) => item !== inputValue);
+      const newValue = filters.state.branch.filter((item) => item !== inputValue);
 
-      onFilters('branch', newValue);
+      filters.setState({ branch: newValue });
     },
-    [filters.branch, onFilters]
+    [filters]
   );
 
-  const handleRemoveStatus = useCallback(
-    (inputValue: string) => {
-      const newValue = filters.status.filter((item) => item !== inputValue);
-
-      onFilters('status', newValue);
-    },
-    [filters.status, onFilters]
-  );
+  const handleRemoveStatus = useCallback(() => {
+    filters.setState({ status: ['all'] });
+  }, [filters]);
 
   const handleRemovepaymenttype = useCallback(
     (inputValue: string) => {
-      const newValue = filters.status.filter((item) => item !== inputValue);
+      const newValue = filters.state.paymenttype.filter((item) => item !== inputValue);
 
-      onFilters('paymenttype', newValue);
+      filters.setState({ paymenttype: newValue });
     },
-    [filters.status, onFilters]
+    [filters]
   );
-
   return (
-    <Stack spacing={1.5} {...other}>
-      <Box sx={{ typography: 'body2' }}>
-        <strong>{results}</strong>
-        <Box component="span" sx={{ color: 'text.secondary', ml: 0.25 }}>
-          results found
-        </Box>
-      </Box>
+    <FiltersResult totalResults={totalResults} onReset={filters.onResetState} sx={sx}>
+      <FiltersBlock label="Branch:" isShow={!!filters.state.branch.length}>
+        {filters.state.branch.map((item) => (
+          <Chip {...chipProps} key={item} label={item} onDelete={() => handleRemoveBranch(item)} />
+        ))}
+      </FiltersBlock>
 
-      <Stack flexGrow={1} spacing={1} direction="row" flexWrap="wrap" alignItems="center">
-        {!!filters.branch.length && (
-          <Block label="Branch:">
-            {filters.branch.map((item) => (
-              <Chip
-                key={item}
-                label={item}
-                size="small"
-                onDelete={() => handleRemoveBranch(item)}
-              />
-            ))}
-          </Block>
-        )}
+      <FiltersBlock label="Status:" isShow={!!filters.state.status.length}>
+        <Chip
+          {...chipProps}
+          label={filters.state.status}
+          onDelete={handleRemoveStatus}
+          sx={{ textTransform: 'capitalize' }}
+        />
+      </FiltersBlock>
 
-        {!!filters.status.length && (
-          <Block label="Status:">
-            {filters.status.map((item) => (
-              <Chip
-                key={item}
-                label={item}
-                size="small"
-                onDelete={() => handleRemoveStatus(item)}
-              />
-            ))}
-          </Block>
-        )}
-
-        {!!filters.paymenttype.length && (
-          <Block label="Payment Type:">
-            {filters.paymenttype.map((item) => (
-              <Chip
-                key={item}
-                label={item}
-                size="small"
-                onDelete={() => handleRemovepaymenttype(item)}
-              />
-            ))}
-          </Block>
-        )}
-
-        <Button
-          color="error"
-          onClick={onResetFilters}
-          startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
-        >
-          Clear
-        </Button>
-      </Stack>
-    </Stack>
-  );
-}
-
-// ----------------------------------------------------------------------
-
-type BlockProps = StackProps & {
-  label: string;
-};
-
-function Block({ label, children, sx, ...other }: BlockProps) {
-  return (
-    <Stack
-      component={Paper}
-      variant="outlined"
-      spacing={1}
-      direction="row"
-      sx={{
-        p: 1,
-        borderRadius: 1,
-        overflow: 'hidden',
-        borderStyle: 'dashed',
-        ...sx,
-      }}
-      {...other}
-    >
-      <Box component="span" sx={{ typography: 'subtitle2' }}>
-        {label}
-      </Box>
-
-      <Stack spacing={1} direction="row" flexWrap="wrap">
-        {children}
-      </Stack>
-    </Stack>
+      <FiltersBlock label="Payment Type:" isShow={!!filters.state.paymenttype.length}>
+        {filters.state.paymenttype.map((item) => (
+          <Chip
+            {...chipProps}
+            key={item}
+            label={item}
+            onDelete={() => handleRemovepaymenttype(item)}
+          />
+        ))}
+      </FiltersBlock>
+    </FiltersResult>
   );
 }

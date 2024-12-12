@@ -1,6 +1,8 @@
 import useSWR from 'swr';
-import { useForm } from 'react-hook-form';
 import { z as zod } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -11,7 +13,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { zodResolver } from '@hookform/resolvers/zod';
+
 import { fetcher } from 'src/utils/axios';
 
 import { useTranslate } from 'src/locales';
@@ -168,9 +170,9 @@ export default function AddressNewForm({ open, onClose, onCreate }: Props) {
                   row
                   name="sex"
                   options={[
-                    { label: 'Male', value: 0 },
-                    { label: 'Female', value: 1 },
-                    { label: 'Other', value: 2 },
+                    { label: 'Male', value: '0' },
+                    { label: 'Female', value: '1' },
+                    { label: 'Other', value: '2' },
                   ]}
                 />
               </Stack>

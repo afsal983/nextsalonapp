@@ -1,10 +1,10 @@
 'use client';
 
+
 import axios, { endpoints } from 'src/utils/axios';
 
 import { AppSettings } from 'src/types/settings';
 
-import { first } from '@tiptap/core/dist/packages/core/src/commands';
 import { setSession } from './utils';
 import { STORAGE_KEY } from './constant';
 

@@ -1,11 +1,10 @@
-import type { BoxProps } from '@mui/material/Box';
-import type { Breakpoint } from '@mui/material/styles';
-
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Tooltip from '@mui/material/Tooltip';
 import { useTheme } from '@mui/material/styles';
+import type { BoxProps } from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import type { Breakpoint } from '@mui/material/styles';
 
 import { RouterLink } from 'src/routes/components';
 
@@ -33,8 +32,8 @@ export function Section({
   layoutQuery,
   methods,
   title = 'Manage the job',
-  imgUrl = `${CONFIG.assetsDir}/assets/illustrations/illustration-dashboard.webp`,
-  subtitle = 'More effectively with optimized workflows.',
+  imgUrl = `${CONFIG.assetsDir}/illustrations/illustration-dashboard.webp`,
+  subtitle = 'Run your business more effectively with ease.',
   ...other
 }: SectionProps) {
   const theme = useTheme();
@@ -82,7 +81,7 @@ export function Section({
         src={imgUrl}
         sx={{ width: 1, aspectRatio: '4/3', objectFit: 'cover' }}
       />
-
+      {/*
       {!!methods?.length && method && (
         <Box component="ul" gap={2} display="flex">
           {methods.map((option) => {
@@ -120,6 +119,7 @@ export function Section({
           })}
         </Box>
       )}
+        */}
     </Box>
   );
 }

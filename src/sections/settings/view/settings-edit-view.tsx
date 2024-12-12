@@ -6,10 +6,11 @@ import { useState, useCallback } from 'react';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 
-import { DashboardContent } from 'src/layouts/dashboard';
 import { paths } from 'src/routes/paths';
 
 import { fetcher } from 'src/utils/axios';
+
+import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
 import { useSettingsContext } from 'src/components/settings';

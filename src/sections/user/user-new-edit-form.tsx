@@ -1,8 +1,9 @@
-import { z as zod } from 'zod';
 import { mutate } from 'swr';
+import { z as zod } from 'zod';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -28,28 +29,18 @@ interface Props {
   branches: BranchItem[];
 }
 
-const { t } = useTranslate();
 export type NewUserSchemaType = zod.infer<typeof NewUserSchema>;
 
 const NewUserSchema = zod.object({
   id: zod.string().optional(), // Optional string field
-  firstname: zod.string().min(1, { message: t('salonapp.user.fn_fvalid_error') }), // Required string with custom error
+  firstname: zod.string().min(1, { message: 'Name invalid' }), // Required string with custom error
   lastname: zod.string().optional(), // Optional string field
-  email: zod
-    .string()
-    .email()
-    .min(1, { message: t('salonapp.user.em_fvalid_error') }), // Required email with custom error
-  password: zod.string().min(1, { message: t('salonapp.user.pw_fvalid_error') }), // Required password with custom error
-  telephone: zod.string().min(1, { message: t('salonapp.user.tel_fvalid_error') }), // Required string with custom error
+  email: zod.string().email().min(1, { message: 'Invalid Email' }), // Required email with custom error
+  password: zod.string().min(1, { message: 'Invalid passowrd' }), // Required password with custom error
+  telephone: zod.string().min(1, { message: 'Telephone invalid' }), // Required string with custom error
   pin: zod.string().optional(), // Optional string field
-  branch_id: zod
-    .number()
-    .positive({ message: t('general.must_be_non_zero') })
-    .min(1, { message: t('general.branch_fvalid_error') }), // Positive number with custom error
-  role_id: zod
-    .number()
-    .positive({ message: t('general.must_be_non_zero') })
-    .min(1, { message: t('general.roleid_fvalid_error') }), // Positive number with custom error
+  branch_id: zod.number().positive({ message: 'Branch Required' }),
+  role_id: zod.number().positive({ message: 'Role required' }),
   address: zod.string().optional(), // Optional string field
   comment: zod.string().optional(), // Optional string field
   enabled: zod.boolean().optional(), // Optional boolean field
@@ -57,6 +48,8 @@ const NewUserSchema = zod.object({
 
 export default function UserNewEditForm({ currentUser, userroles, branches }: Props) {
   const router = useRouter();
+
+  const { t } = useTranslate();
 
   const defaultValues = useMemo(
     () => ({

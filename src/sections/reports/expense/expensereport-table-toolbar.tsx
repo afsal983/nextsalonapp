@@ -1,198 +1,251 @@
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 
 import MenuItem from '@mui/material/MenuItem';
+import MenuList from '@mui/material/MenuList';
 import Checkbox from '@mui/material/Checkbox';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
+import { useSetState } from 'src/hooks/use-set-state';
+import type { UseSetStateReturn } from 'src/hooks/use-set-state';
+
+import { varAlpha } from 'src/theme/styles';
+
 import { Iconify } from 'src/components/iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-import { ExpenseReportTableFilters, ExpenseReportTableFilterValue } from 'src/types/report';
+import { ExpenseReportTableFilters } from 'src/types/report';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  filters: ExpenseReportTableFilters;
-  onFilters: (name: string, value: ExpenseReportTableFilterValue) => void;
-  //
-  branchOptions: {
-    value: string;
-    label: string;
-  }[];
-  statusOptions: {
-    value: string;
-    label: string;
-  }[];
-  paymentOptions: {
-    value: string;
-    label: string;
-  }[];
+  filters: UseSetStateReturn<ExpenseReportTableFilters>;
+  options: {
+    branchOptions: {
+      value: string;
+      label: string;
+    }[];
+    statusOptions: {
+      value: string;
+      label: string;
+    }[];
+    paymentOptions: {
+      value: string;
+      label: string;
+    }[];
+  };
 };
 
-export default function ExpenseReportTableToolbar({
-  filters,
-  onFilters,
-  //
-  branchOptions,
-  statusOptions,
-  paymentOptions,
-}: Props) {
+export default function ExpenseReportTableToolbar({ filters, options }: Props) {
   const popover = usePopover();
 
-  const [branch, setBranch] = useState<string[]>(filters.branch);
+  const local = useSetState<ExpenseReportTableFilters>({
+    branch: filters.state.branch,
+    status: filters.state.status,
+    paymenttype: filters.state.paymenttype,
+  });
 
-  const [status, setStatus] = useState<string[]>(filters.status);
+  const handleChangeBranch = useCallback(
+    (event: SelectChangeEvent<string[]>) => {
+      const {
+        target: { value },
+      } = event;
 
-  const [paymenttype, setPaymenttype] = useState<string[]>(filters.paymenttype);
+      local.setState({ branch: typeof value === 'string' ? value.split(',') : value });
+    },
+    [local]
+  );
 
-  const handleChangeBranch = useCallback((event: SelectChangeEvent<string[]>) => {
-    const {
-      target: { value },
-    } = event;
-    setBranch(typeof value === 'string' ? value.split(',') : value);
-  }, []);
+  const handleChangeStatus = useCallback(
+    (event: SelectChangeEvent<string[]>) => {
+      const {
+        target: { value },
+      } = event;
 
-  const handleChangeStatus = useCallback((event: SelectChangeEvent<string[]>) => {
-    const {
-      target: { value },
-    } = event;
-    setStatus(typeof value === 'string' ? value.split(',') : value);
-  }, []);
+      local.setState({ status: typeof value === 'string' ? value.split(',') : value });
+    },
+    [local]
+  );
 
-  const handleChangePaymenttype = useCallback((event: SelectChangeEvent<string[]>) => {
-    const {
-      target: { value },
-    } = event;
-    setPaymenttype(typeof value === 'string' ? value.split(',') : value);
-  }, []);
+  const handleChangePaymenttype = useCallback(
+    (event: SelectChangeEvent<string[]>) => {
+      const {
+        target: { value },
+      } = event;
 
-  const handleCloseBranch = useCallback(() => {
-    onFilters('branch', branch);
-  }, [onFilters, branch]);
+      local.setState({ paymenttype: typeof value === 'string' ? value.split(',') : value });
+    },
+    [local]
+  );
 
-  const handleCloseStatus = useCallback(() => {
-    onFilters('status', status);
-  }, [onFilters, status]);
+  const handleFilterBranch = useCallback(() => {
+    filters.setState({ branch: local.state.branch });
+  }, [filters, local.state.branch]);
 
-  const handleClosePaymenttype = useCallback(() => {
-    onFilters('paymenttype', paymenttype);
-  }, [onFilters, paymenttype]);
+  const handleFilterStatus = useCallback(() => {
+    filters.setState({ status: local.state.status });
+  }, [filters, local.state.status]);
+
+  const handleFilterPaymentType = useCallback(() => {
+    filters.setState({ paymenttype: local.state.paymenttype });
+  }, [filters, local.state.paymenttype]);
 
   return (
     <>
-      <FormControl
-        sx={{
-          flexShrink: 0,
-          width: { xs: 1, md: 200 },
-        }}
-      >
-        <InputLabel>Branch</InputLabel>
+      <FormControl sx={{ flexShrink: 0, width: { xs: 1, md: 200 } }}>
+        <InputLabel htmlFor="product-filter-stock-select-label">Branch</InputLabel>
 
         <Select
           multiple
-          value={branch}
+          value={local.state.branch}
           onChange={handleChangeBranch}
-          input={<OutlinedInput label="Branch" />}
+          onClose={handleFilterBranch}
+          input={<OutlinedInput label="Branxh" />}
           renderValue={(selected) => selected.map((value) => value).join(', ')}
-          onClose={handleCloseBranch}
+          inputProps={{ id: 'product-filter-stock-select-label' }}
           sx={{ textTransform: 'capitalize' }}
         >
-          {branchOptions?.map((option) => (
+          {options.branchOptions.map((option) => (
             <MenuItem key={option.value} value={option.value}>
-              <Checkbox disableRipple size="small" checked={branch?.includes(option.value)} />
+              <Checkbox
+                disableRipple
+                size="small"
+                checked={local.state.branch.includes(option.value)}
+              />
               {option.label}
             </MenuItem>
           ))}
+          <MenuItem
+            onClick={handleFilterBranch}
+            sx={{
+              justifyContent: 'center',
+              fontWeight: (theme) => theme.typography.button,
+              border: (theme) =>
+                `solid 1px ${varAlpha(theme.vars.palette.grey['500Channel'], 0.16)}`,
+              bgcolor: (theme) => varAlpha(theme.vars.palette.grey['500Channel'], 0.08),
+            }}
+          >
+            Apply
+          </MenuItem>
         </Select>
       </FormControl>
 
-      <FormControl
-        sx={{
-          flexShrink: 0,
-          width: { xs: 1, md: 200 },
-        }}
-      >
-        <InputLabel>Status</InputLabel>
-
+      <FormControl sx={{ flexShrink: 0, width: { xs: 1, md: 200 } }}>
+        <InputLabel htmlFor="product-filter-publish-select-label">Status</InputLabel>
         <Select
           multiple
-          value={status}
+          value={local.state.status}
           onChange={handleChangeStatus}
-          input={<OutlinedInput label="Status" />}
+          onClose={handleFilterStatus}
+          input={<OutlinedInput label="Publish" />}
           renderValue={(selected) => selected.map((value) => value).join(', ')}
-          onClose={handleCloseStatus}
+          inputProps={{ id: 'product-filter-publish-select-label' }}
           sx={{ textTransform: 'capitalize' }}
         >
-          {statusOptions?.map((option) => (
+          {options.statusOptions.map((option) => (
             <MenuItem key={option.value} value={option.value}>
-              <Checkbox disableRipple size="small" checked={status?.includes(option.value)} />
+              <Checkbox
+                disableRipple
+                size="small"
+                checked={local.state.status.includes(option.value)}
+              />
               {option.label}
             </MenuItem>
           ))}
+
+          <MenuItem
+            disableGutters
+            disableTouchRipple
+            onClick={handleFilterStatus}
+            sx={{
+              justifyContent: 'center',
+              fontWeight: (theme) => theme.typography.button,
+              border: (theme) =>
+                `solid 1px ${varAlpha(theme.vars.palette.grey['500Channel'], 0.16)}`,
+              bgcolor: (theme) => varAlpha(theme.vars.palette.grey['500Channel'], 0.08),
+            }}
+          >
+            Apply
+          </MenuItem>
         </Select>
       </FormControl>
 
-      <FormControl
-        sx={{
-          flexShrink: 0,
-          width: { xs: 1, md: 200 },
-        }}
-      >
-        <InputLabel>Payment Type</InputLabel>
-
+      <FormControl sx={{ flexShrink: 0, width: { xs: 1, md: 200 } }}>
+        <InputLabel htmlFor="product-filter-publish-select-label">Payment Type</InputLabel>
         <Select
           multiple
-          value={paymenttype}
+          value={local.state.paymenttype}
           onChange={handleChangePaymenttype}
+          onClose={handleFilterPaymentType}
           input={<OutlinedInput label="Payment Type" />}
           renderValue={(selected) => selected.map((value) => value).join(', ')}
-          onClose={handleClosePaymenttype}
+          inputProps={{ id: 'product-filter-publish-select-label' }}
           sx={{ textTransform: 'capitalize' }}
         >
-          {paymentOptions?.map((option) => (
+          {options.paymentOptions.map((option) => (
             <MenuItem key={option.value} value={option.value}>
-              <Checkbox disableRipple size="small" checked={paymenttype?.includes(option.value)} />
+              <Checkbox
+                disableRipple
+                size="small"
+                checked={local.state.paymenttype.includes(option.value)}
+              />
               {option.label}
             </MenuItem>
           ))}
+
+          <MenuItem
+            disableGutters
+            disableTouchRipple
+            onClick={handleFilterPaymentType}
+            sx={{
+              justifyContent: 'center',
+              fontWeight: (theme) => theme.typography.button,
+              border: (theme) =>
+                `solid 1px ${varAlpha(theme.vars.palette.grey['500Channel'], 0.16)}`,
+              bgcolor: (theme) => varAlpha(theme.vars.palette.grey['500Channel'], 0.08),
+            }}
+          >
+            Apply
+          </MenuItem>
         </Select>
       </FormControl>
 
       <CustomPopover
         open={popover.open}
+        anchorEl={popover.anchorEl}
         onClose={popover.onClose}
-        arrow="right-top"
-        sx={{ width: 140 }}
+        slotProps={{ arrow: { placement: 'right-top' } }}
       >
-        <MenuItem
-          onClick={() => {
-            popover.onClose();
-          }}
-        >
-          <Iconify icon="solar:printer-minimalistic-bold" />
-          Print
-        </MenuItem>
+        <MenuList>
+          <MenuItem
+            onClick={() => {
+              popover.onClose();
+            }}
+          >
+            <Iconify icon="solar:printer-minimalistic-bold" />
+            Print
+          </MenuItem>
 
-        <MenuItem
-          onClick={() => {
-            popover.onClose();
-          }}
-        >
-          <Iconify icon="solar:import-bold" />
-          Import
-        </MenuItem>
+          <MenuItem
+            onClick={() => {
+              popover.onClose();
+            }}
+          >
+            <Iconify icon="solar:import-bold" />
+            Import
+          </MenuItem>
 
-        <MenuItem
-          onClick={() => {
-            popover.onClose();
-          }}
-        >
-          <Iconify icon="solar:export-bold" />
-          Export
-        </MenuItem>
+          <MenuItem
+            onClick={() => {
+              popover.onClose();
+            }}
+          >
+            <Iconify icon="solar:export-bold" />
+            Export
+          </MenuItem>
+        </MenuList>
       </CustomPopover>
     </>
   );

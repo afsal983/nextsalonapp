@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 
+import { Box } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Badge from '@mui/material/Badge';
 import { LoadingButton } from '@mui/lab';
@@ -11,61 +12,45 @@ import Typography from '@mui/material/Typography';
 import SearchIcon from '@mui/icons-material/Search';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
+import type { UseSetStateReturn } from 'src/hooks/use-set-state';
+
 import { Iconify } from 'src/components/iconify';
 
-import { SalesReportPeriodFilters, SalesReportPeriodFilterValue } from 'src/types/report';
+import type { IDatePickerControl } from 'src/types/common';
+import { ExpenseReportPeriodFilters } from 'src/types/report';
 
 // ----------------------------------------------------------------------
-
 type Props = {
-  //
-  filters: SalesReportPeriodFilters;
-  onFilters: (name: string, value: SalesReportPeriodFilterValue) => void;
-  handleSearch: () => void;
-  //
-  canReset: boolean;
-  onResetFilters: VoidFunction;
-  //
-  dateError: boolean;
-  //
   open: boolean;
-  onClose: VoidFunction;
-  //
-  // events: ICalendarEvent[];
+  canReset: boolean;
+  dateError: boolean;
+  onClose: () => void;
   colorOptions: string[];
-  // onClickEvent: (eventId: string) => void;
-  isLoading: boolean;
+  filters: UseSetStateReturn<ExpenseReportPeriodFilters>;
+  handleSearch: () => void;
 };
 
 export default function PeriodFilters({
   open,
   onClose,
-  handleSearch,
-  //
   filters,
-  onFilters,
-  //
   canReset,
-  onResetFilters,
-  //
   dateError,
-  //
-  // events,
-  colorOptions, // onClickEvent,
-  isLoading,
+  colorOptions,
+  handleSearch,
 }: Props) {
   const handleFilterStartDate = useCallback(
-    (newValue: Date | null) => {
-      onFilters('startDate', newValue);
+    (newValue: IDatePickerControl) => {
+      filters.setState({ startDate: newValue });
     },
-    [onFilters]
+    [filters]
   );
 
   const handleFilterEndDate = useCallback(
-    (newValue: Date | null) => {
-      onFilters('endDate', newValue);
+    (newValue: IDatePickerControl) => {
+      filters.setState({ endDate: newValue });
     },
-    [onFilters]
+    [filters]
   );
 
   const renderHead = (
@@ -80,7 +65,7 @@ export default function PeriodFilters({
       </Typography>
 
       <Tooltip title="Reset">
-        <IconButton onClick={onResetFilters}>
+        <IconButton onClick={filters.onResetState}>
           <Badge color="error" variant="dot" invisible={!canReset}>
             <Iconify icon="solar:restart-bold" />
           </Badge>
@@ -94,37 +79,41 @@ export default function PeriodFilters({
   );
 
   const renderDateRange = (
-    <Stack spacing={1.5} sx={{ mb: 3, px: 2.5 }}>
-      <Typography variant="subtitle2">Range</Typography>
+    <Box display="flex" flexDirection="column" sx={{ mb: 3, px: 2.5 }}>
+      <Typography variant="subtitle2" sx={{ mb: 1.5 }}>
+        Range
+      </Typography>
 
-      <Stack spacing={2}>
-        <DatePicker label="Start date" value={filters.startDate} onChange={handleFilterStartDate} />
+      <DatePicker
+        label="Start date"
+        value={filters.state.startDate}
+        onChange={handleFilterStartDate}
+        sx={{ mb: 2.5 }}
+      />
 
-        <DatePicker
-          label="End date"
-          value={filters.endDate}
-          onChange={handleFilterEndDate}
-          slotProps={{
-            textField: {
-              error: dateError,
-              helperText: dateError && 'End date must be later than start date',
-            },
-          }}
-        />
-
-        <LoadingButton
-          variant="contained"
-          loading={isLoading}
-          size="large"
-          startIcon={<SearchIcon />}
-          onClick={() => {
-            handleSearch();
-          }}
-        >
-          Search
-        </LoadingButton>
-      </Stack>
-    </Stack>
+      <DatePicker
+        label="End date"
+        value={filters.state.endDate}
+        onChange={handleFilterEndDate}
+        slotProps={{
+          textField: {
+            error: dateError,
+            helperText: dateError ? 'End date must be later than start date' : null,
+          },
+        }}
+      />
+      <LoadingButton
+        variant="contained"
+        size="large"
+        startIcon={<SearchIcon />}
+        onClick={() => {
+          handleSearch();
+        }}
+        sx={{ my: 2.5 }}
+      >
+        Search
+      </LoadingButton>
+    </Box>
   );
 
   return (

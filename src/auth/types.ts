@@ -12,3 +12,8 @@ export type AuthContextValue = {
   unauthenticated: boolean;
   checkUserSession?: () => Promise<void>;
 };
+
+export type SessionPayload = {
+  token: string;
+  refresh_token: string;
+};

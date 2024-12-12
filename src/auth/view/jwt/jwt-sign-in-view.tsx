@@ -52,8 +52,8 @@ export function JwtSignInView() {
   const password = useBoolean();
 
   const defaultValues = {
-    email: 'admin@test.com',
-    password: 'Fashion@1234',
+    email: '',
+    password: '',
   };
 
   const methods = useForm<SignInSchemaType>({
@@ -129,14 +129,7 @@ export function JwtSignInView() {
     <>
       <FormHead
         title="Sign in to your account"
-        description={
-          <>
-            {`Don’t have an account? `}
-            <Link component={RouterLink} href={paths.auth.jwt.signUp} variant="subtitle2">
-              Get started
-            </Link>
-          </>
-        }
+        description={<></>}
         sx={{ textAlign: { xs: 'center', md: 'left' } }}
       />
 

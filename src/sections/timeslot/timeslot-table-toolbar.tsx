@@ -1,15 +1,17 @@
 import { useCallback } from 'react';
-import type { UseSetStateReturn } from 'src/hooks/use-set-state';
+
 import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import InputAdornment from '@mui/material/InputAdornment';
 
+import type { UseSetStateReturn } from 'src/hooks/use-set-state';
+
 import { Iconify } from 'src/components/iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-import { TimeSlotTableFilters, type TimeSlotTableFilterValue } from 'src/types/employee';
+import { TimeSlotTableFilters } from 'src/types/employee';
 
 // ----------------------------------------------------------------------
 

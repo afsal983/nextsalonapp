@@ -1,4 +1,6 @@
+import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -21,6 +23,20 @@ import {
 
 import { IAddressItem } from 'src/types/address';
 
+const NewAddressSchema = zod.object({
+  name: zod.string({ required_error: 'Fullname is required' }), // Required string with custom error
+  phoneNumber: zod.string({ required_error: 'Phone number is required' }), // Required string with custom error
+  address: zod.string({ required_error: 'Address is required' }), // Required string with custom error
+  city: zod.string({ required_error: 'City is required' }), // Required string with custom error
+  state: zod.string({ required_error: 'State is required' }), // Required string with custom error
+  country: zod.string({ required_error: 'Country is required' }), // Required string with custom error
+  zipCode: zod.string({ required_error: 'Zip code is required' }), // Required string with custom error
+  addressType: zod.string().optional(), // Optional string
+  primary: zod.boolean().optional(), // Optional boolean
+});
+
+export type NewAddressSchemaType = zod.infer<typeof NewAddressSchema>;
+
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -30,19 +46,6 @@ type Props = {
 };
 
 export default function AddressNewForm({ open, onClose, onCreate }: Props) {
-  const NewAddressSchema = Yup.object().shape({
-    name: Yup.string().required('Fullname is required'),
-    phoneNumber: Yup.string().required('Phone number is required'),
-    address: Yup.string().required('Address is required'),
-    city: Yup.string().required('City is required'),
-    state: Yup.string().required('State is required'),
-    country: Yup.string().required('Country is required'),
-    zipCode: Yup.string().required('Zip code is required'),
-    // not required
-    addressType: Yup.string(),
-    primary: Yup.boolean(),
-  });
-
   const defaultValues = {
     name: '',
     city: '',
@@ -55,8 +58,9 @@ export default function AddressNewForm({ open, onClose, onCreate }: Props) {
     country: '',
   };
 
-  const methods = useForm({
-    resolver: yupResolver(NewAddressSchema),
+  const methods = useForm<NewAddressSchemaType>({
+    mode: 'all',
+    resolver: zodResolver(NewAddressSchema),
     defaultValues,
   });
 
@@ -131,7 +135,6 @@ export default function AddressNewForm({ open, onClose, onCreate }: Props) {
 
             <RHFAutocomplete
               name="country"
-              type="country"
               label="Country"
               placeholder="Choose a country"
               options={countries.map((option) => option.label)}

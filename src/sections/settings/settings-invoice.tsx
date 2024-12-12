@@ -1,4 +1,6 @@
+import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
@@ -28,19 +30,30 @@ interface Props {
   currentSettings: AppSettings[];
 }
 
+export type InvoiceSettingsSchemaType = zod.infer<typeof InvoiceSettingSchema>;
+const InvoiceSettingSchema = zod.object({
+  taxId: zod.string().nonempty('Tax ID is required'),
+  taxName: zod.string().nonempty('Tax Name is required'),
+  taxValue: zod.string().nonempty('Tax % is required'),
+  walkin: zod.string().nonempty('Tax % is required'),
+  poslogocontent: zod
+    .any()
+    .nullable()
+    .refine((value) => value !== null, {
+      message: 'Pos Logo is required',
+    }),
+  seal: zod
+    .any()
+    .nullable()
+    .refine((value) => value !== null, {
+      message: 'Seal is required',
+    }),
+  invoiceprefix: zod.string().optional(),
+});
+
 export default function SettingsInvoice({ currentSettings }: Props) {
   const router = useRouter();
   const { t } = useTranslate();
-
-  const UpdateUserSchema = Yup.object().shape({
-    taxId: Yup.string().required('Tax ID is required'),
-    taxName: Yup.string().required('Tax ID is required'),
-    taxValue: Yup.string().required('Tax % is required'),
-    walkin: Yup.string().required('Tax % is required'),
-    poslogocontent: Yup.mixed<any>().nullable().required('Pos Logo is required'),
-    seal: Yup.mixed<any>().nullable().required('Seal is required'),
-    invoiceprefix: Yup.string(),
-  });
 
   const defaultValues = useMemo(
     () => ({
@@ -55,8 +68,9 @@ export default function SettingsInvoice({ currentSettings }: Props) {
     [currentSettings]
   );
 
-  const methods = useForm({
-    resolver: yupResolver(UpdateUserSchema),
+  const methods = useForm<InvoiceSettingsSchemaType>({
+    mode: 'all',
+    resolver: zodResolver(InvoiceSettingSchema),
     defaultValues,
   });
 

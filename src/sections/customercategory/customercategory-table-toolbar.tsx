@@ -6,33 +6,29 @@ import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import InputAdornment from '@mui/material/InputAdornment';
 
+import type { UseSetStateReturn } from 'src/hooks/use-set-state';
+
 import { Iconify } from 'src/components/iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-import {
-  CustomerCategoryTableFilters,
-  type CustomerCategoryTableFilterValue,
-} from 'src/types/customer';
+import { type CustomerCategoryTableFilters } from 'src/types/customer';
 
 // ----------------------------------------------------------------------
 
 interface Props {
-  filters: CustomerCategoryTableFilters;
-  onFilters: (name: string, value: CustomerCategoryTableFilterValue) => void;
-  //
+  onResetPage: () => void;
+  filters: UseSetStateReturn<CustomerCategoryTableFilters>;
 }
 
-export default function CustomerCategoryTableToolbar({
-  filters,
-  onFilters, //
-}: Props) {
+export default function CustomerCategoryTableToolbar({ filters, onResetPage }: Props) {
   const popover = usePopover();
 
   const handleFilterName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      onFilters('name', event.target.value);
+      onResetPage();
+      filters.setState({ name: event.target.value });
     },
-    [onFilters]
+    [filters, onResetPage]
   );
 
   return (
@@ -59,7 +55,7 @@ export default function CustomerCategoryTableToolbar({
         <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
           <TextField
             fullWidth
-            value={filters.name}
+            value={filters.state.name}
             onChange={handleFilterName}
             placeholder="Search..."
             InputProps={{
@@ -80,9 +76,9 @@ export default function CustomerCategoryTableToolbar({
 
       <CustomPopover
         open={popover.open}
+        anchorEl={popover.anchorEl}
         onClose={popover.onClose}
-        arrow="right-top"
-        sx={{ width: 140 }}
+        slotProps={{ arrow: { placement: 'right-top' } }}
       >
         <MenuItem
           onClick={() => {

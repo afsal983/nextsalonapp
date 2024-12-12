@@ -1,6 +1,8 @@
 import { mutate } from 'swr';
+import { z as zod } from 'zod';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -24,16 +26,17 @@ interface Props {
   currentRetailbrand?: RetailBrandItem;
 }
 
+export type NewPRetailBrandSchemaType = zod.infer<typeof NewRetailBrandSchema>;
+const NewRetailBrandSchema = zod.object({
+  id: zod.string().optional(),
+  name: zod.string().nonempty({ message: 'Name Error' }),
+  desc: zod.string().optional(),
+});
+
 export default function RetailBrandNewEditForm({ currentRetailbrand }: Props) {
   const router = useRouter();
 
   const { t } = useTranslate();
-
-  const NewProductSchema = Yup.object().shape({
-    id: Yup.string(),
-    name: Yup.string().required(t('salonapp.service.name_fvalid_error')),
-    desc: Yup.string(),
-  });
 
   const defaultValues = useMemo(
     () => ({
@@ -44,8 +47,9 @@ export default function RetailBrandNewEditForm({ currentRetailbrand }: Props) {
     [currentRetailbrand]
   );
 
-  const methods = useForm({
-    resolver: yupResolver(NewProductSchema),
+  const methods = useForm<NewPRetailBrandSchemaType>({
+    mode: 'all',
+    resolver: zodResolver(NewRetailBrandSchema),
     defaultValues,
   });
 

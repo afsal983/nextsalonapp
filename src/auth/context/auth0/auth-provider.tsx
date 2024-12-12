@@ -1,7 +1,6 @@
 'use client';
 
 import type { AppState } from '@auth0/auth0-react';
-
 import { useAuth0, Auth0Provider } from '@auth0/auth0-react';
 import { useMemo, useState, useEffect, useCallback } from 'react';
 

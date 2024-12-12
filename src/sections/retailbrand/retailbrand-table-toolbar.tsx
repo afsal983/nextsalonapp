@@ -6,29 +6,29 @@ import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import InputAdornment from '@mui/material/InputAdornment';
 
+import type { UseSetStateReturn } from 'src/hooks/use-set-state';
+
 import { Iconify } from 'src/components/iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-import { type RetailBrandTableFilters, type RetailBrandTableFilterValue } from 'src/types/service';
+import { type RetailBrandTableFilters } from 'src/types/service';
 
 // ----------------------------------------------------------------------
 
 interface Props {
-  filters: RetailBrandTableFilters;
-  onFilters: (name: string, value: RetailBrandTableFilterValue) => void;
+  onResetPage: () => void;
+  filters: UseSetStateReturn<RetailBrandTableFilters>;
 }
 
-export default function RetailBrandTableToolbar({
-  filters,
-  onFilters, //
-}: Props) {
+export default function RetailBrandTableToolbar({ filters, onResetPage }: Props) {
   const popover = usePopover();
 
   const handleFilterName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      onFilters('name', event.target.value);
+      onResetPage();
+      filters.setState({ name: event.target.value });
     },
-    [onFilters]
+    [filters, onResetPage]
   );
 
   return (
@@ -55,7 +55,7 @@ export default function RetailBrandTableToolbar({
         <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
           <TextField
             fullWidth
-            value={filters.name}
+            value={filters.state.name}
             onChange={handleFilterName}
             placeholder="Search..."
             InputProps={{
@@ -76,9 +76,9 @@ export default function RetailBrandTableToolbar({
 
       <CustomPopover
         open={popover.open}
+        anchorEl={popover.anchorEl}
         onClose={popover.onClose}
-        arrow="right-top"
-        sx={{ width: 140 }}
+        slotProps={{ arrow: { placement: 'right-top' } }}
       >
         <MenuItem
           onClick={() => {

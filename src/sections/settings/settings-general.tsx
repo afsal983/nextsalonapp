@@ -1,4 +1,6 @@
+import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
@@ -33,30 +35,34 @@ interface Props {
   currentSettings: AppSettings[];
 }
 
+export type GeneralSettingsSchemaType = zod.infer<typeof GeneralSettingsSchema>;
+const GeneralSettingsSchema = zod.object({
+  logocontent: zod
+    .any()
+    .nullable()
+    .refine((value) => value !== null, {
+      message: 'Logo is required',
+    }),
+  emailid: zod.string().nonempty('Email is required').email('Email must be a valid email address'),
+  adminemail: zod.string().email('Email must be a valid email address'),
+  telephone: zod.string().nonempty('Phone number is required'),
+  language: zod.string().nonempty('Language is required'),
+  address1: zod.string().optional(),
+  address2: zod.string().optional(),
+  startTime: zod.string().optional(),
+  endTime: zod.string().optional(),
+  timeFormat: zod.string().optional(),
+  timezone: zod.string().optional(),
+  homepage: zod.string().optional(),
+  currency: zod.string().nonempty('Currency is required'),
+  theme: zod.string().optional(),
+  defaulttelcode: zod.string().optional(),
+  emailserver: zod.string().optional(),
+});
+
 export default function SettingsGeneral({ currentSettings }: Props) {
   const router = useRouter();
   const { t } = useTranslate();
-
-  const UpdateUserSchema = Yup.object().shape({
-    logocontent: Yup.mixed<any>().nullable().required('Logo is required'),
-    emailid: Yup.string()
-      .required('Email is required')
-      .email('Email must be a valid email address'),
-    adminemail: Yup.string().email('Email must be a valid email address'),
-    telephone: Yup.string().required('Phone number is required'),
-    language: Yup.string().required('Language is required'),
-    address1: Yup.string(),
-    address2: Yup.string(),
-    startTime: Yup.string(),
-    endTime: Yup.string(),
-    timeFormat: Yup.string(),
-    timezone: Yup.string(),
-    homepage: Yup.string(),
-    currency: Yup.string().required('Currency is required'),
-    theme: Yup.string(),
-    defaulttelcode: Yup.string(),
-    emailserver: Yup.string(),
-  });
 
   const defaultValues = useMemo(
     () => ({
@@ -80,8 +86,9 @@ export default function SettingsGeneral({ currentSettings }: Props) {
     [currentSettings]
   );
 
-  const methods = useForm({
-    resolver: yupResolver(UpdateUserSchema),
+  const methods = useForm<GeneralSettingsSchemaType>({
+    mode: 'all',
+    resolver: zodResolver(GeneralSettingsSchema),
     defaultValues,
   });
 

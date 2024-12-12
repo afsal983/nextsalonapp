@@ -1,5 +1,6 @@
+import dayjs from 'dayjs';
 import { useCallback } from 'react';
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -7,19 +8,15 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
-import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
 
 import { useResponsive } from 'src/hooks/use-responsive';
-
-import { fTimestamp, fAdd } from 'src/utils/format-time';
-import dayjs from 'dayjs';
 
 import { Iconify } from 'src/components/iconify';
 import { Field, RHFSelect } from 'src/components/hook-form';
 
 import { ServiceItem } from 'src/types/service';
 import { EmployeeItem } from 'src/types/employee';
-import { AppointmentDate, AppointmentItem } from 'src/types/appointment';
+import { AppointmentItem } from 'src/types/appointment';
 // ----------------------------------------------------------------------
 
 type Props = {

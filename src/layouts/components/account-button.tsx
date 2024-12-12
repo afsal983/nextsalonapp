@@ -1,5 +1,3 @@
-import type { IconButtonProps } from '@mui/material/IconButton';
-
 import { m } from 'framer-motion';
 
 import NoSsr from '@mui/material/NoSsr';
@@ -7,6 +5,7 @@ import Avatar from '@mui/material/Avatar';
 import SvgIcon from '@mui/material/SvgIcon';
 import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
+import type { IconButtonProps } from '@mui/material/IconButton';
 
 import { varHover, AnimateAvatar } from 'src/components/animate';
 

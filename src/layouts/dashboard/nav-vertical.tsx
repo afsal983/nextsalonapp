@@ -1,16 +1,14 @@
-import type { Breakpoint } from '@mui/material/styles';
-import type { NavSectionProps } from 'src/components/nav-section';
-
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
+import type { Breakpoint } from '@mui/material/styles';
 
 import { varAlpha, hideScrollY } from 'src/theme/styles';
 
 import { Logo } from 'src/components/logo';
 import { Scrollbar } from 'src/components/scrollbar';
+import type { NavSectionProps } from 'src/components/nav-section';
 import { NavSectionMini, NavSectionVertical } from 'src/components/nav-section';
 
-import { NavUpgrade } from '../components/nav-upgrade';
 import { NavToggleButton } from '../components/nav-toggle-button';
 
 // ----------------------------------------------------------------------

@@ -10,46 +10,46 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import Select, { type SelectChangeEvent } from '@mui/material/Select';
 
+import type { UseSetStateReturn } from 'src/hooks/use-set-state';
+
 import { useTranslate } from 'src/locales';
 
 import { Iconify } from 'src/components/iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
-import { type CustomerTableFilters, type CustomerTableFilterValue } from 'src/types/customer';
+import { type CustomerTableFilters } from 'src/types/customer';
 
 // ----------------------------------------------------------------------
 
 interface Props {
-  filters: CustomerTableFilters;
-  onFilters: (name: string, value: CustomerTableFilterValue) => void;
-  //
-  customerCategory: string[];
+  onResetPage: () => void;
+  filters: UseSetStateReturn<CustomerTableFilters>;
+  options: {
+    customercategory: string[];
+  };
 }
 
-export default function CustomerTableToolbar({
-  filters,
-  onFilters,
-  //
-  customerCategory,
-}: Props) {
+export default function CustomerTableToolbar({ filters, options, onResetPage }: Props) {
   const popover = usePopover();
   const { t } = useTranslate();
 
   const handleFilterName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      onFilters('name', event.target.value);
+      onResetPage();
+      filters.setState({ name: event.target.value });
     },
-    [onFilters]
+    [filters, onResetPage]
   );
 
-  const handleFilterRole = useCallback(
+  const handleFilterCustomerCategory = useCallback(
     (event: SelectChangeEvent<string[]>) => {
-      onFilters(
-        'customercategory',
-        typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value
-      );
+      const newValue =
+        typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value;
+
+      onResetPage();
+      filters.setState({ customercategory: newValue });
     },
-    [onFilters]
+    [filters, onResetPage]
   );
 
   return (
@@ -76,8 +76,8 @@ export default function CustomerTableToolbar({
 
           <Select
             multiple
-            value={filters.customercategory}
-            onChange={handleFilterRole}
+            value={filters.state.customercategory}
+            onChange={handleFilterCustomerCategory}
             input={<OutlinedInput label="Role" />}
             renderValue={(selected) => selected.map((value) => value).join(', ')}
             MenuProps={{
@@ -86,12 +86,12 @@ export default function CustomerTableToolbar({
               },
             }}
           >
-            {customerCategory.map((option) => (
+            {options.customercategory.map((option) => (
               <MenuItem key={option} value={option}>
                 <Checkbox
                   disableRipple
                   size="small"
-                  checked={filters.customercategory.includes(option)}
+                  checked={filters.state.customercategory.includes(option)}
                 />
                 {option}
               </MenuItem>
@@ -102,7 +102,7 @@ export default function CustomerTableToolbar({
         <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
           <TextField
             fullWidth
-            value={filters.name}
+            value={filters.state.name}
             onChange={handleFilterName}
             placeholder={t('salonapp.customer.search_customer')}
             InputProps={{
@@ -123,9 +123,9 @@ export default function CustomerTableToolbar({
 
       <CustomPopover
         open={popover.open}
+        anchorEl={popover.anchorEl}
         onClose={popover.onClose}
-        arrow="right-top"
-        sx={{ width: 140 }}
+        slotProps={{ arrow: { placement: 'right-top' } }}
       >
         <MenuItem
           onClick={() => {

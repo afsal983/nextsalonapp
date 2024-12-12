@@ -17,9 +17,8 @@ import FormHelperText from '@mui/material/FormHelperText';
 import { Toolbar } from './toolbar';
 import { StyledRoot } from './styles';
 import { editorClasses } from './classes';
-import { CodeHighlightBlock } from './components/code-highlight-block';
-
 import type { EditorProps } from './types';
+import { CodeHighlightBlock } from './components/code-highlight-block';
 
 // ----------------------------------------------------------------------
 

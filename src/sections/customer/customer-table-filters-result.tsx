@@ -1,16 +1,14 @@
-import type { Theme, SxProps } from '@mui/material/styles';
 import { useCallback } from 'react';
-import type { UseSetStateReturn } from 'src/hooks/use-set-state';
-import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import Stack, { type StackProps } from '@mui/material/Stack';
 
-import { Iconify } from 'src/components/iconify';
+import Chip from '@mui/material/Chip';
+import { type StackProps } from '@mui/material/Stack';
+import type { Theme, SxProps } from '@mui/material/styles';
+
+import type { UseSetStateReturn } from 'src/hooks/use-set-state';
+
+import { chipProps, FiltersBlock, FiltersResult } from 'src/components/filters-result';
 
 import { type CustomerTableFilters } from 'src/types/customer';
-import { chipProps, FiltersBlock, FiltersResult } from 'src/components/filters-result';
 // ----------------------------------------------------------------------
 
 type Props = StackProps & {
@@ -31,7 +29,7 @@ export default function CustomerTableFiltersResult({
     filters.setState({ name: '' });
   }, [filters, onResetPage]);
 
-  const handleRemoveProductCategory = useCallback(
+  const handleRemoveCustomerCategory = useCallback(
     (inputValue: string) => {
       const newValue = filters.state.customercategory.filter((item) => item !== inputValue);
 
@@ -53,7 +51,7 @@ export default function CustomerTableFiltersResult({
             {...chipProps}
             key={item}
             label={item}
-            onDelete={() => handleRemoveProductCategory(item)}
+            onDelete={() => handleRemoveCustomerCategory(item)}
           />
         ))}
       </FiltersBlock>

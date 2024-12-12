@@ -1,12 +1,10 @@
 'use client';
 
-import type { NavSectionProps } from 'src/components/nav-section';
-import type { Theme, SxProps, Breakpoint } from '@mui/material/styles';
-
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
 import { useTheme } from '@mui/material/styles';
 import { iconButtonClasses } from '@mui/material/IconButton';
+import type { Theme, SxProps, Breakpoint } from '@mui/material/styles';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
@@ -15,6 +13,7 @@ import { _contacts, _notifications } from 'src/_data';
 
 import { Logo } from 'src/components/logo';
 import { useSettingsContext } from 'src/components/settings';
+import type { NavSectionProps } from 'src/components/nav-section';
 
 import { Main } from './main';
 import { NavMobile } from './nav-mobile';

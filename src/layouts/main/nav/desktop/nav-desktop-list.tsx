@@ -15,9 +15,8 @@ import { paper } from 'src/theme/styles';
 
 import { NavLi, NavUl } from 'src/components/nav-section';
 
-import { NavItem, NavItemDashboard } from './nav-desktop-item';
-
 import type { NavListProps, NavSubListProps } from '../types';
+import { NavItem, NavItemDashboard } from './nav-desktop-item';
 
 // ----------------------------------------------------------------------
 

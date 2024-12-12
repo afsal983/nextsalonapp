@@ -13,7 +13,7 @@ import { fetcher } from 'src/utils/axios';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
-import SearchNotFound from 'src/components/search-not-found';
+import { SearchNotFound } from 'src/components/search-not-found';
 
 import { Customer } from 'src/types/customer';
 import { IAddressItem } from 'src/types/address';

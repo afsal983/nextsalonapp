@@ -1,10 +1,12 @@
 import { useCallback } from 'react';
-import type { UseSetStateReturn } from 'src/hooks/use-set-state';
+
 import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import InputAdornment from '@mui/material/InputAdornment';
+
+import type { UseSetStateReturn } from 'src/hooks/use-set-state';
 
 import { Iconify } from 'src/components/iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
@@ -54,7 +56,7 @@ export default function LocationTableToolbar({ filters, onResetPage }: Props) {
         <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
           <TextField
             fullWidth
-            value={filters.name}
+            value={filters.state.name}
             onChange={handleFilterName}
             placeholder="Search..."
             InputProps={{

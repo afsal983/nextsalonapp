@@ -1,6 +1,5 @@
-import type { BoxProps } from '@mui/material/Box';
-
 import Box from '@mui/material/Box';
+import type { BoxProps } from '@mui/material/Box';
 
 import { layoutClasses } from '../classes';
 

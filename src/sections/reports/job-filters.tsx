@@ -9,56 +9,39 @@ import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
+import type { UseSetStateReturn } from 'src/hooks/use-set-state';
+
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 
-import { ReportFilters, ReportFilterValue } from 'src/types/report';
+import { ReportFilters } from 'src/types/report';
 
 // ----------------------------------------------------------------------
 
 type Props = {
   open: boolean;
-  onOpen: VoidFunction;
-  onClose: VoidFunction;
-  //
-  filters: ReportFilters;
-  onFilters: (name: string, value: ReportFilterValue) => void;
-  //
   canReset: boolean;
-  onResetFilters: VoidFunction;
-  //
-  roleOptions: string[];
-  benefitOptions: string[];
-  experienceOptions: string[];
-  employmentTypeOptions: string[];
-  locationOptions: string[];
+  onOpen: () => void;
+  onClose: () => void;
+  filters: UseSetStateReturn<ReportFilters>;
+  options: {
+    roles: string[];
+    benefits: string[];
+    experiences: string[];
+    employmentTypes: string[];
+  };
 };
 
-export default function JobFilters({
-  open,
-  onOpen,
-  onClose,
-  //
-  filters,
-  onFilters,
-  //
-  canReset,
-  onResetFilters,
-  //
-  roleOptions,
-  locationOptions,
-  benefitOptions,
-  experienceOptions,
-  employmentTypeOptions,
-}: Props) {
+export default function JobFilters({ open, canReset, onOpen, onClose, filters, options }: Props) {
   const handleFilterEmploymentTypes = useCallback(
     (newValue: string) => {
-      const checked = filters.name.includes(newValue)
-        ? filters.name.filter((value) => value !== newValue)
-        : [...filters.name, newValue];
-      onFilters('employmentTypes', checked);
+      const checked = filters.state.name.includes(newValue)
+        ? filters.state.name.filter((value) => value !== newValue)
+        : [...filters.state.name, newValue];
+
+      filters.setState({ name: checked });
     },
-    [filters.name, onFilters]
+    [filters]
   );
 
   const renderHead = (
@@ -73,7 +56,7 @@ export default function JobFilters({
       </Typography>
 
       <Tooltip title="Reset">
-        <IconButton onClick={onResetFilters}>
+        <IconButton onClick={filters.onResetState}>
           <Badge color="error" variant="dot" invisible={!canReset}>
             <Iconify icon="solar:restart-bold" />
           </Badge>

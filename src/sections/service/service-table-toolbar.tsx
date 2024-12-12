@@ -1,7 +1,5 @@
 import { useCallback } from 'react';
 
-import type { UseSetStateReturn } from 'src/hooks/use-set-state';
-
 import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
 import Checkbox from '@mui/material/Checkbox';
@@ -11,6 +9,8 @@ import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import Select, { type SelectChangeEvent } from '@mui/material/Select';
+
+import type { UseSetStateReturn } from 'src/hooks/use-set-state';
 
 import { Iconify } from 'src/components/iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';

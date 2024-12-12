@@ -1,7 +1,5 @@
 'use client';
 
-import type { IconButtonProps } from '@mui/material/IconButton';
-
 import { m } from 'framer-motion';
 
 import Badge from '@mui/material/Badge';
@@ -11,6 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
+import type { IconButtonProps } from '@mui/material/IconButton';
 
 import { fToNow } from 'src/utils/format-time';
 

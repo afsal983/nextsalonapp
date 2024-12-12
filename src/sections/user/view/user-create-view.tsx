@@ -2,13 +2,12 @@
 
 import useSWR from 'swr';
 
-import Container from '@mui/material/Container';
-
 import { paths } from 'src/routes/paths';
 
 import { fetcher } from 'src/utils/axios';
 
 import { useTranslate } from 'src/locales';
+import { DashboardContent } from 'src/layouts/dashboard';
 
 import { useSettingsContext } from 'src/components/settings';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
@@ -57,6 +56,6 @@ export default function UserCreateView() {
       />
 
       <UserNewEditForm userroles={userrole?.data} branches={branches?.data} />
-    </Container>
+    </DashboardContent>
   );
 }

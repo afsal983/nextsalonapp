@@ -1,6 +1,8 @@
 import { mutate } from 'swr';
+import { z as zod } from 'zod';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -18,6 +20,14 @@ import { Form, RHFTextField } from 'src/components/hook-form';
 
 import { type OrganizationItem } from 'src/types/organization';
 
+export type NewOrganizationSchemaType = zod.infer<typeof NewOrganizationSchema>;
+const NewOrganizationSchema = zod.object({
+  org_id: zod.string().optional(), // Optional string field
+  name: zod.string({ required_error: 'Invalid Name' }), // Required string with a custom error
+  address: zod.string({ required_error: 'Invalid address' }), // Required string with a custom error
+  telephone: zod.string({ required_error: 'Invalid telephone' }), // Required string with a custom error
+  email: zod.string({ required_error: 'Invalid email' }), // Required string with a custom error
+});
 // ----------------------------------------------------------------------
 
 interface Props {
@@ -28,14 +38,6 @@ export default function OrganizationNewEditForm({ currentOrganization }: Props) 
   const router = useRouter();
 
   const { t } = useTranslate();
-
-  const NewProductSchema = Yup.object().shape({
-    org_id: Yup.string(),
-    name: Yup.string().required(t('salonapp.organization.name_fvalid_error')),
-    address: Yup.string().required(t('salonapp.organization.addr_fvalid_error')),
-    telephone: Yup.string().required(t('salonapp.organization.telephone_fvalid_error')),
-    email: Yup.string().required(t('salonapp.organization.email_fvalid_error')),
-  });
 
   const defaultValues = useMemo(
     () => ({
@@ -48,9 +50,9 @@ export default function OrganizationNewEditForm({ currentOrganization }: Props) 
     [currentOrganization]
   );
 
-  console.log(defaultValues);
-  const methods = useForm({
-    resolver: yupResolver(NewProductSchema),
+  const methods = useForm<NewOrganizationSchemaType>({
+    mode: 'all',
+    resolver: zodResolver(NewOrganizationSchema),
     defaultValues,
   });
 

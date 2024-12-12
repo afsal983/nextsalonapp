@@ -1,5 +1,4 @@
 import { useCallback } from 'react';
-import { orderBy } from 'src/utils/helper';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -13,69 +12,61 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
+import type { UseSetStateReturn } from 'src/hooks/use-set-state';
+
+import { orderBy } from 'src/utils/helper';
 import { fDateTime } from 'src/utils/format-time';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { ColorPicker } from 'src/components/color-utils';
 
-import { ICalendarEvent, ICalendarFilters, ICalendarFilterValue } from 'src/types/calendar';
+import type { IDatePickerControl } from 'src/types/common';
+import { ICalendarEvent, ICalendarFilters } from 'src/types/calendar';
 
 // ----------------------------------------------------------------------
 
 type Props = {
   //
-  filters: ICalendarFilters;
-  onFilters: (name: string, value: ICalendarFilterValue) => void;
-  //
-  canReset: boolean;
-  onResetFilters: VoidFunction;
-  //
-  dateError: boolean;
-  //
   open: boolean;
-  onClose: VoidFunction;
-  //
-  events: ICalendarEvent[];
+  canReset: boolean;
+  dateError: boolean;
+  onClose: () => void;
   colorOptions: string[];
+  events: ICalendarEvent[];
   onClickEvent: (eventId: string) => void;
+  filters: UseSetStateReturn<ICalendarFilters>;
 };
 
 export default function CalendarFilters({
   open,
-  onClose,
-  //
-  filters,
-  onFilters,
-  //
-  canReset,
-  onResetFilters,
-  //
-  dateError,
-  //
   events,
+  onClose,
+  filters,
+  canReset,
+  dateError,
   colorOptions,
   onClickEvent,
 }: Props) {
   const handleFilterColors = useCallback(
     (newValue: string | string[]) => {
-      onFilters('colors', newValue as string[]);
+      filters.setState({ colors: newValue as string[] });
     },
-    [onFilters]
+    [filters]
   );
 
   const handleFilterStartDate = useCallback(
-    (newValue: Date | null) => {
-      onFilters('startDate', newValue);
+    (newValue: IDatePickerControl) => {
+      filters.setState({ startDate: newValue });
     },
-    [onFilters]
+    [filters]
   );
 
   const handleFilterEndDate = useCallback(
-    (newValue: Date | null) => {
-      onFilters('endDate', newValue);
+    (newValue: IDatePickerControl) => {
+      filters.setState({ endDate: newValue });
     },
-    [onFilters]
+    [filters]
   );
 
   const renderHead = (
@@ -90,7 +81,7 @@ export default function CalendarFilters({
       </Typography>
 
       <Tooltip title="Reset">
-        <IconButton onClick={onResetFilters}>
+        <IconButton onClick={filters.onResetState}>
           <Badge color="error" variant="dot" invisible={!canReset}>
             <Iconify icon="solar:restart-bold" />
           </Badge>
@@ -108,7 +99,7 @@ export default function CalendarFilters({
       <Typography variant="subtitle2">Colors</Typography>
       <ColorPicker
         colors={colorOptions}
-        selected={filters.colors}
+        selected={filters.state.colors}
         onSelectColor={handleFilterColors}
       />
     </Stack>
@@ -119,11 +110,15 @@ export default function CalendarFilters({
       <Typography variant="subtitle2">Range</Typography>
 
       <Stack spacing={2}>
-        <DatePicker label="Start date" value={filters.startDate} onChange={handleFilterStartDate} />
+        <DatePicker
+          label="Start date"
+          value={filters.state.startDate}
+          onChange={handleFilterStartDate}
+        />
 
         <DatePicker
           label="End date"
-          value={filters.endDate}
+          value={filters.state.endDate}
           onChange={handleFilterEndDate}
           slotProps={{
             textField: {

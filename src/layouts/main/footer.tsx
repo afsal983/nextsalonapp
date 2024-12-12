@@ -1,5 +1,3 @@
-import type { Theme, SxProps, Breakpoint } from '@mui/material/styles';
-
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
@@ -9,6 +7,7 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import type { Theme, SxProps, Breakpoint } from '@mui/material/styles';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
@@ -22,7 +21,7 @@ import { Logo } from 'src/components/logo';
 
 const LINKS = [
   {
-    headline: 'Minimal',
+    headline: 'SMEEye',
     children: [
       { name: 'About us', href: paths.about },
       { name: 'Contact us', href: paths.contact },
@@ -36,7 +35,7 @@ const LINKS = [
       { name: 'Privacy policy', href: '#' },
     ],
   },
-  { headline: 'Contact', children: [{ name: 'support@minimals.cc', href: '#' }] },
+  { headline: 'Contact', children: [{ name: 'support@smeeye.com', href: '#' }] },
 ];
 
 // ----------------------------------------------------------------------
@@ -94,7 +93,7 @@ export function Footer({ layoutQuery, sx }: FooterProps) {
               }}
             >
               {_socials.map((social) => (
-                <IconButton key={social.label} color="inherit">
+                <IconButton key={social.name} color="inherit">
                   {social.value === 'twitter' && <TwitterIcon />}
                   {social.value === 'facebook' && <FacebookIcon />}
                   {social.value === 'instagram' && <InstagramIcon />}
@@ -174,7 +173,7 @@ export function HomeFooter({ sx }: HomeFooterProps) {
         <Box sx={{ mt: 1, typography: 'caption' }}>
           © All rights reserved.
           <br /> made by
-          <Link href="https://minimals.cc/"> minimals.cc </Link>
+          <Link href="https://smeeye.com/"> smeeye.com </Link>
         </Box>
       </Container>
     </Box>

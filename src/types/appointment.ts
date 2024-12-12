@@ -1,8 +1,8 @@
-import type { IDatePickerControl } from './common';
 import { BranchItem } from './branch';
 import { Customer } from './customer';
 import { ServiceItem } from './service';
 import { EmployeeItem } from './employee';
+import type { IDatePickerControl } from './common';
 // ----------------------------------------------------------------------
 
 export type AppointmentTableFilterValue = string | Date | null;

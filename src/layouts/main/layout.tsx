@@ -1,11 +1,10 @@
 'use client';
 
-import type { Theme, SxProps, Breakpoint } from '@mui/material/styles';
-
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
+import type { Theme, SxProps, Breakpoint } from '@mui/material/styles';
 
 import { paths } from 'src/routes/paths';
 import { usePathname } from 'src/routes/hooks';
@@ -18,14 +17,13 @@ import { Main } from './main';
 import { NavMobile } from './nav/mobile';
 import { NavDesktop } from './nav/desktop';
 import { Footer, HomeFooter } from './footer';
+import type { NavMainProps } from './nav/types';
 import { MenuButton } from '../components/menu-button';
 import { LayoutSection } from '../core/layout-section';
 import { HeaderSection } from '../core/header-section';
 import { navData as mainNavData } from '../config-nav-main';
 import { SignInButton } from '../components/sign-in-button';
 import { SettingsButton } from '../components/settings-button';
-
-import type { NavMainProps } from './nav/types';
 
 // ----------------------------------------------------------------------
 
@@ -108,7 +106,7 @@ export function MainLayout({ sx, data, children, header }: MainLayoutProps) {
                     variant="contained"
                     rel="noopener"
                     target="_blank"
-                    href={paths.minimalStore}
+                    href={paths.SMEYE}
                     sx={{
                       display: 'none',
                       [theme.breakpoints.up(layoutQuery)]: { display: 'inline-flex' },
