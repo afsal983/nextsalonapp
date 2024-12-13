@@ -1,6 +1,5 @@
 'use client';
 
-
 import axios, { endpoints } from 'src/utils/axios';
 
 import { AppSettings } from 'src/types/settings';
