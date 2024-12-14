@@ -15,7 +15,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from 'minimal-shared/hooks';
 import { useResponsive } from 'src/hooks/use-responsive';
 
 import { toast } from 'src/components/snackbar';

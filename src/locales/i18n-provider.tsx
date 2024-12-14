@@ -8,7 +8,7 @@ import { initReactI18next, I18nextProvider as Provider } from 'react-i18next';
 
 import { localStorageGetItem } from 'src/utils/storage-available';
 
-import { CONFIG } from 'src/config-global';
+import { CONFIG } from 'src/global-config';
 
 import type { LanguageValue } from './config-locales';
 import { i18nOptions, fallbackLng } from './config-locales';

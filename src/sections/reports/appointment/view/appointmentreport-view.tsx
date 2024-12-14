@@ -3,15 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 
 import FilterListIcon from '@mui/icons-material/FilterList';
-import {
-  Card,
-  Stack,
-  Badge,
-  Button,
-  Divider,
-  useTheme,
-  IconButton,
-} from '@mui/material';
+import { Card, Stack, Badge, Button, Divider, useTheme, IconButton } from '@mui/material';
 import type {
   GridSlots,
   GridColDef,
@@ -31,7 +23,7 @@ import {
 
 import { paths } from 'src/routes/paths';
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from 'minimal-shared/hooks';
 import { useSetState } from 'src/hooks/use-set-state';
 import type { UseSetStateReturn } from 'src/hooks/use-set-state';
 

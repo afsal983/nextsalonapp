@@ -14,14 +14,15 @@ import CardHeader from '@mui/material/CardHeader';
 import Card, { CardProps } from '@mui/material/Card';
 import ListItemText from '@mui/material/ListItemText';
 import TableContainer from '@mui/material/TableContainer';
-
+import type { TableHeadCellProps } from 'src/components/table';
 import { fCurrency } from 'src/utils/format-number';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { TableHeadCustom } from 'src/components/table';
-import { usePopover, CustomPopover } from 'src/components/custom-popover';
+import { CustomPopover } from 'src/components/custom-popover';
+import { usePopover } from 'minimal-shared/hooks';
 
 // ----------------------------------------------------------------------
 
@@ -40,14 +41,14 @@ type RowProps = {
 interface Props extends CardProps {
   title?: string;
   subheader?: string;
-  tableLabels: any;
+  headCells: TableHeadCellProps[];
   tableData: RowProps[];
 }
 
 export default function LatestTransactions({
   title,
   subheader,
-  tableLabels,
+  headCells,
   tableData,
   ...other
 }: Props) {
@@ -58,7 +59,7 @@ export default function LatestTransactions({
       <TableContainer sx={{ overflow: 'unset' }}>
         <Scrollbar>
           <Table sx={{ minWidth: 960 }}>
-            <TableHeadCustom headLabel={tableLabels} />
+            <TableHeadCustom headCells={headCells} />
 
             <TableBody>
               {tableData?.map((row) => <LatestTransactionsRow key={row.id} row={row} />)}

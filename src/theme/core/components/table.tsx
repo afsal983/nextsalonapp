@@ -1,8 +1,9 @@
-import { tableRowClasses } from '@mui/material/TableRow';
-import { tableCellClasses } from '@mui/material/TableCell';
 import type { Theme, Components } from '@mui/material/styles';
 
-import { varAlpha } from '../../styles';
+import { varAlpha } from 'minimal-shared/utils';
+
+import { tableRowClasses } from '@mui/material/TableRow';
+import { tableCellClasses } from '@mui/material/TableCell';
 
 // ----------------------------------------------------------------------
 

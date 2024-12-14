@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { paths } from 'src/routes/paths';
@@ -19,7 +19,6 @@ import { toast } from 'src/components/snackbar';
 import { Form, RHFSwitch, RHFTextField } from 'src/components/hook-form';
 
 import { type PaymentTypeItem } from 'src/types/paymenttype';
-
 
 export type PaymentTypeSchemaType = zod.infer<typeof PaymentTypeSchema>;
 const PaymentTypeSchema = zod.object({
@@ -105,14 +104,14 @@ export default function PaymentTypeNewEditForm({ currentPaymentType }: Props) {
         router.push(paths.dashboard.invoice.paymenttypes.list);
       }
     } catch (error) {
-      toast.error(error);
+      toast.error('Error');
     }
   });
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
-        <Grid xs={12} md={12}>
+        <Grid size={{ xs: 12, md: 12 }}>
           <Card sx={{ p: 3 }}>
             <Box
               rowGap={3}

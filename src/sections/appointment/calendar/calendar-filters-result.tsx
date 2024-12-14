@@ -9,7 +9,7 @@ import type { UseSetStateReturn } from 'src/hooks/use-set-state';
 
 import { fDateRangeShortLabel } from 'src/utils/format-time';
 
-import { varAlpha } from 'src/theme/styles';
+import { varAlpha } from 'minimal-shared/utils';
 
 import { chipProps, FiltersBlock, FiltersResult } from 'src/components/filters-result';
 

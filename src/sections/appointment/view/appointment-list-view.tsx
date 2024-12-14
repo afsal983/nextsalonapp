@@ -18,7 +18,7 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from 'minimal-shared/hooks';
 import { useSetState } from 'src/hooks/use-set-state';
 
 import { fIsAfter } from 'src/utils/format-time';
@@ -62,7 +62,7 @@ const TABLE_HEAD = [
   { id: 'customer', label: 'Customer' },
   { id: 'start', label: 'Start Date', width: 140 },
   { id: 'end', label: 'End Date', width: 140 },
-  { id: 'products', label: 'Products', width: 120, align: 'center' },
+  { id: 'products', label: 'Products', width: 120 },
   { id: 'employee', label: 'Employee', width: 140 },
   { id: 'Branch', label: 'Branch', width: 110 },
   { id: 'status', label: 'Status', width: 110 },
@@ -146,10 +146,7 @@ export default function AppointmentListView() {
 
     setTableData(deleteRows);
 
-    table.onUpdatePageDeleteRows({
-      totalRowsInPage: dataInPage.length,
-      totalRowsFiltered: dataFiltered.length,
-    });
+    table.onUpdatePageDeleteRow(dataInPage.length);
   }, [dataFiltered.length, dataInPage.length, table, tableData]);
 
   const handleViewRow = useCallback(
@@ -301,7 +298,7 @@ export default function AppointmentListView() {
                 <TableHeadCustom
                   order={table.order}
                   orderBy={table.orderBy}
-                  headLabel={TABLE_HEAD}
+                  headCells={TABLE_HEAD}
                   rowCount={dataFiltered.length}
                   numSelected={table.selected.length}
                   onSort={table.onSort}

@@ -6,17 +6,17 @@ import type { Viewport } from 'next';
 
 import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
 
-import { CONFIG } from 'src/config-global';
+import { CONFIG } from 'src/global-config';
 import { primary } from 'src/theme/core/palette';
 import { LocalizationProvider } from 'src/locales';
 import { detectLanguage } from 'src/locales/server';
-import { schemeConfig } from 'src/theme/scheme-config';
+import { themeConfig, ThemeProvider } from 'src/theme';
 import { I18nProvider } from 'src/locales/i18n-provider';
-import { ThemeProvider } from 'src/theme/theme-provider';
 
 import { Snackbar } from 'src/components/snackbar';
 import { ProgressBar } from 'src/components/progress-bar';
 import { MotionLazy } from 'src/components/animate/motion-lazy';
+import { detectSettings } from 'src/components/settings/server';
 import { SettingsDrawer, defaultSettings, SettingsProvider } from 'src/components/settings';
 
 // import { CheckoutProvider } from 'src/sections/checkout/context';
@@ -55,26 +55,51 @@ type Props = {
   children: React.ReactNode;
 };
 
+async function getAppConfig() {
+  if (CONFIG.isStaticExport) {
+    return {
+      lang: 'en',
+      i18nLang: undefined,
+      cookieSettings: undefined,
+      dir: defaultSettings.direction,
+    };
+  } else {
+    const [lang, settings] = await Promise.all([detectLanguage(), detectSettings()]);
+
+    return {
+      lang: lang ?? 'en',
+      i18nLang: lang ?? 'en',
+      cookieSettings: settings,
+      dir: settings.direction,
+    };
+  }
+}
+
 export default async function RootLayout({ children }: Props) {
   const lang = CONFIG.isStaticExport ? 'en' : await detectLanguage();
+  const appConfig = await getAppConfig();
 
   return (
     <html lang={lang ?? 'en'} suppressHydrationWarning>
       <body>
         <InitColorSchemeScript
-          defaultMode={schemeConfig.defaultMode}
-          modeStorageKey={schemeConfig.modeStorageKey}
+          defaultMode={themeConfig.defaultMode}
+          modeStorageKey={themeConfig.modeStorageKey}
+          attribute={themeConfig.cssVariables.colorSchemeSelector}
         />
 
         <I18nProvider lang={CONFIG.isStaticExport ? undefined : lang}>
           <LocalizationProvider>
             <AuthProvider>
-              <SettingsProvider settings={defaultSettings}>
+              <SettingsProvider
+                cookieSettings={appConfig.cookieSettings}
+                defaultSettings={defaultSettings}
+              >
                 <ThemeProvider>
                   <MotionLazy>
                     <Snackbar />
                     <ProgressBar />
-                    <SettingsDrawer />
+                    <SettingsDrawer defaultSettings={defaultSettings} />
                     {children}
                   </MotionLazy>
                 </ThemeProvider>

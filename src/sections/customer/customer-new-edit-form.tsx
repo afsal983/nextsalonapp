@@ -7,7 +7,7 @@ import { useForm, Controller } from 'react-hook-form';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -149,14 +149,14 @@ export default function CustomerNewEditForm({ currentCustomer, customercategory 
         router.push(paths.dashboard.customers.list);
       }
     } catch (error) {
-      toast.error(error);
+      toast.error('Error');
     }
   });
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
-        <Grid xs={12} md={12}>
+        <Grid size={{ xs: 12, md: 12 }}>
           <Card sx={{ p: 3 }}>
             <Box
               rowGap={3}
@@ -200,7 +200,6 @@ export default function CustomerNewEditForm({ currentCustomer, customercategory 
                 label={t('salonapp.customer.comments')}
               />
               <RHFSelect
-                native
                 name="category_id"
                 label={t('salonapp.customer.category')}
                 InputLabelProps={{ shrink: true }}

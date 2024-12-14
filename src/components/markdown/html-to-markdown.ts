@@ -1,5 +1,6 @@
-import TurndownService from 'turndown';
 import type { Node, Filter } from 'turndown';
+
+import TurndownService from 'turndown';
 
 import { htmlTags } from './html-tags';
 

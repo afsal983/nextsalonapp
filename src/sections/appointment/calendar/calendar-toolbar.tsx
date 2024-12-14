@@ -10,7 +10,8 @@ import { useResponsive } from 'src/hooks/use-responsive';
 import { fDate } from 'src/utils/format-time';
 
 import { Iconify } from 'src/components/iconify';
-import { usePopover, CustomPopover } from 'src/components/custom-popover';
+import { CustomPopover } from 'src/components/custom-popover';
+import { usePopover } from 'minimal-shared/hooks';
 
 import { ICalendarView } from 'src/types/calendar';
 

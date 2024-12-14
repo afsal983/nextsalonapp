@@ -9,7 +9,8 @@ import Stack, { StackProps } from '@mui/material/Stack';
 import { RouterLink } from 'src/routes/components';
 
 import { Iconify } from 'src/components/iconify';
-import { usePopover, CustomPopover } from 'src/components/custom-popover';
+import { CustomPopover } from 'src/components/custom-popover';
+import { usePopover } from 'minimal-shared/hooks';
 
 // ----------------------------------------------------------------------
 

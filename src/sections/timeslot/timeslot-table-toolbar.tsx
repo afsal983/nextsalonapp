@@ -9,7 +9,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import type { UseSetStateReturn } from 'src/hooks/use-set-state';
 
 import { Iconify } from 'src/components/iconify';
-import { usePopover, CustomPopover } from 'src/components/custom-popover';
+import { CustomPopover } from 'src/components/custom-popover';
+import { usePopover } from 'minimal-shared/hooks';
 
 import { TimeSlotTableFilters } from 'src/types/employee';
 

@@ -12,13 +12,14 @@ import Card, { CardProps } from '@mui/material/Card';
 import ListItemText from '@mui/material/ListItemText';
 import Badge, { badgeClasses } from '@mui/material/Badge';
 import TableContainer from '@mui/material/TableContainer';
-
+import type { TableHeadCellProps } from 'src/components/table';
 import { fDate, fTime } from 'src/utils/format-time';
 
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { TableHeadCustom } from 'src/components/table';
-import { usePopover, CustomPopover } from 'src/components/custom-popover';
+import { CustomPopover } from 'src/components/custom-popover';
+import { usePopover } from 'minimal-shared/hooks';
 
 // ----------------------------------------------------------------------
 
@@ -36,14 +37,14 @@ type RowProps = {
 interface Props extends CardProps {
   title?: string;
   subheader?: string;
+  headCells: TableHeadCellProps[];
   tableData: RowProps[];
-  tableLabels: any;
 }
 
 export default function AppointmentEvents({
   title,
   subheader,
-  tableLabels,
+  headCells,
   tableData,
   ...other
 }: Props) {
@@ -54,7 +55,7 @@ export default function AppointmentEvents({
       <TableContainer sx={{ overflow: 'unset' }}>
         <Scrollbar>
           <Table sx={{ minWidth: 720 }}>
-            <TableHeadCustom headLabel={tableLabels} />
+            <TableHeadCustom headCells={headCells} />
 
             <TableBody>
               {tableData?.map((row) => <BankingRecentTransitionsRow key={row.id} row={row} />)}

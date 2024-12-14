@@ -11,7 +11,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from 'minimal-shared/hooks';
 
 import { useTranslate } from 'src/locales';
 
@@ -129,7 +129,7 @@ export default function WorkScheduleNewEditForm({
         router.push(paths.dashboard.employees.workschedule.root);
       }
     } catch (error) {
-      toast.error(error);
+      toast.error('Error');
     }
   });
 

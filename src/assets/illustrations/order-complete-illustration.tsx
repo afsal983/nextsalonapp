@@ -1,36 +1,44 @@
-import { memo } from 'react'
+import type { SvgIconProps } from '@mui/material/SvgIcon';
 
-import { useTheme } from '@mui/material/styles'
-import Box, { type BoxProps } from '@mui/material/Box'
+import { memo, forwardRef } from 'react';
 
-import BackgroundShape from './background-shape'
+import SvgIcon from '@mui/material/SvgIcon';
+
+import { CONFIG } from 'src/global-config';
+
+import { BackgroundShape } from './background-shape';
 
 // ----------------------------------------------------------------------
 
-function OrderCompleteIllustration ({ ...other }: BoxProps) {
-  const theme = useTheme()
+type SvgProps = SvgIconProps & { hideBackground?: boolean };
 
-  const PRIMARY_LIGHT = theme.palette.primary.light
-
-  const PRIMARY_MAIN = theme.palette.primary.main
-
-  const PRIMARY_DARK = theme.palette.primary.dark
-
-  const PRIMARY_DARKER = theme.palette.primary.darker
+const OrderCompleteIllustration = forwardRef<SVGSVGElement, SvgProps>((props, ref) => {
+  const { hideBackground, sx, ...other } = props;
 
   return (
-    <Box
-      component="svg"
-      width="100%"
-      height="100%"
+    <SvgIcon
+      ref={ref}
       viewBox="0 0 480 360"
       xmlns="http://www.w3.org/2000/svg"
+      sx={[
+        (theme) => ({
+          '--primary-light': theme.vars.palette.primary.light,
+          '--primary-main': theme.vars.palette.primary.main,
+          '--primary-dark': theme.vars.palette.primary.dark,
+          '--primary-darker': theme.vars.palette.primary.darker,
+          width: 320,
+          maxWidth: 1,
+          flexShrink: 0,
+          height: 'auto',
+        }),
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
       {...other}
     >
-      <BackgroundShape />
+      {!hideBackground && <BackgroundShape />}
 
       <image
-        href="/assets/illustrations/characters/character_10.png"
+        href={`${CONFIG.assetsDir}/assets/illustrations/characters/character-10.webp`}
         height="300"
         x="300"
         y="30"
@@ -52,7 +60,7 @@ function OrderCompleteIllustration ({ ...other }: BoxProps) {
       />
 
       <path
-        fill={PRIMARY_DARKER}
+        fill="var(--primary-darker)"
         d="M128.66 184.017h-.012a7.874 7.874 0 00-7.875 7.875v58.431a7.875 7.875 0 007.875 7.875h.012a7.875 7.875 0 007.875-7.875v-58.431a7.875 7.875 0 00-7.875-7.875zM162.335 184.017h-.012a7.875 7.875 0 00-7.875 7.875v58.431a7.875 7.875 0 007.875 7.875h.012a7.876 7.876 0 007.876-7.875v-58.431a7.875 7.875 0 00-7.876-7.875zM196.023 184.017h-.012a7.875 7.875 0 00-7.875 7.875v58.431a7.875 7.875 0 007.875 7.875h.012a7.876 7.876 0 007.876-7.875v-58.431a7.875 7.875 0 00-7.876-7.875zM229.699 184.017h-.012a7.875 7.875 0 00-7.875 7.875v58.431a7.875 7.875 0 007.875 7.875h.012a7.875 7.875 0 007.875-7.875v-58.431a7.875 7.875 0 00-7.875-7.875z"
       />
 
@@ -80,8 +88,8 @@ function OrderCompleteIllustration ({ ...other }: BoxProps) {
           y2="247.455"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor={PRIMARY_MAIN} />
-          <stop offset="1" stopColor={PRIMARY_DARK} />
+          <stop stopColor="var(--primary-main)" />
+          <stop offset="1" stopColor="var(--primary-dark)" />
         </linearGradient>
 
         <linearGradient
@@ -92,8 +100,8 @@ function OrderCompleteIllustration ({ ...other }: BoxProps) {
           y2="176.397"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor={PRIMARY_LIGHT} />
-          <stop offset="1" stopColor={PRIMARY_DARK} />
+          <stop stopColor="var(--primary-light)" />
+          <stop offset="1" stopColor="var(--primary-dark)" />
         </linearGradient>
 
         <linearGradient
@@ -104,8 +112,8 @@ function OrderCompleteIllustration ({ ...other }: BoxProps) {
           y2="97.537"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor={PRIMARY_LIGHT} />
-          <stop offset="1" stopColor={PRIMARY_DARK} />
+          <stop stopColor="var(--primary-light)" />
+          <stop offset="1" stopColor="var(--primary-dark)" />
         </linearGradient>
 
         <linearGradient
@@ -116,12 +124,12 @@ function OrderCompleteIllustration ({ ...other }: BoxProps) {
           y2="257"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor={PRIMARY_LIGHT} />
-          <stop offset="1" stopColor={PRIMARY_DARK} />
+          <stop stopColor="var(--primary-light)" />
+          <stop offset="1" stopColor="var(--primary-dark)" />
         </linearGradient>
       </defs>
-    </Box>
-  )
-}
+    </SvgIcon>
+  );
+});
 
-export default memo(OrderCompleteIllustration)
+export default memo(OrderCompleteIllustration);

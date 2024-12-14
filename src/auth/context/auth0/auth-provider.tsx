@@ -6,7 +6,7 @@ import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import axios from 'src/utils/axios';
 
-import { CONFIG } from 'src/config-global';
+import { CONFIG } from 'src/global-config';
 
 import { AuthContext } from '../auth-context';
 

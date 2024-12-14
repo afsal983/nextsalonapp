@@ -1,7 +1,6 @@
-import { listClasses } from '@mui/material/List';
 import type { Theme, Components } from '@mui/material/styles';
 
-import { paper } from '../../styles';
+import { listClasses } from '@mui/material/List';
 
 // ----------------------------------------------------------------------
 
@@ -11,7 +10,7 @@ const MuiPopover: Components<Theme>['MuiPopover'] = {
    *************************************** */
   styleOverrides: {
     paper: ({ theme }) => ({
-      ...paper({ theme, dropdown: true }),
+      ...theme.mixins.paperStyles(theme, { dropdown: true }),
       [`& .${listClasses.root}`]: { paddingTop: 0, paddingBottom: 0 },
     }),
   },

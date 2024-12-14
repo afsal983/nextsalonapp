@@ -1,16 +1,17 @@
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { PhoneInput } from '../phone-input';
+
 import type { PhoneInputProps } from '../phone-input';
 
 // ----------------------------------------------------------------------
 
-type Props = Omit<PhoneInputProps, 'value' | 'onChange'> & {
+export type RHFPhoneInputProps = Omit<PhoneInputProps, 'value' | 'onChange'> & {
   name: string;
 };
 
-export function RHFPhoneInput({ name, helperText, ...other }: Props) {
-  const { control, setValue } = useFormContext();
+export function RHFPhoneInput({ name, helperText, ...other }: RHFPhoneInputProps) {
+  const { control } = useFormContext();
 
   return (
     <Controller
@@ -20,10 +21,8 @@ export function RHFPhoneInput({ name, helperText, ...other }: Props) {
         <PhoneInput
           {...field}
           fullWidth
-          value={field.value}
-          onChange={(newValue) => setValue(name, newValue, { shouldValidate: true })}
           error={!!error}
-          helperText={error ? error?.message : helperText}
+          helperText={error?.message ?? helperText}
           {...other}
         />
       )}

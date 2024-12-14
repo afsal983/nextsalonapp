@@ -6,13 +6,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import Stack from '@mui/material/Stack';
 import { Divider } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from 'minimal-shared/hooks';
 
 import { today } from 'src/utils/format-time';
 
@@ -44,8 +44,8 @@ export type NewAppointmentSchemaType = zod.infer<typeof AppointmentSchema>;
 const AppointmentSchema = zod.object({
   id: zod.string().optional(), // Optional field
   name: zod.string().optional(), // Optional field
-  start: schemaHelper.date({ message: { required_error: 'Start date is required!' } }),
-  end: schemaHelper.date({ message: { required_error: 'End date is required!' } }),
+  start: schemaHelper.date({ message: { required: 'Create date is required!' } }),
+  end: schemaHelper.date({ message: { required: 'End date is required!' } }),
   resource: zod.string().optional(), // Optional field
   customer_id: zod.number().min(1, { message: 'Customer is required' }),
   Customer: zod.any().optional(), // Optional field
@@ -61,8 +61,8 @@ const AppointmentSchema = zod.object({
       zod.object({
         id: zod.number().optional(), // Optional field
         event_id: zod.number().optional(),
-        start: schemaHelper.date({ message: { required_error: 'Start date is required!' } }),
-        end: schemaHelper.date({ message: { required_error: 'End date is required!' } }),
+        start: schemaHelper.date({ message: { required: 'Create date is required!' } }),
+        end: schemaHelper.date({ message: { required: 'End date is required!' } }),
         product_id: zod.number().min(1, { message: 'Service is required' }),
         Product: zod.any().optional(), // Optional field
         employee_id: zod.number().min(1, { message: 'Employee is required' }),
@@ -183,24 +183,24 @@ export default function AppointmentNewEditForm({
         router.push(paths.dashboard.appointments.list);
       }
     } catch (error) {
-      toast.error(error);
+      toast.error('Error');
     }
   });
 
   return (
     <Form methods={methods}>
       <Grid container spacing={3}>
-        <Grid xs={12} md={12}>
+        <Grid size={{ xs: 12, md: 12 }}>
           <AppointmentBranchDetails />
         </Grid>
         <Divider />
-        <Grid xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <AppointmentCustomerDetails />
         </Grid>
-        <Grid xs={1} md={1}>
+        <Grid size={{ xs: 1, md: 1 }}>
           <Divider orientation="vertical" />
         </Grid>
-        <Grid xs={12} md={7}>
+        <Grid size={{ xs: 12, md: 7 }}>
           <AppointmentNewEditDetails
             services={services}
             employees={employees}

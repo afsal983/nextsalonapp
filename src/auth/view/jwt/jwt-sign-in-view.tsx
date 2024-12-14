@@ -16,12 +16,13 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from 'minimal-shared/hooks';
 
 import { Iconify } from 'src/components/iconify';
 import { Form, Field } from 'src/components/hook-form';
 
 import { useAuthContext } from '../../hooks';
+import { getErrorMessage } from '../../utils';
 import { FormHead } from '../../components/form-head';
 import { signInWithPassword } from '../../context/jwt';
 
@@ -47,7 +48,7 @@ export function JwtSignInView() {
 
   const { checkUserSession } = useAuthContext();
 
-  const [errorMsg, setErrorMsg] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const password = useBoolean();
 
@@ -73,8 +74,8 @@ export function JwtSignInView() {
 
       router.refresh();
     } catch (error) {
-      console.error(error);
-      setErrorMsg(typeof error === 'string' ? error : error.message);
+      const feedbackMessage = getErrorMessage(error);
+      setErrorMessage(feedbackMessage);
     }
   });
 
@@ -139,9 +140,9 @@ export function JwtSignInView() {
         <strong>{defaultValues.password}</strong>
       </Alert>
 
-      {!!errorMsg && (
+      {!!errorMessage && (
         <Alert severity="error" sx={{ mb: 3 }}>
-          {errorMsg}
+          {errorMessage}
         </Alert>
       )}
 

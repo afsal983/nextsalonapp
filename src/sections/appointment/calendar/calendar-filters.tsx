@@ -98,9 +98,9 @@ export default function CalendarFilters({
     <Stack spacing={1} sx={{ my: 3, px: 2.5 }}>
       <Typography variant="subtitle2">Colors</Typography>
       <ColorPicker
-        colors={colorOptions}
-        selected={filters.state.colors}
-        onSelectColor={handleFilterColors}
+        options={colorOptions}
+        value={filters.state.colors}
+        onChange={handleFilterColors}
       />
     </Stack>
   );

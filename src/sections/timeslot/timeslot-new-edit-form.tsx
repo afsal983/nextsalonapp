@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 
@@ -114,14 +114,14 @@ export default function TimeSlotNewEditForm({ currentTimeSlot }: Props) {
         router.push(paths.dashboard.employees.timeslots.list);
       }
     } catch (error) {
-      toast.error(error);
+      toast.error('Error');
     }
   });
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
-        <Grid xs={12} md={12}>
+        <Grid size={{ xs: 12, md: 12 }}>
           <Card sx={{ p: 3 }}>
             <Box
               rowGap={3}

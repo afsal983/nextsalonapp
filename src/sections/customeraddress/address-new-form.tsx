@@ -191,7 +191,6 @@ export default function AddressNewForm({ open, onClose, onCreate }: Props) {
             </Stack>
 
             <RHFSelect
-              native
               name="category_id"
               label={t('general.category')}
               InputLabelProps={{ shrink: true }}

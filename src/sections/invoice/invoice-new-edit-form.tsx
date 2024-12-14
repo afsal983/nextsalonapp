@@ -12,7 +12,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from 'minimal-shared/hooks';
 
 import { today } from 'src/utils/format-time';
 
@@ -299,7 +299,7 @@ export default function InvoiceNewEditForm({
         router.push(paths.dashboard.invoice.details(responseData.data[0].id));
       }
     } catch (error) {
-      toast.error(error);
+      toast.error('Error');
     }
   });
 

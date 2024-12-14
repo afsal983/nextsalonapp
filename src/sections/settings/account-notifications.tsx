@@ -3,7 +3,7 @@ import { useForm, Controller } from 'react-hook-form';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import LoadingButton from '@mui/lab/LoadingButton';
 import ListItemText from '@mui/material/ListItemText';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -125,7 +125,7 @@ export default function AccountNotifications({ currentSettings }: Props) {
         router.push(paths.dashboard.settings.root);
       }
     } catch (error) {
-      toast.error(error);
+      toast.error('Error');
     }
   });
 
@@ -139,7 +139,7 @@ export default function AccountNotifications({ currentSettings }: Props) {
       <Stack component={Card} spacing={3} sx={{ p: 3 }}>
         {NOTIFICATIONS.map((notification) => (
           <Grid key={notification.subheader} container spacing={3}>
-            <Grid xs={12} md={4}>
+            <Grid size={{ xs: 12, md: 4 }}>
               <ListItemText
                 primary={notification.subheader}
                 secondary={notification.caption}
@@ -148,7 +148,7 @@ export default function AccountNotifications({ currentSettings }: Props) {
               />
             </Grid>
 
-            <Grid xs={12} md={8}>
+            <Grid size={{ xs: 12, md: 8 }}>
               <Stack spacing={1} sx={{ p: 3, borderRadius: 2, bgcolor: 'background.neutral' }}>
                 <Controller
                   name="selected"

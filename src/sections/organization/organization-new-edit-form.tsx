@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { paths } from 'src/routes/paths';
@@ -102,14 +102,14 @@ export default function OrganizationNewEditForm({ currentOrganization }: Props) 
         router.push(paths.dashboard.organization.list);
       }
     } catch (error) {
-      toast.error(error);
+      toast.error('Error');
     }
   });
 
   return (
     <Form methods={methods}>
       <Grid container spacing={3}>
-        <Grid xs={12} md={12}>
+        <Grid size={{ xs: 12, md: 12 }}>
           <Card sx={{ p: 3 }}>
             <Box
               rowGap={3}

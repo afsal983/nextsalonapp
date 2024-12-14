@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 
 import { useSearchParams } from 'src/routes/hooks';
 
-import { CONFIG } from 'src/config-global';
+import { CONFIG } from 'src/global-config';
 
 // ----------------------------------------------------------------------
 

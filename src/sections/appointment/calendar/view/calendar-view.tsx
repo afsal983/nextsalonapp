@@ -18,7 +18,7 @@ import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Select, SelectChangeEvent } from '@mui/material';
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from 'minimal-shared/hooks';
 import { useSetState } from 'src/hooks/use-set-state';
 import { useResponsive } from 'src/hooks/use-responsive';
 

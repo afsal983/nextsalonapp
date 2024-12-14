@@ -11,10 +11,11 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useSetState } from 'src/hooks/use-set-state';
 import type { UseSetStateReturn } from 'src/hooks/use-set-state';
 
-import { varAlpha } from 'src/theme/styles';
+import { varAlpha } from 'minimal-shared/utils';
 
 import { Iconify } from 'src/components/iconify';
-import { usePopover, CustomPopover } from 'src/components/custom-popover';
+import { CustomPopover } from 'src/components/custom-popover';
+import { usePopover } from 'minimal-shared/hooks';
 
 import { ExpenseReportTableFilters } from 'src/types/report';
 

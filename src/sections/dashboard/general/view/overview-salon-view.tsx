@@ -4,7 +4,7 @@ import useSWR from 'swr';
 
 import { Stack } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 
 import { fetcher } from 'src/utils/axios';
 
@@ -14,14 +14,14 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { useSettingsContext } from 'src/components/settings';
 
 import BestProducts from '../salon-best-product';
-import SalonYearlySales from '../salon-yearly-sales';
-import CustomerByGender from '../customer-by-gender';
+import { SalonYearlySales } from '../salon-yearly-sales';
+import { CustomerByGender } from '../customer-by-gender';
 import AppointmentEvents from '../appointment-events';
 import SalonBestCustomer from '../salon-best-customer';
 import SalonBestEmployee from '../salon-best-employee';
-import AppointmentSource from '../appointment-sources';
+import { AppointmentSource } from '../appointment-sources';
 import LatestTransactions from '../latest-transactions';
-import SalonDashBoardWidgetSummary from '../salondashboard-widget-summary';
+import { SalonDashBoardWidgetSummary } from '../salondashboard-widget-summary';
 
 // ----------------------------------------------------------------------
 
@@ -99,58 +99,59 @@ export default function OverviewSalonView() {
   return (
     <DashboardContent>
       <Grid container spacing={3}>
-        <Grid xs={12} md={3}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <SalonDashBoardWidgetSummary
             title="Today's Sales"
-            count={revenuebycriteria.data?.salescounttoday}
+            percent={revenuebycriteria.data?.salescounttoday}
             total={revenuebycriteria.data?.salestoday}
             chart={{
-              series: [22, 8, 35, 50, 82, 84, 77, 12, 87, 43],
+              categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+              series: [22, 8, 35, 50, 82, 84, 77, 12],
             }}
           />
         </Grid>
 
-        <Grid xs={12} md={3}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <SalonDashBoardWidgetSummary
             title="Yesterday's sales"
-            count={revenuebycriteria.data?.salescountyesterday}
+            percent={revenuebycriteria.data?.salesyesterday}
             total={revenuebycriteria.data?.salesyesterday}
             chart={{
-              colors: [theme.palette.info.light, theme.palette.info.main],
-              series: [56, 47, 40, 62, 73, 30, 23, 54, 67, 68],
+              categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+              series: [22, 8, 35, 50, 82, 84, 77, 12],
             }}
           />
         </Grid>
 
-        <Grid xs={12} md={3}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <SalonDashBoardWidgetSummary
             title="This week sales"
-            count={revenuebycriteria.data?.salescountthisweek}
+            percent={revenuebycriteria.data?.salescountthisweek}
             total={revenuebycriteria.data?.salesthisweek}
             chart={{
-              colors: [theme.palette.warning.light, theme.palette.warning.main],
-              series: [40, 70, 75, 70, 50, 28, 7, 64, 38, 27],
+              categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+              series: [22, 8, 35, 50, 82, 84, 77, 12],
             }}
           />
         </Grid>
-        <Grid xs={12} md={3}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <SalonDashBoardWidgetSummary
             title="This month sales"
-            count={revenuebycriteria.data?.salescountthismonth}
+            percent={revenuebycriteria.data?.salescountthismonth}
             total={revenuebycriteria.data?.salesthismonth}
             chart={{
-              colors: [theme.palette.warning.light, theme.palette.warning.main],
-              series: [40, 70, 75, 70, 50, 28, 7, 64, 38, 27],
+              categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+              series: [22, 8, 35, 50, 82, 84, 77, 12],
             }}
           />
         </Grid>
 
-        <Grid xs={12} md={8}>
+        <Grid size={{ xs: 12, md: 8 }}>
           <Stack spacing={3}>
             <LatestTransactions
               title="Latest Transactions"
               tableData={latestsales?.data}
-              tableLabels={[
+              headCells={[
                 { id: 'orderid', label: 'Order ID' },
                 { id: 'billingname', label: 'Billing Name' },
                 { id: 'employeename', label: 'Employee Name' },
@@ -166,7 +167,7 @@ export default function OverviewSalonView() {
               <AppointmentEvents
                 title="Upcoming appointments"
                 tableData={appointment?.data?.upcomingevents}
-                tableLabels={[
+                headCells={[
                   { id: 'customer', label: 'Customer' },
                   { id: 'date', label: 'Date' },
                   { id: 'product', label: 'Product' },
@@ -196,7 +197,7 @@ export default function OverviewSalonView() {
                 ],
                 series: [
                   {
-                    year: yearlysales?.thisyearname,
+                    name: yearlysales?.thisyearname,
                     data: [
                       {
                         name: 'Total Sales',
@@ -211,7 +212,7 @@ export default function OverviewSalonView() {
                     ],
                   },
                   {
-                    year: yearlysales?.lastyearname,
+                    name: yearlysales?.lastyearname,
                     data: [
                       {
                         name: 'Total Sales',
@@ -233,7 +234,7 @@ export default function OverviewSalonView() {
               title="Best Customers"
               subheader="In this month"
               tableData={bestcustomer.data}
-              tableLabels={[
+              headCells={[
                 { id: 'customername', label: 'Customer' },
                 { id: 'revenue', label: 'Revenue', align: 'center' },
                 { id: 'amount', label: '#Sales', align: 'center' },
@@ -245,7 +246,7 @@ export default function OverviewSalonView() {
               title="Best Employee"
               subheader="Last two months"
               tableData={bestemployee.data}
-              tableLabels={[
+              headCells={[
                 { id: 'customername', label: 'Employee Name' },
                 { id: 'revenue', label: 'Revenue', align: 'center' },
                 { id: 'amount', label: '#Sales', align: 'center' },
@@ -255,7 +256,7 @@ export default function OverviewSalonView() {
           </Stack>
         </Grid>
 
-        <Grid xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Stack spacing={3}>
             <BestProducts
               title="Top Selling Products"

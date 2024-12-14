@@ -7,11 +7,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
 import LoadingButton from '@mui/lab/LoadingButton';
 
+import { paths } from 'src/routes/paths';
+
 import { PasswordIcon } from 'src/assets/icons';
 
 import { Form, Field } from 'src/components/hook-form';
 
 import { FormHead } from '../../../components/form-head';
+import { FormReturnLink } from '../../../components/form-return-link';
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +30,9 @@ export const ResetPasswordSchema = zod.object({
 // ----------------------------------------------------------------------
 
 export function CenteredResetPasswordView() {
-  const defaultValues = { email: '' };
+  const defaultValues: ResetPasswordSchemaType = {
+    email: '',
+  };
 
   const methods = useForm<ResetPasswordSchemaType>({
     resolver: zodResolver(ResetPasswordSchema),
@@ -48,14 +53,14 @@ export function CenteredResetPasswordView() {
     }
   });
 
-  const renderForm = (
-    <Box gap={3} display="flex" flexDirection="column">
+  const renderForm = () => (
+    <Box sx={{ gap: 3, display: 'flex', flexDirection: 'column' }}>
       <Field.Text
         name="email"
         label="Email address"
         placeholder="example@gmail.com"
         autoFocus
-        InputLabelProps={{ shrink: true }}
+        slotProps={{ inputLabel: { shrink: true } }}
       />
 
       <LoadingButton
@@ -80,10 +85,10 @@ export function CenteredResetPasswordView() {
       />
 
       <Form methods={methods} onSubmit={onSubmit}>
-        {renderForm}
+        {renderForm()}
       </Form>
 
-      {/* <FormReturnLink href={paths.authDemo.centered.signIn} /> */}
+      <FormReturnLink href={paths.authDemo.centered.signIn} />
     </>
   );
 }

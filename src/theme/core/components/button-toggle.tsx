@@ -1,16 +1,19 @@
-import { toggleButtonClasses } from '@mui/material/ToggleButton';
 import type { ToggleButtonProps } from '@mui/material/ToggleButton';
 import type { Theme, CSSObject, Components } from '@mui/material/styles';
 
-import { varAlpha } from '../../styles';
+import { varAlpha } from 'minimal-shared/utils';
+
+import { toggleButtonClasses } from '@mui/material/ToggleButton';
 
 // ----------------------------------------------------------------------
 
 const COLORS = ['primary', 'secondary', 'info', 'success', 'warning', 'error'] as const;
 
-type ColorType = (typeof COLORS)[number];
+type PaletteColor = (typeof COLORS)[number];
 
-function styleColors(ownerState: ToggleButtonProps, styles: (val: ColorType) => CSSObject) {
+// ----------------------------------------------------------------------
+
+function styleColors(ownerState: ToggleButtonProps, styles: (val: PaletteColor) => CSSObject) {
   const outputStyle = COLORS.reduce((acc, color) => {
     if (!ownerState.disabled && ownerState.color === color) {
       acc = styles(color);
@@ -56,7 +59,12 @@ const MuiToggleButton: Components<Theme>['MuiToggleButton'] = {
         },
       };
 
-      return { ...styled.colors, ...styled.selected, ...styled.disabled };
+      return {
+        fontWeight: theme.typography.fontWeightSemiBold,
+        ...styled.colors,
+        ...styled.selected,
+        ...styled.disabled,
+      };
     },
   },
 };

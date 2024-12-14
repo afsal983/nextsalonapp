@@ -1,24 +1,31 @@
-import { buttonClasses } from '@mui/material/Button';
 import type { ButtonProps } from '@mui/material/Button';
-import { loadingButtonClasses } from '@mui/lab/LoadingButton';
 import type { Theme, CSSObject, Components, ComponentsVariants } from '@mui/material/styles';
 
-import { varAlpha, stylesMode } from '../../styles';
+import { varAlpha } from 'minimal-shared/utils';
+
+import { buttonClasses } from '@mui/material/Button';
+import { loadingButtonClasses } from '@mui/lab/LoadingButton';
 
 // ----------------------------------------------------------------------
 
-// NEW VARIANT
-declare module '@mui/material/Button' {
-  interface ButtonPropsVariantOverrides {
-    soft: true;
-  }
-}
+/**
+ * TypeScript (type definition and extension)
+ * @to {@link file://./../../extend-theme-types.d.ts}
+ */
+
+export type ButtonExtendVariant = {
+  soft: true;
+};
+
+// ----------------------------------------------------------------------
 
 const COLORS = ['primary', 'secondary', 'info', 'success', 'warning', 'error'] as const;
 
-type ColorType = (typeof COLORS)[number];
+type PaletteColor = (typeof COLORS)[number];
 
-function styleColors(ownerState: ButtonProps, styles: (val: ColorType) => CSSObject) {
+// ----------------------------------------------------------------------
+
+function styleColors(ownerState: ButtonProps, styles: (val: PaletteColor) => CSSObject) {
   const outputStyle = COLORS.reduce((acc, color) => {
     if (!ownerState.disabled && ownerState.color === color) {
       acc = styles(color);
@@ -48,7 +55,9 @@ const softVariant: Record<string, ComponentsVariants<Theme>['MuiButton']> = {
       color: theme.vars.palette[color].dark,
       backgroundColor: varAlpha(theme.vars.palette[color].mainChannel, 0.16),
       '&:hover': { backgroundColor: varAlpha(theme.vars.palette[color].mainChannel, 0.32) },
-      [stylesMode.dark]: { color: theme.vars.palette[color].light },
+      ...theme.applyStyles('dark', {
+        color: theme.vars.palette[color].light,
+      }),
     }),
   })),
   base: [
@@ -78,26 +87,18 @@ const MuiButton: Components<Theme>['MuiButton'] = {
   defaultProps: { color: 'inherit', disableElevation: true },
 
   /** **************************************
-   * VARIANTS
-   *************************************** */
-  variants: [
-    /**
-     * @variant soft
-     */
-    ...[...softVariant.base!, ...softVariant.colors!],
-  ],
-
-  /** **************************************
    * STYLE
    *************************************** */
   styleOverrides: {
+    root: { variants: [softVariant.base, softVariant.colors].flat() },
+
     /**
      * @variant contained
      */
     contained: ({ theme, ownerState }) => {
       const styled = {
         colors: styleColors(ownerState, (color) => ({
-          '&:hover': { boxShadow: theme.customShadows[color] },
+          '&:hover': { boxShadow: theme.vars.customShadows[color] },
         })),
         inheritColor: {
           ...(ownerState.color === 'inherit' &&
@@ -105,14 +106,14 @@ const MuiButton: Components<Theme>['MuiButton'] = {
               color: theme.vars.palette.common.white,
               backgroundColor: theme.vars.palette.grey[800],
               '&:hover': {
-                boxShadow: theme.customShadows.z8,
+                boxShadow: theme.vars.customShadows.z8,
                 backgroundColor: theme.vars.palette.grey[700],
               },
-              [stylesMode.dark]: {
+              ...theme.applyStyles('dark', {
                 color: theme.vars.palette.grey[800],
                 backgroundColor: theme.vars.palette.common.white,
                 '&:hover': { backgroundColor: theme.vars.palette.grey[400] },
-              },
+              }),
             }),
         },
       };

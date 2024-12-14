@@ -8,7 +8,7 @@ import { useSetState } from 'src/hooks/use-set-state';
 
 import axios from 'src/utils/axios';
 
-import { CONFIG } from 'src/config-global';
+import { CONFIG } from 'src/global-config';
 
 import type { AuthState } from '../../types';
 import { AuthContext } from '../auth-context';

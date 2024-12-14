@@ -1,7 +1,6 @@
-import { tooltipClasses } from '@mui/material/Tooltip';
 import type { Theme, Components } from '@mui/material/styles';
 
-import { stylesMode } from '../../styles';
+import { tooltipClasses } from '@mui/material/Tooltip';
 
 // ----------------------------------------------------------------------
 
@@ -12,15 +11,15 @@ const MuiTooltip: Components<Theme>['MuiTooltip'] = {
   styleOverrides: {
     tooltip: ({ theme }) => ({
       backgroundColor: theme.vars.palette.grey[800],
-      [stylesMode.dark]: {
+      ...theme.applyStyles('dark', {
         backgroundColor: theme.vars.palette.grey[700],
-      },
+      }),
     }),
     arrow: ({ theme }) => ({
       color: theme.vars.palette.grey[800],
-      [stylesMode.dark]: {
+      ...theme.applyStyles('dark', {
         color: theme.vars.palette.grey[700],
-      },
+      }),
     }),
     popper: {
       [`&.${tooltipClasses.popper}[data-popper-placement*="bottom"] .${tooltipClasses.tooltip}`]: {

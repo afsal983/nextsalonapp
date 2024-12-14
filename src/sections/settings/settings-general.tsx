@@ -6,7 +6,7 @@ import { useMemo, useEffect, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 
@@ -137,7 +137,7 @@ export default function SettingsGeneral({ currentSettings }: Props) {
         router.push(paths.dashboard.settings.root);
       }
     } catch (error) {
-      toast.error(error);
+      toast.error('Error');
     }
   });
 
@@ -190,7 +190,7 @@ export default function SettingsGeneral({ currentSettings }: Props) {
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
-        <Grid xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Card sx={{ pt: 10, pb: 5, px: 3, textAlign: 'center' }}>
             <RHFUploadAvatar
               name="logocontent"
@@ -217,7 +217,7 @@ export default function SettingsGeneral({ currentSettings }: Props) {
           </Card>
         </Grid>
 
-        <Grid xs={12} md={8}>
+        <Grid size={{ xs: 12, md: 8 }}>
           <Card sx={{ p: 3 }}>
             <Box
               rowGap={3}
@@ -252,7 +252,6 @@ export default function SettingsGeneral({ currentSettings }: Props) {
               <RHFTextField name="theme" label="Theme" />
               <RHFTextField name="defaulttelcode" label="Default Telephone code" />
               <RHFSelect
-                native
                 name="emailserver"
                 label={t('general.product_type')}
                 InputLabelProps={{ shrink: true }}

@@ -4,7 +4,7 @@ import useSWR from 'swr';
 import { useState, useCallback } from 'react';
 
 import Stack from '@mui/material/Stack';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 
 import { paths } from 'src/routes/paths';
 
@@ -54,7 +54,7 @@ export default function AppointmentDetailsView({ id }: Props) {
       />
 
       <Grid container spacing={3}>
-        <Grid xs={12} md={8}>
+        <Grid size={{ xs: 12, md: 8 }}>
           <Stack spacing={3} direction={{ xs: 'column-reverse', md: 'column' }}>
             <AppointmentDetailsItems
               items={appointment.items}
@@ -69,7 +69,7 @@ export default function AppointmentDetailsView({ id }: Props) {
           </Stack>
         </Grid>
 
-        <Grid xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <AppointmentDetailsInfo
             customer={appointment.Customer}
             delivery={appointment.delivery}

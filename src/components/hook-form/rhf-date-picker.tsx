@@ -1,14 +1,15 @@
-import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
+import type { TextFieldProps } from '@mui/material/TextField';
+import type { DatePickerProps } from '@mui/x-date-pickers/DatePicker';
+import type { MobileDateTimePickerProps } from '@mui/x-date-pickers/MobileDateTimePicker';
+
+import dayjs from 'dayjs';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import type { TextFieldProps } from '@mui/material/TextField';
-import type { DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
-import type { MobileDateTimePickerProps } from '@mui/x-date-pickers/MobileDateTimePicker';
 
-import { formatStr } from 'src/utils/format-time';
+import { formatPatterns } from 'src/utils/format-time';
 
 // ----------------------------------------------------------------------
 
@@ -28,7 +29,7 @@ export function RHFDatePicker({ name, slotProps, ...other }: RHFDatePickerProps)
           {...field}
           value={dayjs(field.value)}
           onChange={(newValue) => field.onChange(dayjs(newValue).format())}
-          format={formatStr.split.date}
+          format={formatPatterns.split.date}
           slotProps={{
             ...slotProps,
             textField: {
@@ -67,7 +68,7 @@ export function RHFMobileDateTimePicker({
           {...field}
           value={dayjs(field.value)}
           onChange={(newValue) => field.onChange(dayjs(newValue).format())}
-          format={formatStr.split.dateTime}
+          format={formatPatterns.split.dateTime}
           slotProps={{
             textField: {
               fullWidth: true,

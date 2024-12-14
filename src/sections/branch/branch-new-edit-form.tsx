@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { paths } from 'src/routes/paths';
@@ -113,14 +113,14 @@ export default function BranchNewEditForm({ currentBranch, organization, locatio
         router.push(paths.dashboard.branches.list);
       }
     } catch (error) {
-      toast.error(error);
+      toast.error('Error');
     }
   });
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
-        <Grid xs={12} md={12}>
+        <Grid size={{ xs: 12, md: 12 }}>
           <Card sx={{ p: 3 }}>
             <Box
               rowGap={3}
@@ -157,7 +157,6 @@ export default function BranchNewEditForm({ currentBranch, organization, locatio
                 helperText={t('salonapp.branch.ti_helper')}
               />
               <RHFSelect
-                native
                 name="org_id"
                 label={t('salonapp.branch.orgname')}
                 InputLabelProps={{ shrink: true }}
@@ -171,7 +170,6 @@ export default function BranchNewEditForm({ currentBranch, organization, locatio
               </RHFSelect>
 
               <RHFSelect
-                native
                 name="loc_id"
                 label={t('salonapp.branch.locname')}
                 InputLabelProps={{ shrink: true }}

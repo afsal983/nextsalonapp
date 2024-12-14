@@ -5,7 +5,7 @@ import { getFirestore } from 'firebase/firestore';
 import type { Auth as AuthType } from 'firebase/auth';
 import type { Firestore as FirestoreType } from 'firebase/firestore';
 
-import { CONFIG } from 'src/config-global';
+import { CONFIG } from 'src/global-config';
 
 // ----------------------------------------------------------------------
 

@@ -23,7 +23,7 @@ import {
 
 import { paths } from 'src/routes/paths';
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from 'minimal-shared/hooks';
 import { useSetState } from 'src/hooks/use-set-state';
 import type { UseSetStateReturn } from 'src/hooks/use-set-state';
 

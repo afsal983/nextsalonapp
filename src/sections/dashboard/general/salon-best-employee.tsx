@@ -5,7 +5,7 @@ import TableBody from '@mui/material/TableBody';
 import CardHeader from '@mui/material/CardHeader';
 import Card, { type CardProps } from '@mui/material/Card';
 import TableContainer from '@mui/material/TableContainer';
-
+import type { TableHeadCellProps } from 'src/components/table';
 import { fCurrency } from 'src/utils/format-number';
 
 import { Label } from 'src/components/label';
@@ -25,15 +25,15 @@ interface RowProps {
 interface Props extends CardProps {
   title?: string;
   subheader?: string;
+  headCells: TableHeadCellProps[];
   tableData: RowProps[];
-  tableLabels: any;
 }
 
 export default function SalonBestEmployee({
   title,
   subheader,
   tableData,
-  tableLabels,
+  headCells,
   ...other
 }: Props) {
   return (
@@ -43,7 +43,7 @@ export default function SalonBestEmployee({
       <TableContainer sx={{ overflow: 'unset' }}>
         <Scrollbar>
           <Table sx={{ minWidth: 640 }}>
-            <TableHeadCustom headLabel={tableLabels} />
+            <TableHeadCustom headCells={headCells} />
             <TableBody>
               {tableData?.map((row, index) => (
                 <EcommerceEmployeeRow key={index} row={row} rank={index} />

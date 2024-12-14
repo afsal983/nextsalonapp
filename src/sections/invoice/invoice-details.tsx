@@ -10,7 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import TableHead from '@mui/material/TableHead';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 
@@ -126,13 +126,13 @@ export default function InvoiceDetails({ printinvoice }: Props) {
 
   const renderFooter = (
     <Grid container>
-      <Grid xs={12} md={9} sx={{ py: 3 }}>
+      <Grid size={{ xs: 12, md: 9 }} sx={{ py: 3 }}>
         <Typography variant="subtitle2">NOTES</Typography>
 
         <Typography variant="body2">We appreciate your business.</Typography>
       </Grid>
 
-      <Grid xs={12} md={3} sx={{ py: 3, textAlign: 'right' }}>
+      <Grid size={{ xs: 12, md: 3 }} sx={{ py: 3, textAlign: 'right' }}>
         <Typography variant="subtitle2">Have a Question?</Typography>
 
         <Typography variant="body2">support@smeeye.com</Typography>

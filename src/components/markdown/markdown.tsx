@@ -1,24 +1,27 @@
+import './code-highlight-block.css';
+
+import type { Options } from 'react-markdown';
+
 import { useMemo } from 'react';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
-import type { Options } from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
+import { mergeClasses, isExternalLink } from 'minimal-shared/utils';
 
 import Link from '@mui/material/Link';
 
-import { isExternalLink } from 'src/routes/utils';
 import { RouterLink } from 'src/routes/components';
 
 import { Image } from '../image';
-import './code-highlight-block.css';
-import { StyledRoot } from './styles';
+import { MarkdownRoot } from './styles';
 import { markdownClasses } from './classes';
-import type { MarkdownProps } from './types';
 import { htmlToMarkdown, isMarkdownContent } from './html-to-markdown';
+
+import type { MarkdownProps } from './types';
 
 // ----------------------------------------------------------------------
 
-export function Markdown({ children, sx, ...other }: MarkdownProps) {
+export function Markdown({ children, sx, className, ...other }: MarkdownProps) {
   const content = useMemo(() => {
     if (isMarkdownContent(`${children}`)) {
       return children;
@@ -27,7 +30,7 @@ export function Markdown({ children, sx, ...other }: MarkdownProps) {
   }, [children]);
 
   return (
-    <StyledRoot
+    <MarkdownRoot
       children={content}
       components={components as Options['components']}
       rehypePlugins={rehypePlugins as Options['rehypePlugins']}
@@ -35,7 +38,7 @@ export function Markdown({ children, sx, ...other }: MarkdownProps) {
        * https://github.com/remarkjs/react-markdown/issues/774
        * urlTransform={(value: string) => value}
        */
-      className={markdownClasses.root}
+      className={mergeClasses([markdownClasses.root, className])}
       sx={sx}
       {...other}
     />
@@ -59,7 +62,7 @@ const components = {
       {...other}
     />
   ),
-  a: ({ href, children, ...other }: ComponentTag) => {
+  a: ({ href, children, node, ...other }: ComponentTag) => {
     const linkProps = isExternalLink(href)
       ? { target: '_blank', rel: 'noopener' }
       : { component: RouterLink };
@@ -75,7 +78,7 @@ const components = {
       <pre>{children}</pre>
     </div>
   ),
-  code({ className, children, ...other }: ComponentTag) {
+  code({ className, children, node, ...other }: ComponentTag) {
     const language = /language-(\w+)/.exec(className || '');
 
     return language ? (

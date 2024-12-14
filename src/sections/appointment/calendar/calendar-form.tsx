@@ -11,7 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 import DialogActions from '@mui/material/DialogActions';
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from 'minimal-shared/hooks';
 
 import { uuidv4 } from 'src/utils/uuidv4';
 import { fIsAfter } from 'src/utils/format-time';
@@ -205,7 +205,7 @@ export default function CalendarForm({
           to.onFalse();
         }
       } catch (error) {
-        toast.error(error);
+        toast.error('Error');
       }
     },
     [to]
@@ -241,7 +241,7 @@ export default function CalendarForm({
           />
         </Box>
 
-        <RHFSelect native name="employee_id" label="Employee" InputLabelProps={{ shrink: true }}>
+        <RHFSelect name="employee_id" label="Employee" InputLabelProps={{ shrink: true }}>
           <option key={0}>{t('general.dropdown_select')}</option>
           {employees.map((item: EmployeeItem) => (
             <option key={item.id} value={item.id}>
@@ -250,7 +250,7 @@ export default function CalendarForm({
           ))}
         </RHFSelect>
 
-        <RHFSelect native name="service_id" label="Service" InputLabelProps={{ shrink: true }}>
+        <RHFSelect name="service_id" label="Service" InputLabelProps={{ shrink: true }}>
           <option key={0}>{t('general.dropdown_select')}</option>
           {services.map((item) => (
             <option key={item.id} value={item.id}>
@@ -281,9 +281,9 @@ export default function CalendarForm({
           control={control}
           render={({ field }) => (
             <ColorPicker
-              selected={field.value as string}
-              onSelectColor={(color) => field.onChange(color as string)}
-              colors={colorOptions}
+              value={field.value as string}
+              onChange={(color) => field.onChange(color as string)}
+              options={colorOptions}
             />
           )}
         />

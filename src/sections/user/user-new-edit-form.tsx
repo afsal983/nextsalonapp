@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { paths } from 'src/routes/paths';
@@ -126,14 +126,14 @@ export default function UserNewEditForm({ currentUser, userroles, branches }: Pr
         router.push(paths.dashboard.user.list);
       }
     } catch (error) {
-      toast.error(error);
+      toast.error('Error');
     }
   });
 
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
-        <Grid xs={12} md={12}>
+        <Grid size={{ xs: 12, md: 12 }}>
           <Card sx={{ p: 3 }}>
             <Box
               rowGap={3}
@@ -162,7 +162,6 @@ export default function UserNewEditForm({ currentUser, userroles, branches }: Pr
               <RHFTextField name="pin" label={t('salonapp.user.pin')} />
 
               <RHFSelect
-                native
                 name="branch_id"
                 label={t('salonapp.user.branch_name')}
                 InputLabelProps={{ shrink: true }}
@@ -176,7 +175,6 @@ export default function UserNewEditForm({ currentUser, userroles, branches }: Pr
               </RHFSelect>
 
               <RHFSelect
-                native
                 name="role_id"
                 label={t('salonapp.user.role_name')}
                 InputLabelProps={{ shrink: true }}

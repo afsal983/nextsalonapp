@@ -16,7 +16,8 @@ import { formHelperTextClasses } from '@mui/material/FormHelperText';
 import type { UseSetStateReturn } from 'src/hooks/use-set-state';
 
 import { Iconify } from 'src/components/iconify';
-import { usePopover, CustomPopover } from 'src/components/custom-popover';
+import { CustomPopover } from 'src/components/custom-popover';
+import { usePopover } from 'minimal-shared/hooks';
 
 import { IInvoiceTableFilters } from 'src/types/invoice';
 import type { IDatePickerControl } from 'src/types/common';

@@ -1,10 +1,9 @@
-import SvgIcon from '@mui/material/SvgIcon';
-import { buttonClasses } from '@mui/material/Button';
 import type { SvgIconProps } from '@mui/material/SvgIcon';
 import type { Theme, Components } from '@mui/material/styles';
-import { dialogActionsClasses } from '@mui/material/DialogActions';
 
-import { stylesMode } from '../../styles';
+import SvgIcon from '@mui/material/SvgIcon';
+import { buttonClasses } from '@mui/material/Button';
+import { dialogActionsClasses } from '@mui/material/DialogActions';
 
 // ----------------------------------------------------------------------
 
@@ -12,7 +11,7 @@ import { stylesMode } from '../../styles';
  * Icons
  */
 /* https://icon-sets.iconify.design/eva/chevron-down-fill */
-export const PickerSwitchIcon = (props: SvgIconProps) => (
+const PickerSwitchIcon = (props: SvgIconProps) => (
   <SvgIcon {...props}>
     <path
       fill="currentColor"
@@ -22,7 +21,7 @@ export const PickerSwitchIcon = (props: SvgIconProps) => (
 );
 
 /* https://icon-sets.iconify.design/eva/arrow-ios-back-fill */
-export const PickerLeftIcon = (props: SvgIconProps) => (
+const PickerLeftIcon = (props: SvgIconProps) => (
   <SvgIcon {...props}>
     <path
       fill="currentColor"
@@ -32,7 +31,7 @@ export const PickerLeftIcon = (props: SvgIconProps) => (
 );
 
 /* https://icon-sets.iconify.design/eva/arrow-ios-forward-fill */
-export const PickerRightIcon = (props: SvgIconProps) => (
+const PickerRightIcon = (props: SvgIconProps) => (
   <SvgIcon {...props}>
     <path
       fill="currentColor"
@@ -42,7 +41,7 @@ export const PickerRightIcon = (props: SvgIconProps) => (
 );
 
 /* https://icon-sets.iconify.design/solar/calendar-mark-bold-duotone */
-export const PickerCalendarIcon = (props: SvgIconProps) => (
+const PickerCalendarIcon = (props: SvgIconProps) => (
   <SvgIcon {...props}>
     <path
       fill="currentColor"
@@ -58,7 +57,7 @@ export const PickerCalendarIcon = (props: SvgIconProps) => (
 );
 
 /* https://icon-sets.iconify.design/solar/clock-circle-outline */
-export const PickerClockIcon = (props: SvgIconProps) => (
+const PickerClockIcon = (props: SvgIconProps) => (
   <SvgIcon {...props}>
     <path
       fill="currentColor"
@@ -171,7 +170,9 @@ const MuiPickersLayout: Components<Theme>['MuiPickersLayout'] = {
           [`&:last-of-type`]: {
             color: theme.vars.palette.common.white,
             backgroundColor: theme.vars.palette.text.primary,
-            [stylesMode.dark]: { color: theme.vars.palette.grey[800] },
+            ...theme.applyStyles('dark', {
+              color: theme.vars.palette.grey[800],
+            }),
           },
         },
       },
@@ -185,7 +186,7 @@ const MuiPickersPopper: Components<Theme>['MuiPickersPopper'] = {
    *************************************** */
   styleOverrides: {
     paper: ({ theme }) => ({
-      boxShadow: theme.customShadows.dropdown,
+      boxShadow: theme.vars.customShadows.dropdown,
       borderRadius: theme.shape.borderRadius * 1.5,
     }),
   },
