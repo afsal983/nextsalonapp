@@ -98,7 +98,7 @@ export default function AppointmentNewEditDetails({
   const handleSelectEmployee = useCallback((index: number, option: string) => {}, []);
 
   return (
-    <Box sx={{ p: 2 }}>
+    <Box sx={{ p: 2 }} justifyContent="flex-end">
       <Typography variant="h6" sx={{ color: 'text.disabled' }} gutterBottom>
         Appointments:
       </Typography>

@@ -200,7 +200,7 @@ export default function AppointmentNewEditForm({
         <Grid size={{ xs: 1, md: 1 }}>
           <Divider orientation="vertical" />
         </Grid>
-        <Grid size={{ xs: 12, md: 7 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <AppointmentNewEditDetails
             services={services}
             employees={employees}
