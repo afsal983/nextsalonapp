@@ -99,7 +99,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
             ml: { xs: 0.75, md: 1, xl: 1.5 },
           }}
         >
-          Minimal
+          SMEEYE
         </Box>
       </Box>
     </m.div>
@@ -115,7 +115,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
           [theme.breakpoints.up(lgKey)]: { fontSize: 20, lineHeight: '36px' },
         }}
       >
-        {`The starting point for your next project is based on MUI. \nEasy customization helps you build apps faster and better.`}
+        {`Your one-stop destination for powerful and efficient cloud-based business management software.`}
       </Typography>
     </m.div>
   );
@@ -163,10 +163,10 @@ export function HomeHero({ sx, ...other }: BoxProps) {
             color="inherit"
             size="large"
             variant="contained"
-            startIcon={<Iconify width={24} icon="iconoir:flash" />}
+            startIcon={<Iconify width={24} icon="ic:baseline-login" />}
           >
             <span>
-              Live preview
+              Login
               <Box
                 component="small"
                 sx={{
@@ -177,11 +177,11 @@ export function HomeHero({ sx, ...other }: BoxProps) {
                   fontWeight: theme.typography.fontWeightMedium,
                 }}
               >
-                v{CONFIG.appVersion}
+                {CONFIG.appVersion}
               </Box>
             </span>
           </Button>
-
+          {/*
           <Link
             color="inherit"
             variant="body2"
@@ -194,22 +194,8 @@ export function HomeHero({ sx, ...other }: BoxProps) {
             <Iconify width={16} icon="eva:external-link-fill" />
             Get free version
           </Link>
+              */}
         </Stack>
-      </m.div>
-
-      <m.div {...motionProps}>
-        <Button
-          color="inherit"
-          size="large"
-          variant="outlined"
-          target="_blank"
-          rel="noopener"
-          href={paths.SMEYE}
-          startIcon={<Iconify width={24} icon="solar:figma-outline" />}
-          sx={{ borderColor: 'text.primary' }}
-        >
-          Figma preview
-        </Button>
       </m.div>
     </Box>
   );
@@ -301,7 +287,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
 
           <m.div style={{ y: y3 }}>{renderRatings()}</m.div>
           <m.div style={{ y: y4 }}>{renderButtons()}</m.div>
-          <m.div style={{ y: y5 }}>{renderIcons()}</m.div>
+          {/* <m.div style={{ y: y5 }}>{renderIcons()}</m.div> */}
         </Container>
 
         <HeroBackground />

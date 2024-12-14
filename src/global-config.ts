@@ -34,7 +34,7 @@ export type ConfigValue = {
 
 export const CONFIG: ConfigValue = {
   appName: 'SMEEYE',
-  appVersion: packageJson.version,
+  appVersion: 'blacklower 1.0',
   serverUrl: process.env.NEXT_PUBLIC_SERVER_URL ?? '',
   assetsDir: process.env.NEXT_PUBLIC_ASSETS_DIR ?? '',
   // isStaticExport: JSON.parse(`${process.env.BUILD_STATIC_EXPORT}`),
