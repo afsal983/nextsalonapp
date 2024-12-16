@@ -74,7 +74,7 @@ export function NavList({ data, sx, ...other }: NavListProps) {
                     backgroundSize: 'auto 88%',
                     backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat',
-                    backgroundImage: `url(${CONFIG.assetsDir}/assets/illustrations/illustration-dashboard.webp)`,
+                    backgroundImage: `url(${CONFIG.assetsDir}/illustrations/illustration-dashboard.webp)`,
                     // @ts-ignore
                     border: `solid 1px ${varAlpha(theme.vars.palette.grey['500Channel'], 0.12)}`,
                   },

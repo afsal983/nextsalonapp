@@ -10,12 +10,13 @@ import type { NavMainProps } from './main/nav/types';
 
 export const navData: NavMainProps['data'] = [
   { title: 'Home', path: '/', icon: <Iconify width={22} icon="solar:home-2-bold-duotone" /> },
+  /*
   {
     title: 'Components',
     path: paths.SMEYE,
     icon: <Iconify width={22} icon="solar:atom-bold-duotone" />,
   },
-  /*
+
   {
     title: 'Pages',
     path: '/pages',

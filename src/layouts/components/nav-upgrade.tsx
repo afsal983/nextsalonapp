@@ -84,7 +84,7 @@ export function UpgradeBlock({ sx, ...other }: BoxProps) {
           ...theme.mixins.bgGradient({
             images: [
               `linear-gradient(135deg, ${varAlpha(theme.vars.palette.error.lightChannel, 0.92)}, ${varAlpha(theme.vars.palette.secondary.darkChannel, 0.92)})`,
-              `url(${CONFIG.assetsDir}/assets/background/background-7.webp)`,
+              `url(${CONFIG.assetsDir}/background/background-7.webp)`,
             ],
           }),
           px: 3,
@@ -118,7 +118,7 @@ export function UpgradeBlock({ sx, ...other }: BoxProps) {
           repeatDelay: 0,
         }}
         alt="Small Rocket"
-        src={`${CONFIG.assetsDir}/assets/illustrations/illustration-rocket-small.webp`}
+        src={`${CONFIG.assetsDir}/illustrations/illustration-rocket-small.webp`}
         sx={{
           right: 0,
           width: 112,

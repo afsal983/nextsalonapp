@@ -37,6 +37,17 @@ export const allLangs = [
     },
   },
   {
+    value: 'ar',
+    label: 'Arabic',
+    countryCode: 'AE',
+    adapterLocale: 'ar-sa',
+    numberFormat: { code: 'ar', currency: 'AED' },
+    systemValue: {
+      components: { ...arSACore.components, ...arSDDataGrid.components },
+    },
+  },
+  /*
+  {
     value: 'fr',
     label: 'French',
     countryCode: 'FR',
@@ -66,16 +77,7 @@ export const allLangs = [
       components: { ...zhCNCore.components, ...zhCNDate.components, ...zhCNDataGrid.components },
     },
   },
-  {
-    value: 'ar',
-    label: 'Arabic',
-    countryCode: 'SA',
-    adapterLocale: 'ar-sa',
-    numberFormat: { code: 'ar', currency: 'AED' },
-    systemValue: {
-      components: { ...arSACore.components, ...arSDDataGrid.components },
-    },
-  },
+  */
 ];
 
 /**

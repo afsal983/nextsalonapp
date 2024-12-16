@@ -90,7 +90,7 @@ export function HomeMinimal({ sx, ...other }: BoxProps) {
         <Box
           component="img"
           alt="Home chart"
-          src={`${CONFIG.assetsDir}/assets/images/home/home-chart.webp`}
+          src={`${CONFIG.assetsDir}/images/home/home-chart.webp`}
           sx={{ width: 720 }}
         />
       </Box>
@@ -133,17 +133,17 @@ export function HomeMinimal({ sx, ...other }: BoxProps) {
 
 const ITEMS = [
   {
-    icon: `${CONFIG.assetsDir}/assets/icons/home/ic-make-brand.svg`,
+    icon: `${CONFIG.assetsDir}/icons/home/ic-make-brand.svg`,
     title: 'Basic Plan',
     description: 'Single Orgnaization & Single Branch. Email support included.',
   },
   {
-    icon: `${CONFIG.assetsDir}/assets/icons/home/ic-design.svg`,
+    icon: `${CONFIG.assetsDir}/icons/home/ic-design.svg`,
     title: 'Standard Plan',
     description: 'Single Orgnaization & Upto 2 branches. Email support included..',
   },
   {
-    icon: `${CONFIG.assetsDir}/assets/icons/home/ic-development.svg`,
+    icon: `${CONFIG.assetsDir}/icons/home/ic-development.svg`,
     title: 'Pro Plan',
     description:
       'Single Orgnaization & Upto 5 branches. Priority phone and email support included.',

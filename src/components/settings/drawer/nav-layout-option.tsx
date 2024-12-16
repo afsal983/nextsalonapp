@@ -54,7 +54,7 @@ export function NavLayoutOptions({
             ]}
           >
             <SvgColor
-              src={`${CONFIG.assetsDir}/assets/icons/settings/ic-nav-${option}.svg`}
+              src={`${CONFIG.assetsDir}/icons/settings/ic-nav-${option}.svg`}
               sx={{ width: 1, height: 1, color: 'currentColor' }}
             />
           </OptionButton>
@@ -102,7 +102,7 @@ export function NavColorOptions({
             sx={{ gap: 1.5, height: 56, textTransform: 'capitalize' }}
           >
             <SvgColor
-              src={`${CONFIG.assetsDir}/assets/icons/settings/ic-sidebar-${option === 'integrate' ? 'outline' : 'filled'}.svg`}
+              src={`${CONFIG.assetsDir}/icons/settings/ic-sidebar-${option === 'integrate' ? 'outline' : 'filled'}.svg`}
             />
             {option}
           </OptionButton>

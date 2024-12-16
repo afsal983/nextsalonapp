@@ -33,8 +33,8 @@ export function AuthSplitSection({
   methods,
   layoutQuery = 'md',
   title = 'Manage the job',
-  imgUrl = `${CONFIG.assetsDir}/assets/illustrations/illustration-dashboard.webp`,
-  subtitle = 'More effectively with optimized workflows.',
+  imgUrl = `${CONFIG.assetsDir}/illustrations/illustration_dashboard.png`,
+  subtitle = 'Do good business.',
   ...other
 }: AuthSplitSectionProps) {
   return (
@@ -44,7 +44,7 @@ export function AuthSplitSection({
           ...theme.mixins.bgGradient({
             images: [
               `linear-gradient(0deg, ${varAlpha(theme.vars.palette.background.defaultChannel, 0.92)}, ${varAlpha(theme.vars.palette.background.defaultChannel, 0.92)})`,
-              `url(${CONFIG.assetsDir}/assets/background/background-3-blur.webp)`,
+              `url(${CONFIG.assetsDir}/background/background-3-blur.webp)`,
             ],
           }),
           px: 3,
@@ -84,7 +84,7 @@ export function AuthSplitSection({
         src={imgUrl}
         sx={{ width: 1, aspectRatio: '4/3', objectFit: 'cover' }}
       />
-
+      {/*
       {!!methods?.length && method && (
         <Box component="ul" sx={{ gap: 2, display: 'flex' }}>
           {methods.map((option) => {
@@ -120,6 +120,7 @@ export function AuthSplitSection({
           })}
         </Box>
       )}
+        */}
     </Box>
   );
 }

@@ -25,6 +25,7 @@ export const _account: AccountDrawerProps['data'] = [
       </SvgIcon>
     ),
   },
+  /*
   {
     label: 'Projects',
     href: '#',
@@ -55,5 +56,6 @@ export const _account: AccountDrawerProps['data'] = [
     ),
   },
   { label: 'Security', href: '#', icon: <Iconify icon="solar:shield-keyhole-bold-duotone" /> },
+  */
   { label: 'Account settings', href: '#', icon: <Iconify icon="solar:settings-bold-duotone" /> },
 ];

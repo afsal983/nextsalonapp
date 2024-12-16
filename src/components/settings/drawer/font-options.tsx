@@ -57,7 +57,7 @@ export function FontFamilyOptions({
             })}
           >
             <SvgColor
-              src={`${CONFIG.assetsDir}/assets/icons/settings/ic-font.svg`}
+              src={`${CONFIG.assetsDir}/icons/settings/ic-font.svg`}
               sx={{ width: 28, height: 28, color: 'currentColor' }}
             />
 

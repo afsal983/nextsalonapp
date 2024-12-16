@@ -216,7 +216,7 @@ const MaintenanceIllustration = forwardRef<SVGSVGElement, SvgProps>((props, ref)
       </defs>
 
       <image
-        href={`${CONFIG.assetsDir}/assets/illustrations/characters/character-5.webp`}
+        href={`${CONFIG.assetsDir}/illustrations/characters/character-5.webp`}
         height="300"
         x="245"
         y="30"

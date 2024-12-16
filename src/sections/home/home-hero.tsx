@@ -214,7 +214,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
             <Box
               component="img"
               alt={platform}
-              src={`${CONFIG.assetsDir}/assets/icons/platforms/ic-${platform}.svg`}
+              src={`${CONFIG.assetsDir}/icons/platforms/ic-${platform}.svg`}
               sx={[
                 {
                   width: 24,

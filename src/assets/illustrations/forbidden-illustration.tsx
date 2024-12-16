@@ -38,7 +38,7 @@ const ForbiddenIllustration = forwardRef<SVGSVGElement, SvgProps>((props, ref) =
       {!hideBackground && <BackgroundShape />}
 
       <image
-        href={`${CONFIG.assetsDir}/assets/illustrations/characters/character-4.webp`}
+        href={`${CONFIG.assetsDir}/illustrations/characters/character-4.webp`}
         height="300"
         x="220"
         y="30"

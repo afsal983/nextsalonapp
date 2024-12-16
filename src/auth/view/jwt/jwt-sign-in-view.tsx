@@ -84,6 +84,7 @@ export function JwtSignInView() {
       <Field.Text name="email" label="Email address" InputLabelProps={{ shrink: true }} />
 
       <Box gap={1.5} display="flex" flexDirection="column">
+        {/*
         <Link
           component={RouterLink}
           href="#"
@@ -93,6 +94,7 @@ export function JwtSignInView() {
         >
           Forgot password?
         </Link>
+        */}
 
         <Field.Text
           name="password"

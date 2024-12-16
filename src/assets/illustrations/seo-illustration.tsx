@@ -237,7 +237,7 @@ const SeoIllustration = forwardRef<SVGSVGElement, SvgProps>((props, ref) => {
       </defs>
 
       <image
-        href={`${CONFIG.assetsDir}/assets/illustrations/characters/character-3.webp`}
+        href={`${CONFIG.assetsDir}/illustrations/characters/character-3.webp`}
         height="300"
         x="312"
         y="30"

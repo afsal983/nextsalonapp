@@ -54,7 +54,7 @@ export default function BranchNewEditForm({ currentBranch, organization, locatio
       address: currentBranch?.address || '',
       telephone: currentBranch?.telephone || '',
       taxid: currentBranch?.taxid || '',
-      org_id: currentBranch?.org_id || 0,
+      org_id: currentBranch?.org_id || 1,
       loc_id: currentBranch?.loc_id || 0,
     }),
     [currentBranch]

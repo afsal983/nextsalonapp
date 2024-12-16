@@ -53,7 +53,7 @@ export function PresetsOptions({
             }}
           >
             <SvgColor
-              src={`${CONFIG.assetsDir}/assets/icons/settings/ic-siderbar-duotone.svg`}
+              src={`${CONFIG.assetsDir}/icons/settings/ic-siderbar-duotone.svg`}
               sx={{ width: 28, height: 28, color: 'currentColor' }}
             />
           </OptionButton>

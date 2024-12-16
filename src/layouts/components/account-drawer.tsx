@@ -26,6 +26,7 @@ import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { AnimateBorder } from 'src/components/animate';
 
+import { useAuthContext } from 'src/auth/hooks';
 import { useMockedUser } from 'src/auth/hooks';
 
 import { UpgradeBlock } from './nav-upgrade';
@@ -46,7 +47,8 @@ export type AccountDrawerProps = IconButtonProps & {
 export function AccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
   const pathname = usePathname();
 
-  const { user } = useMockedUser();
+  const { user } = useAuthContext();
+  // const { user } = useMockedUser();
 
   const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
 
@@ -158,7 +160,7 @@ export function AccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
             {renderAvatar()}
 
             <Typography variant="subtitle1" noWrap sx={{ mt: 2 }}>
-              {user?.displayName}
+              {`${user?.firstname} ${user?.lastname}`}
             </Typography>
 
             <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }} noWrap>
@@ -177,7 +179,7 @@ export function AccountDrawer({ data = [], sx, ...other }: AccountDrawerProps) {
           >
             {Array.from({ length: 3 }, (_, index) => (
               <Tooltip
-                key={_mock.fullName(index + 1)}
+                key={_mock?.fullName(index + 1)}
                 title={`Switch to: ${_mock.fullName(index + 1)}`}
               >
                 <Avatar

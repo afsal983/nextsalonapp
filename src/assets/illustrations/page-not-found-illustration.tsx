@@ -38,7 +38,7 @@ const PageNotFoundIllustration = forwardRef<SVGSVGElement, SvgProps>((props, ref
       {!hideBackground && <BackgroundShape />}
 
       <image
-        href={`${CONFIG.assetsDir}/assets/illustrations/characters/character-6.webp`}
+        href={`${CONFIG.assetsDir}/illustrations/characters/character-6.webp`}
         height="300"
         x="205"
         y="30"
