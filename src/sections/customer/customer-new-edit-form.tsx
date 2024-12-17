@@ -11,14 +11,15 @@ import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
+import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { useTranslate } from 'src/locales';
 
 import { toast } from 'src/components/snackbar';
-import { Form, RHFSwitch, RHFSelect, RHFTextField, RHFRadioGroup } from 'src/components/hook-form';
+import { Form, RHFSwitch, Field, RHFTextField, RHFRadioGroup } from 'src/components/hook-form';
 
 import { type Customer, type CustomerCategory } from 'src/types/customer';
 
@@ -199,35 +200,18 @@ export default function CustomerNewEditForm({ currentCustomer, customercategory 
                 rows={3}
                 label={t('salonapp.customer.comments')}
               />
-              <RHFSelect
-                name="category_id"
-                label={t('salonapp.customer.category')}
-                InputLabelProps={{ shrink: true }}
-              >
-                <option key={0}>{t('general.dropdown_select')}</option>
-                {customercategory.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name}
-                  </option>
+
+              <Field.Select name="category_id" label={t('salonapp.customer.category')}>
+                <MenuItem value="">None</MenuItem>
+                <Divider sx={{ borderStyle: 'dashed' }} />
+                {customercategory.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.name}
+                  </MenuItem>
                 ))}
-              </RHFSelect>
-              <Controller
-                name="dob"
-                control={control}
-                render={({ field, fieldState: { error } }) => (
-                  <DatePicker
-                    {...field}
-                    format="dd/MM/yyyy"
-                    slotProps={{
-                      textField: {
-                        fullWidth: true,
-                        error: !!error,
-                        helperText: error?.message,
-                      },
-                    }}
-                  />
-                )}
-              />
+              </Field.Select>
+
+              <Field.DatePicker format="DD/MM/YYYY" name="dob" label="Date of birth" />
             </Box>
             <Box
               rowGap={3}

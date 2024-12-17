@@ -9,7 +9,8 @@ import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
-
+import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
@@ -19,13 +20,7 @@ import { base64ToBlob, blobToBase64 } from 'src/utils/base64convert';
 import { useTranslate } from 'src/locales';
 
 import { toast } from 'src/components/snackbar';
-import {
-  Form,
-  RHFSwitch,
-  RHFSelect,
-  RHFTextField,
-  RHFUploadAvatar,
-} from 'src/components/hook-form';
+import { Form, RHFSwitch, Field, RHFTextField, RHFUploadAvatar } from 'src/components/hook-form';
 
 import { type AppSettings } from 'src/types/settings';
 
@@ -251,19 +246,19 @@ export default function SettingsGeneral({ currentSettings }: Props) {
               <RHFTextField name="currency" label="Currency" />
               <RHFTextField name="theme" label="Theme" />
               <RHFTextField name="defaulttelcode" label="Default Telephone code" />
-              <RHFSelect
-                name="emailserver"
-                label={t('general.product_type')}
-                InputLabelProps={{ shrink: true }}
-              >
-                <option key={0}>{t('general.dropdown_select')}</option>
-                <option key={1} value="smtp">
+
+              <Field.Select name="emailserver" label={t('general.product_type')}>
+                <MenuItem value="">None</MenuItem>
+                <Divider sx={{ borderStyle: 'dashed' }} />
+
+                <MenuItem key={1} value="smtp">
                   SMTP
-                </option>
-                <option key={2} value="sendgrid">
+                </MenuItem>
+
+                <MenuItem key={2} value="sendgrid">
                   Sendgrid
-                </option>
-              </RHFSelect>
+                </MenuItem>
+              </Field.Select>
             </Box>
 
             <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>

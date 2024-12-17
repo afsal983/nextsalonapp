@@ -9,14 +9,15 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid2';
 import LoadingButton from '@mui/lab/LoadingButton';
-
+import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { useTranslate } from 'src/locales';
 
 import { toast } from 'src/components/snackbar';
-import { Form, RHFSwitch, RHFSelect, RHFTextField } from 'src/components/hook-form';
+import { Form, RHFSwitch, Field, RHFTextField } from 'src/components/hook-form';
 
 import { type BranchItem } from 'src/types/branch';
 import { type UserItem, type UserRoleDB } from 'src/types/user';
@@ -161,31 +162,25 @@ export default function UserNewEditForm({ currentUser, userroles, branches }: Pr
               <RHFTextField name="telephone" label={t('salonapp.user.telephone')} />
               <RHFTextField name="pin" label={t('salonapp.user.pin')} />
 
-              <RHFSelect
-                name="branch_id"
-                label={t('salonapp.user.branch_name')}
-                InputLabelProps={{ shrink: true }}
-              >
-                <option key={0}>{t('general.dropdown_select')}</option>
-                {branches.map((item) => (
-                  <option key={item.branch_id} value={item.branch_id}>
-                    {item.name}
-                  </option>
+              <Field.Select name="branch_id" label={t('salonapp.user.branch_name')}>
+                <MenuItem value="">None</MenuItem>
+                <Divider sx={{ borderStyle: 'dashed' }} />
+                {branches.map((option) => (
+                  <MenuItem key={option.branch_id} value={option.branch_id}>
+                    {option.name}
+                  </MenuItem>
                 ))}
-              </RHFSelect>
+              </Field.Select>
 
-              <RHFSelect
-                name="role_id"
-                label={t('salonapp.user.role_name')}
-                InputLabelProps={{ shrink: true }}
-              >
-                <option key={0}>{t('general.dropdown_select')}</option>
-                {userroles.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name}
-                  </option>
+              <Field.Select name="role_id" label={t('salonapp.user.role_name')}>
+                <MenuItem value="">None</MenuItem>
+                <Divider sx={{ borderStyle: 'dashed' }} />
+                {userroles.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.name}
+                  </MenuItem>
                 ))}
-              </RHFSelect>
+              </Field.Select>
 
               <RHFTextField name="address" label={t('salonapp.user.address')} />
 

@@ -10,7 +10,8 @@ import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 import DialogActions from '@mui/material/DialogActions';
-
+import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider';
 import { useBoolean } from 'minimal-shared/hooks';
 
 import { uuidv4 } from 'src/utils/uuidv4';
@@ -23,7 +24,7 @@ import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
 import { ColorPicker } from 'src/components/color-utils';
 import { LiveCustomerSearch } from 'src/components/livecustomersearch';
-import { Form, Field, RHFSelect, RHFSwitch, RHFTextField } from 'src/components/hook-form';
+import { Form, Field, RHFSwitch, RHFTextField } from 'src/components/hook-form';
 
 import { Customer } from 'src/types/customer';
 import { ServiceItem } from 'src/types/service';
@@ -241,23 +242,25 @@ export default function CalendarForm({
           />
         </Box>
 
-        <RHFSelect name="employee_id" label="Employee" InputLabelProps={{ shrink: true }}>
-          <option key={0}>{t('general.dropdown_select')}</option>
-          {employees.map((item: EmployeeItem) => (
-            <option key={item.id} value={item.id}>
-              {item.name}
-            </option>
+        <Field.Select name="employee_id" label="Employee">
+          <MenuItem value="">None</MenuItem>
+          <Divider sx={{ borderStyle: 'dashed' }} />
+          {employees.map((option) => (
+            <MenuItem key={option.id} value={option.id}>
+              {option.name}
+            </MenuItem>
           ))}
-        </RHFSelect>
+        </Field.Select>
 
-        <RHFSelect name="service_id" label="Service" InputLabelProps={{ shrink: true }}>
-          <option key={0}>{t('general.dropdown_select')}</option>
-          {services.map((item) => (
-            <option key={item.id} value={item.id}>
-              {item.name}
-            </option>
+        <Field.Select name="service_id" label="Service">
+          <MenuItem value="">None</MenuItem>
+          <Divider sx={{ borderStyle: 'dashed' }} />
+          {services.map((option) => (
+            <MenuItem key={option.id} value={option.id}>
+              {option.name}
+            </MenuItem>
           ))}
-        </RHFSelect>
+        </Field.Select>
 
         <RHFTextField name="notes" label="Notes" multiline rows={3} />
 

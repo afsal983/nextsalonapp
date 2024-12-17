@@ -10,14 +10,15 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid2';
 import LoadingButton from '@mui/lab/LoadingButton';
-
+import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { useTranslate } from 'src/locales';
 
 import { toast } from 'src/components/snackbar';
-import { Form, RHFSwitch, RHFSelect, RHFTextField } from 'src/components/hook-form';
+import { Form, RHFSwitch, Field, RHFTextField, schemaHelper } from 'src/components/hook-form';
 
 import {
   type ServiceItem,
@@ -37,16 +38,24 @@ export type NewProductSchemaType = zod.infer<typeof NewProductSchema>;
 const NewProductSchema = zod.object({
   id: zod.string().optional(),
   name: zod.string().min(1, { message: 'salonapp.service.name_fvalid_error' }),
-  duration: zod
-    .number()
-    .positive({ message: 'general.must_be_non_zero' })
-    .refine((val) => val !== undefined, { message: 'salonapp.service.duration_fvalid_error' }),
-  tax: zod.number().refine((val) => val !== undefined, { message: 'general.tax_fvalid_error' }),
+  duration: schemaHelper.nullableInput(
+    zod.number({ coerce: true }).min(1, { message: 'Duration is required!' }),
+    {
+      // message for null value
+      message: 'Duration is required!',
+    }
+  ),
+
+  tax: zod.number({ coerce: true }).nullable(),
   color: zod.string().min(1, { message: 'general.color_fvalid_error' }),
-  price: zod
-    .number()
-    .positive({ message: 'general.must_be_non_zero' })
-    .refine((val) => val !== undefined, { message: 'general.price_fvalid_error' }),
+  price: schemaHelper.nullableInput(
+    zod.number({ coerce: true }).min(1, { message: 'Price is required!' }),
+    {
+      // message for null value
+      message: 'Price is required!',
+    }
+  ),
+
   category_id: zod
     .number()
     .positive({ message: 'general.must_be_non_zero' })
@@ -54,7 +63,7 @@ const NewProductSchema = zod.object({
   brand_id: zod.number().optional(),
   sku: zod.string().optional(),
   stock: zod.number().optional(),
-  commission: zod.number().optional(),
+  commission: zod.number({ coerce: true }).nullable(),
   type: zod.number().optional(),
   on_top: zod.boolean().optional(),
 });
@@ -82,7 +91,7 @@ export default function ServiceNewEditForm({
       brand_id: currentService?.brand_id || 0,
       sku: currentService?.sku || '',
       stock: currentService?.stock || 0,
-      commission: currentService?.commission,
+      commission: currentService?.commission || 0,
       type: currentService?.type || 1,
       on_top: currentService?.ProductPreference.on_top || false,
     }),
@@ -172,19 +181,17 @@ export default function ServiceNewEditForm({
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <RHFSelect
-                name="type"
-                label={t('general.product_type')}
-                InputLabelProps={{ shrink: true }}
-              >
-                <option key={0}>{t('general.dropdown_select')}</option>
-                <option key={1} value={1}>
+              <Field.Select name="type" label={t('general.product_type')}>
+                <MenuItem value="">None</MenuItem>
+                <Divider sx={{ borderStyle: 'dashed' }} />
+
+                <MenuItem key={1} value={1}>
                   Services
-                </option>
-                <option key={2} value={2}>
+                </MenuItem>
+                <MenuItem key={2} value={2}>
                   Retails
-                </option>
-              </RHFSelect>
+                </MenuItem>
+              </Field.Select>
 
               <RHFTextField
                 name="name"
@@ -192,18 +199,16 @@ export default function ServiceNewEditForm({
                 helperText={t('salonapp.service.sn_helper')}
               />
 
-              <RHFSelect
-                name="category_id"
-                label={t('general.category')}
-                InputLabelProps={{ shrink: true }}
-              >
-                <option key={0}>{t('general.dropdown_select')}</option>
-                {servicecategory.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name}
-                  </option>
+              <Field.Select name="category_id" label={t('general.category')}>
+                <MenuItem value="">None</MenuItem>
+                <Divider sx={{ borderStyle: 'dashed' }} />
+                {servicecategory.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.name}
+                  </MenuItem>
                 ))}
-              </RHFSelect>
+              </Field.Select>
+
               <RHFTextField
                 name="duration"
                 label={t('salonapp.service.duration_in_min')}
@@ -214,10 +219,18 @@ export default function ServiceNewEditForm({
                 label={t('general.product_type')}
                 style={{ display: 'none' }}
               />
-              <RHFTextField name="price" label={t('salonapp.price_exclusive_tax')} />
-              <RHFTextField name="tax" label={t('tax')} helperText={t('salonapp.tax_helper')} />
+              <RHFTextField name="price" type="number" label={t('salonapp.price_exclusive_tax')} />
+              <RHFTextField
+                name="tax"
+                type="number"
+                label={t('tax')}
+                helperText={t('salonapp.tax_helper')}
+              />
+
               <RHFTextField
                 name="commission"
+                type="number"
+                placeholder="0.00"
                 label={t('commission')}
                 helperText={t('salonapp.service.commission_helper')}
               />
@@ -232,18 +245,16 @@ export default function ServiceNewEditForm({
 
               {Number(type) === 2 && (
                 <>
-                  <RHFSelect
-                    name="brand_id"
-                    label={t('general.retail_brand')}
-                    InputLabelProps={{ shrink: true }}
-                  >
-                    <option key={0}>{t('general.dropdown_select')}</option>
-                    {retailbrands.map((item) => (
-                      <option key={item.id} value={item.id}>
-                        {item.name}
-                      </option>
+                  <Field.Select name="brand_id" label={t('general.retail_brand')}>
+                    <MenuItem value="">None</MenuItem>
+                    <Divider sx={{ borderStyle: 'dashed' }} />
+                    {retailbrands.map((option) => (
+                      <MenuItem key={option.id} value={option.id}>
+                        {option.name}
+                      </MenuItem>
                     ))}
-                  </RHFSelect>
+                  </Field.Select>
+
                   <RHFTextField
                     name="sku"
                     label={t('sku')}

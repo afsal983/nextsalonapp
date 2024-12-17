@@ -9,14 +9,15 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid2';
 import LoadingButton from '@mui/lab/LoadingButton';
-
+import Divider from '@mui/material/Divider';
+import MenuItem from '@mui/material/MenuItem';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { useTranslate } from 'src/locales';
 
 import { toast } from 'src/components/snackbar';
-import { Form, RHFSelect, RHFTextField } from 'src/components/hook-form';
+import { Form, Field, RHFTextField } from 'src/components/hook-form';
 
 import { type BranchItem } from 'src/types/branch';
 import { type LocationItem } from 'src/types/location';
@@ -55,7 +56,7 @@ export default function BranchNewEditForm({ currentBranch, organization, locatio
       telephone: currentBranch?.telephone || '',
       taxid: currentBranch?.taxid || '',
       org_id: currentBranch?.org_id || 1,
-      loc_id: currentBranch?.loc_id || 0,
+      loc_id: currentBranch?.loc_id || 1,
     }),
     [currentBranch]
   );
@@ -156,31 +157,26 @@ export default function BranchNewEditForm({ currentBranch, organization, locatio
                 label={t('salonapp.branch.taxid')}
                 helperText={t('salonapp.branch.ti_helper')}
               />
-              <RHFSelect
-                name="org_id"
-                label={t('salonapp.branch.orgname')}
-                InputLabelProps={{ shrink: true }}
-              >
-                <option key={0}>{t('general.dropdown_select')}</option>
-                {organization.map((item) => (
-                  <option key={item.org_id} value={item.org_id}>
-                    {item.name}
-                  </option>
-                ))}
-              </RHFSelect>
 
-              <RHFSelect
-                name="loc_id"
-                label={t('salonapp.branch.locname')}
-                InputLabelProps={{ shrink: true }}
-              >
-                <option key={0}>{t('general.dropdown_select')}</option>
-                {location.map((item) => (
-                  <option key={item.loc_id} value={item.loc_id}>
-                    {item.name}
-                  </option>
+              <Field.Select name="org_id" label={t('salonapp.branch.orgname')}>
+                <MenuItem value="">None</MenuItem>
+                <Divider sx={{ borderStyle: 'dashed' }} />
+                {organization.map((option) => (
+                  <MenuItem key={option.org_id} value={option.org_id}>
+                    {option.name}
+                  </MenuItem>
                 ))}
-              </RHFSelect>
+              </Field.Select>
+
+              <Field.Select name="loc_id" label={t('salonapp.branch.locname')}>
+                <MenuItem value="">None</MenuItem>
+                <Divider sx={{ borderStyle: 'dashed' }} />
+                {location.map((option) => (
+                  <MenuItem key={option.loc_id} value={option.loc_id}>
+                    {option.name}
+                  </MenuItem>
+                ))}
+              </Field.Select>
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>

@@ -10,14 +10,15 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid2';
 import LoadingButton from '@mui/lab/LoadingButton';
-
+import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { useTranslate } from 'src/locales';
 
 import { toast } from 'src/components/snackbar';
-import { Form, RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
+import { Form, Field, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
 import { type UserItem } from 'src/types/user';
 import { type BranchItem } from 'src/types/branch';
@@ -156,30 +157,25 @@ export default function EmployeeNewEditForm({ currentEmployee, branches, users, 
 
                 <RHFTextField name="email" label="email" />
 
-                <RHFSelect
-                  name="branch_id"
-                  label={t('salonapp.employee.branch')}
-                  InputLabelProps={{ shrink: true }}
-                >
-                  <option key={0}>{t('general.dropdown_select')}</option>
-                  {branches.map((item) => (
-                    <option key={item.branch_id} value={item.branch_id}>
-                      {item.name}
-                    </option>
+                <Field.Select name="branch_id" label={t('salonapp.employee.branch')}>
+                  <MenuItem value="">None</MenuItem>
+                  <Divider sx={{ borderStyle: 'dashed' }} />
+                  {branches.map((option) => (
+                    <MenuItem key={option.branch_id} value={option.branch_id}>
+                      {option.name}
+                    </MenuItem>
                   ))}
-                </RHFSelect>
-                <RHFSelect
-                  name="user_id"
-                  label={t('salonapp.employee.link_to_user_account')}
-                  InputLabelProps={{ shrink: true }}
-                >
-                  <option key={0}>{t('general.dropdown_select')}</option>
-                  {users.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.name}
-                    </option>
+                </Field.Select>
+
+                <Field.Select name="user_id" label={t('salonapp.employee.link_to_user_account')}>
+                  <MenuItem value="">None</MenuItem>
+                  <Divider sx={{ borderStyle: 'dashed' }} />
+                  {users.map((option) => (
+                    <MenuItem key={option.id} value={option.id}>
+                      {option.name}
+                    </MenuItem>
                   ))}
-                </RHFSelect>
+                </Field.Select>
               </Box>
 
               <RHFAutocomplete
