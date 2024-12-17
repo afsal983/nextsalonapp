@@ -28,7 +28,7 @@ interface Props {
 
 export type NewProductCategorySchemaType = zod.infer<typeof NewProductCategorySchema>;
 const NewProductCategorySchema = zod.object({
-  id: zod.number().optional(), // Optional string field (equivalent to Yup.string())
+  id: zod.string().optional(), // Optional string field (equivalent to Yup.string())
   name: zod.string().min(1, { message: 'Name invalid' }), // Required field with a custom error message
 });
 
@@ -38,7 +38,7 @@ export default function ServiceCategoryNewEditForm({ currentServiceCategory }: P
   const { t } = useTranslate();
   const defaultValues = useMemo(
     () => ({
-      id: currentServiceCategory?.id || 0,
+      id: currentServiceCategory?.id.toString() || '0',
       name: currentServiceCategory?.name || '',
     }),
     [currentServiceCategory]

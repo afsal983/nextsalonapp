@@ -41,7 +41,7 @@ export default function OrganizationNewEditForm({ currentOrganization }: Props) 
 
   const defaultValues = useMemo(
     () => ({
-      org_id: currentOrganization?.org_id || '0',
+      org_id: currentOrganization?.org_id.toString() || '0',
       name: currentOrganization?.name || '',
       address: currentOrganization?.address || '',
       telephone: currentOrganization?.telephone || '',

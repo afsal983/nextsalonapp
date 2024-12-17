@@ -54,7 +54,7 @@ export default function UserNewEditForm({ currentUser, userroles, branches }: Pr
 
   const defaultValues = useMemo(
     () => ({
-      id: currentUser?.id || '0',
+      id: currentUser?.id.toString() || '0',
       firstname: currentUser?.firstname || '',
       lastname: currentUser?.lastname || '',
       email: currentUser?.email || '',

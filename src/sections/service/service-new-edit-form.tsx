@@ -36,7 +36,7 @@ interface Props {
 export type NewProductSchemaType = zod.infer<typeof NewProductSchema>;
 
 const NewProductSchema = zod.object({
-  id: zod.number().optional(),
+  id: zod.string().optional(),
   name: zod.string().min(1, { message: 'salonapp.service.name_fvalid_error' }),
   duration: schemaHelper.nullableInput(
     zod.number({ coerce: true }).min(1, { message: 'Duration is required!' }),
@@ -78,7 +78,7 @@ export default function ServiceNewEditForm({
 
   const defaultValues = useMemo(
     () => ({
-      id: currentService?.id || 0,
+      id: currentService?.id.toString() || '0',
       name: currentService?.name || '',
       duration: currentService?.duration || 30,
       tax: currentService?.tax || 0,
@@ -114,7 +114,6 @@ export default function ServiceNewEditForm({
   };
   const type = watch('type');
   const onSubmit = handleSubmit(async (data) => {
-    console.log('sssddd');
     const productData = {
       id: Number(data.id),
       name: data.name,
@@ -143,7 +142,7 @@ export default function ServiceNewEditForm({
       });
 
       const responseData = await response.json();
-      console.log('sss');
+
       if (responseData?.status > 401) {
         toast.error(
           currentService

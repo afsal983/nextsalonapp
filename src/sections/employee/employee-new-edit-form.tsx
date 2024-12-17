@@ -40,7 +40,7 @@ interface Props {
 export type NewEmployeeSchemaType = zod.infer<typeof NewEmployeeSchema>;
 
 const NewEmployeeSchema = zod.object({
-  id: zod.number().optional(), // Optional string
+  id: zod.string().optional(), // Optional string
   name: zod.string().min(1, { message: 'Enter Valid Name' }),
   address: zod.string().optional(), // Optional string
   telephone: schemaHelper.phoneNumber({ isValid: isValidPhoneNumber }),
@@ -61,7 +61,7 @@ export default function EmployeeNewEditForm({ currentEmployee, branches, users, 
 
   const defaultValues = useMemo(
     () => ({
-      id: currentEmployee?.id || '0',
+      id: currentEmployee?.id.toString() || '0',
       name: currentEmployee?.name || '',
       address: currentEmployee?.address || '',
       telephone: currentEmployee?.telephone || '',

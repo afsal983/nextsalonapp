@@ -23,7 +23,7 @@ export interface RetailBrandTableFilters {
 // ----------------------------------------------------------------------
 
 export interface ServiceItem {
-  id: number;
+  id: string;
   name: string;
   price: number;
   tax: number;
@@ -47,13 +47,13 @@ export interface ServiceItem {
 }
 
 export interface ServiceCategoryItem {
-  id: number;
+  id: string;
   name: string;
   type: number;
 }
 
 export interface RetailBrandItem {
-  id: number;
+  id: string;
   name: string;
   desc: string;
 }

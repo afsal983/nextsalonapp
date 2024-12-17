@@ -41,7 +41,7 @@ export default function CustomerCategoryNewEditForm({ currentCustomerCategory }:
 
   const defaultValues = useMemo(
     () => ({
-      id: currentCustomerCategory?.id || '0',
+      id: currentCustomerCategory?.id.toString() || '0',
       name: currentCustomerCategory?.name || '',
       discount: currentCustomerCategory?.discount || 0,
       default_category: currentCustomerCategory?.default_category || false,
@@ -78,7 +78,7 @@ export default function CustomerCategoryNewEditForm({ currentCustomerCategory }:
       });
 
       const responseData = await response.json();
-      console.log('sss1');
+
       if (responseData?.status > 401) {
         toast.error(
           currentCustomerCategory
@@ -93,7 +93,6 @@ export default function CustomerCategoryNewEditForm({ currentCustomerCategory }:
           currentCustomerCategory ? t('general.update_success') : t('general.create_success')
         );
 
-        console.log('sss');
         mutate(`/api/salonapp/customercategory/${currentCustomerCategory?.id}`);
         // Customer listing again
         router.push(paths.dashboard.customers.customercategory.list);

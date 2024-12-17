@@ -61,7 +61,7 @@ export default function CustomerNewEditForm({ currentCustomer, customercategory 
 
   const defaultValues = useMemo(
     () => ({
-      id: currentCustomer?.id || '0',
+      id: currentCustomer?.id.toString() || '0',
       firstname: currentCustomer?.firstname || '',
       lastname: currentCustomer?.lastname || '',
       comment: currentCustomer?.comment || '',

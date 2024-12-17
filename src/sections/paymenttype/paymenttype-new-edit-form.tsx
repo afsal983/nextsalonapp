@@ -42,7 +42,7 @@ export default function PaymentTypeNewEditForm({ currentPaymentType }: Props) {
 
   const defaultValues = useMemo(
     () => ({
-      id: currentPaymentType?.id || '',
+      id: currentPaymentType?.id.toString() || '',
       name: currentPaymentType?.name || '',
       description: currentPaymentType?.description || '',
       default_paymenttype: currentPaymentType?.default_paymenttype || false,

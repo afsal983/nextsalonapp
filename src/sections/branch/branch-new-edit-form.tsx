@@ -35,7 +35,7 @@ interface Props {
 
 export type NewBranchSchemaType = zod.infer<typeof NewBranchSchema>;
 const NewBranchSchema = zod.object({
-  id: zod.number().optional(), // Optional field
+  id: zod.string().optional(), // Optional field
   name: zod.string().min(1, { message: 'salonapp.branch.name_fvalid_error' }), // Required with error message
   reg_name: zod.string().min(1, { message: 'salonapp.branch.reg_fvalid_error' }), // Required with error message
   address: zod.string().optional(), // Optional field
@@ -51,7 +51,7 @@ export default function BranchNewEditForm({ currentBranch, organization, locatio
 
   const defaultValues = useMemo(
     () => ({
-      id: currentBranch?.branch_id || 0,
+      id: currentBranch?.branch_id.toString() || '0',
       name: currentBranch?.name || '',
       reg_name: currentBranch?.reg_name || '',
       address: currentBranch?.address || '',

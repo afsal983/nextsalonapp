@@ -28,7 +28,7 @@ interface Props {
 
 export type NewPRetailBrandSchemaType = zod.infer<typeof NewRetailBrandSchema>;
 const NewRetailBrandSchema = zod.object({
-  id: zod.number().optional(),
+  id: zod.string().optional(),
   name: zod.string().min(1, { message: 'Enter valid Name' }),
   desc: zod.string().optional(),
 });
@@ -40,7 +40,7 @@ export default function RetailBrandNewEditForm({ currentRetailbrand }: Props) {
 
   const defaultValues = useMemo(
     () => ({
-      id: currentRetailbrand?.id || '',
+      id: currentRetailbrand?.id.toString() || '',
       name: currentRetailbrand?.name || '',
       desc: currentRetailbrand?.desc || '',
     }),

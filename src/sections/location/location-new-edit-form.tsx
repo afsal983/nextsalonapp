@@ -38,13 +38,11 @@ const NewLocationSchema = zod.object({
 export default function LocationNewEditForm({ currentLocation }: Props) {
   const router = useRouter();
 
-  console.log(currentLocation);
-
   const { t } = useTranslate();
 
   const defaultValues = useMemo(
     () => ({
-      loc_id: currentLocation?.loc_id || '0',
+      loc_id: currentLocation?.loc_id.toString() || '0',
       name: currentLocation?.name || '',
       address: currentLocation?.address || '',
       telephone: currentLocation?.telephone || '',

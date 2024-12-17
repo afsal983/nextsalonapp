@@ -21,7 +21,7 @@ export interface TimeSlotTableFilters {
 // ----------------------------------------------------------------------
 
 export interface EmployeeItem {
-  id: number;
+  id: string;
   name: string;
   address: string;
   telephone: string;
@@ -55,7 +55,7 @@ export interface EmployeeSettings {
 }
 
 export interface TimeSlotItem {
-  id: number;
+  id: string;
   name: string;
   desc: string;
   starttime: string;

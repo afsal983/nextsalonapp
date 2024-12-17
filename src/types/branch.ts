@@ -12,7 +12,7 @@ export interface BranchTableFilters {
 // ----------------------------------------------------------------------
 
 export interface BranchItem {
-  branch_id: number;
+  branch_id: string;
   name: string;
   reg_name: string;
   address: string;
