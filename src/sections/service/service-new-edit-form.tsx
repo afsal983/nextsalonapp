@@ -51,7 +51,7 @@ const NewProductSchema = zod.object({
   price: schemaHelper.nullableInput(
     zod.number({ coerce: true }).min(1, { message: 'Price is required!' }),
     {
-      // message for null value
+      // message for null value1
       message: 'Price is required!',
     }
   ),
