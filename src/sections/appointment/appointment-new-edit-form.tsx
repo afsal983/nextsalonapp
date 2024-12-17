@@ -90,7 +90,7 @@ export default function AppointmentNewEditForm({
 
   const defaultValues = useMemo(
     () => ({
-      id: currentAppointment?.id || '',
+      id: currentAppointment?.id.toString() || '',
       name: currentAppointment?.name || '',
       start: currentAppointment?.start || today(),
       end: currentAppointment?.end || today(),
