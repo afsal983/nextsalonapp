@@ -30,8 +30,8 @@ interface Props {
 export type NewTimeSlotSchemaType = zod.infer<typeof NewTimeSlotSchema>;
 
 const NewTimeSlotSchema = zod.object({
-  id: zod.string().optional(), // Optional field
-  name: zod.string().nonempty({ message: 'invalid name' }), // Required with custom error message
+  id: zod.number().optional(), // Optional field
+  name: zod.string().min(1, { message: 'Enter Valid Name' }),
   desc: zod.string().optional(), // Optional field
   starttime: zod.date().optional(), // Optional date field
   endtime: zod.date().optional(), // Optional date field
@@ -54,7 +54,7 @@ export default function TimeSlotNewEditForm({ currentTimeSlot }: Props) {
 
   const defaultValues = useMemo(
     () => ({
-      id: currentTimeSlot?.id || '0',
+      id: currentTimeSlot?.id || 0,
       name: currentTimeSlot?.name || '',
       desc: currentTimeSlot?.desc || '',
       starttime:

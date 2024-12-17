@@ -36,7 +36,7 @@ interface Props {
 export type NewProductSchemaType = zod.infer<typeof NewProductSchema>;
 
 const NewProductSchema = zod.object({
-  id: zod.string().optional(),
+  id: zod.number().optional(),
   name: zod.string().min(1, { message: 'salonapp.service.name_fvalid_error' }),
   duration: schemaHelper.nullableInput(
     zod.number({ coerce: true }).min(1, { message: 'Duration is required!' }),
@@ -46,7 +46,7 @@ const NewProductSchema = zod.object({
     }
   ),
 
-  tax: zod.number({ coerce: true }).nullable(),
+  tax: zod.number(),
   color: zod.string().min(1, { message: 'general.color_fvalid_error' }),
   price: schemaHelper.nullableInput(
     zod.number({ coerce: true }).min(1, { message: 'Price is required!' }),
@@ -56,15 +56,12 @@ const NewProductSchema = zod.object({
     }
   ),
 
-  category_id: zod
-    .number()
-    .positive({ message: 'general.must_be_non_zero' })
-    .refine((val) => val !== undefined, { message: 'general.category_fvalid_error' }),
-  brand_id: zod.number().optional(),
-  sku: zod.string().optional(),
-  stock: zod.number().optional(),
-  commission: zod.number({ coerce: true }).nullable(),
-  type: zod.number().optional(),
+  category_id: zod.number().min(1, { message: 'Category is required!' }),
+  brand_id: zod.number(),
+  sku: zod.string(),
+  stock: zod.number(),
+  commission: zod.number(),
+  type: zod.number(),
   on_top: zod.boolean().optional(),
 });
 
@@ -81,7 +78,7 @@ export default function ServiceNewEditForm({
 
   const defaultValues = useMemo(
     () => ({
-      id: currentService?.id || '0',
+      id: currentService?.id || 0,
       name: currentService?.name || '',
       duration: currentService?.duration || 30,
       tax: currentService?.tax || 0,
@@ -117,6 +114,7 @@ export default function ServiceNewEditForm({
   };
   const type = watch('type');
   const onSubmit = handleSubmit(async (data) => {
+    console.log('sssddd');
     const productData = {
       id: Number(data.id),
       name: data.name,
@@ -145,7 +143,7 @@ export default function ServiceNewEditForm({
       });
 
       const responseData = await response.json();
-
+      console.log('sss');
       if (responseData?.status > 401) {
         toast.error(
           currentService

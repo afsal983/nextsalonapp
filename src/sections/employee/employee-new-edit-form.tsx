@@ -17,6 +17,10 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useTranslate } from 'src/locales';
 
+import { isValidPhoneNumber } from 'react-phone-number-input/input';
+
+import { schemaHelper } from 'src/components/hook-form';
+
 import { toast } from 'src/components/snackbar';
 import { Form, Field, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 
@@ -36,12 +40,15 @@ interface Props {
 export type NewEmployeeSchemaType = zod.infer<typeof NewEmployeeSchema>;
 
 const NewEmployeeSchema = zod.object({
-  id: zod.string().optional(), // Optional string
-  name: zod.string({ required_error: 'Invalid name' }), // Required string with custom error
+  id: zod.number().optional(), // Optional string
+  name: zod.string().min(1, { message: 'Enter Valid Name' }),
   address: zod.string().optional(), // Optional string
-  telephone: zod.string({ required_error: 'Invalid telephone' }), // Required string with custom error
-  email: zod.string({ required_error: 'invalid email' }), // Required string with custom error
-  branch_id: zod.number().optional(), // Optional number
+  telephone: schemaHelper.phoneNumber({ isValid: isValidPhoneNumber }),
+  email: zod
+    .string()
+    .min(1, { message: 'Email is required!' })
+    .email({ message: 'Email must be a valid email address!' }),
+  branch_id: zod.number().min(1, { message: 'Branch is required!' }),
   user_id: zod.number().optional(), // Optional number
   employeeservice: zod.array(zod.unknown()).optional(), // Optional array with any type of items
   avatarimagename: zod.string().optional(), // Optional string

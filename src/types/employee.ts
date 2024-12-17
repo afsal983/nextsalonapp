@@ -1,7 +1,7 @@
-import { type UserItem } from "src/types/user";
-import { type BranchItem } from "src/types/branch";
+import { type UserItem } from 'src/types/user';
+import { type BranchItem } from 'src/types/branch';
 
-import { ServiceItem } from "./service";
+import { ServiceItem } from './service';
 // ----------------------------------------------------------------------
 
 export type EmployeeTableFilterValue = string | string[];
@@ -21,7 +21,7 @@ export interface TimeSlotTableFilters {
 // ----------------------------------------------------------------------
 
 export interface EmployeeItem {
-  id: string;
+  id: number;
   name: string;
   address: string;
   telephone: string;
@@ -55,7 +55,7 @@ export interface EmployeeSettings {
 }
 
 export interface TimeSlotItem {
-  id: string;
+  id: number;
   name: string;
   desc: string;
   starttime: string;

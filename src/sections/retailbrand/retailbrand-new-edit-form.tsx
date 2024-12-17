@@ -28,8 +28,8 @@ interface Props {
 
 export type NewPRetailBrandSchemaType = zod.infer<typeof NewRetailBrandSchema>;
 const NewRetailBrandSchema = zod.object({
-  id: zod.string().optional(),
-  name: zod.string().nonempty({ message: 'Name Error' }),
+  id: zod.number().optional(),
+  name: zod.string().min(1, { message: 'Enter valid Name' }),
   desc: zod.string().optional(),
 });
 

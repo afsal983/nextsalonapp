@@ -13,11 +13,13 @@ import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
-
+import { isValidPhoneNumber } from 'react-phone-number-input/input';
 import { useTranslate } from 'src/locales';
 
 import { toast } from 'src/components/snackbar';
 import { Form, Field, RHFTextField } from 'src/components/hook-form';
+
+import { schemaHelper } from 'src/components/hook-form';
 
 import { type BranchItem } from 'src/types/branch';
 import { type LocationItem } from 'src/types/location';
@@ -33,11 +35,11 @@ interface Props {
 
 export type NewBranchSchemaType = zod.infer<typeof NewBranchSchema>;
 const NewBranchSchema = zod.object({
-  id: zod.string().optional(), // Optional field
+  id: zod.number().optional(), // Optional field
   name: zod.string().min(1, { message: 'salonapp.branch.name_fvalid_error' }), // Required with error message
   reg_name: zod.string().min(1, { message: 'salonapp.branch.reg_fvalid_error' }), // Required with error message
   address: zod.string().optional(), // Optional field
-  telephone: zod.string().optional(), // Optional field
+  telephone: schemaHelper.phoneNumber({ isValid: isValidPhoneNumber }),
   taxid: zod.string().optional(), // Optional field
   org_id: zod.number().min(1, { message: 'salonapp.branch.orgid_fvalid_error' }), // Required with error message
   loc_id: zod.number().min(1, { message: 'salonapp.branch.locid_fvalid_error' }), // Required with error message

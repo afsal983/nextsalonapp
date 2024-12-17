@@ -29,8 +29,8 @@ export type NewCustomerCategorySchemaType = zod.infer<typeof NewCustomerCategory
 
 const NewCustomerCategorySchema = zod.object({
   id: zod.string().optional(), // Optional field
-  name: zod.string().min(1, { message: 'salonapp.customer.customercategory.name_fvalid_error' }), // Required with error message
-  discount: zod.number().optional(), // Optional field
+  name: zod.string().min(1, { message: 'Invalid Name' }), // Required with error message
+  discount: zod.number(),
   default_category: zod.boolean().optional(), // Optional field
 });
 
@@ -78,7 +78,7 @@ export default function CustomerCategoryNewEditForm({ currentCustomerCategory }:
       });
 
       const responseData = await response.json();
-
+      console.log('sss1');
       if (responseData?.status > 401) {
         toast.error(
           currentCustomerCategory
@@ -93,6 +93,7 @@ export default function CustomerCategoryNewEditForm({ currentCustomerCategory }:
           currentCustomerCategory ? t('general.update_success') : t('general.create_success')
         );
 
+        console.log('sss');
         mutate(`/api/salonapp/customercategory/${currentCustomerCategory?.id}`);
         // Customer listing again
         router.push(paths.dashboard.customers.customercategory.list);
@@ -123,6 +124,7 @@ export default function CustomerCategoryNewEditForm({ currentCustomerCategory }:
               />
               <RHFTextField
                 name="discount"
+                type="number"
                 label={t('salonapp.customer.customercategory.customercategory_discount')}
                 helperText={t('salonapp.customer.customercategory.cdiscount_helper')}
               />

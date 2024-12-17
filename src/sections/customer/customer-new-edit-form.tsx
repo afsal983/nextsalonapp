@@ -3,7 +3,7 @@ import { z as zod } from 'zod';
 import { useMemo } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, Controller } from 'react-hook-form';
-
+import { isValidPhoneNumber } from 'react-phone-number-input/input';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -15,7 +15,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
-
+import { schemaHelper } from 'src/components/hook-form';
 import { useTranslate } from 'src/locales';
 
 import { toast } from 'src/components/snackbar';
@@ -43,7 +43,7 @@ const NewCustomerSchema = zod.object({
   lastname: zod.string().optional(), // Optional field
   comment: zod.string().optional(), // Optional field
   address: zod.string().optional(), // Optional field
-  telephone: zod.string().min(1, { message: 'salonapp.customer.telephone_fvalid_error' }), // Required with error message
+  telephone: schemaHelper.phoneNumber({ isValid: isValidPhoneNumber }),
   email: zod.string().optional(), // Optional field
   sex: zod.number().optional(), // Optional field
   dob: zod.any().refine((val) => val !== undefined, { message: 'Date is required' }), // Required field

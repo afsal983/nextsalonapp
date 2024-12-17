@@ -45,7 +45,7 @@ export default function TimeSlotEditView({ id }: Props) {
             href: paths.dashboard.root,
           },
           {
-            name: t('salonapp.services'),
+            name: t('salonapp.timeslot.name'),
             href: paths.dashboard.employees.timeslots.root,
           },
           { name: servicecategoryData?.data[0].name },
