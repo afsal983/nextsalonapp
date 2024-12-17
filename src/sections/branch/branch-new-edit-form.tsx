@@ -51,7 +51,7 @@ export default function BranchNewEditForm({ currentBranch, organization, locatio
 
   const defaultValues = useMemo(
     () => ({
-      id: currentBranch?.branch_id || '0',
+      id: currentBranch?.branch_id || 0,
       name: currentBranch?.name || '',
       reg_name: currentBranch?.reg_name || '',
       address: currentBranch?.address || '',
