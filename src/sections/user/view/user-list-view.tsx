@@ -267,7 +267,7 @@ export default function UserListView() {
           <UserTableToolbar
             filters={filters}
             onResetPage={table.onResetPage}
-            options={{ userrole: userrole.map((obj: UserRoleDB) => obj.name) }}
+            options={{ userrole: userrole.data.map((obj: UserRoleDB) => obj.name) }}
           />
 
           {canReset && (

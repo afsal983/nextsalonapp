@@ -13,7 +13,9 @@ import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+import { isValidPhoneNumber } from 'react-phone-number-input/input';
 
+import { schemaHelper } from 'src/components/hook-form';
 import { useTranslate } from 'src/locales';
 
 import { toast } from 'src/components/snackbar';
@@ -36,12 +38,18 @@ const NewUserSchema = zod.object({
   id: zod.string().optional(), // Optional string field
   firstname: zod.string().min(1, { message: 'Name invalid' }), // Required string with custom error
   lastname: zod.string().optional(), // Optional string field
-  email: zod.string().email().min(1, { message: 'Invalid Email' }), // Required email with custom error
-  password: zod.string().min(1, { message: 'Invalid passowrd' }), // Required password with custom error
-  telephone: zod.string().min(1, { message: 'Telephone invalid' }), // Required string with custom error
+  email: zod
+    .string()
+    .min(1, { message: 'Email is required!' })
+    .email({ message: 'Email must be a valid email address!' }),
+  password: zod
+    .string()
+    .min(1, { message: 'Password is required!' })
+    .min(6, { message: 'Password is too short!' }),
+  telephone: schemaHelper.phoneNumber({ isValid: isValidPhoneNumber }),
   pin: zod.string().optional(), // Optional string field
-  branch_id: zod.number().positive({ message: 'Branch Required' }),
-  role_id: zod.number().positive({ message: 'Role required' }),
+  branch_id: zod.number().min(1, { message: 'Branch required!' }),
+  role_id: zod.number().min(1, { message: 'Role required!' }),
   address: zod.string().optional(), // Optional string field
   comment: zod.string().optional(), // Optional string field
   enabled: zod.boolean().optional(), // Optional boolean field
