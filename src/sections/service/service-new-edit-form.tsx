@@ -46,7 +46,7 @@ const NewProductSchema = zod.object({
     }
   ),
 
-  tax: zod.number(),
+  tax: schemaHelper.nullableInput(zod.number({ coerce: true })),
   color: zod.string().min(1, { message: 'general.color_fvalid_error' }),
   price: schemaHelper.nullableInput(
     zod.number({ coerce: true }).min(1, { message: 'Price is required!' }),
@@ -60,7 +60,7 @@ const NewProductSchema = zod.object({
   brand_id: zod.number(),
   sku: zod.string(),
   stock: zod.number(),
-  commission: zod.number(),
+  commission: schemaHelper.nullableInput(zod.number({ coerce: true })),
   type: zod.number(),
   on_top: zod.boolean().optional(),
 });

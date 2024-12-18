@@ -45,7 +45,7 @@ export default function CustomerCategoryEditView({ id }: Props) {
             href: paths.dashboard.root,
           },
           {
-            name: t('salonapp.services'),
+            name: t('salonapp.customer_category'),
             href: paths.dashboard.services.root,
           },
           { name: servicecategoryData?.data[0].name },

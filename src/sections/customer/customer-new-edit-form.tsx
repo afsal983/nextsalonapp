@@ -45,7 +45,7 @@ const NewCustomerSchema = zod.object({
   address: zod.string().optional(), // Optional field
   telephone: schemaHelper.phoneNumber({ isValid: isValidPhoneNumber }),
   email: zod.string().optional(), // Optional field
-  sex: zod.number().optional(), // Optional field
+  sex: zod.string().optional(), // Optional field
   dob: zod.any().refine((val) => val !== undefined, { message: 'Date is required' }), // Required field
   category_id: zod.number().min(1, { message: 'salonapp.customer.category_fvalid_error' }), // Required with error message
   taxid: zod.string().optional(), // Optional field
@@ -68,7 +68,7 @@ export default function CustomerNewEditForm({ currentCustomer, customercategory 
       address: currentCustomer?.address || '',
       telephone: currentCustomer?.telephone || '',
       email: currentCustomer?.email || '',
-      sex: currentCustomer?.sex || 0,
+      sex: currentCustomer?.sex.toString() || '0',
       dob: (currentCustomer?.dob && new Date(currentCustomer?.dob)) || new Date(),
       category_id: currentCustomer?.category_id || 0,
       taxid: currentCustomer?.taxid || '',
@@ -109,7 +109,7 @@ export default function CustomerNewEditForm({ currentCustomer, customercategory 
       address: data.address,
       telephone: data.telephone,
       email: data.email,
-      sex: data.sex,
+      sex: Number(data.sex),
       dob: isoDateString,
       category_id: data.category_id,
       taxid: data.taxid,
@@ -167,6 +167,7 @@ export default function CustomerNewEditForm({ currentCustomer, customercategory 
                 xs: 'repeat(1, 1fr)',
                 sm: 'repeat(2, 1fr)',
               }}
+              my={2}
             >
               <RHFTextField
                 name="firstname"
@@ -221,6 +222,7 @@ export default function CustomerNewEditForm({ currentCustomer, customercategory 
                 xs: 'repeat(1, 1fr)',
                 sm: 'repeat(2, 1fr)',
               }}
+              mx={1}
             >
               <Stack spacing={1}>
                 <Typography variant="subtitle2">Sex</Typography>

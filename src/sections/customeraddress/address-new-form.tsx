@@ -40,7 +40,7 @@ const NewAddressSchema = zod.object({
   address: zod.string().optional(),
   comments: zod.string().optional(),
   dob: zod.any().nullable().optional(),
-  sex: zod.number().refine((value) => value !== undefined, { message: 'Sex is required' }),
+  sex: zod.string().optional(),
   category_id: zod
     .number()
     .refine((value) => value !== undefined, { message: 'Category is required' }),
@@ -69,7 +69,7 @@ export default function AddressNewForm({ open, onClose, onCreate }: Props) {
     address: '',
     comments: '',
     dob: null,
-    sex: 0,
+    sex: '0',
     category_id: 0,
     // not required
     promonotify: false,
@@ -114,7 +114,7 @@ export default function AddressNewForm({ open, onClose, onCreate }: Props) {
         cardno: data.cardno || '',
         taxid: data.taxid || '',
         address: data.address || '',
-        sex: data.sex,
+        sex: data.sex || '0',
         dob: isoDateString || null,
         category_id: Number(data.category_id),
         CustomerPreference: {

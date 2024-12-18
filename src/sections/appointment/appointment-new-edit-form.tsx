@@ -3,7 +3,7 @@ import { z as zod } from 'zod';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-
+import { today, fIsAfter } from 'src/utils/format-time';
 import Stack from '@mui/material/Stack';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Grid2';
@@ -13,8 +13,6 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'minimal-shared/hooks';
-
-import { today } from 'src/utils/format-time';
 
 import { useTranslate } from 'src/locales';
 
@@ -41,38 +39,53 @@ type Props = {
 
 export type NewAppointmentSchemaType = zod.infer<typeof AppointmentSchema>;
 
-const AppointmentSchema = zod.object({
-  id: zod.string().optional(), // Optional field
-  name: zod.string().optional(), // Optional field
-  start: schemaHelper.date({ message: { required: 'Create date is required!' } }),
-  end: schemaHelper.date({ message: { required: 'End date is required!' } }),
-  resource: zod.string().optional(), // Optional field
-  customer_id: zod.number().min(1, { message: 'Customer is required' }),
-  Customer: zod.any().optional(), // Optional field
-  product_id: zod.number().min(1, { message: 'Service is required' }),
-  Product: zod.any().optional(), // Optional field
-  employee_id: zod.number().min(1, { message: 'Employee is required' }),
-  Employee: zod.any().optional(), // Optional field
-  branch_id: zod.number().min(1, { message: 'Branch is required' }),
-  Branches_organization: zod.any().optional(), // Optional field
-  Reminder_count: zod.number().optional(), // Optional field
-  Additional_products: zod
-    .array(
-      zod.object({
-        id: zod.number().optional(), // Optional field
-        event_id: zod.number().optional(),
-        start: schemaHelper.date({ message: { required: 'Create date is required!' } }),
-        end: schemaHelper.date({ message: { required: 'End date is required!' } }),
-        product_id: zod.number().min(1, { message: 'Service is required' }),
-        Product: zod.any().optional(), // Optional field
-        employee_id: zod.number().min(1, { message: 'Employee is required' }),
-        Employee: zod.any().optional(), // Optional field
-        deleted: zod.number().optional(), // Optional field
-      })
-    )
-    .optional(), // Optional array
-  notify: zod.boolean().optional(), // Optional field
-});
+const AppointmentSchema = zod
+  .object({
+    id: zod.string().optional(), // Optional field
+    name: zod.string().optional(), // Optional field
+    start: schemaHelper.date({ message: { required: 'Create date is required!' } }),
+    end: schemaHelper.date({ message: { required: 'End date is required!' } }),
+    resource: zod.string().optional(), // Optional field
+    customer_id: zod.number().min(1, { message: 'Customer is required' }),
+    Customer: zod.any().optional(), // Optional field
+    product_id: zod.number().min(1, { message: 'Service is required' }),
+    Product: zod.any().optional(), // Optional field
+    employee_id: zod.number().min(1, { message: 'Employee is required' }),
+    Employee: zod.any().optional(), // Optional field
+    branch_id: zod.number().min(1, { message: 'Branch is required' }),
+    Branches_organization: zod.any().optional(), // Optional field
+    Reminder_count: zod.number().optional(), // Optional field
+    Additional_products: zod
+      .array(
+        zod.object({
+          id: zod.number().optional(), // Optional field
+          event_id: zod.number().optional(),
+          start: schemaHelper.date({ message: { required: 'Create date is required!' } }),
+          end: schemaHelper.date({ message: { required: 'End date is required!' } }),
+          product_id: zod.number().min(1, { message: 'Service is required' }),
+          Product: zod.any().optional(), // Optional field
+          employee_id: zod.number().min(1, { message: 'Employee is required' }),
+          Employee: zod.any().optional(), // Optional field
+          deleted: zod.number().optional(), // Optional field
+        })
+      )
+      .refine(
+        (data) => {
+          // Ensure that for every object in the array, the end date is not earlier than the start date
+          return data.every((item) => !fIsAfter(item.start, item.end)); // Iterate over each object
+        },
+        {
+          message: 'End date cannot be earlier than create date!',
+          path: ['end'],
+        }
+      )
+      .optional(), // Optional array
+    notify: zod.boolean().optional(), // Optional field
+  })
+  .refine((data) => !fIsAfter(data.start, data.end), {
+    message: 'End date cannot be earlier than create date!',
+    path: ['end'],
+  });
 
 export default function AppointmentNewEditForm({
   currentAppointment,

@@ -34,7 +34,6 @@ export default function UserTableRow({
 }: Props) {
   const { name, email, address, telephone, userroledb, Branches_organization } = row;
 
-  console.log(row);
   const confirm = useBoolean();
 
   const popover = usePopover();

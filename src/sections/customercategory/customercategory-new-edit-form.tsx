@@ -9,7 +9,7 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Grid from '@mui/material/Grid2';
 import LoadingButton from '@mui/lab/LoadingButton';
-
+import { schemaHelper } from 'src/components/hook-form';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
@@ -30,7 +30,7 @@ export type NewCustomerCategorySchemaType = zod.infer<typeof NewCustomerCategory
 const NewCustomerCategorySchema = zod.object({
   id: zod.string().optional(), // Optional field
   name: zod.string().min(1, { message: 'Invalid Name' }), // Required with error message
-  discount: zod.number(),
+  discount: schemaHelper.nullableInput(zod.number({ coerce: true })),
   default_category: zod.boolean().optional(), // Optional field
 });
 

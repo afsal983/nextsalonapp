@@ -68,13 +68,13 @@ export default function CustomerTableRow({
           <Label
             variant="soft"
             color={
-              (sex === 0 && 'success') ||
-              (sex === 1 && 'warning') ||
-              (sex === 2 && 'error') ||
+              (sex === '0' && 'success') ||
+              (sex === '1' && 'warning') ||
+              (sex === '2' && 'error') ||
               'default'
             }
           >
-            {(sex === 0 && 'Female') || (sex === 1 && 'Male') || (sex === 2 && 'Other')}
+            {(sex === '0' && 'Female') || (sex === '1' && 'Male') || (sex === '2' && 'Other')}
           </Label>
         </TableCell>
 

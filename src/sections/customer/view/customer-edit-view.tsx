@@ -49,7 +49,7 @@ export default function CustomerEditView({ id }: Props) {
             name: t('salonapp.customer.name'),
             href: paths.dashboard.customers.root,
           },
-          { name: customerData?.data.firstname },
+          { name: customerData?.data[0].firstname },
         ]}
         sx={{
           mb: { xs: 3, md: 5 },

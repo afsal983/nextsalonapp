@@ -24,7 +24,7 @@ export interface Customer {
   address: string;
   telephone: string;
   email: string;
-  sex: number;
+  sex: string;
   dob: string | null;
   deleted: number;
   category_id: number;
