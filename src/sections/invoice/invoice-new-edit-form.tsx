@@ -136,7 +136,7 @@ export default function InvoiceNewEditForm({
 
   const defaultValues = useMemo(
     () => ({
-      id: currentInvoice?.id || '',
+      id: currentInvoice?.id.toString() || '',
       invoicenumber: currentInvoice?.invoicenumber || '',
       date: currentInvoice?.date || today(),
       total: currentInvoice?.total || 0,
