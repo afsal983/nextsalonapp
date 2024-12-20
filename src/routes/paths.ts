@@ -191,5 +191,9 @@ export const paths = {
     product: {
       root: `${ROOTS.DASHBOARD}/product`,
     },
+    account: {
+      settings: `${ROOTS.DASHBOARD}/account/settings`,
+      security: `${ROOTS.DASHBOARD}/account/settings`,
+    },
   },
 };

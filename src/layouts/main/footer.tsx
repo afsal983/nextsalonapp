@@ -35,7 +35,7 @@ const LINKS = [
       { name: 'Privacy policy', href: '#' },
     ],
   },
-  { headline: 'Contact', children: [{ name: 'support@minimals.cc', href: '#' }] },
+  { headline: 'Contact', children: [{ name: 'support@smeeye.com', href: '#' }] },
 ];
 
 // ----------------------------------------------------------------------
