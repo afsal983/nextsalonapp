@@ -1,19 +1,19 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { decrypt } from "src/utils/encrypt";
+import { decrypt } from 'src/utils/encrypt';
 
 const baseUSRL = process.env.NEXT_PUBLIC_HOST_API;
-
+import fs from 'fs';
 export async function GET(request: NextRequest) {
   // Get the cookies
   const cookieStore = request.cookies;
-  const sessionCookie = cookieStore.get("session")?.value;
+  const sessionCookie = cookieStore.get('session')?.value;
 
   if (sessionCookie === undefined) {
     const res = {
-      Title: "NOK",
+      Title: 'NOK',
       status: 401,
-      message: "Cookie missing",
+      message: 'Cookie missing',
     };
     return NextResponse.json(res, { status: 401 });
   }
@@ -21,9 +21,9 @@ export async function GET(request: NextRequest) {
   const cookiedata = await decrypt(sessionCookie);
   if (cookiedata === undefined) {
     const res = {
-      Title: "NOK",
+      Title: 'NOK',
       status: 401,
-      message: "Cookie missing",
+      message: 'Cookie missing',
     };
     return NextResponse.json(res, { status: 401 });
   }
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
 
   if (response?.status === 401) {
     const res = {
-      Title: "NOK",
+      Title: 'NOK',
       status: 401,
       message: response?.message,
     };
@@ -55,15 +55,31 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest, response: NextResponse) {
   const body = await request.json();
 
+  const uniq_id = Date.now();
+  const fileext = body.avatarimagetype;
+  const domain_id = body.domain_id;
+  const avatarImage = body.avatarUrl;
+
+  const myArray = fileext.split('/');
+
+  // Convert the Base64 string to a Buffer
+  const buffer = Buffer.from(avatarImage, 'base64');
+
+  //Write to the public folder
+  fs.writeFileSync(`public/assets/images/${domain_id}/${uniq_id}.${myArray[1]}`, buffer);
+
+  //Store the name in the database
+  body.avatarimagename = `${domain_id}/${uniq_id}.${myArray[1]}`;
+
   // Get the cookies
   const cookieStore = request.cookies;
-  const sessionCookie = cookieStore?.get("session")?.value;
+  const sessionCookie = cookieStore?.get('session')?.value;
 
   if (sessionCookie === undefined) {
     const res = {
-      Title: "NOK",
+      Title: 'NOK',
       status: 401,
-      message: "Cookie missing",
+      message: 'Cookie missing',
     };
     return NextResponse.json(res, { status: 401 });
   }
@@ -72,18 +88,18 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
   if (cookiedata === undefined) {
     const res = {
-      Title: "NOK",
+      Title: 'NOK',
       status: 401,
-      message: "Cookie missing",
+      message: 'Cookie missing',
     };
     return NextResponse.json(res, { status: 401 });
   }
   const { token } = cookiedata;
 
   const data = await fetch(`${baseUSRL}/apiserver/employee`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(body),
@@ -94,7 +110,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
   if (apiResponse?.status === 401) {
     const res = {
-      Title: "NOK",
+      Title: 'NOK',
       status: 401,
       message: apiResponse?.message,
     };
@@ -107,17 +123,30 @@ export async function POST(request: NextRequest, response: NextResponse) {
 export async function PUT(request: NextRequest, response: NextResponse) {
   const body = await request.json();
 
-  const employeeId = body.id;
+  const uniq_id = Date.now();
+  const fileext = body.avatarimagetype;
+  const domain_id = body.domain_id;
+  const avatarImage = body.avatarUrl;
 
+  const myArray = fileext.split('/');
+
+  // Convert the Base64 string to a Buffer
+  const buffer = Buffer.from(avatarImage, 'base64');
+
+  //Write to the public folder
+  fs.writeFileSync(`public/assets/images/${domain_id}/${uniq_id}.${myArray[1]}`, buffer);
+
+  //Store the name in the database
+  body.avatarimagename = `${domain_id}/${uniq_id}.${myArray[1]}`;
   // Get the cookies
   const cookieStore = request.cookies;
-  const sessionCookie = cookieStore?.get("session")?.value;
+  const sessionCookie = cookieStore?.get('session')?.value;
 
   if (sessionCookie === undefined) {
     const res = {
-      Title: "NOK",
+      Title: 'NOK',
       status: 401,
-      message: "Cookie missing",
+      message: 'Cookie missing',
     };
     return NextResponse.json(res, { status: 401 });
   }
@@ -126,18 +155,18 @@ export async function PUT(request: NextRequest, response: NextResponse) {
 
   if (cookiedata === undefined) {
     const res = {
-      Title: "NOK",
+      Title: 'NOK',
       status: 401,
-      message: "Cookie missing",
+      message: 'Cookie missing',
     };
     return NextResponse.json(res, { status: 401 });
   }
   const { token } = cookiedata;
 
   const data = await fetch(`${baseUSRL}/apiserver/employee/${employeeId}`, {
-    method: "UPDATE",
+    method: 'UPDATE',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(body),
@@ -147,7 +176,7 @@ export async function PUT(request: NextRequest, response: NextResponse) {
 
   if (apiResponse?.status === 401) {
     const res = {
-      Title: "NOK",
+      Title: 'NOK',
       status: 401,
       message: apiResponse?.message,
     };

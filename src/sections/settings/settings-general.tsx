@@ -13,6 +13,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+import { useAuthContext } from 'src/auth/hooks';
 
 import { fData } from 'src/utils/format-number';
 import { base64ToBlob, blobToBase64 } from 'src/utils/base64convert';
@@ -58,6 +59,8 @@ const GeneralSettingsSchema = zod.object({
 export default function SettingsGeneral({ currentSettings }: Props) {
   const router = useRouter();
   const { t } = useTranslate();
+
+  const { user } = useAuthContext();
 
   const defaultValues = useMemo(
     () => ({
