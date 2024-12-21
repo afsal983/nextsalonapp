@@ -78,7 +78,7 @@ export default function AppointmentTableRow({
             },
           }}
         >
-          #{id}
+          {id}
         </Box>
       </TableCell>
 
@@ -229,6 +229,7 @@ export default function AppointmentTableRow({
             Invoice
           </MenuItem>
         )}
+
         <MenuItem
           onClick={() => {
             onEditRow();
@@ -239,16 +240,18 @@ export default function AppointmentTableRow({
           Edit
         </MenuItem>
 
-        <MenuItem
-          onClick={() => {
-            confirm.onTrue();
-            popover.onClose();
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <Iconify icon="solar:trash-bin-trash-bold" />
-          Delete
-        </MenuItem>
+        {!row.is_invoiced && (
+          <MenuItem
+            onClick={() => {
+              confirm.onTrue();
+              popover.onClose();
+            }}
+            sx={{ color: 'error.main' }}
+          >
+            <Iconify icon="solar:trash-bin-trash-bold" />
+            Delete
+          </MenuItem>
+        )}
 
         <MenuItem
           onClick={() => {

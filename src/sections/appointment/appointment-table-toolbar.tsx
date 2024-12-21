@@ -32,6 +32,7 @@ export default function AppointmentTableToolbar({ filters, dateError, onResetPag
     (event: React.ChangeEvent<HTMLInputElement>) => {
       onResetPage();
       filters.setState({ name: event.target.value });
+      console.log('dd');
     },
     [filters, onResetPage]
   );

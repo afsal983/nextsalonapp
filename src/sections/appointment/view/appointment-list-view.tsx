@@ -94,14 +94,12 @@ export default function AppointmentListView() {
   const defaultend = new Date();
   defaultend.setDate(defaultend.getDate() + 7);
 
-  const defaultFilters = useSetState<AppointmentTableFilters>({
+  const filters = useSetState<AppointmentTableFilters>({
     name: '',
     status: 'all',
     startDate: dayjs(start),
     endDate: dayjs(end),
   });
-
-  const [filters, setFilters] = useState(defaultFilters);
 
   const dateError = fIsAfter(filters.state.startDate, filters.state.endDate);
 
@@ -415,13 +413,15 @@ function applyFilter({
     }
   }
   */
+  console.log(name);
 
   if (name) {
     inputData = inputData.filter(
       (appointment) =>
         appointment.Customer.lastname.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
         appointment.Customer.firstname.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-        appointment.Customer.email.toLowerCase().indexOf(name.toLowerCase()) !== -1
+        appointment.Customer.email.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+        String(appointment.id).toLowerCase().indexOf(name.toLowerCase()) !== -1
     );
   }
 
