@@ -85,8 +85,8 @@ export function Footer({
                 [theme.breakpoints.up(layoutQuery)]: { mx: 'unset' },
               })}
             >
-              The starting point for your next project with Minimal UI Kit, built on the newest
-              version of Material-UI ©, ready to be customized to your style.
+              Your one-stop destination for powerful and efficient cloud-based business management
+              software.
             </Typography>
 
             <Box
