@@ -111,14 +111,14 @@ export default function InvoiceDetails({ printinvoice }: Props) {
         <TableCell colSpan={5} />
         <TableCell sx={{ typography: 'subtitle1' }}>Total</TableCell>
         <TableCell width={140} sx={{ typography: 'subtitle1' }}>
-          {printinvoice.billamount}
+          {printinvoice.nonroundedbillamount}
         </TableCell>
       </StyledTableRow>
       <StyledTableRow>
         <TableCell colSpan={5} />
         <TableCell sx={{ typography: 'subtitle1' }}>Rounded Total</TableCell>
         <TableCell width={140} sx={{ typography: 'subtitle1' }}>
-          {printinvoice.nonroundedbillamount}
+          {printinvoice.billamount}
         </TableCell>
       </StyledTableRow>
     </>
