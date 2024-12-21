@@ -123,6 +123,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
 export async function PUT(request: NextRequest, response: NextResponse) {
   const body = await request.json();
 
+  const employeeId = body.id;
   const uniq_id = Date.now();
   const fileext = body.avatarimagetype;
   const domain_id = body.domain_id;
