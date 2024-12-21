@@ -113,7 +113,7 @@ export interface Printinvoice {
 }
 
 export interface Products {
-  id: number;
+  id: number | undefined;
   start: Date;
   end: Date;
   productid: number;
@@ -125,7 +125,7 @@ export interface Products {
 }
 
 export interface Retails {
-  id: number;
+  id: number | undefined;
   productid: number | undefined;
   price: number | undefined;
   quantity: number;
@@ -135,7 +135,7 @@ export interface Retails {
 }
 
 export interface Packages {
-  id: number;
+  id: number | undefined;
   start: Date;
   end: Date;
   productid: number | undefined;
