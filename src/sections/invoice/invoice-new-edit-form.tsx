@@ -3,7 +3,7 @@ import { z as zod } from 'zod';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-
+import { schemaHelper } from 'src/components/hook-form';
 import { Grid } from '@mui/material';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -49,12 +49,12 @@ export type NewInvoiceSchemaType = zod.infer<typeof InvoiceSchema>;
 const InvoiceSchema = zod.object({
   id: zod.string().optional(),
   invoicenumber: zod.string().optional(),
-  date: zod.any().refine((value) => value !== undefined, { message: 'Date is required' }),
-  dueDate: zod.any().optional(),
+  date: schemaHelper.date({ message: { required: 'Date is required!' } }),
+  dueDate: schemaHelper.date({ message: { required: 'Due date is required!' } }),
   total: zod.number().optional(),
-  discount: zod.number().optional(),
+  discount: schemaHelper.nullableInput(zod.number({ coerce: true })),
   tax_rate: zod.number().optional(),
-  tip: zod.number().optional(),
+  tip: schemaHelper.nullableInput(zod.number({ coerce: true })),
   customer_id: zod
     .number()
     .positive('Customer required')
@@ -66,23 +66,13 @@ const InvoiceSchema = zod.object({
     .array(
       zod.object({
         id: zod.number().optional(),
-        quantity: zod
-          .number()
-          .min(1, 'Quantity must be more than 0')
-          .refine((value) => value !== undefined, { message: 'Quantity is required' }),
-        price: zod
-          .number()
-          .positive('Price must be a positive value')
-          .refine((value) => value !== undefined, { message: 'Price is required' }),
-        discount: zod.number().min(0, 'Discount cannot be negative').optional(),
+        quantity: zod.number().int().positive().min(1, { message: 'Quantity must be more than 0' }),
+        price: zod.number(),
+        discount: zod.number(),
         invoice_id: zod.number().optional(),
-        product_id: zod
-          .number()
-          .refine((value) => value !== undefined, { message: 'Product is required' }),
+        product_id: zod.number().min(1, { message: 'Product is required!' }),
         Product: zod.any().optional(),
-        employee_id: zod
-          .number()
-          .refine((value) => value !== undefined, { message: 'Employee is required' }),
+        employee_id: zod.number().min(1, { message: 'Employee is required!' }),
         Employee: zod.any().optional(),
         branch_id: zod.number().optional(),
         Branches_organization: zod.any().optional(),
@@ -104,10 +94,12 @@ const InvoiceSchema = zod.object({
       zod.object({
         id: zod.number().optional(),
         invoice_id: zod.number().optional(),
-        value: zod
-          .number()
-          .positive('Payment value must be a positive value')
-          .refine((value) => value !== undefined, { message: 'Payment amount is required' }),
+        value: schemaHelper.nullableInput(
+          // handle null value and undefined value
+          zod.number({ coerce: true }).min(1, { message: 'Payment value is required!' }).optional(),
+          // message for null value
+          { message: 'Price is required!' }
+        ),
         payment_type: zod.number().positive('Payment type required').optional(),
         auth_code: zod.string().optional(),
       })
@@ -170,23 +162,6 @@ export default function InvoiceNewEditForm({
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
-  /*
-  const handleSaveAsDraft = handleSubmit(async (data) => {
-    loadingSave.onTrue();
-
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      loadingSave.onFalse();
-      router.push(paths.dashboard.invoice.root);
-      // console.info('DATA', JSON.stringify(data, null, 2));
-    } catch (error) {
-      console.error(error);
-      loadingSave.onFalse();
-    }
-  });
-  */
 
   const handleCreateAndSend = handleSubmit(async (data) => {
     loadingSend.onTrue();

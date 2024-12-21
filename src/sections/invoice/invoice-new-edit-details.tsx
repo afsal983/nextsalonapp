@@ -1,6 +1,7 @@
 import { useEffect, useCallback } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
+import { Field } from 'src/components/hook-form';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -80,7 +81,7 @@ export default function InvoiceNewEditDetails({
 
   const discount = actualTotal - subTotal;
 
-  const totalAmount = subTotal + values.tip + taxTotal;
+  const totalAmount = Math.round(subTotal + Number(values.tip) + taxTotal);
 
   const customerSavings = discount + discount * tax;
 
@@ -403,17 +404,6 @@ export default function InvoiceNewEditDetails({
                     },
                   }}
                 />
-                {/*
-              <RHFTextField
-                size="small"
-                type="number"
-                name={`Invoice_line[${index}].type`}
-                label="Type"
-                placeholder="0"
-                style={{ display: "none" }}
-                InputLabelProps={{ shrink: true }}
-              />
-              */}
               </Stack>
 
               <Button
@@ -451,19 +441,45 @@ export default function InvoiceNewEditDetails({
           direction={{ xs: 'column', md: 'row' }}
           sx={{ width: 1 }}
         >
-          <RHFTextField
-            size="small"
-            label="Tip($)"
+          <Field.Text
             name="tip"
+            size="small"
+            label="Tip"
+            placeholder="0.00"
             type="number"
+            slotProps={{
+              inputLabel: { shrink: true },
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start" sx={{ mr: 0.75 }}>
+                    <Box component="span" sx={{ color: 'text.disabled' }}>
+                      {currency}
+                    </Box>
+                  </InputAdornment>
+                ),
+              },
+            }}
             sx={{ maxWidth: { md: 120 } }}
           />
 
-          <RHFTextField
-            size="small"
-            label="Discount(%)"
+          <Field.Text
             name="discount"
+            size="small"
+            label="Discount"
+            placeholder="0.00"
             type="number"
+            slotProps={{
+              inputLabel: { shrink: true },
+              input: {
+                endAdornment: (
+                  <InputAdornment position="end" sx={{ mr: 0.75 }}>
+                    <Box component="span" sx={{ color: 'text.disabled' }}>
+                      %
+                    </Box>
+                  </InputAdornment>
+                ),
+              },
+            }}
             sx={{ maxWidth: { md: 120 } }}
           />
         </Stack>
@@ -475,7 +491,11 @@ export default function InvoiceNewEditDetails({
         spacing={2}
         my={4}
       >
-        <PaymentNewEditForm paymenttypes={paymenttypes} appsettings={appsettings} />
+        <PaymentNewEditForm
+          paymenttypes={paymenttypes}
+          appsettings={appsettings}
+          currency={currency}
+        />
         <Divider
           flexItem
           orientation={mdUp ? 'vertical' : 'horizontal'}

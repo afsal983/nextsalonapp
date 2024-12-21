@@ -113,21 +113,21 @@ export interface Printinvoice {
 }
 
 export interface Products {
-  id: number | undefined;
+  id: number;
   start: Date;
   end: Date;
-  productid: number | undefined;
+  productid: number;
   price: number;
   quantity: number;
-  discount: number | undefined;
-  employeeid: number | undefined;
+  discount: number;
+  employeeid: number;
   deleted: number | undefined;
 }
 
 export interface Retails {
-  id: number | undefined;
+  id: number;
   productid: number | undefined;
-  price: number;
+  price: number | undefined;
   quantity: number;
   discount: number | undefined;
   employeeid: number | undefined;
@@ -135,7 +135,7 @@ export interface Retails {
 }
 
 export interface Packages {
-  id: number | undefined;
+  id: number;
   start: Date;
   end: Date;
   productid: number | undefined;

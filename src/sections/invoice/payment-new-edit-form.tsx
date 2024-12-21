@@ -1,6 +1,7 @@
 import { useEffect, useCallback } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-
+import { varAlpha } from 'minimal-shared/utils';
+import InputAdornment from '@mui/material/InputAdornment';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
@@ -11,11 +12,11 @@ import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Card, Chip, Divider, CardHeader, CardContent } from '@mui/material';
-
+import Button from '@mui/material/Button';
 import { fCurrency } from 'src/utils/format-number';
 
 import { Iconify } from 'src/components/iconify';
-import { RHFSelect, RHFTextField } from 'src/components/hook-form';
+import { RHFSelect, RHFTextField, Field } from 'src/components/hook-form';
 
 import { Payment } from 'src/types/invoice';
 import { AppSettings } from 'src/types/settings';
@@ -26,8 +27,9 @@ import { IPaymenttypes } from 'src/types/payment';
 type Props = {
   paymenttypes?: IPaymenttypes[];
   appsettings: AppSettings[];
+  currency: string | null;
 };
-export default function PaymentNewEditForm({ paymenttypes, appsettings }: Props) {
+export default function PaymentNewEditForm({ paymenttypes, appsettings, currency }: Props) {
   const {
     control,
     watch,
@@ -50,7 +52,7 @@ export default function PaymentNewEditForm({ paymenttypes, appsettings }: Props)
 
   const balance = values.totalAmount - paymentTotal;
 
-  const currency = appsettings.find((appsetting) => appsetting.name === 'currency')?.value || 'INR';
+  console.log(balance);
 
   useEffect(() => {
     setValue('balance', balance);
@@ -81,7 +83,7 @@ export default function PaymentNewEditForm({ paymenttypes, appsettings }: Props)
 
   const handleSelectPayment = useCallback(
     (index: number, payment: IPaymenttypes) => {
-      setValue(`Payment[${index}].value`, values.totalAmount - paymentTotal);
+      // setValue(`Payment[${index}].value`, values.totalAmount - paymentTotal);
 
       setValue(`Payment[${index}].payment_type`, payment?.id);
     },
@@ -108,7 +110,7 @@ export default function PaymentNewEditForm({ paymenttypes, appsettings }: Props)
       divider={<Divider flexItem sx={{ borderStyle: 'dashed' }} />}
       sx={{ order: { xs: 2, md: 1 }, width: 1 }}
     >
-      <Card sx={{ width: 1 }}>
+      <Card sx={{ width: 1, backgroundColor: '#E5E4E2' }}>
         <CardHeader
           title={
             <Typography
@@ -148,9 +150,6 @@ export default function PaymentNewEditForm({ paymenttypes, appsettings }: Props)
           </Stack>
 
           <Divider flexItem sx={{ borderStyle: 'dashed' }} />
-          <Typography variant="h6" color="text.disabled" my={2}>
-            Payment
-          </Typography>
 
           <Stack divider={<Divider flexItem sx={{ borderStyle: 'dashed' }} />} spacing={0.5}>
             {fields.map((item, index) => (
@@ -190,18 +189,26 @@ export default function PaymentNewEditForm({ paymenttypes, appsettings }: Props)
                           </MenuItem>
                         ))}
                     </RHFSelect>
-
-                    <RHFTextField
-                      size="small"
-                      type="number"
-                      sx={{
-                        width: '100%', // Optional: make it responsive within its container
-                      }}
+                    <Field.Text
                       name={`Payment[${index}].value`}
+                      size="small"
                       label="Amount"
-                      placeholder="0"
+                      placeholder="0.00"
+                      type="number"
+                      slotProps={{
+                        inputLabel: { shrink: true },
+                        input: {
+                          startAdornment: (
+                            <InputAdornment position="start" sx={{ mr: 0.75 }}>
+                              <Box component="span" sx={{ color: 'text.disabled' }}>
+                                {currency}
+                              </Box>
+                            </InputAdornment>
+                          ),
+                        },
+                      }}
+                      sx={{ maxWidth: { md: 120 } }}
                       onChange={(event) => handleChangePrice(event, index)}
-                      InputLabelProps={{ shrink: true }}
                     />
 
                     <RHFTextField
@@ -229,15 +236,15 @@ export default function PaymentNewEditForm({ paymenttypes, appsettings }: Props)
             direction={{ xs: 'column', md: 'row' }}
             alignItems={{ xs: 'flex-end', md: 'center' }}
           >
-            <IconButton
-              aria-label="add"
+            <Button
               size="small"
               color="primary"
+              startIcon={<Iconify icon="mingcute:add-line" />}
               onClick={handleAdd}
               sx={{ flexShrink: 0 }}
             >
-              <ControlPointIcon fontSize="small" />
-            </IconButton>
+              Add Payment
+            </Button>
           </Stack>
           <Divider sx={{ my: 1, borderStyle: 'dashed' }} />
           <Stack
@@ -256,7 +263,7 @@ export default function PaymentNewEditForm({ paymenttypes, appsettings }: Props)
                   color: balance === 0 ? 'primary' : 'error',
                 }}
               >
-                {balance === 0 ? (
+                {Math.round(balance) === 0 ? (
                   <Stack direction="row" spacing={2}>
                     <Typography>{fCurrency(String(balance)) || '-'}</Typography>
                     <ThumbUpIcon color="primary" />
